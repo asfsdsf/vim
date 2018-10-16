@@ -1,5 +1,5 @@
 set nocompatible              " be improved, required
-set encoding=utf8
+set encoding=utf8 
 """" START Vundle Configuration
 filetype off                  " required
 
@@ -19,10 +19,11 @@ Plugin 'majutsushi/tagbar'  " file names at top bar
 Plugin 'ervandew/supertab'  " perform all your vim insert mode completions with Tab
 Plugin 'junegunn/fzf.vim'  " fuzzy find
 Plugin 'junegunn/fzf'  " fuzzy find together with plugin above
-Plugin 'Shougo/neocomplete.vim'  " auto complete
-Plugin 'Shougo/neopairs.vim'  " auto insert pairs when complete done
 Plugin 'benmills/vimux'  " vim plugin to interact with tmux
 Plugin 'ctrlpvim/ctrlp.vim'
+
+" Language support
+Plugin 'mattn/emmet-vim'  " for html
 
 " Generic Programming Support
 Plugin 'Townk/vim-autoclose'  " enable an auto-close chars feature
@@ -210,49 +211,3 @@ let g:fzf_colors =
 " explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 
-" Neocomplete Settings
-let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_at_startup = 1 " Use neocomplete.
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
-
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  " insert <CR> key after <CR> key is hit
-  "return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-    return pumvisible() ? "\<C-y>" : "\<CR>"
-endfunction
-
-" select first option when return is hit
-let g:neocomplete#enable_auto_select = 1
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python3 setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
