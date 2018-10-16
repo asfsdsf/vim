@@ -20,6 +20,7 @@ Plugin 'ervandew/supertab'  " perform all your vim insert mode completions with 
 Plugin 'junegunn/fzf.vim'  " fuzzy find
 Plugin 'junegunn/fzf'  " fuzzy find together with plugin above
 Plugin 'Valloric/YouCompleteMe'  " auto complete engine
+Plugin 'terryma/vim-multiple-cursors' "Sublime Text style multiple selections
 Plugin 'benmills/vimux'  " vim plugin to interact with tmux
 Plugin 'ctrlpvim/ctrlp.vim'
 
@@ -75,6 +76,10 @@ filetype plugin indent on    " required
 map <C-n> :NERDTreeToggle<CR>
 map <C-m> :TagbarToggle<CR>
 
+" YouCompleteMe Mappings
+nnoremap <c-f> :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <c-b> :YcmCompleter GoToDeclaration<CR>
+
 " Mapping selecting Mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
@@ -97,33 +102,10 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " display
 """""""""""""""""""""""""""""""""""""
 set showcmd                          "show key strokes
-"""""""""""""""""""""""""""""""""""""
-" custom functin
-"""""""""""""""""""""""""""""""""""""
-"""""""""""""""""""""""""""""""""""""
-" Configuration Section
-"""""""""""""""""""""""""""""""""""""
+
 " Show linenumbers
 set number
 set ruler " Always show cursor position
-
-" smart case for / search
-set ignorecase
-set smartcase
-
-" highlight all search matches
-:set hlsearch
-
-" set more visual hints in command-line mode
-set wildmenu
-
-" Indention Options
-set autoindent " New lines inherit the indentation of previous lines
-set expandtab " Convert tabs to spaces
-set shiftwidth=4 " When shifting, indent using four spaces
-set tabstop=4 " Indent using four spaces
-set smarttab
-set expandtab
 
 " Enable highlighting of the current lines
 set cursorline
@@ -146,69 +128,112 @@ let g:spacegray_italicize_comments = 1
 
 let g:gruvbox_contrast = 'hard'
 
-" Vim-Airline Configuration
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-let g:airline_theme='hybrid'
-let g:hybrid_custom_term_colors = 1
-let g:hybrid_reduced_contrast = 1
+" Vim-Airline {{{
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline_powerline_fonts = 1
+    let g:airline_theme='hybrid'
+    let g:hybrid_custom_term_colors = 1
+    let g:hybrid_reduced_contrast = 1
+" }}}
 
-" Devicons configuration
-let g:webdevicons_conceal_nerdtree_brackets = 1
-let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 
-" Elixir Tagbar Configuration
-let g:tagbar_type_elixir = {
-    \ 'ctagstype' : 'elixir',
-    \ 'kinds' : [
-        \ 'f:functions',
-        \ 'functions:functions',
-        \ 'c:callbacks',
-        \ 'd:delegates',
-        \ 'e:exceptions',
-        \ 'i:implementations',
-        \ 'a:macros',
-        \ 'o:operators',
-        \ 'm:modules',
-        \ 'p:protocols',
-        \ 'r:records',
-        \ 't:tests'
-    \ ]
-    \ }
 
-" Fzf Configuration
-" This is the default extra key bindings
-let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit' }
+" Devicons {{{
+    let g:webdevicons_conceal_nerdtree_brackets = 1
+    let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+" }}}
 
-" Default fzf layout
-" - down / up / left / right
-let g:fzf_layout = { 'down': '~40%' }
+"""""""""""""""""""""""""""""""""""""
+" custom functin
+"""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""
+" Configuration Section
+"""""""""""""""""""""""""""""""""""""
+" smart case for / search
+set ignorecase
+set smartcase
 
-" In Neovim, you can set up fzf window using a Vim command
-let g:fzf_layout = { 'window': 'enew' }
-let g:fzf_layout = { 'window': '-tabnew' }
+" highlight all search matches
+:set hlsearch
 
-" Customize fzf colors to match your color scheme
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Comment'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
+" set more visual hints in command-line mode
+set wildmenu
 
-" Enable per-command history.
-" CTRL-N and CTRL-P will be automatically bound to next-history and
-" previous-history instead of down and up. If you don't like the change,
-" explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
-let g:fzf_history_dir = '~/.local/share/fzf-history'
+" Indention Options
+set autoindent " New lines inherit the indentation of previous lines
+set expandtab " Convert tabs to spaces
+set shiftwidth=4 " When shifting, indent using four spaces
+set tabstop=4 " Indent using four spaces
+set smarttab
+set expandtab
 
+" Elixir {{{
+    let g:tagbar_type_elixir = {
+        \ 'ctagstype' : 'elixir',
+        \ 'kinds' : [
+            \ 'f:functions',
+            \ 'functions:functions',
+            \ 'c:callbacks',
+            \ 'd:delegates',
+            \ 'e:exceptions',
+            \ 'i:implementations',
+            \ 'a:macros',
+            \ 'o:operators',
+            \ 'm:modules',
+            \ 'p:protocols',
+            \ 'r:records',
+            \ 't:tests'
+        \ ]
+        \ }
+" }}}
+
+
+
+" YouCompleteMe {{{
+    " open keyword completion
+    let g:ycm_seed_identifiers_with_syntax=1
+    "blacklist for youcompleteme
+    let g:ycm_filetype_blacklist = {
+            \ 'tagbar' : 1,
+            \ 'gitcommit' : 1,
+            \}
+" }}}
+
+
+
+" Fzf {{{ 
+    " This is the default extra key bindings
+    let g:fzf_action = {
+      \ 'ctrl-t': 'tab split',
+      \ 'ctrl-x': 'split',
+      \ 'ctrl-v': 'vsplit' }
+
+    " Default fzf layout
+    " - down / up / left / right
+    let g:fzf_layout = { 'down': '~40%' }
+
+    " In Neovim, you can set up fzf window using a Vim command
+    let g:fzf_layout = { 'window': 'enew' }
+    let g:fzf_layout = { 'window': '-tabnew' }
+
+    " Customize fzf colors to match your color scheme
+    let g:fzf_colors =
+    \ { 'fg':      ['fg', 'Normal'],
+      \ 'bg':      ['bg', 'Normal'],
+      \ 'hl':      ['fg', 'Comment'],
+      \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+      \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+      \ 'hl+':     ['fg', 'Statement'],
+      \ 'info':    ['fg', 'PreProc'],
+      \ 'prompt':  ['fg', 'Conditional'],
+      \ 'pointer': ['fg', 'Exception'],
+      \ 'marker':  ['fg', 'Keyword'],
+      \ 'spinner': ['fg', 'Label'],
+      \ 'header':  ['fg', 'Comment'] }
+
+    " Enable per-command history.
+    " CTRL-N and CTRL-P will be automatically bound to next-history and
+    " previous-history instead of down and up. If you don't like the change,
+    " explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
+    let g:fzf_history_dir = '~/.local/share/fzf-history'
+" }}}
