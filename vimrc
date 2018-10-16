@@ -1,4 +1,4 @@
-set nocompatible              " be iMproved, required
+set nocompatible              " be improved, required
 set encoding=utf8
 """" START Vundle Configuration
 filetype off                  " required
