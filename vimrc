@@ -19,6 +19,7 @@ Plugin 'majutsushi/tagbar'  " file names at top bar
 Plugin 'ervandew/supertab'  " perform all your vim insert mode completions with Tab
 Plugin 'junegunn/fzf.vim'  " fuzzy find
 Plugin 'junegunn/fzf'  " fuzzy find together with plugin above
+Plugin 'Valloric/YouCompleteMe'  " auto complete engine
 Plugin 'benmills/vimux'  " vim plugin to interact with tmux
 Plugin 'ctrlpvim/ctrlp.vim'
 
