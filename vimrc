@@ -117,6 +117,7 @@ endfunc
 " Comment following line to disable meta key as alt
 call Terminal_MetaMode(0)
 
+map <A-q> <Esc><Esc><Esc><Esc>
 map <C-n> :NERDTreeToggle<CR>
 map <C-m> :TagbarToggle<CR>
 
