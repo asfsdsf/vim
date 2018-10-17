@@ -22,12 +22,13 @@ Plugin 'junegunn/fzf'  " fuzzy find together with plugin above
 Plugin 'Valloric/YouCompleteMe'  " auto complete engine
 Plugin 'benmills/vimux'  " vim plugin to interact with tmux
 Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'terryma/vim-multiple-cursors'
 
 " Language support
 Plugin 'mattn/emmet-vim'  " for html
 
 " Generic Programming Support
-Plugin 'Townk/vim-autoclose'  " enable an auto-close chars feature
+Plugin 'Raimondi/delimitMate' " enable an auto-close chars feature
 Plugin 'tomtom/tcomment_vim'  " extensible & universal comment vim-plugin that also handles embedded filetypes
 
 " Theme / Interface
@@ -116,6 +117,9 @@ endfunc
  
 " Comment following line to disable meta key as alt
 call Terminal_MetaMode(0)
+
+" vim-multiple-cursor Mappings
+" let g:multi_cursor_use_default_mapping=0
 
 map <A-q> <Esc><Esc><Esc><Esc>
 map <C-n> :NERDTreeToggle<CR>
