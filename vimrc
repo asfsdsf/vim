@@ -21,8 +21,8 @@ Plugin 'junegunn/fzf.vim'  " fuzzy find
 Plugin 'junegunn/fzf'  " fuzzy find together with plugin above
 Plugin 'Valloric/YouCompleteMe'  " auto complete engine
 Plugin 'benmills/vimux'  " vim plugin to interact with tmux
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'terryma/vim-multiple-cursors'
+Plugin 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
+Plugin 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
 
 " Language support
 Plugin 'mattn/emmet-vim'  " for html
@@ -73,6 +73,7 @@ filetype plugin indent on    " required
 """""""""""""""""""""""""""""""""""""
 " Mappings configurationn
 """""""""""""""""""""""""""""""""""""
+
 " set alt map
 function! Terminal_MetaMode(mode)
     set ttimeout
@@ -119,9 +120,17 @@ endfunc
 call Terminal_MetaMode(0)
 
 " vim-multiple-cursor Mappings
-" let g:multi_cursor_use_default_mapping=0
+let g:multi_cursor_use_default_mapping=0
+let g:multi_cursor_start_word_key      = '<A-j>'
+let g:multi_cursor_select_all_word_key = '<A-n>'
+let g:multi_cursor_start_key           = 'g<A-j>'
+let g:multi_cursor_select_all_key      = 'g<A-n>'
+let g:multi_cursor_next_key            = '<A-j>'
+let g:multi_cursor_prev_key            = '<A-k>'
+let g:multi_cursor_skip_key            = '<A-x>'
+let g:multi_cursor_quit_key            = '<Esc>'
 
-map <A-q> <Esc><Esc><Esc><Esc>
+imap ] <Esc>
 map <C-n> :NERDTreeToggle<CR>
 map <C-m> :TagbarToggle<CR>
 
