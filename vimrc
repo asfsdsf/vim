@@ -130,7 +130,10 @@ let g:multi_cursor_prev_key            = '<A-k>'
 let g:multi_cursor_skip_key            = '<A-x>'
 let g:multi_cursor_quit_key            = '<Esc>'
 
-imap ] <Esc>
+inoremap ] <Esc>
+inoremap <C-[> ]
+cnoremap ] <Esc>
+cnoremap <C-[> ]
 map <C-n> :NERDTreeToggle<CR>
 map <C-m> :TagbarToggle<CR>
 
