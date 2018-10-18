@@ -23,13 +23,15 @@ Plugin 'Valloric/YouCompleteMe'  " auto complete engine
 Plugin 'benmills/vimux'  " vim plugin to interact with tmux
 Plugin 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
 Plugin 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
+Plugin 'vim-syntastic/syntastic'  " Syntax checking hacks for vim
 
 " Language support
 Plugin 'mattn/emmet-vim'  " for html
 
 " Generic Programming Support
-Plugin 'Raimondi/delimitMate' " enable an auto-close chars feature
+" Plugin 'Raimondi/delimitMate' " enable an auto-close chars feature
 Plugin 'tomtom/tcomment_vim'  " extensible & universal comment vim-plugin that also handles embedded filetypes
+Plugin 'tpope/vim-surround'  " surround.vim: quoting/parenthesizing made simple
 
 " Theme / Interface
 Plugin 'vim-airline/vim-airline'  " beautiful bar at bottom
@@ -130,10 +132,6 @@ let g:multi_cursor_prev_key            = '<A-k>'
 let g:multi_cursor_skip_key            = '<A-x>'
 let g:multi_cursor_quit_key            = '<Esc>'
 
-inoremap ] <Esc>
-inoremap <C-[> ]
-cnoremap ] <Esc>
-cnoremap <C-[> ]
 map <C-n> :NERDTreeToggle<CR>
 map <C-m> :TagbarToggle<CR>
 
@@ -297,4 +295,33 @@ set expandtab
     " previous-history instead of down and up. If you don't like the change,
     " explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
     let g:fzf_history_dir = '~/.local/share/fzf-history'
+" }}}
+
+
+
+" {{{ syntastic
+    " show list of errors and warnings on the current file 
+    nmap <leader>e :Errors<CR> 
+    set statusline+=%#warningmsg#
+    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*
+
+    let g:syntastic_always_populate_loc_list = 1
+    let g:syntastic_auto_loc_list = 1
+    " Whether to perform syntastic checking on opening of file 
+    " This made it very slow on open, so don’t 
+    let g:syntastic_check_on_open = 0 
+    " Don’t check every time i save the file 
+    " I will call you when i need you 
+    " let g:syntastic_check_on_wq = 0 
+    " By default, keep syntastic in passive mode 
+    let g:syntastic_mode_map = { 'mode': 'passive' } 
+    " Use :Sc to perform syntastic check 
+    :command Sc :SyntasticCheck 
+    " Use :Sr to reset syntastic check 
+    :command Sr :SyntasticReset 
+    " Check pylint for python 
+    " let g:syntastic_python_checkers = ['pylint'] 
+    let g:syntastic_error_symbol = "✗"
+    let g:syntastic_warning_symbol = "⚠"
 " }}}
