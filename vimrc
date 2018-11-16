@@ -32,6 +32,8 @@ Plugin 'mattn/emmet-vim'  " for html
 " Plugin 'Raimondi/delimitMate' " enable an auto-close chars feature
 Plugin 'tomtom/tcomment_vim'  " extensible & universal comment vim-plugin that also handles embedded filetypes
 Plugin 'tpope/vim-surround'  " surround.vim: quoting/parenthesizing made simple
+Plugin 'SirVer/ultisnips'  " Track the engine.
+Plugin 'honza/vim-snippets'  " Snippets are separated from the engine. Add this if you want them:
 
 " Theme / Interface
 Plugin 'vim-airline/vim-airline'  " beautiful bar at bottom
@@ -138,6 +140,7 @@ map <C-m> :TagbarToggle<CR>
 " YouCompleteMe Mappings
 nnoremap <c-f> :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <c-b> :YcmCompleter GoToDeclaration<CR>
+" <c-p> :cancel completion
 
 " Mapping selecting Mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
@@ -205,6 +208,7 @@ let g:gruvbox_contrast = 'hard'
 """""""""""""""""""""""""""""""""""""
 " custom functin
 """""""""""""""""""""""""""""""""""""
+nmap <c-A> :help 
 """""""""""""""""""""""""""""""""""""
 " Configuration Section
 """""""""""""""""""""""""""""""""""""
@@ -256,6 +260,8 @@ set expandtab
             \ 'tagbar' : 1,
             \ 'gitcommit' : 1,
             \}
+    let g:ycm_autoclose_preview_window_after_completion = 1
+    let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 " }}}
 
 
@@ -324,4 +330,16 @@ set expandtab
     " let g:syntastic_python_checkers = ['pylint'] 
     let g:syntastic_error_symbol = "✗"
     let g:syntastic_warning_symbol = "⚠"
+" }}}
+
+
+
+" {{{ snippets
+    " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+    let g:UltiSnipsExpandTrigger="<c-j>"
+    let g:UltiSnipsJumpForwardTrigger="<c-b>"
+    let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+    " If you want :UltiSnipsEdit to split your window.
+    let g:UltiSnipsEditSplit="vertical"
 " }}}
