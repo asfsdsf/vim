@@ -209,6 +209,20 @@ let g:gruvbox_contrast = 'hard'
 " custom functin
 """""""""""""""""""""""""""""""""""""
 nmap <c-A> :help 
+
+function Python_print()
+    if expand('%:p')=="/home/ban/Software/vim/python_for_vim.py"
+        wq
+        r !python /home/ban/Software/vim/python_for_vim.py
+    else
+        vsplit /home/ban/Software/vim/python_for_vim.py
+        execute "normal!ggdG"
+    endif
+endfunction
+
+nmap <c-k> :call Python_print()<CR>
+
+nnoremap [e :w<CR>:Sc<CR>:ll<CR>
 """""""""""""""""""""""""""""""""""""
 " Configuration Section
 """""""""""""""""""""""""""""""""""""
