@@ -22,14 +22,17 @@ Plugin 'junegunn/fzf'  " fuzzy find together with plugin above
 Plugin 'Valloric/YouCompleteMe'  " auto complete engine
 Plugin 'benmills/vimux'  " vim plugin to interact with tmux
 Plugin 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
-Plugin 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
+" Plugin 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
+Plugin 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
 Plugin 'vim-syntastic/syntastic'  " Syntax checking hacks for vim
+Plugin 'wellle/targets.vim' " Vim plugin that provides additional text objects
 
 " Language support
 Plugin 'mattn/emmet-vim'  " for html
 
 " Generic Programming Support
 " Plugin 'Raimondi/delimitMate' " enable an auto-close chars feature
+Plugin 'jiangmiao/auto-pairs' " enable an auto-close chars feature
 Plugin 'tomtom/tcomment_vim'  " extensible & universal comment vim-plugin that also handles embedded filetypes
 Plugin 'tpope/vim-surround'  " surround.vim: quoting/parenthesizing made simple
 Plugin 'SirVer/ultisnips'  " Track the engine.
@@ -124,17 +127,34 @@ endfunc
 call Terminal_MetaMode(0)
 
 " vim-multiple-cursor Mappings
-let g:multi_cursor_use_default_mapping=0
-let g:multi_cursor_start_word_key      = '<A-j>'
-let g:multi_cursor_select_all_word_key = '<A-n>'
-let g:multi_cursor_start_key           = 'g<A-j>'
-let g:multi_cursor_select_all_key      = 'g<A-n>'
-let g:multi_cursor_next_key            = '<A-j>'
-let g:multi_cursor_prev_key            = '<A-k>'
-let g:multi_cursor_skip_key            = '<A-x>'
-let g:multi_cursor_quit_key            = '<Esc>'
+" let g:multi_cursor_use_default_mapping=0
+" let g:multi_cursor_start_word_key      = '<A-j>'
+" let g:multi_cursor_select_all_word_key = '<A-n>'
+" let g:multi_cursor_start_key           = 'g<A-j>'
+" let g:multi_cursor_select_all_key      = 'g<A-n>'
+" let g:multi_cursor_next_key            = '<A-j>'
+" let g:multi_cursor_prev_key            = '<A-k>'
+" let g:multi_cursor_skip_key            = '<A-x>'
+" let g:multi_cursor_quit_key            = '<Esc>'
 
-map <C-n> :NERDTreeToggle<CR>
+" vim-visual-multi Mappings
+let g:VM_no_meta_mappings=0
+let g:VM_maps = {}
+let g:VM_maps["Select Operator"]          = 'gs'
+let g:VM_maps["Add Cursor At Pos"]        = 'g<space>'
+let g:VM_maps["Start Regex Search"]       = 'g/'
+let g:VM_maps["Select All"]               = '<leader>A'
+let g:VM_maps["Add Cursor Down"]          = '<A-j>'
+let g:VM_maps["Add Cursor Up"]            = '<A-k>'
+let g:VM_maps["Visual Regex"]             = 'g/'
+let g:VM_maps["Visual All"]               = '<A-A>'
+let g:VM_maps["Visual Add"]               = '<A-a>'
+let g:VM_maps["Visual Find"]              = '<C-f>'
+let g:VM_maps["Visual Cursors"]           = '<C-c>'
+let g:VM_maps["Find Under"]               = '<c-n>'
+let g:VM_maps["Find Subword Under"]       = '<c-n>'
+
+map <leader>n :NERDTreeToggle<CR>
 map <C-m> :TagbarToggle<CR>
 
 " YouCompleteMe Mappings
@@ -166,7 +186,7 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 set showcmd                          "show key strokes
 
 " Show linenumbers
-set number
+set number relativenumber
 set ruler " Always show cursor position
 
 " Enable highlighting of the current lines
@@ -208,7 +228,7 @@ let g:gruvbox_contrast = 'hard'
 """""""""""""""""""""""""""""""""""""
 " custom functin
 """""""""""""""""""""""""""""""""""""
-nmap <c-A> :help 
+" nmap <c-A> :help 
 
 function Python_print()
     if expand('%:p')=="/home/ban/Software/vim/python_for_vim.py"
