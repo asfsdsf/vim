@@ -228,7 +228,7 @@ let g:gruvbox_contrast = 'hard'
 """""""""""""""""""""""""""""""""""""
 " custom functin
 """""""""""""""""""""""""""""""""""""
-" nmap <c-A> :help 
+nmap <c-A> :FindActions<CR>
 
 function Python_print()
     if expand('%:p')=="/home/ban/Software/vim/python_for_vim.py"
@@ -239,6 +239,7 @@ function Python_print()
         execute "normal!ggdG"
     endif
 endfunction
+
 
 nmap <c-k> :call Python_print()<CR>
 
@@ -309,7 +310,7 @@ set expandtab
 
     " Default fzf layout
     " - down / up / left / right
-    let g:fzf_layout = { 'down': '~40%' }
+    let g:fzf_layout = { 'down': '~30%' }
 
     " In Neovim, you can set up fzf window using a Vim command
     let g:fzf_layout = { 'window': 'enew' }
@@ -335,6 +336,21 @@ set expandtab
     " previous-history instead of down and up. If you don't like the change,
     " explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
     let g:fzf_history_dir = '~/.local/share/fzf-history'
+
+    " help search command 
+    command! -bang -nargs=* FindActions
+      \ call fzf#vim#grep(
+      \   'cat /home/ban/Software/vim/vim_tip/find_actions '.shellescape(<q-args>), 1,
+      \   <bang>0 ? fzf#vim#with_preview('up:60%')
+      \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+      \   <bang>0)
+" }}}
+
+
+
+" CtrlP {{{
+    let g:ctrlp_extensions = [ 'line' ]
+    nnoremap <c-f> :CtrlPLine<CR>
 " }}}
 
 

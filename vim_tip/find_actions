@@ -1,0 +1,16 @@
+z<          Align at cursors by character in multiple cursor mode
+g;          Go to last edited location
+<c-^>       Switch to next buffer tab
+gt          Go to next tab
+gT          Go to last tab
+<a-j>       Add multiple cursor below
+<a-k>       Add multiple cursor above
+<c-n>       Find and extend multiple cursor in visual mode
+<c-f>       Search by lines using CtrlP(Find Strings)
+<c-w><c-_>  Expand current split vertically
+<c-w><c-|>  Expand current split horizontally
+<c-w><c-w>  Switch to next split
+<c-t>       Open in new tab(CtrlP or fzf)
+t           Open in new tab in NerdTree 
+<leader>n   Open NerdTree
+<c-m>       Open ctags
