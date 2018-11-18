@@ -310,11 +310,12 @@ set expandtab
 
     " Default fzf layout
     " - down / up / left / right
-    let g:fzf_layout = { 'down': '~30%' }
+    let g:fzf_layout = { 'up': '~40%' }
 
     " In Neovim, you can set up fzf window using a Vim command
     let g:fzf_layout = { 'window': 'enew' }
     let g:fzf_layout = { 'window': '-tabnew' }
+    let g:fzf_layout = { 'window': 'belowright 10split enew' }
 
     " Customize fzf colors to match your color scheme
     let g:fzf_colors =
@@ -340,10 +341,7 @@ set expandtab
     " help search command 
     command! -bang -nargs=* FindActions
       \ call fzf#vim#grep(
-      \   'cat /home/ban/Software/vim/vim_tip/find_actions '.shellescape(<q-args>), 1,
-      \   <bang>0 ? fzf#vim#with_preview('up:60%')
-      \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-      \   <bang>0)
+      \   'cat /home/ban/Software/vim/vim_tip/find_actions '.shellescape(<q-args>), 1)
 " }}}
 
 
