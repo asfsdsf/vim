@@ -45,7 +45,8 @@ T           NerdTree: open in new tab silently   (Directory node mappings)
 x           NerdTree: close parent of node   (Directory node mappings) 
 X           NerdTree: close all child nodes of current node recursively   (Directory node mappings) 
 e           NerdTree: explore selected dir   (Directory node mappings) 
-[e          Check syntastic error and go to the location
+]e          Go to next error
+[e          Go to previous error
 <c-/><c-/>  Comment the line
 <c-f>       YouCompleteMe(YCM): go to definition (else declaration if no definition found)
 <c-b>       YouCompleteMe(YCM): go to declaration

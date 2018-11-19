@@ -26,7 +26,6 @@ Plugin 'benmills/vimux'  " vim plugin to interact with tmux
 Plugin 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
 " Plugin 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
 Plugin 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
-Plugin 'vim-syntastic/syntastic'  " Syntax checking hacks for vim
 Plugin 'w0rp/ale'  " Syntax checking for python
 Plugin 'wellle/targets.vim' " Vim plugin that provides additional text objects
 
@@ -268,7 +267,8 @@ nnoremap <c-k> :call Python_print()<CR>
 nnoremap <c-w><c-o> :call MaximizeToggle()<CR>
 nnoremap <c-w><o> :call MaximizeToggle()<CR>
 
-nnoremap [e :w<CR>:Sc<CR>:ll<CR>
+nmap <silent> [e <Plug>(ale_previous_wrap)
+nmap <silent> ]e <Plug>(ale_next_wrap)
 """""""""""""""""""""""""""""""""""""
 " Configuration Section
 """""""""""""""""""""""""""""""""""""
@@ -381,42 +381,21 @@ set expandtab
 
 
 
-" {{{ syntastic
-    " show list of errors and warnings on the current file 
-    nmap <leader>e :Errors<CR> 
-    set statusline+=%#warningmsg#
-    set statusline+=%{SyntasticStatuslineFlag()}
-    set statusline+=%*
-
-    " let g:syntastic_always_populate_loc_list = 1
-    let g:syntastic_auto_loc_list = 1
-    " Whether to perform syntastic checking on opening of file 
-    " This made it very slow on open, so don’t 
-    let g:syntastic_check_on_open = 1 
-    " Don’t check every time i save the file 
-    " I will call you when i need you 
-    let g:syntastic_check_on_wq = 1 
-    " By default, keep syntastic in passive mode 
-    let g:syntastic_mode_map = { 'mode': 'passive' } 
-    
-
-    " Use :Sc to perform syntastic check 
-    :command Sc :SyntasticCheck 
-    " Use :Sr to reset syntastic check 
-    :command Sr :SyntasticReset 
-
-
-    " Check pylint for python 
-    " let g:syntastic_python_checkers = ['flake8'] 
-    let g:syntastic_error_symbol = "✗"
-    let g:syntastic_warning_symbol = "⚠"
-
+" {{{ ale
+    let g:ale_sign_error = '✗'
+    let g:ale_sign_warning = '⚠'
+    " suppress the display of errors when you move the cursor onto their line (prevent cursor from disappearing)
+    let g:ale_echo_cursor = 0
 " }}}
+
+
 
 " {{{ flake8
     " let g:flake8_show_in_gutter=1  " show signs in the gutter
     " let g:flake8_show_in_file=1  " show marks in the file
 " }}}
+
+
 
 " {{{ snippets
     " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
