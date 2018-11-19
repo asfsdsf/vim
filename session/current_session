@@ -1,0 +1,776 @@
+let SessionLoad = 1
+if &cp | set nocp | endif
+let s:cpo_save=&cpo
+set cpo&vim
+imap <Nul> <C-Space>
+inoremap <expr> <Up> pumvisible() ? "\" : "\<Up>"
+inoremap <expr> <Down> pumvisible() ? "\" : "\<Down>"
+inoremap <Plug>TComment_9 :call tcomment#SetOption("count", 9)
+inoremap <Plug>TComment_8 :call tcomment#SetOption("count", 8)
+inoremap <Plug>TComment_7 :call tcomment#SetOption("count", 7)
+inoremap <Plug>TComment_6 :call tcomment#SetOption("count", 6)
+inoremap <Plug>TComment_5 :call tcomment#SetOption("count", 5)
+inoremap <Plug>TComment_4 :call tcomment#SetOption("count", 4)
+inoremap <Plug>TComment_3 :call tcomment#SetOption("count", 3)
+inoremap <Plug>TComment_2 :call tcomment#SetOption("count", 2)
+inoremap <Plug>TComment_1 :call tcomment#SetOption("count", 1)
+inoremap <Plug>TComment_s :TCommentAs =&ft_
+inoremap <Plug>TComment_n :TCommentAs =&ft 
+inoremap <Plug>TComment_a :TCommentAs 
+inoremap <Plug>TComment_b :TCommentBlock mode=#
+inoremap <Plug>TComment_i v:TCommentInline mode=#
+inoremap <Plug>TComment_r :TCommentRight
+inoremap <Plug>TComment_  :TComment 
+inoremap <Plug>TComment_p :norm! m`vip:TComment``
+inoremap <Plug>TComment_ :TComment
+inoremap <silent> <SNR>58_AutoPairsReturn =AutoPairsReturn()
+inoremap <Plug>(emmet-anchorize-summary) =emmet#util#closePopup()=emmet#anchorizeURL(1)
+inoremap <Plug>(emmet-anchorize-url) =emmet#util#closePopup()=emmet#anchorizeURL(0)
+inoremap <Plug>(emmet-remove-tag) =emmet#util#closePopup()=emmet#removeTag()
+inoremap <Plug>(emmet-split-join-tag) :call emmet#splitJoinTag()
+inoremap <Plug>(emmet-toggle-comment) =emmet#util#closePopup()=emmet#toggleComment()
+inoremap <Plug>(emmet-image-size) =emmet#util#closePopup()=emmet#imageSize()
+inoremap <Plug>(emmet-move-prev-item) :call emmet#moveNextPrevItem(1)
+inoremap <Plug>(emmet-move-next-item) :call emmet#moveNextPrevItem(0)
+inoremap <Plug>(emmet-move-prev) :call emmet#moveNextPrev(1)
+inoremap <Plug>(emmet-move-next) :call emmet#moveNextPrev(0)
+inoremap <Plug>(emmet-balance-tag-outword) :call emmet#balanceTag(-1)
+inoremap <Plug>(emmet-balance-tag-inward) :call emmet#balanceTag(1)
+inoremap <Plug>(emmet-update-tag) =emmet#util#closePopup()=emmet#updateTag()
+inoremap <Plug>(emmet-expand-word) =emmet#util#closePopup()=emmet#expandAbbr(1,"")
+inoremap <Plug>(emmet-expand-abbr) =emmet#util#closePopup()=emmet#expandAbbr(0,"")
+inoremap <silent> <Plug>(fzf-maps-i) :call fzf#vim#maps('i', 0)
+inoremap <expr> <Plug>(fzf-complete-buffer-line) fzf#vim#complete#buffer_line()
+inoremap <expr> <Plug>(fzf-complete-line) fzf#vim#complete#line()
+inoremap <expr> <Plug>(fzf-complete-file-ag) fzf#vim#complete#path('ag -l -g ""')
+inoremap <expr> <Plug>(fzf-complete-file) fzf#vim#complete#path("find . -path '*/\.*' -prune -o -type f -print -o -type l -print | sed 's:^..::'")
+inoremap <expr> <Plug>(fzf-complete-path) fzf#vim#complete#path("find . -path '*/\.*' -prune -o -print | sed '1d;s:^..::'")
+inoremap <expr> <Plug>(fzf-complete-word) fzf#vim#complete#word()
+inoremap <expr> <S-Tab> pumvisible() ? "\" : "\<S-Tab>"
+inoremap <silent> <C-Tab> =UltiSnips#ListSnippets()
+nmap  :FindActions
+nnoremap  :YcmCompleter GoToDeclaration
+xmap <nowait> <silent>  <Plug>(VM-Visual-Cursors)
+xmap <nowait> <silent>  <Plug>(VM-Visual-Find)
+nnoremap  :CtrlPLine
+snoremap <silent>  c
+xnoremap <silent> <NL> :call UltiSnips#SaveLastVisualSelection()gvs
+snoremap <silent> <NL> :call UltiSnips#ExpandSnippet()
+nnoremap  :call Python_print()
+map  :TagbarToggle
+nmap <nowait> <silent>  <Plug>(VM-Find-Under)
+xmap <nowait> <silent>  <Plug>(VM-Find-Subword-Under)
+map  <Plug>(ctrlp)
+snoremap  "_c
+nnoremap <o> :call MaximizeToggle()
+nnoremap  :call MaximizeToggle()
+vmap c <Plug>(emmet-code-pretty)
+vmap m <Plug>(emmet-merge-lines)
+nmap A <Plug>(emmet-anchorize-summary)
+nmap a <Plug>(emmet-anchorize-url)
+nmap k <Plug>(emmet-remove-tag)
+nmap j <Plug>(emmet-split-join-tag)
+nmap / <Plug>(emmet-toggle-comment)
+nmap i <Plug>(emmet-image-size)
+nmap N <Plug>(emmet-move-prev)
+nmap n <Plug>(emmet-move-next)
+vmap D <Plug>(emmet-balance-tag-outword)
+nmap D <Plug>(emmet-balance-tag-outword)
+vmap d <Plug>(emmet-balance-tag-inward)
+nmap d <Plug>(emmet-balance-tag-inward)
+nmap u <Plug>(emmet-update-tag)
+nmap ; <Plug>(emmet-expand-word)
+vmap , <Plug>(emmet-expand-abbr)
+nmap , <Plug>(emmet-expand-abbr)
+nmap  <Plug>TComment_
+nmap 1 <Plug>TComment_1
+nmap 2 <Plug>TComment_2
+nmap 3 <Plug>TComment_3
+nmap 4 <Plug>TComment_4
+nmap 5 <Plug>TComment_5
+nmap 6 <Plug>TComment_6
+nmap 7 <Plug>TComment_7
+nmap 8 <Plug>TComment_8
+nmap 9 <Plug>TComment_9
+vmap 9 <Plug>TComment_9
+omap 9 <Plug>TComment_9
+vmap 8 <Plug>TComment_8
+omap 8 <Plug>TComment_8
+vmap 7 <Plug>TComment_7
+omap 7 <Plug>TComment_7
+vmap 6 <Plug>TComment_6
+omap 6 <Plug>TComment_6
+vmap 5 <Plug>TComment_5
+omap 5 <Plug>TComment_5
+vmap 4 <Plug>TComment_4
+omap 4 <Plug>TComment_4
+vmap 3 <Plug>TComment_3
+omap 3 <Plug>TComment_3
+vmap 2 <Plug>TComment_2
+omap 2 <Plug>TComment_2
+vmap 1 <Plug>TComment_1
+omap 1 <Plug>TComment_1
+map ca <Plug>TComment_ca
+map cc <Plug>TComment_cc
+map s <Plug>TComment_s
+map n <Plug>TComment_n
+map a <Plug>TComment_a
+map b <Plug>TComment_b
+map i <Plug>TComment_i
+map r <Plug>TComment_r
+map   <Plug>TComment_ 
+map p <Plug>TComment_p
+vmap  <Plug>TComment_
+omap  <Plug>TComment_
+xnoremap <silent> @(targets) :call targets#do()
+onoremap <silent> @(targets) :call targets#do()
+xmap <expr> A targets#e('A', 'A')
+omap <expr> A targets#e('A', 'A')
+xmap <expr> I targets#e('I', 'I')
+omap <expr> I targets#e('I', 'I')
+xmap S <Plug>VSurround
+nnoremap [e :w:Sc:ll
+smap \__ <Plug>TComment_\__
+nmap \__ <Plug>TComment_\__
+nmap <nowait> <silent> \A <Plug>(VM-Select-All)
+nnoremap \d :YcmShowDetailedDiagnostic
+map \_s <Plug>TComment_\_s
+map \_n <Plug>TComment_\_n
+map \_a <Plug>TComment_\_a
+map \_b <Plug>TComment_\_b
+map \_r <Plug>TComment_\_r
+xmap \_i <Plug>TComment_\_i
+map \_  <Plug>TComment_\_ 
+map \_p <Plug>TComment_\_p
+xmap \__ <Plug>TComment_\__
+omap \__ <Plug>TComment_\__
+nmap \e :Errors 
+omap \	 <Plug>(fzf-maps-o)
+xmap \	 <Plug>(fzf-maps-x)
+nmap \	 <Plug>(fzf-maps-n)
+nnoremap \q :YcmCompleter GetDoc
+map \n :NERDTreeToggle
+xmap <expr> a targets#e('a', 'a')
+omap <expr> a targets#e('a', 'a')
+nmap cS <Plug>CSurround
+nmap cs <Plug>Csurround
+nmap ds <Plug>Dsurround
+nmap <nowait> <silent> gs <Plug>(VM-Select-Operator)
+nmap <nowait> <silent> g/ <Plug>(VM-Start-Regex-Search)
+nmap <nowait> <silent> g  <Plug>(VM-Add-Cursor-At-Pos)
+xmap <nowait> <silent> g/ <Plug>(VM-Visual-Regex)
+vmap gx <Plug>NetrwBrowseXVis
+nmap gx <Plug>NetrwBrowseX
+xmap gS <Plug>VgSurround
+xmap g> <Plug>TComment_Comment
+nmap <silent> g>b <Plug>TComment_Commentb
+nmap <silent> g>c <Plug>TComment_Commentc
+nmap <silent> g> <Plug>TComment_Comment
+xmap g< <Plug>TComment_Uncomment
+nmap <silent> g<b <Plug>TComment_Uncommentb
+nmap <silent> g<c <Plug>TComment_Uncommentc
+nmap <silent> g< <Plug>TComment_Uncomment
+xmap gc <Plug>TComment_gc
+nmap <silent> gcb <Plug>TComment_gcb
+nmap <silent> gcc <Plug>TComment_gcc
+nmap <silent> gc9c <Plug>TComment_gc9c
+nmap <silent> gc9 <Plug>TComment_gc9
+nmap <silent> gc8c <Plug>TComment_gc8c
+nmap <silent> gc8 <Plug>TComment_gc8
+nmap <silent> gc7c <Plug>TComment_gc7c
+nmap <silent> gc7 <Plug>TComment_gc7
+nmap <silent> gc6c <Plug>TComment_gc6c
+nmap <silent> gc6 <Plug>TComment_gc6
+nmap <silent> gc5c <Plug>TComment_gc5c
+nmap <silent> gc5 <Plug>TComment_gc5
+nmap <silent> gc4c <Plug>TComment_gc4c
+nmap <silent> gc4 <Plug>TComment_gc4
+nmap <silent> gc3c <Plug>TComment_gc3c
+nmap <silent> gc3 <Plug>TComment_gc3
+nmap <silent> gc2c <Plug>TComment_gc2c
+nmap <silent> gc2 <Plug>TComment_gc2
+nmap <silent> gc1c <Plug>TComment_gc1c
+nmap <silent> gc1 <Plug>TComment_gc1
+nmap <silent> gc <Plug>TComment_gc
+omap ic <Plug>TComment_ic
+vmap ic <Plug>TComment_ic
+xmap <expr> i targets#e('i', 'i')
+omap <expr> i targets#e('i', 'i')
+nmap ySS <Plug>YSsurround
+nmap ySs <Plug>YSsurround
+nmap yss <Plug>Yssurround
+nmap yS <Plug>YSurround
+nmap ys <Plug>Ysurround
+nnoremap <Plug>TComment_ :TComment
+snoremap <Plug>TComment_\__ :TComment
+nnoremap <Plug>TComment_\__ :TComment
+nnoremap <Plug>TComment_1 :call tcomment#SetOption("count", 1)
+nnoremap <Plug>TComment_2 :call tcomment#SetOption("count", 2)
+nnoremap <Plug>TComment_3 :call tcomment#SetOption("count", 3)
+nnoremap <Plug>TComment_4 :call tcomment#SetOption("count", 4)
+nnoremap <Plug>TComment_5 :call tcomment#SetOption("count", 5)
+nnoremap <Plug>TComment_6 :call tcomment#SetOption("count", 6)
+nnoremap <Plug>TComment_7 :call tcomment#SetOption("count", 7)
+nnoremap <Plug>TComment_8 :call tcomment#SetOption("count", 8)
+nnoremap <Plug>TComment_9 :call tcomment#SetOption("count", 9)
+nmap <Plug>(VM-Mouse-Column) :call vm#commands#mouse_column()
+nmap <Plug>(VM-Mouse-Word) <LeftMouse><Plug>(VM-Find-Under)
+nmap <Plug>(VM-Mouse-Cursor) <LeftMouse>g 
+nnoremap <expr> <Plug>(VM-?) vm#commands#regex_reset('?')
+nnoremap <expr> <Plug>(VM-/) vm#commands#regex_reset('/')
+nnoremap <expr> <Plug>(VM-:) vm#commands#regex_reset(':')
+nnoremap <Plug>(VM-Run-Last-Visual) :call b:VM_Selection.Edit.run_visual(g:VM.last_visual[0], g:VM.last_visual[1])
+nnoremap <Plug>(VM-Run-Visual) :call b:VM_Selection.Edit.run_visual(-1, 0)
+nnoremap <Plug>(VM-Run-Last-Normal) :call b:VM_Selection.Edit.run_normal(g:VM.last_normal[0] ,g:VM.last_normal[1], v:count1, 1)
+nnoremap <Plug>(VM-Run-Normal) :call b:VM_Selection.Edit.run_normal(-1, 1,  v:count1,1)
+nnoremap <Plug>(VM-Run-Last-Ex) :call b:VM_Selection.Edit.run_ex(v:count1, g:VM.last_ex)
+nnoremap <Plug>(VM-Run-Ex) :call b:VM_Selection.Edit.run_ex(v:count1)
+nnoremap <Plug>(VM-Run-Macro) :call b:VM_Selection.Edit.run_macro(0)
+nnoremap <Plug>(VM-Surround) :call b:VM_Selection.Edit.surround()
+nnoremap <Plug>(VM-Run-Dot) :call b:VM_Selection.Edit.run_normal('.', 0, v:count1, 0)
+nnoremap <Plug>(VM-Zero-Numbers-Append) :call b:VM_Selection.Edit.numbers(v:count, 1)
+nnoremap <Plug>(VM-Zero-Numbers) :call b:VM_Selection.Edit.numbers(v:count, 0)
+nnoremap <Plug>(VM-Numbers-Append) :call b:VM_Selection.Edit.numbers(v:count1, 1)
+nnoremap <Plug>(VM-Numbers) :call b:VM_Selection.Edit.numbers(v:count1, 0)
+nnoremap <Plug>(VM-Align-Regex) :call vm#commands#align_regex()
+nnoremap <Plug>(VM-Align-Char) :call vm#commands#align_char(v:count1)
+nnoremap <Plug>(VM-Align) :call vm#commands#align()
+nnoremap <Plug>(VM-Duplicate) :call b:VM_Selection.Edit.duplicate()
+nnoremap <Plug>(VM-Transpose) :call b:VM_Selection.Edit.transpose()
+nnoremap <Plug>(VM-Move-Left) :call b:VM_Selection.Edit.shift(0)
+nnoremap <Plug>(VM-Move-Right) :call b:VM_Selection.Edit.shift(1)
+nnoremap <Plug>(VM-P-Paste-Normal) :call b:VM_Selection.Edit.paste((g:VM.extend_mode? 1 : 1), 1, g:VM.extend_mode, v:register)
+nnoremap <Plug>(VM-p-Paste-Normal) :call b:VM_Selection.Edit.paste((g:VM.extend_mode? 1 : 0), 1, g:VM.extend_mode, v:register)
+nnoremap <Plug>(VM-P-Paste-Regions) :call b:VM_Selection.Edit.paste((g:VM.extend_mode? 1 : 1), 0, g:VM.extend_mode, v:register)
+nnoremap <Plug>(VM-p-Paste-Regions) :call b:VM_Selection.Edit.paste((g:VM.extend_mode? 1 : 0), 0, g:VM.extend_mode, v:register)
+nnoremap <Plug>(VM-Transform-Regions) :call b:VM_Selection.Edit.replace_expression()
+nnoremap <Plug>(VM-Replace-Pattern) :call b:VM_Selection.Edit.replace_pattern()
+nnoremap <Plug>(VM-Replace) :call b:VM_Selection.Edit.replace()
+nnoremap <Plug>(VM-Delete-Exit) :call b:VM_Selection.Edit.delete(g:VM.extend_mode, v:register, v:count1, 1):call vm#reset()
+nnoremap <Plug>(VM-Delete) :call b:VM_Selection.Edit.delete(g:VM.extend_mode, v:register, v:count1, 1)
+nnoremap <Plug>(VM-C) :call vm#operators#cursors('c', 0, v:register, 'c$')
+nnoremap <Plug>(VM-c) :call b:VM_Selection.Edit.change(g:VM.extend_mode, v:count1, v:register)
+nnoremap <Plug>(VM-O) :call b:VM_Selection.Insert.key('O')
+nnoremap <Plug>(VM-o) :call b:VM_Selection.Insert.key('o')
+nnoremap <Plug>(VM-I) :call b:VM_Selection.Insert.key('I')
+nnoremap <Plug>(VM-i) :call b:VM_Selection.Insert.key('i')
+nnoremap <Plug>(VM-A) :call b:VM_Selection.Insert.key('A')
+nnoremap <Plug>(VM-a) :call b:VM_Selection.Insert.key('a')
+nnoremap <Plug>(VM-Decrease) :call b:VM_Selection.Edit.run_normal('', 0, v:count1, 0)
+nnoremap <Plug>(VM-Increase) :call b:VM_Selection.Edit.run_normal('', 0, v:count1, 0)
+nnoremap <Plug>(VM-Dot) :call b:VM_Selection.Edit.dot()
+nnoremap <Plug>(VM-Del) :call b:VM_Selection.Edit.special('del')
+nnoremap <Plug>(VM-~) :call b:VM_Selection.Edit.run_normal('~', 0, 1, 0):silent! undojoin
+nnoremap <Plug>(VM-J) :call b:VM_Selection.Edit.run_normal('J', 0, v:count1, 0):silent! undojoin
+nnoremap <Plug>(VM-X) :call b:VM_Selection.Edit.run_normal('X', 0, v:count1, 0):silent! undojoin
+nnoremap <Plug>(VM-x) :call b:VM_Selection.Edit.run_normal('x', 0, v:count1, 0):silent! undojoin
+nnoremap <Plug>(VM-Y) :call vm#operators#cursors('y', 0, v:register, 'y$')
+nnoremap <Plug>(VM-D) :call vm#operators#cursors('d', 0, v:register, 'd$')
+nnoremap <Plug>(VM-Merge-To-Bol) :call vm#commands#merge_to_beol(0, 0)
+nnoremap <Plug>(VM-Merge-To-Eol) :call vm#commands#merge_to_beol(1, 0)
+nnoremap <Plug>(VM-Enlarge) :call vm#commands#shrink_or_enlarge(0, 0)
+nnoremap <Plug>(VM-Shrink) :call vm#commands#shrink_or_enlarge(1, 0)
+nnoremap <Plug>(VM-This-Select-BBW) :call vm#commands#motion('BBW', v:count1, 1, 1)
+nnoremap <Plug>(VM-Select-BBW) :call vm#commands#motion('BBW', v:count1, 1, 0)
+nnoremap <Plug>(VM-This-Select-gE) :call vm#commands#motion('gE', v:count1, 1, 1)
+nnoremap <Plug>(VM-Select-gE) :call vm#commands#motion('gE', v:count1, 1, 0)
+nnoremap <Plug>(VM-This-Select-ge) :call vm#commands#motion('ge', v:count1, 1, 1)
+nnoremap <Plug>(VM-Select-ge) :call vm#commands#motion('ge', v:count1, 1, 0)
+nnoremap <Plug>(VM-This-Select-E) :call vm#commands#motion('E', v:count1, 1, 1)
+nnoremap <Plug>(VM-Select-E) :call vm#commands#motion('E', v:count1, 1, 0)
+nnoremap <Plug>(VM-This-Select-e) :call vm#commands#motion('e', v:count1, 1, 1)
+nnoremap <Plug>(VM-Select-e) :call vm#commands#motion('e', v:count1, 1, 0)
+nnoremap <Plug>(VM-This-Select-B) :call vm#commands#motion('B', v:count1, 1, 1)
+nnoremap <Plug>(VM-Select-B) :call vm#commands#motion('B', v:count1, 1, 0)
+nnoremap <Plug>(VM-This-Select-b) :call vm#commands#motion('b', v:count1, 1, 1)
+nnoremap <Plug>(VM-Select-b) :call vm#commands#motion('b', v:count1, 1, 0)
+nnoremap <Plug>(VM-This-Select-W) :call vm#commands#motion('W', v:count1, 1, 1)
+nnoremap <Plug>(VM-Select-W) :call vm#commands#motion('W', v:count1, 1, 0)
+nnoremap <Plug>(VM-This-Select-w) :call vm#commands#motion('w', v:count1, 1, 1)
+nnoremap <Plug>(VM-Select-w) :call vm#commands#motion('w', v:count1, 1, 0)
+nnoremap <Plug>(VM-This-Select-l) :call vm#commands#motion('l', v:count1, 1, 1)
+nnoremap <Plug>(VM-Select-l) :call vm#commands#motion('l', v:count1, 1, 0)
+nnoremap <Plug>(VM-This-Select-k) :call vm#commands#motion('k', v:count1, 1, 1)
+nnoremap <Plug>(VM-Select-k) :call vm#commands#motion('k', v:count1, 1, 0)
+nnoremap <Plug>(VM-This-Select-j) :call vm#commands#motion('j', v:count1, 1, 1)
+nnoremap <Plug>(VM-Select-j) :call vm#commands#motion('j', v:count1, 1, 0)
+nnoremap <Plug>(VM-This-Select-h) :call vm#commands#motion('h', v:count1, 1, 1)
+nnoremap <Plug>(VM-Select-h) :call vm#commands#motion('h', v:count1, 1, 0)
+nnoremap <Plug>(VM-Motion-T) :call vm#commands#find_motion('T', '', 0)
+nnoremap <Plug>(VM-Motion-t) :call vm#commands#find_motion('t', '', 0)
+nnoremap <Plug>(VM-Motion-F) :call vm#commands#find_motion('F', '', 0)
+nnoremap <Plug>(VM-Motion-f) :call vm#commands#find_motion('f', '', 0)
+nnoremap <Plug>(VM-This-Motion-gE) :call vm#commands#motion('gE',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-gE) :call vm#commands#motion('gE', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-ge) :call vm#commands#motion('ge',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-ge) :call vm#commands#motion('ge', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-%) :call vm#commands#motion('%',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-%) :call vm#commands#motion('%', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-^) :call vm#commands#motion('^',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-^) :call vm#commands#motion('^', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-0) :call vm#commands#motion('0',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-0) :call vm#commands#motion('0', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-$) :call vm#commands#motion('$',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-$) :call vm#commands#motion('$', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-;) :call vm#commands#motion(';',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-;) :call vm#commands#motion(';', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-,) :call vm#commands#motion(',',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-,) :call vm#commands#motion(',', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-E) :call vm#commands#motion('E',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-E) :call vm#commands#motion('E', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-e) :call vm#commands#motion('e',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-e) :call vm#commands#motion('e', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-B) :call vm#commands#motion('B',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-B) :call vm#commands#motion('B', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-b) :call vm#commands#motion('b',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-b) :call vm#commands#motion('b', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-W) :call vm#commands#motion('W',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-W) :call vm#commands#motion('W', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-w) :call vm#commands#motion('w',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-w) :call vm#commands#motion('w', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-l) :call vm#commands#motion('l',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-l) :call vm#commands#motion('l', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-k) :call vm#commands#motion('k',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-k) :call vm#commands#motion('k', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-j) :call vm#commands#motion('j',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-j) :call vm#commands#motion('j', v:count1, 0, 0)
+nnoremap <Plug>(VM-This-Motion-h) :call vm#commands#motion('h',v:count1, 0, 1)
+nnoremap <Plug>(VM-Motion-h) :call vm#commands#motion('h', v:count1, 0, 0)
+nnoremap <Plug>(VM-Show-Infoline) :call b:VM_Selection.Funcs.count_msg(2)
+nnoremap <Plug>(VM-Undo-Visual) :call vm#commands#undo()
+nnoremap <Plug>(VM-Remove-Every-n-Regions) :call vm#commands#remove_every_n_regions(v:count)
+nnoremap <Plug>(VM-Remove-Last-Region) :call b:VM_Selection.Global.remove_last_region()
+nnoremap <Plug>(VM-Remove-Region) :call vm#commands#skip(1)
+nnoremap <Plug>(VM-q-Skip) :call vm#commands#skip(0)
+nnoremap <Plug>(VM-Skip-Region) :call vm#commands#skip(0)
+nnoremap <Plug>(VM-Seek-Down) :call vm#commands#seek_down()
+nnoremap <Plug>(VM-Seek-Up) :call vm#commands#seek_up()
+nnoremap <Plug>(VM-Find-Prev) :call vm#commands#find_prev(0, 0)
+nnoremap <Plug>(VM-Find-Next) :call vm#commands#find_next(0, 0)
+nnoremap <Plug>(VM-F2-Prev) :call vm#commands#find_prev(0, 1)
+nnoremap <Plug>(VM-F3-Next) :call vm#commands#find_next(0, 1)
+nnoremap <Plug>(VM-Goto-Prev) :call vm#commands#find_prev(0, 1)
+nnoremap <Plug>(VM-Goto-Next) :call vm#commands#find_next(0, 1)
+nnoremap <Plug>(VM-Invert-Direction) :call vm#commands#invert_direction(1)
+nnoremap <Plug>(VM-Undo) u:call b:VM_Selection.Global.update_regions()
+nnoremap <Plug>(VM-Reset) :call vm#reset()
+nnoremap <Plug>(VM-Switch-Mode) :call b:VM_Selection.Global.change_mode(1)
+nnoremap <Plug>(VM-Merge-Regions) :call b:VM_Selection.Global.merge_regions()
+nnoremap <Plug>(VM-Filter-Lines-Strip) :call vm#special#commands#filter_lines(1)
+nnoremap <Plug>(VM-Filter-Lines) :call vm#special#commands#filter_lines(0)
+nnoremap <Plug>(VM-Regions-To-Buffer) :call vm#special#commands#regions_to_buffer()
+nnoremap <Plug>(VM-Filter-Regions) :call vm#special#commands#filter_regions()
+nnoremap <Plug>(VM-Erase-Regions) :call vm#commands#erase_regions(1)
+nnoremap <Plug>(VM-Tools-Menu) :call vm#special#commands#menu()
+nnoremap <Plug>(VM-Show-Registers) :call b:VM_Selection.Funcs.show_registers()
+nnoremap <Plug>(VM-Show-Regions-Info) :call b:VM_Selection.Funcs.regions_contents()
+nnoremap <Plug>(VM-Case-Conversion-Menu) :call b:VM_Selection.Case.menu()
+nnoremap <Plug>(VM-Search-Menu) :call b:VM_Selection.Search.menu()
+nnoremap <Plug>(VM-Remove-Search-Regions) :call b:VM_Selection.Search.remove(1)
+nnoremap <Plug>(VM-Remove-Search) :call b:VM_Selection.Search.remove(0)
+nnoremap <Plug>(VM-Add-Search) :call b:VM_Selection.Search.get()
+nnoremap <Plug>(VM-Read-From-Search) :call b:VM_Selection.Search.get_slash_reg()
+nnoremap <Plug>(VM-Rewrite-All-Search) :call b:VM_Selection.Search.rewrite(0)
+nnoremap <Plug>(VM-Rewrite-Last-Search) :call b:VM_Selection.Search.rewrite(1)
+nnoremap <Plug>(VM-Case-Setting) :call b:VM_Selection.Search.case()
+nnoremap <Plug>(VM-Show-Help) :call vm#special#help#show()
+nnoremap <Plug>(VM-Toggle-Only-This-Region) :call b:VM_Selection.Funcs.toggle_option('only_this_always', 1)
+nnoremap <Plug>(VM-Toggle-Whole-Word) :call b:VM_Selection.Funcs.toggle_option('whole_word', 1)
+nnoremap <Plug>(VM-Toggle-Debug) :let g:VM_debug = !g:VM_debug
+nnoremap <Plug>(VM-Toggle-Block) :call b:VM_Selection.Funcs.toggle_option('block_mode', 1)
+nnoremap <Plug>(VM-Toggle-Multiline) :call b:VM_Selection.Funcs.toggle_option('multiline', 1)
+nnoremap <Plug>(VM-Toggle-Mappings) :call b:VM_Selection.Maps.mappings_toggle()
+nnoremap <Plug>(VM-Find-A-Whole-Word) :call vm#commands#find_under(0, 1, 1)
+nnoremap <Plug>(VM-Find-I-Whole-Word) :call vm#commands#find_under(0, 1, 0)
+nnoremap <Plug>(VM-Find-A-Word) :call vm#commands#find_under(0, 0, 1)
+nnoremap <Plug>(VM-Find-I-Word) :call vm#commands#find_under(0, 0, 0)
+nnoremap <Plug>(VM-Find-Under) :call vm#commands#ctrld(v:count1)
+nnoremap <Plug>(VM-Remove-Empty-Lines) :call vm#commands#remove_empty_lines()
+nnoremap <Plug>(VM-Split-Regions) :call vm#visual#split()
+xnoremap <Plug>(VM-Visual-Subtract) :call vm#commands#from_visual('subtract')
+xnoremap <Plug>(VM-Visual-Add) :call vm#commands#from_visual('add')
+xnoremap <Plug>(VM-Visual-Cursors) :call vm#commands#from_visual('cursors')
+nnoremap <Plug>(VM-Select-All) :call vm#commands#find_all(0, 1, 0)
+nnoremap <Plug>(VM-Select-Line-Up) :call vm#commands#expand_line(0)
+nnoremap <Plug>(VM-Select-Line-Down) :call vm#commands#expand_line(1)
+nnoremap <Plug>(VM-Select-Cursor-Up) :call vm#commands#add_cursor_up(1, v:count1)
+nnoremap <Plug>(VM-Select-Cursor-Down) :call vm#commands#add_cursor_down(1, v:count1)
+nnoremap <Plug>(VM-Add-Cursor-Up) :call vm#commands#add_cursor_up(0, v:count1)
+nnoremap <Plug>(VM-Add-Cursor-Down) :call vm#commands#add_cursor_down(0, v:count1)
+nnoremap <Plug>(VM-Add-Cursor-At-Word) :call vm#commands#add_cursor_at_word(1, 1)
+nnoremap <Plug>(VM-Add-Cursor-At-Pos) :call vm#commands#add_cursor_at_pos(0)
+xmap <silent> <expr> <Plug>(VM-Visual-Find) vm#operators#find(1, 1)
+nmap <silent> <expr> <Plug>(VM-Find-Operator) vm#operators#find(1, 0)
+nnoremap <Plug>(VM-Select-All-Operator) :call vm#operators#select(1, v:count)
+nmap <silent> <Plug>(VM-Select-Operator) :call vm#operators#select(0, 0)y
+vnoremap <silent> <Plug>NetrwBrowseXVis :call netrw#BrowseXVis()
+nnoremap <silent> <Plug>NetrwBrowseX :call netrw#BrowseX(expand((exists("g:netrw_gx")? g:netrw_gx : '<cfile>')),netrw#CheckIfRemote())
+xnoremap <silent> <Plug>(Limelight) :Limelight
+nnoremap <silent> <Plug>(Limelight) :set opfunc=limelight#operatorg@
+snoremap <silent> <Del> c
+snoremap <silent> <BS> c
+snoremap <silent> <C-Tab> :call UltiSnips#ListSnippets()
+nnoremap <silent> <Plug>SurroundRepeat .
+nnoremap <silent> <Plug>TComment_gc9c :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_gc9cg@
+nnoremap <silent> <Plug>TComment_gc8c :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_gc8cg@
+nnoremap <silent> <Plug>TComment_gc7c :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_gc7cg@
+nnoremap <silent> <Plug>TComment_gc6c :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_gc6cg@
+nnoremap <silent> <Plug>TComment_gc5c :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_gc5cg@
+nnoremap <silent> <Plug>TComment_gc4c :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_gc4cg@
+nnoremap <silent> <Plug>TComment_gc3c :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_gc3cg@
+nnoremap <silent> <Plug>TComment_gc2c :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_gc2cg@
+nnoremap <silent> <Plug>TComment_gc1c :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_gc1cg@
+vnoremap <Plug>TComment_9 :call tcomment#SetOption("count", 9)
+onoremap <Plug>TComment_9 :call tcomment#SetOption("count", 9)
+vnoremap <Plug>TComment_8 :call tcomment#SetOption("count", 8)
+onoremap <Plug>TComment_8 :call tcomment#SetOption("count", 8)
+vnoremap <Plug>TComment_7 :call tcomment#SetOption("count", 7)
+onoremap <Plug>TComment_7 :call tcomment#SetOption("count", 7)
+vnoremap <Plug>TComment_6 :call tcomment#SetOption("count", 6)
+onoremap <Plug>TComment_6 :call tcomment#SetOption("count", 6)
+vnoremap <Plug>TComment_5 :call tcomment#SetOption("count", 5)
+onoremap <Plug>TComment_5 :call tcomment#SetOption("count", 5)
+vnoremap <Plug>TComment_4 :call tcomment#SetOption("count", 4)
+onoremap <Plug>TComment_4 :call tcomment#SetOption("count", 4)
+vnoremap <Plug>TComment_3 :call tcomment#SetOption("count", 3)
+onoremap <Plug>TComment_3 :call tcomment#SetOption("count", 3)
+vnoremap <Plug>TComment_2 :call tcomment#SetOption("count", 2)
+onoremap <Plug>TComment_2 :call tcomment#SetOption("count", 2)
+vnoremap <Plug>TComment_1 :call tcomment#SetOption("count", 1)
+onoremap <Plug>TComment_1 :call tcomment#SetOption("count", 1)
+nnoremap <silent> <Plug>TComment_gC :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_gCg@
+nnoremap <silent> <Plug>TComment_gc :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_gcg@
+xnoremap <Plug>TComment_gc :TCommentMaybeInline
+nnoremap <silent> <Plug>TComment_gcb :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_gcbg@
+nnoremap <silent> <Plug>TComment_gcc :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_gccg@$
+noremap <Plug>TComment_ic :call tcomment#textobject#InlineComment()
+xnoremap <silent> <Plug>TComment_Comment :if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | '<,'>TCommentMaybeInline!
+nnoremap <silent> <Plug>TComment_Commentb :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_Commentbg@
+nnoremap <silent> <Plug>TComment_Commentc :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_Commentcg@$
+nnoremap <silent> <Plug>TComment_Commentl :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_Commentlg@$
+nnoremap <silent> <Plug>TComment_Comment :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_Commentg@
+xnoremap <silent> <Plug>TComment_Uncomment :if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | call tcomment#SetOption("mode_extra", "U") | '<,'>TCommentMaybeInline
+nnoremap <silent> <Plug>TComment_Uncommentb :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_Uncommentbg@
+nnoremap <silent> <Plug>TComment_Uncommentc :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_Uncommentcg@$
+nnoremap <silent> <Plug>TComment_Uncomment :call tcomment#ResetOption() | if v:count > 0 | call tcomment#SetOption("count", v:count) | endif | let w:tcommentPos = getpos(".") |set opfunc=TCommentOpFunc_Uncommentg@
+noremap <Plug>TComment_\_s :TCommentAs =&ft_
+noremap <Plug>TComment_\_n :TCommentAs =&ft 
+noremap <Plug>TComment_\_a :TCommentAs 
+noremap <Plug>TComment_\_b :TCommentBlock
+noremap <Plug>TComment_\_r :TCommentRight
+xnoremap <Plug>TComment_\_i :TCommentInline
+noremap <Plug>TComment_\_  :TComment 
+noremap <Plug>TComment_\_p vip:TComment
+xnoremap <Plug>TComment_\__ :TCommentMaybeInline
+onoremap <Plug>TComment_\__ :TComment
+noremap <Plug>TComment_ca :call tcomment#SetOption("as", input("Comment as: ", &filetype, "customlist,tcomment#complete#Complete"))
+noremap <Plug>TComment_cc :call tcomment#SetOption("count", v:count1)
+noremap <Plug>TComment_s :TCommentAs =&ft_
+noremap <Plug>TComment_n :TCommentAs =&ft 
+noremap <Plug>TComment_a :TCommentAs 
+noremap <Plug>TComment_b :TCommentBlock
+noremap <Plug>TComment_i v:TCommentInline mode=I#
+noremap <Plug>TComment_r :TCommentRight
+noremap <Plug>TComment_  :TComment 
+noremap <Plug>TComment_p m`vip:TComment``
+vnoremap <Plug>TComment_ :TCommentMaybeInline
+onoremap <Plug>TComment_ :TComment
+vnoremap <Plug>(emmet-code-pretty) :call emmet#codePretty()
+vnoremap <Plug>(emmet-merge-lines) :call emmet#mergeLines()
+nnoremap <Plug>(emmet-anchorize-summary) :call emmet#anchorizeURL(1)
+nnoremap <Plug>(emmet-anchorize-url) :call emmet#anchorizeURL(0)
+nnoremap <Plug>(emmet-remove-tag) :call emmet#removeTag()
+nnoremap <Plug>(emmet-split-join-tag) :call emmet#splitJoinTag()
+nnoremap <Plug>(emmet-toggle-comment) :call emmet#toggleComment()
+nnoremap <Plug>(emmet-image-size) :call emmet#imageSize()
+nnoremap <Plug>(emmet-move-prev-item) :call emmet#moveNextPrevItem(1)
+nnoremap <Plug>(emmet-move-next-item) :call emmet#moveNextPrevItem(0)
+nnoremap <Plug>(emmet-move-prev) :call emmet#moveNextPrev(1)
+nnoremap <Plug>(emmet-move-next) :call emmet#moveNextPrev(0)
+vnoremap <Plug>(emmet-balance-tag-outword) :call emmet#balanceTag(-2)
+nnoremap <Plug>(emmet-balance-tag-outword) :call emmet#balanceTag(-1)
+vnoremap <Plug>(emmet-balance-tag-inward) :call emmet#balanceTag(2)
+nnoremap <Plug>(emmet-balance-tag-inward) :call emmet#balanceTag(1)
+nnoremap <Plug>(emmet-update-tag) :call emmet#updateTag()
+nnoremap <Plug>(emmet-expand-word) :call emmet#expandAbbr(1,"")
+vnoremap <Plug>(emmet-expand-abbr) :call emmet#expandAbbr(2,"")
+nnoremap <Plug>(emmet-expand-abbr) :call emmet#expandAbbr(3,"")
+nnoremap <silent> <Plug>(ctrlp) :CtrlP
+onoremap <silent> <Plug>(fzf-maps-o) :call fzf#vim#maps('o', 0)
+xnoremap <silent> <Plug>(fzf-maps-x) :call fzf#vim#maps('x', 0)
+nnoremap <silent> <Plug>(fzf-maps-n) :call fzf#vim#maps('n', 0)
+imap S <Plug>ISurround
+imap s <Plug>Isurround
+inoremap <expr> 	 pumvisible() ? "\" : "\	"
+inoremap <silent> <NL> =UltiSnips#ExpandSnippet()
+imap  <Plug>Isurround
+imap  <Plug>(fzf-complete-line)
+imap <NL> <Plug>(fzf-complete-file-ag)
+imap  <Plug>(fzf-complete-path)
+inoremap <expr>  fzf#vim#complete#word({'left': '14%'})
+imap A <Plug>(emmet-anchorize-summary)
+imap a <Plug>(emmet-anchorize-url)
+imap k <Plug>(emmet-remove-tag)
+imap j <Plug>(emmet-split-join-tag)
+imap / <Plug>(emmet-toggle-comment)
+imap i <Plug>(emmet-image-size)
+imap N <Plug>(emmet-move-prev)
+imap n <Plug>(emmet-move-next)
+imap D <Plug>(emmet-balance-tag-outword)
+imap d <Plug>(emmet-balance-tag-inward)
+imap u <Plug>(emmet-update-tag)
+imap ; <Plug>(emmet-expand-word)
+imap , <Plug>(emmet-expand-abbr)
+imap 9 <Plug>TComment_9
+imap 8 <Plug>TComment_8
+imap 7 <Plug>TComment_7
+imap 6 <Plug>TComment_6
+imap 5 <Plug>TComment_5
+imap 4 <Plug>TComment_4
+imap 3 <Plug>TComment_3
+imap 2 <Plug>TComment_2
+imap 1 <Plug>TComment_1
+imap s <Plug>TComment_s
+imap n <Plug>TComment_n
+imap a <Plug>TComment_a
+imap b <Plug>TComment_b
+imap i <Plug>TComment_i
+imap r <Plug>TComment_r
+imap   <Plug>TComment_ 
+imap p <Plug>TComment_p
+imap  <Plug>TComment_
+xmap <nowait> <silent> á <Plug>(VM-Visual-Add)
+nmap <nowait> <silent> ë <Plug>(VM-Add-Cursor-Up)
+xmap <nowait> <silent> Á <Plug>(VM-Visual-All)
+nmap <nowait> <silent> ê <Plug>(VM-Add-Cursor-Down)
+let &cpo=s:cpo_save
+unlet s:cpo_save
+set autoindent
+set background=dark
+set backspace=indent,eol,start
+set completefunc=youcompleteme#CompleteFunc
+set completeopt=preview,menuone
+set cpoptions=aAceFsB
+set expandtab
+set fileencodings=ucs-bom,utf-8,default,latin1
+set helplang=en
+set hidden
+set hlsearch
+set ignorecase
+set laststatus=2
+set printoptions=paper:a4
+set ruler
+set runtimepath=~/.vim,~/.vim/bundle/Vundle.vim,~/.vim/bundle/nerdtree,~/.vim/bundle/tagbar,~/.vim/bundle/supertab,~/.vim/bundle/fzf.vim,~/.vim/bundle/fzf,~/.vim/bundle/YouCompleteMe,~/.vim/bundle/vimux,~/.vim/bundle/ctrlp.vim,~/.vim/bundle/vim-visual-multi,~/.vim/bundle/syntastic,~/.vim/bundle/targets.vim,~/.vim/bundle/emmet-vim,~/.vim/bundle/auto-pairs,~/.vim/bundle/tcomment_vim,~/.vim/bundle/vim-surround,~/.vim/bundle/ultisnips,~/.vim/bundle/vim-snippets,~/.vim/bundle/vim-airline,~/.vim/bundle/vim-airline-themes,~/.vim/bundle/vim-devicons,~/.vim/bundle/gruvbox,~/.vim/bundle/badwolf,~/.vim/bundle/molokai,~/.vim/bundle/dracula-theme/vim/,~/.vim/bundle/limelight.vim,~/.vim/bundle/colorsbox,~/.vim/bundle/Apprentice,~/.vim/bundle/vim-distinguished,~/.vim/bundle/base16-vim,~/.vim/bundle/vim-hybrid,~/.vim/bundle/Sierra,~/.vim/bundle/colour-schemes,~/.vim/bundle/argonaut.vim,~/.vim/bundle/Spacegray.vim,~/.vim/bundle/Base2Tone-vim,~/.vim/bundle/spacemacs-theme.vim,/var/lib/vim/addons,/usr/share/vim/vimfiles,/usr/share/vim/vim80,/usr/share/vim/vimfiles/after,/var/lib/vim/addons/after,~/.vim/after,~/.vim/bundle/Vundle.vim,~/.vim/bundle/Vundle.vim/after,~/.vim/bundle/nerdtree/after,~/.vim/bundle/tagbar/after,~/.vim/bundle/supertab/after,~/.vim/bundle/fzf.vim/after,~/.vim/bundle/fzf/after,~/.vim/bundle/YouCompleteMe/after,~/.vim/bundle/vimux/after,~/.vim/bundle/ctrlp.vim/after,~/.vim/bundle/vim-visual-multi/after,~/.vim/bundle/syntastic/after,~/.vim/bundle/targets.vim/after,~/.vim/bundle/emmet-vim/after,~/.vim/bundle/auto-pairs/after,~/.vim/bundle/tcomment_vim/after,~/.vim/bundle/vim-surround/after,~/.vim/bundle/ultisnips/after,~/.vim/bundle/vim-snippets/after,~/.vim/bundle/vim-airline/after,~/.vim/bundle/vim-airline-themes/after,~/.vim/bundle/vim-devicons/after,~/.vim/bundle/gruvbox/after,~/.vim/bundle/badwolf/after,~/.vim/bundle/molokai/after,~/.vim/bundle/dracula-theme/vim//after,~/.vim/bundle/limelight.vim/after,~/.vim/bundle/colorsbox/after,~/.vim/bundle/Apprentice/after,~/.vim/bundle/vim-distinguished/after,~/.vim/bundle/base16-vim/after,~/.vim/bundle/vim-hybrid/after,~/.vim/bundle/Sierra/after,~/.vim/bundle/colour-schemes/after,~/.vim/bundle/argonaut.vim/after,~/.vim/bundle/Spacegray.vim/after,~/.vim/bundle/Base2Tone-vim/after,~/.vim/bundle/spacemacs-theme.vim/after
+set shiftwidth=4
+set shortmess=filnxtToOc
+set showcmd
+set showtabline=2
+set smartcase
+set smarttab
+set statusline=%#warningmsg#%{SyntasticStatuslineFlag()}%*
+set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
+set tabline=%!airline#extensions#tabline#get()
+set tabstop=4
+set termguicolors
+set ttimeout
+set ttimeoutlen=80
+set wildmenu
+let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
+let v:this_session=expand("<sfile>:p")
+silent only
+cd ~/
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
+set shortmess=aoO
+badd +260 .vimrc
+argglobal
+silent! argdel *
+$argadd .vimrc
+edit .vimrc
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winminheight=1 winheight=1 winminwidth=1 winwidth=1
+argglobal
+let s:cpo_save=&cpo
+set cpo&vim
+inoremap <buffer> <silent> <BS> =AutoPairsDelete()
+inoremap <buffer> <silent> § =AutoPairsMoveCharacter('''')
+inoremap <buffer> <silent> ¢ =AutoPairsMoveCharacter('"')
+inoremap <buffer> <silent> © =AutoPairsMoveCharacter(')')
+inoremap <buffer> <silent> ¨ =AutoPairsMoveCharacter('(')
+inoremap <buffer> <silent> Û =AutoPairsMoveCharacter('[')
+inoremap <buffer> <silent> î :call AutoPairsJump()a
+inoremap <buffer> <silent> <expr> ð AutoPairsToggle()
+inoremap <buffer> <silent> â =AutoPairsBackInsert()
+inoremap <buffer> <silent> å =AutoPairsFastWrap()
+inoremap <buffer> <silent> ý =AutoPairsMoveCharacter('}')
+inoremap <buffer> <silent> û =AutoPairsMoveCharacter('{')
+inoremap <buffer> <silent> Ý =AutoPairsMoveCharacter(']')
+inoremap <buffer> <silent> Û =AutoPairsMoveCharacter('[')
+vnoremap <buffer> <silent> [" :exe "normal! gv"|call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
+nnoremap <buffer> <silent> [" :call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
+vnoremap <buffer> <silent> [] m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "bW")
+nnoremap <buffer> <silent> [] m':call search('^\s*endf*\%[unction]\>', "bW")
+vnoremap <buffer> <silent> [[ m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "bW")
+nnoremap <buffer> <silent> [[ m':call search('^\s*fu\%[nction]\>', "bW")
+vnoremap <buffer> <silent> ]" :exe "normal! gv"|call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
+nnoremap <buffer> <silent> ]" :call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
+vnoremap <buffer> <silent> ][ m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "W")
+nnoremap <buffer> <silent> ][ m':call search('^\s*endf*\%[unction]\>', "W")
+vnoremap <buffer> <silent> ]] m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "W")
+nnoremap <buffer> <silent> ]] m':call search('^\s*fu\%[nction]\>', "W")
+inoremap <buffer> <silent>  =AutoPairsDelete()
+inoremap <buffer> <silent>   =AutoPairsSpace()
+inoremap <buffer> <silent> " =AutoPairsInsert('"')
+inoremap <buffer> <silent> ' =AutoPairsInsert('''')
+inoremap <buffer> <silent> ( =AutoPairsInsert('(')
+inoremap <buffer> <silent> ) =AutoPairsInsert(')')
+noremap <buffer> <silent> î :call AutoPairsJump()
+noremap <buffer> <silent> ð :call AutoPairsToggle()
+inoremap <buffer> <silent> [ =AutoPairsInsert('[')
+inoremap <buffer> <silent> ] =AutoPairsInsert(']')
+inoremap <buffer> <silent> ` =AutoPairsInsert('`')
+inoremap <buffer> <silent> { =AutoPairsInsert('{')
+inoremap <buffer> <silent> } =AutoPairsInsert('}')
+let &cpo=s:cpo_save
+unlet s:cpo_save
+setlocal keymap=
+setlocal noarabic
+setlocal autoindent
+setlocal backupcopy=
+setlocal balloonexpr=
+setlocal nobinary
+setlocal nobreakindent
+setlocal breakindentopt=
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=sO:\"\ -,mO:\"\ \ ,eO:\"\",:\"
+setlocal commentstring=\"%s
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=youcompleteme#CompleteFunc
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+set cursorline
+setlocal cursorline
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal expandtab
+if &filetype != 'vim'
+setlocal filetype=vim
+endif
+setlocal fixendofline
+setlocal foldcolumn=0
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldmarker={{{,}}}
+setlocal foldmethod=manual
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldtext=foldtext()
+setlocal formatexpr=
+setlocal formatoptions=croql
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal formatprg=
+setlocal grepprg=
+setlocal iminsert=0
+setlocal imsearch=-1
+setlocal include=
+setlocal includeexpr=
+setlocal indentexpr=GetVimIndent()
+setlocal indentkeys=0{,0},:,0#,!^F,o,O,e,=end,=else,=cat,=fina,=END,0\\
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,#
+setlocal keywordprg=:help
+setlocal nolinebreak
+setlocal nolisp
+setlocal lispwords=
+setlocal nolist
+setlocal makeencoding=
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:]
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=bin,octal,hex
+set number
+setlocal number
+setlocal numberwidth=4
+setlocal omnifunc=
+setlocal path=
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+set relativenumber
+setlocal relativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=4
+setlocal noshortname
+setlocal signcolumn=auto
+setlocal nosmartindent
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=%!airline#statusline(1)
+setlocal suffixesadd=
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'vim'
+setlocal syntax=vim
+endif
+setlocal tabstop=4
+setlocal tagcase=
+setlocal tags=
+setlocal termkey=
+setlocal termsize=
+setlocal textwidth=78
+setlocal thesaurus=
+setlocal noundofile
+setlocal undolevels=-123456
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+silent! normal! zE
+let s:l = 260 - ((26 * winheight(0) + 16) / 33)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+260
+normal! 07|
+tabnext 1
+if exists('s:wipebuf')
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
+set winheight=1 winwidth=20 shortmess=filnxtToOc
+set winminheight=1 winminwidth=1
+let s:sx = expand("<sfile>:p:r")."x.vim"
+if file_readable(s:sx)
+  exe "source " . fnameescape(s:sx)
+endif
+let &so = s:so_save | let &siso = s:siso_save
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :
