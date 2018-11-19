@@ -19,12 +19,15 @@ Plugin 'majutsushi/tagbar'  " file names at top bar
 Plugin 'ervandew/supertab'  " perform all your vim insert mode completions with Tab
 Plugin 'junegunn/fzf.vim'  " fuzzy find
 Plugin 'junegunn/fzf'  " fuzzy find together with plugin above
+" To recompile YouCompleteMe, run:
+" python3 install.py --clang-completer --ts-completer --java-completer
 Plugin 'Valloric/YouCompleteMe'  " auto complete engine
 Plugin 'benmills/vimux'  " vim plugin to interact with tmux
 Plugin 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
 " Plugin 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
 Plugin 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
 Plugin 'vim-syntastic/syntastic'  " Syntax checking hacks for vim
+Plugin 'w0rp/ale'  " Syntax checking for python
 Plugin 'wellle/targets.vim' " Vim plugin that provides additional text objects
 
 " Language support
@@ -66,8 +69,9 @@ Plugin 'colepeters/spacemacs-theme.vim'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
+filetype on
 " To ignore plugin indent changes, instead use:
-"filetype plugin on
+" filetype plugin on
 "
 " Brief help
 " :PluginList       - lists configured plugins
@@ -158,9 +162,10 @@ map <leader>n :NERDTreeToggle<CR>
 map <C-m> :TagbarToggle<CR>
 
 " YouCompleteMe Mappings
-nnoremap <c-f> :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap <c-b> :YcmCompleter GoToDeclaration<CR>
-" <c-p> :cancel completion
+nnoremap <c-b> :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <c-f> :YcmCompleter GoToDeclaration<CR>
+nnoremap <leader>q :YcmCompleter GetDoc<CR>
+" <c-e> :cancel completion
 
 " Mapping selecting Mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
@@ -240,8 +245,28 @@ function Python_print()
     endif
 endfunction
 
+function! MaximizeToggle()
+    if exists("s:maximize_session")
+        exec "source /home/ban/Software/vim/session/current_session"
+        call delete(s:maximize_session)
+        unlet s:maximize_session
+        let &hidden=s:maximize_hidden_save
+        unlet s:maximize_hidden_save
+    else
+        NERDTreeClose 
+        TagbarClose
+        let s:maximize_hidden_save = &hidden
+        let s:maximize_session = tempname()
+        set hidden
+        exec "mksession! /home/ban/Software/vim/session/current_session"
+        only
+  endif
+endfunction
 
-nmap <c-k> :call Python_print()<CR>
+nnoremap <c-k> :call Python_print()<CR>
+
+nnoremap <c-w><c-o> :call MaximizeToggle()<CR>
+nnoremap <c-w><o> :call MaximizeToggle()<CR>
 
 nnoremap [e :w<CR>:Sc<CR>:ll<CR>
 """""""""""""""""""""""""""""""""""""
@@ -288,6 +313,8 @@ set expandtab
 
 
 " YouCompleteMe {{{
+    " To recompile YouCompleteMe:
+    " python3 install.py --clang-completer --ts-completer --java-completer
     " open keyword completion
     let g:ycm_seed_identifiers_with_syntax=1
     "blacklist for youcompleteme
@@ -349,6 +376,7 @@ set expandtab
 " CtrlP {{{
     let g:ctrlp_extensions = [ 'line' ]
     nnoremap <c-f> :CtrlPLine<CR>
+    nnoremap <c-p> :CtrlP .<CR>
 " }}}
 
 
@@ -360,33 +388,41 @@ set expandtab
     set statusline+=%{SyntasticStatuslineFlag()}
     set statusline+=%*
 
-    let g:syntastic_always_populate_loc_list = 1
+    " let g:syntastic_always_populate_loc_list = 1
     let g:syntastic_auto_loc_list = 1
     " Whether to perform syntastic checking on opening of file 
     " This made it very slow on open, so don’t 
-    let g:syntastic_check_on_open = 0 
+    let g:syntastic_check_on_open = 1 
     " Don’t check every time i save the file 
     " I will call you when i need you 
-    " let g:syntastic_check_on_wq = 0 
+    let g:syntastic_check_on_wq = 1 
     " By default, keep syntastic in passive mode 
     let g:syntastic_mode_map = { 'mode': 'passive' } 
+    
+
     " Use :Sc to perform syntastic check 
     :command Sc :SyntasticCheck 
     " Use :Sr to reset syntastic check 
     :command Sr :SyntasticReset 
+
+
     " Check pylint for python 
-    " let g:syntastic_python_checkers = ['pylint'] 
+    " let g:syntastic_python_checkers = ['flake8'] 
     let g:syntastic_error_symbol = "✗"
     let g:syntastic_warning_symbol = "⚠"
+
 " }}}
 
-
+" {{{ flake8
+    " let g:flake8_show_in_gutter=1  " show signs in the gutter
+    " let g:flake8_show_in_file=1  " show marks in the file
+" }}}
 
 " {{{ snippets
     " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
     let g:UltiSnipsExpandTrigger="<c-j>"
-    let g:UltiSnipsJumpForwardTrigger="<c-b>"
-    let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+    let g:UltiSnipsJumpForwardTrigger="<c-f>"
+    let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 
     " If you want :UltiSnipsEdit to split your window.
     let g:UltiSnipsEditSplit="vertical"
