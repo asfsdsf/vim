@@ -55,4 +55,31 @@ e           NerdTree: explore selected dir   (Directory node mappings)
 <c-j>       snippets: trigger snippets
 <c-f>       snippets: jump forward to fill in items
 <c-b>       snippets: jump backward to fill in items
+<c-o>       Jump back to previous visited location
+<c-i>       Jump forward to next visited location
+L           Go to buttom of screen
+H           Go to top of screen
+M           Go to middle of screen
+%           Go to the match character of the pair
+[(          Go to the previous unmatched (
+[)          Go to the previous unmatched )
+[{          Go to the previous unmatched {
+[}          Go to the previous unmatched }
+vim -R      Open file by vim as read-only mode(can make changes,but can't save)
+vim -M      Open file by vim as read-only mode(can not make changes)
+vim +n      Open file and go to the nth line
+vim +/str   Go to the first match of the str pattern
+vim +?str   Go to the last match of the str pattern
+<S-right>   Go to begining of next word
+<S-left>    Go to begining of previous word
+ma          Bookmark the current location with name 'a'
+`a          Jump to the exact location of bookmark 'a'
+'a          Jump to the beginning of the line containing the bookmark 'a'
+mA          Bookmark the current location with name 'a' globally
+:marks      Display all bookmarks
+`"          Go to the position where you did last edit before exit
+`.          Go to the position of where the last change was made
+`^          Go to the position where the cursor was the last time when exiting insert mode
+gv          Start Visual mode with the same area as the previous area and the same mode.
+:'<,'>      Type : in visual mode to invoke this command.Execute command to manipulate the selected text
 
