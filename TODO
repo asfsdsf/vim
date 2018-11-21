@@ -4,24 +4,28 @@ set scrolloff=3
 " Enable hidden buffers
 set hidden
 
-" Plug 'Shougo/vimproc.vim', {'do': g:make}  " Interactive command execution in Vim.
-
-nnoremap <c-Y> "+y
-nnoremap <c-D> "+d
+nnoremap Y "+y
+nnoremap D "+d
 
 delete filetype on
 
-" "" Vim-Session
-" Plug 'xolox/vim-misc'
-" Plug 'xolox/vim-session'
 " Easier moving in tabs and windows
-nnoremap <C-J> <C-W>j<C-W>_
-nnoremap <C-K> <C-W>k<C-W>_
-nnoremap <C-L> <C-W>l<C-W>_
-nnoremap <C-H> <C-W>h<C-W>_
+nnoremap <A-J> <C-W>j<C-W>_
+nnoremap <A-K> <C-W>k<C-W>_
+nnoremap <A-L> <C-W>l<C-W>_
+nnoremap <A-H> <C-W>h<C-W>_
 
 " Moving in insert mode
 inoremap <A-h> <C-o>h
 inoremap <A-j> <C-o>j
 inoremap <A-k> <C-o>k
 inoremap <A-l> <C-o>l
+
+************************** the above has been finished ********************************
+
+" Plug 'Shougo/vimproc.vim', {'do': g:make}  " Interactive command execution in Vim.
+" "" Vim-Session
+" Plug 'xolox/vim-misc'
+" Plug 'xolox/vim-session'
+
+diff buffers , files, and so on

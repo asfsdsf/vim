@@ -1,17 +1,20 @@
+~/Software/vim/vim_tip/find_actions
 g;          Go to last edited location
 <c-^>       Switch to next buffer tab
 gt          Go to next tab
-gT          Go to last tab
+gT          Go to previous tab
 <a-j>       Add multiple cursor below
 <a-k>       Add multiple cursor above
 <c-n>       Find and extend multiple cursor in visual mode
-<c-f>       Search by lines using CtrlP(Find Strings)
+<Space>f    Search by lines using CtrlP(Find Strings everywhere)
 <c-w><c-_>  Expand current split vertically
 <c-w><c-|>  Expand current split horizontally
 <c-w><c-w>  Switch to next split
+<c-w>v      Split current window vertically
+<c-w>s      Split current window horizontally
 <c-t>       Open in new tab(CtrlP or fzf)
 t           NerdTree: Open in new tab
-<leader>n   Open NerdTree
+<Space>n   Open NerdTree
 <c-m>       Open ctags
 z<          Multiple cursor: align at cursors by character
 ]           Multiple cursor: find next
@@ -21,6 +24,8 @@ z<          Multiple cursor: align at cursors by character
 g/          Multiple cursor: start regex search
 <leader>a   Multiple cursor: select all that match pattern
 <c-c>       Multiple cursor: change match case type
+Q           Multiple cursor: cancel current selection
+q           Multiple cursor: cancel current selection in cursor mode and ignore curret selection and find the next in visual mode
 h           Move left
 j           Move down
 k           Move up
@@ -61,10 +66,6 @@ L           Go to buttom of screen
 H           Go to top of screen
 M           Go to middle of screen
 %           Go to the match character of the pair
-[(          Go to the previous unmatched (
-[)          Go to the previous unmatched )
-[{          Go to the previous unmatched {
-[}          Go to the previous unmatched }
 vim -R      Open file by vim as read-only mode(can make changes,but can't save)
 vim -M      Open file by vim as read-only mode(can not make changes)
 vim +n      Open file and go to the nth line
@@ -82,4 +83,24 @@ mA          Bookmark the current location with name 'a' globally
 `^          Go to the position where the cursor was the last time when exiting insert mode
 gv          Start Visual mode with the same area as the previous area and the same mode.
 :'<,'>      Type : in visual mode to invoke this command.Execute command to manipulate the selected text
-
+D           Delete using system register
+Y           Yank using system register
+<A-h>       Move left in insert mode
+<A-j>       Move down in insert mode
+<A-k>       Move up in insert mode
+<A-l>       Move right in insert mode
+<A-H>       Move to left split
+<A-J>       Move to down split
+<A-K>       Move to up split
+<A-L>       Move to right split
+<c-R>       To find a string under working directory
+PythonPrint Open odd python file to edit a python program to print.Press again to exit and print
+<c-e>       Open recent files
+[[          Go to preious function
+]]          Go to next function
+[]          Go to end of previous function
+][          Go to end of next function
+/           Search forward
+?           Search backward
+.           Concat two strings in ex mode
+".          Register for last inserted text

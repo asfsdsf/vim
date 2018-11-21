@@ -71,7 +71,6 @@ Plugin 'colepeters/spacemacs-theme.vim'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
-filetype on
 " To ignore plugin indent changes, instead use:
 " filetype plugin on
 "
@@ -160,7 +159,7 @@ let g:VM_maps["Visual Cursors"]           = '<C-c>'
 let g:VM_maps["Find Under"]               = '<c-n>'
 let g:VM_maps["Find Subword Under"]       = '<c-n>'
 
-map <leader>n :NERDTreeToggle<CR>
+map <Space>n :NERDTreeToggle<CR>
 map <C-m> :TagbarToggle<CR>
 
 " YouCompleteMe Mappings
@@ -235,41 +234,76 @@ let g:gruvbox_contrast = 'hard'
 """""""""""""""""""""""""""""""""""""
 " custom functin
 """""""""""""""""""""""""""""""""""""
-nmap <c-A> :FindActions<CR>
+nmap <space>a :FindActions<CR>
 
-function Python_print()
+function s:Python_print()
     if expand('%:p')=="/home/ban/Software/vim/python_for_vim.py"
         wq
         r !python /home/ban/Software/vim/python_for_vim.py
     else
         vsplit /home/ban/Software/vim/python_for_vim.py
         execute "normal!ggdG"
+"        echo "press P to use last python file"
     endif
 endfunction
+com! PythonPrint call s:Python_print()
 
-function! MaximizeToggle()
-    if exists("s:maximize_session")
-        exec "source /home/ban/Software/vim/session/current_session"
-        call delete(s:maximize_session)
-        unlet s:maximize_session
-        let &hidden=s:maximize_hidden_save
-        unlet s:maximize_hidden_save
-    else
-        NERDTreeClose 
-        TagbarClose
-        let s:maximize_hidden_save = &hidden
-        let s:maximize_session = tempname()
-        set hidden
-        exec "mksession! /home/ban/Software/vim/session/current_session"
-        only
-  endif
+" open and edit find actions file which provide useful keymaps.(Use <Space>a to
+" access the keymaps)
+function s:Open_find_actions_file()
+    12sp ~/Software/vim/vim_tip/find_actions
 endfunction
+com! OpenFindActionsFile call s:Open_find_actions_file()
 
-nnoremap <c-k> :call Python_print()<CR>
+function! s:DiffWithSaved()
+  let filetype=&ft
+  diffthis
+  vnew | r # | normal! 1Gdd
+  diffthis
+  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+endfunction
+com! DiffSaved call s:DiffWithSaved()
 
-nnoremap <c-w><c-o> :call MaximizeToggle()<CR>
-nnoremap <c-w><o> :call MaximizeToggle()<CR>
+function! s:Compared_with_clipboard()
+    diffthis
+    vnew ~/Software/vim/clipboard
+    execute 'normal!gg"_dG"+P'
+    diffthis
+endfunction
+com!CompareClipboard call s:Compared_with_clipboard()
+" exit diff mode after closing clipboard
+autocmd QuitPre ~/Software/vim/clipboard :diffoff
+" auto update difference
+autocmd TextChanged ~/Software/vim/clipboard :diffupdate
 
+
+autocmd InsertLeave * :update
+
+" nnoremap <c-w><c-o> :call MaximizeToggle()<CR>
+" nnoremap <c-w><o> :call MaximizeToggle()<CR>
+
+" Moving in insert mode
+inoremap <A-h> <left>
+inoremap <A-j> <down>
+inoremap <A-k> <up>
+inoremap <A-l> <right>
+
+" Easier moving in tabs and windows
+nnoremap <A-right> gt
+nnoremap <A-left> gT
+nnoremap <A-J> <C-W>j
+nnoremap <A-K> <C-W>k
+nnoremap <A-L> <C-W>l
+nnoremap <A-H> <C-W>h
+
+nnoremap Y "+y
+nnoremap D "+d
+
+nnoremap <Cr> o<esc>
+
+nnoremap <c-e> :CtrlPBuffer<CR>
+
+nnoremap <Space>f :Ag<CR>
 " inoremap <s-Enter> <Esc>o
 """""""""""""""""""""""""""""""""""""
 " Configuration Section
@@ -281,6 +315,9 @@ set smartcase
 " highlight all search matches
 :set hlsearch
 
+" highlight the next match while you're still typing out your search pattern
+:set hlsearch incsearch
+
 " set more visual hints in command-line mode
 set wildmenu
 
@@ -291,6 +328,17 @@ set shiftwidth=4 " When shifting, indent using four spaces
 set tabstop=4 " Indent using four spaces
 set smarttab
 set expandtab
+
+" Enable hidden buffers
+set hidden
+
+" make scroll leave a margin for 3 lines
+set scrolloff=3
+
+" set updatetime to 1 second.This is used for CursorHold event
+set updatetime=1000
+
+
 
 " Elixir {{{
     let g:tagbar_type_elixir = {
@@ -377,8 +425,10 @@ set expandtab
 
 " CtrlP {{{
     let g:ctrlp_extensions = [ 'line' ]
-    nnoremap <c-f> :CtrlPLine<CR>
-    nnoremap <c-p> :CtrlP .<CR>
+    nnoremap <c-f> :CtrlPLine %<CR>
+    nmap <c-p> :CtrlP .<CR>
+    " let g:ctrlp_map = '<c-p>'
+    let g:ctrlp_working_path_mode=2
 " }}}
 
 
@@ -415,3 +465,4 @@ set expandtab
     " If you want :UltiSnipsEdit to split your window.
     let g:UltiSnipsEditSplit="vertical"
 " }}}
+"
