@@ -25,11 +25,12 @@ Plugin 'junegunn/fzf'  " fuzzy find together with plugin above
 " To recompile YouCompleteMe, run:
 " python3 install.py --clang-completer --ts-completer --java-completer
 Plugin 'Valloric/YouCompleteMe'  " auto complete engine
+Plugin 'davidhalter/jedi-vim'  "Using the jedi autocompletion library for VIM.
 Plugin 'benmills/vimux'  " vim plugin to interact with tmux
 Plugin 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
 " Plugin 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
 Plugin 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
-" Plugin 'w0rp/ale'  " Syntax checking for python
+Plugin 'w0rp/ale'  " Syntax checking for python
 Plugin 'wellle/targets.vim' " Vim plugin that provides additional text objects
 
 " Language support
@@ -37,7 +38,8 @@ Plugin 'mattn/emmet-vim'  " for html
 
 " Generic Programming Support
 " Plugin 'Raimondi/delimitMate' " enable an auto-close chars feature
-Plugin 'jiangmiao/auto-pairs' " enable an auto-close chars feature
+" Plugin 'jiangmiao/auto-pairs' " enable an auto-close chars feature
+Plugin 'Raimondi/delimitMate'  " enable an auto-close chars feature
 Plugin 'tomtom/tcomment_vim'  " extensible & universal comment vim-plugin that also handles embedded filetypes
 Plugin 'tpope/vim-surround'  " surround.vim: quoting/parenthesizing made simple
 Plugin 'SirVer/ultisnips'  " Track the engine.
@@ -250,10 +252,11 @@ com! PythonPrint call s:Python_print()
 
 " open and edit find actions file which provide useful keymaps.(Use <Space>a to
 " access the keymaps)
-function s:Open_find_actions_file()
-    12sp ~/Software/vim/vim_tip/find_actions
-endfunction
-com! OpenFindActionsFile call s:Open_find_actions_file()
+com! OpenFindActionsFile 12sp ~/Software/vim/vim_tip/find_actions
+
+com! OpenTodoFile 12sp ~/Software/vim/TODO
+
+com! OpenFlake8Config 12sp ~/.config/flake8
 
 function! s:DiffWithSaved()
   let filetype=&ft
@@ -276,17 +279,32 @@ autocmd QuitPre ~/Software/vim/clipboard :diffoff
 " auto update difference
 autocmd TextChanged ~/Software/vim/clipboard :diffupdate
 
+autocmd FileType python nnoremap <buffer> <Space>r :w <bar> !/home/ban/Programming/Python/Anaconda/bin/python %<CR>
 
-autocmd InsertLeave * :update
+
+" autocmd InsertLeave * :update
 
 " nnoremap <c-w><c-o> :call MaximizeToggle()<CR>
 " nnoremap <c-w><o> :call MaximizeToggle()<CR>
 
 " Moving in insert mode
-inoremap <A-h> <left>
-inoremap <A-j> <down>
-inoremap <A-k> <up>
-inoremap <A-l> <right>
+
+inoremap <A-h> <c-left>
+inoremap <A-j> <c-o>o
+inoremap <A-k> <c-o>O
+inoremap <A-l> <c-right>
+
+inoremap <c-h> <left>
+inoremap <c-j> <down>
+inoremap <c-k> <up>
+inoremap <c-l> <right>
+
+inoremap <c-b> <c-o>^
+inoremap <c-e> <c-o>$
+
+inoremap <c-p> <c-o>p
+inoremap <c-d> <c-o>d
+inoremap <c-y> <c-o>y
 
 " Easier moving in tabs and windows
 nnoremap <A-right> gt
@@ -298,8 +316,6 @@ nnoremap <A-H> <C-W>h
 
 nnoremap Y "+y
 nnoremap D "+d
-
-nnoremap <Cr> o<esc>
 
 nnoremap <c-e> :CtrlPBuffer<CR>
 
@@ -438,13 +454,22 @@ set updatetime=1000
     " let g:ale_sign_warning = '⚠'
     " " suppress the display of errors when you move the cursor onto their line (prevent cursor from disappearing)
     " let g:ale_echo_cursor = 0
-    "
-    " nmap <silent> [e <Plug>(ale_previous_wrap)
-    " nmap <silent> ]e <Plug>(ale_next_wrap)
-    "
-    " let g:ale_linters = {
-    " \   'python': ['flake8'],
-    " \}
+
+    nmap <silent> [e <Plug>(ale_previous_wrap)
+    nmap <silent> ]e <Plug>(ale_next_wrap)
+
+    " Available Linters: 'flake8', 'mypy', 'prospector', 'pycodestyle', 'pyflakes', 'pylint', 'pyls', 'pyre', 'vulture'
+    let g:ale_linters = {
+    \   'python': ['flake8','pylint'],
+    \}
+
+    let g:ale_fixer= {
+    \   'python': ['autopep8'],
+    \}
+
+    " to suppress errors by flake8 globally,use OpenFlake8Config
+    " add at the end of the error line `# noqa EXXX` XXX is num to suppress an
+    " error there
 " }}}
 
 
@@ -458,7 +483,7 @@ set updatetime=1000
 
 " {{{ snippets
     " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-    let g:UltiSnipsExpandTrigger="<c-j>"
+    let g:UltiSnipsExpandTrigger="<c-:>"
     let g:UltiSnipsJumpForwardTrigger="<c-f>"
     let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 

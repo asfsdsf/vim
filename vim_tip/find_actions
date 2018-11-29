@@ -12,9 +12,15 @@ gT          Go to previous tab
 <c-w><c-w>  Switch to next split
 <c-w>v      Split current window vertically
 <c-w>s      Split current window horizontally
+<c-w>H      Move the current window(split) to the "far left"
+<c-w>J      Move the current window(split) to the "far down"
+<c-w>K      Move the current window(split) to the "far up"
+<c-w>L      Move the current window(split) to the "far right"
+<c-w>h      Move to the "far left" window(split)
+<c-w>j      Move to the "far down" window(split)
+<c-w>k      Move to the "far up" window(split)
+<c-w>l      Move to the "far right" window(split)
 <c-t>       Open in new tab(CtrlP or fzf)
-t           NerdTree: Open in new tab
-<Space>n   Open NerdTree
 <c-m>       Open ctags
 z<          Multiple cursor: align at cursors by character
 ]           Multiple cursor: find next
@@ -36,6 +42,8 @@ ngg         Go to nth line
 :noh        cancel all current highlight
 :r!command  execute external command and read output to current buffer
 o: open in prev window
+t           NerdTree: Open in new tab
+<Space>n    Open NerdTree
 go          NerdTree: preview   (File node mappings) 
 t           NerdTree: open in new tab   (File node mappings) 
 T           NerdTree: open in new tab silently   (File node mappings) 
@@ -47,9 +55,12 @@ o           NerdTree: open & close node   (Directory node mappings)
 O           NerdTree: recursively open node   (Directory node mappings) 
 t           NerdTree: open in new tab   (Directory node mappings) 
 T           NerdTree: open in new tab silently   (Directory node mappings) 
+R           NerdTree: Refresh current root directory
+r           NerdTree: Refresh cursor directory
 x           NerdTree: close parent of node   (Directory node mappings) 
 X           NerdTree: close all child nodes of current node recursively   (Directory node mappings) 
 e           NerdTree: explore selected dir   (Directory node mappings) 
+m           NerdTree: open nerdtree menu to do some operation(Create dir,delete dir,open in system software...)
 ]e          Go to next error
 [e          Go to previous error
 <c-/><c-/>  Comment the line
@@ -57,7 +68,7 @@ e           NerdTree: explore selected dir   (Directory node mappings)
 <c-b>       YouCompleteMe(YCM): go to declaration
 <c-y>       YouCompleteMe(YCM): comfirm selection
 <c-e>       YouCompleteMe(YCM): cancel completion and redisplay origin word
-<c-j>       snippets: trigger snippets
+<c-:>       snippets: trigger snippets
 <c-f>       snippets: jump forward to fill in items
 <c-b>       snippets: jump backward to fill in items
 <c-o>       Jump back to previous visited location
@@ -104,3 +115,22 @@ PythonPrint Open odd python file to edit a python program to print.Press again t
 ?           Search backward
 .           Concat two strings in ex mode
 ".          Register for last inserted text
+<a-h>       Insert mode: move the last word(<c-left>)
+<a-j>       Insert mode: add new line below and go to that(<c-o>o)
+<a-k>       Insert mode: add new line above and go to that(<c-o>O)
+<a-l>       Insert mode: move the previous word(<c-right>)
+<c-h>       Insert mode: move to left(<left>)
+<c-j>       Insert mode: move to down(<down>)
+<c-k>       Insert mode: move to up(<up>)
+<c-l>       Insert mode: move to right(<right>)
+<c-b>       Insert mode: move to the end(<c-o>^)
+<c-e>       Insert mode: move to the start(<c-o>$)
+<c-p>       Insert mode: paste(<c-o>p)
+<c-d>       Insert mode: delete(<c-o>d)
+<space>r    Run current python file(write automatically)
+cs          Vim-Surround: change surround type t1 to t2 with motion
+ds          Vim-Surround: delete surround type t
+ys          Vim-Surround: add surround type t with motion
+yss         Vim-Surround: add surround around the sentence
+DiffSaved   Difference between buffer and file
+CompareClipboard    Check difference between current buffer and clipboard

@@ -21,6 +21,11 @@ inoremap <A-j> <C-o>j
 inoremap <A-k> <C-o>k
 inoremap <A-l> <C-o>l
 
+Plug 'davidhalter/jedi-vim'
+diff buffers , files, and so on
+
+
+Change run python only in python file
 ************************** the above has been finished ********************************
 
 " Plug 'Shougo/vimproc.vim', {'do': g:make}  " Interactive command execution in Vim.
@@ -28,4 +33,4 @@ inoremap <A-l> <C-o>l
 " Plug 'xolox/vim-misc'
 " Plug 'xolox/vim-session'
 
-diff buffers , files, and so on
+keymap of vim-surround
