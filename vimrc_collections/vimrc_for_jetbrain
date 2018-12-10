@@ -1,0 +1,103 @@
+set encoding=utf8 
+""""""""""""""""""""""""""""""""""""
+" Mappings configurationn
+"""""""""""""""""""""""""""""""""""""
+
+" vim-multiple-cursor Mappings
+" let g:multi_cursor_use_default_mapping=0
+" let g:multi_cursor_start_word_key      = '<A-j>'
+" let g:multi_cursor_select_all_word_key = '<A-n>'
+" let g:multi_cursor_start_key           = 'g<A-j>'
+" let g:multi_cursor_select_all_key      = 'g<A-n>'
+" let g:multi_cursor_next_key            = '<A-j>'
+" let g:multi_cursor_prev_key            = '<A-k>'
+" let g:multi_cursor_skip_key            = '<A-x>'
+" let g:multi_cursor_quit_key            = '<Esc>'
+"
+
+"""""""""""""""""""""""""""""""""""""
+" display
+"""""""""""""""""""""""""""""""""""""
+set showcmd                          "show key strokes
+
+" Show linenumbers
+set number relativenumber
+set ruler " Always show cursor position
+
+" Enable highlighting of the current lines
+set cursorline
+
+" Theme and Styling
+set t_Co=256
+set background=dark
+
+if (has("termguicolors"))
+  set termguicolors
+endif
+
+let base16colorspace=256  " Access colors present in 256 colorspace
+" colorscheme spacegray
+" colorscheme spacemacs-theme
+
+"""""""""""""""""""""""""""""""""""""
+" custom functin
+"""""""""""""""""""""""""""""""""""""
+" nnoremap <c-w><c-o> :call MaximizeToggle()<CR>
+" nnoremap <c-w><o> :call MaximizeToggle()<CR>
+
+" Moving in insert mode
+
+inoremap <A-h> <c-left>
+inoremap <A-j> <c-o>o
+inoremap <A-k> <c-o>O
+inoremap <A-l> <c-right>
+
+inoremap <c-h> <left>
+inoremap <c-j> <down>
+inoremap <c-k> <up>
+inoremap <c-l> <right>
+
+inoremap <c-b> <c-o>^
+inoremap <c-e> <c-o>$
+
+inoremap <c-p> <c-o>p
+inoremap <c-d> <c-o>d
+inoremap <c-y> <c-o>y
+
+" Easier moving in tabs and windows
+nnoremap <A-l> gt
+nnoremap <A-h> gT
+
+nnoremap Y "+y
+nnoremap D "+d
+nnoremap P "+p
+
+"""""""""""""""""""""""""""""""""""""
+" Configuration Section
+"""""""""""""""""""""""""""""""""""""
+" smart case for / search
+set ignorecase
+set smartcase
+
+" highlight all search matches
+:set hlsearch
+
+" highlight the next match while you're still typing out your search pattern
+:set hlsearch incsearch
+
+" set more visual hints in command-line mode
+set wildmenu
+
+" Indention Options
+set autoindent " New lines inherit the indentation of previous lines
+set expandtab " Convert tabs to spaces
+set shiftwidth=4 " When shifting, indent using four spaces
+set tabstop=4 " Indent using four spaces
+set smarttab
+set expandtab
+
+" Enable hidden buffers
+set hidden
+
+" make scroll leave a margin for 3 lines
+set scrolloff=3
