@@ -17,6 +17,7 @@ Plugin 'VundleVim/Vundle.vim'
 """ All of your Plugins must be added before the following line
 
 " Utility
+Plugin 'file:///home/ban/Software/vim/plugins/toggle_maximize.vim/'  " toggle maximize window
 Plugin 'scrooloose/nerdtree'  " file tree
 Plugin 'majutsushi/tagbar'  " file names at top bar
 Plugin 'ervandew/supertab'  " perform all your vim insert mode completions with Tab
@@ -25,6 +26,7 @@ Plugin 'junegunn/fzf'  " fuzzy find together with plugin above
 " To recompile YouCompleteMe, run:
 " python3 install.py --clang-completer --ts-completer --java-completer
 Plugin 'Valloric/YouCompleteMe'  " auto complete engine
+Plugin 'rdnetto/YCM-Generator'  " generate .ycm_extra_conf.py file according to CMakeList.txt for YouCompleteMe
 Plugin 'davidhalter/jedi-vim'  "Using the jedi autocompletion library for VIM.
 Plugin 'benmills/vimux'  " vim plugin to interact with tmux
 Plugin 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
@@ -32,6 +34,7 @@ Plugin 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
 Plugin 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
 Plugin 'w0rp/ale'  " Syntax checking for python
 Plugin 'wellle/targets.vim' " Vim plugin that provides additional text objects
+Plugin 'sbdchd/neoformat' " A (Neo)vim plugin for formatting code.
 
 " Language support
 Plugin 'mattn/emmet-vim'  " for html
@@ -161,7 +164,7 @@ let g:VM_maps["Visual Cursors"]           = '<C-c>'
 let g:VM_maps["Find Under"]               = '<c-n>'
 let g:VM_maps["Find Subword Under"]       = '<c-n>'
 
-map <Space>n :NERDTreeToggle<CR>
+map <Space>0 :NERDTreeToggle<CR>
 map <C-m> :TagbarToggle<CR>
 
 " YouCompleteMe Mappings
@@ -224,6 +227,17 @@ let g:gruvbox_contrast = 'hard'
     let g:airline_theme='hybrid'
     let g:hybrid_custom_term_colors = 1
     let g:hybrid_reduced_contrast = 1
+
+    " add window number in front of the airline
+    function! WindowNumber(...)
+        let builder = a:1
+        let context = a:2
+        call builder.add_section('airline_b', '%{tabpagewinnr(tabpagenr())}')
+        return 0
+    endfunction
+
+    call airline#add_statusline_func('WindowNumber')
+    call airline#add_inactive_statusline_func('WindowNumber')
 " }}}
 
 
@@ -253,6 +267,8 @@ com! PythonPrint call s:Python_print()
 " open and edit find actions file which provide useful keymaps.(Use <Space>a to
 " access the keymaps)
 com! OpenFindActionsFile 12sp ~/Software/vim/vim_tip/find_actions
+
+com! OpenVimrcDotFile vs ~/.vimrc
 
 com! OpenTodoFile 12sp ~/Software/vim/TODO
 
@@ -299,7 +315,7 @@ inoremap <c-j> <down>
 inoremap <c-k> <up>
 inoremap <c-l> <right>
 
-inoremap <c-b> <c-o>^
+inoremap <c-a> <c-o>^
 inoremap <c-e> <c-o>$
 
 inoremap <c-p> <c-o>p
@@ -317,10 +333,50 @@ nnoremap <A-H> <C-W>h
 nnoremap Y "+y
 nnoremap D "+d
 
-nnoremap <c-e> :CtrlPBuffer<CR>
-
 nnoremap <Space>f :Ag<CR>
 " inoremap <s-Enter> <Esc>o
+
+
+"""""""""""""""""""""""""""""""""""""
+" Map from spacemacs
+"""""""""""""""""""""""""""""""""""""
+nnoremap <Space>wh <C-w>h
+nnoremap <Space>wj <C-w>j
+nnoremap <Space>wk <C-w>k
+nnoremap <Space>wl <C-w>l
+nnoremap <Space>wH <C-w>H
+nnoremap <Space>wJ <C-w>J
+nnoremap <Space>wK <C-w>K
+nnoremap <Space>wL <C-w>L
+nnoremap <Space>w/ :vs<CR>
+nnoremap <Space>w- :sp<CR>
+nnoremap <Space>ww <C-w>w
+nnoremap <Space>w= <C-w>=
+nnoremap <c-down>  2<C-w>-
+nnoremap <c-up>    2<C-w>+
+nnoremap <c-left>  2<C-w><
+nnoremap <c-right> 2<C-w>>
+nnoremap <Space>1  1<C-w><C-w>
+nnoremap <Space>2  2<C-w><C-w>
+nnoremap <Space>3  3<C-w><C-w>
+nnoremap <Space>4  4<C-w><C-w>
+nnoremap <Space>5  5<C-w><C-w>
+nnoremap <Space>6  6<C-w><C-w>
+nnoremap <Space>7  7<C-w><C-w>
+nnoremap <Space>8  8<C-w><C-w>
+nnoremap <Space>9  9<C-w><C-w>
+nnoremap <Space>fr :CtrlPMRUFiles<CR>
+nnoremap <Space><Tab> :b#<CR>
+nnoremap <Space>bb :CtrlPBuffer<CR>
+nnoremap <Space>wx :q<CR>
+nnoremap ]e        :move +1<CR>
+nnoremap [e        :move -2<CR>
+nnoremap <Space><Space> :
+nnoremap <Space>fvd :OpenVimrcDotFile<CR>
+nnoremap <Space>mcc :w<CR>:!python %<CR>
+nnoremap <Space>bd :bd<CR>
+map <Space>ba :1,1000 bd<CR>
+
 """""""""""""""""""""""""""""""""""""
 " Configuration Section
 """""""""""""""""""""""""""""""""""""
@@ -389,7 +445,7 @@ set updatetime=1000
             \ 'gitcommit' : 1,
             \}
     let g:ycm_autoclose_preview_window_after_completion = 1
-    let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+    let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
 " }}}
 
 
@@ -455,8 +511,9 @@ set updatetime=1000
     " " suppress the display of errors when you move the cursor onto their line (prevent cursor from disappearing)
     " let g:ale_echo_cursor = 0
 
-    nmap <silent> [e <Plug>(ale_previous_wrap)
-    nmap <silent> ]e <Plug>(ale_next_wrap)
+    nmap <silent> <Space>ep <Plug>(ale_previous_wrap)
+    nmap <silent> <Space>eN <Plug>(ale_previous_wrap)
+    nmap <silent> <Space>en <Plug>(ale_next_wrap)
 
     " Available Linters: 'flake8', 'mypy', 'prospector', 'pycodestyle', 'pyflakes', 'pylint', 'pyls', 'pyre', 'vulture'
     let g:ale_linters = {
@@ -483,7 +540,7 @@ set updatetime=1000
 
 " {{{ snippets
     " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-    let g:UltiSnipsExpandTrigger="<c-:>"
+    let g:UltiSnipsExpandTrigger="<c-v>"
     let g:UltiSnipsJumpForwardTrigger="<c-f>"
     let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 

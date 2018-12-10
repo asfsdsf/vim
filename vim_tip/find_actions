@@ -6,7 +6,8 @@ gT          Go to previous tab
 <a-j>       Add multiple cursor below
 <a-k>       Add multiple cursor above
 <c-n>       Find and extend multiple cursor in visual mode
-<Space>f    Search by lines using CtrlP(Find Strings everywhere)
+<c-f>       Search by lines using CtrlP(Find Strings everywhere)
+<Space>f    Search by lines using Ag in directories(Find Strings everywhere)
 <c-w><c-_>  Expand current split vertically
 <c-w><c-|>  Expand current split horizontally
 <c-w><c-w>  Switch to next split
@@ -43,7 +44,7 @@ ngg         Go to nth line
 :r!command  execute external command and read output to current buffer
 o: open in prev window
 t           NerdTree: Open in new tab
-<Space>n    Open NerdTree
+<Space>0    Open NerdTree
 go          NerdTree: preview   (File node mappings) 
 t           NerdTree: open in new tab   (File node mappings) 
 T           NerdTree: open in new tab silently   (File node mappings) 
@@ -61,14 +62,14 @@ x           NerdTree: close parent of node   (Directory node mappings)
 X           NerdTree: close all child nodes of current node recursively   (Directory node mappings) 
 e           NerdTree: explore selected dir   (Directory node mappings) 
 m           NerdTree: open nerdtree menu to do some operation(Create dir,delete dir,open in system software...)
-]e          Go to next error
-[e          Go to previous error
+<Space>en   Go to next error
+<Space>en   Go to previous error
 <c-/><c-/>  Comment the line
 <c-f>       YouCompleteMe(YCM): go to definition (else declaration if no definition found)
 <c-b>       YouCompleteMe(YCM): go to declaration
 <c-y>       YouCompleteMe(YCM): comfirm selection
 <c-e>       YouCompleteMe(YCM): cancel completion and redisplay origin word
-<c-:>       snippets: trigger snippets
+<c-v>       snippets: trigger snippets
 <c-f>       snippets: jump forward to fill in items
 <c-b>       snippets: jump backward to fill in items
 <c-o>       Jump back to previous visited location
@@ -106,7 +107,6 @@ Y           Yank using system register
 <A-L>       Move to right split
 <c-R>       To find a string under working directory
 PythonPrint Open odd python file to edit a python program to print.Press again to exit and print
-<c-e>       Open recent files
 [[          Go to preious function
 ]]          Go to next function
 []          Go to end of previous function
@@ -134,3 +134,4 @@ ys          Vim-Surround: add surround type t with motion
 yss         Vim-Surround: add surround around the sentence
 DiffSaved   Difference between buffer and file
 CompareClipboard    Check difference between current buffer and clipboard
+zz          Scroll the current line to the center of the window
