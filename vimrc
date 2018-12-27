@@ -35,6 +35,7 @@ Plugin 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for V
 Plugin 'w0rp/ale'  " Syntax checking for python
 Plugin 'wellle/targets.vim' " Vim plugin that provides additional text objects
 Plugin 'sbdchd/neoformat' " A (Neo)vim plugin for formatting code.
+Plugin 'tpope/vim-fugitive' " A git wrapper for vim
 
 " Language support
 Plugin 'mattn/emmet-vim'  " for html
@@ -207,14 +208,16 @@ set cursorline
 set t_Co=256
 set background=dark
 
+set foldmethod=indent
+
 if (has("termguicolors"))
   set termguicolors
 endif
 
 let base16colorspace=256  " Access colors present in 256 colorspace
 " colorscheme spacegray
-" colorscheme spacemacs-theme
-colorscheme gruvbox
+colorscheme spacemacs-theme
+" colorscheme gruvbox
 
 let g:spacegray_underline_search = 1
 let g:spacegray_italicize_comments = 1
@@ -252,7 +255,7 @@ let g:gruvbox_contrast = 'hard'
 """""""""""""""""""""""""""""""""""""
 nmap <space>a :FindActions<CR>
 
-function s:Python_print()
+function! s:Python_print()
     if expand('%:p')=="/home/ban/Software/vim/python_for_vim.py"
         wq
         r !python /home/ban/Software/vim/python_for_vim.py
@@ -273,6 +276,12 @@ com! OpenVimrcDotFile vs ~/.vimrc
 com! OpenTodoFile 12sp ~/Software/vim/TODO
 
 com! OpenFlake8Config 12sp ~/.config/flake8
+
+function! g:OpenFileByCtrlP()
+    let @p=expand('%:p:h')
+    exec "CtrlP %"
+endfunction
+nnoremap <Space>ff :call OpenFileByCtrlP()<CR>
 
 function! s:DiffWithSaved()
   let filetype=&ft
@@ -302,6 +311,9 @@ autocmd FileType python nnoremap <buffer> <Space>r :w <bar> !/home/ban/Programmi
 
 " nnoremap <c-w><c-o> :call MaximizeToggle()<CR>
 " nnoremap <c-w><o> :call MaximizeToggle()<CR>
+
+" directly use s to perform surround
+nmap s ys
 
 " Moving in insert mode
 
@@ -333,13 +345,17 @@ nnoremap <A-H> <C-W>h
 nnoremap Y "+y
 nnoremap D "+d
 
-nnoremap <Space>f :Ag<CR>
+nnoremap <Space>sf :Ag<CR>
 " inoremap <s-Enter> <Esc>o
 
+" map for replacement
+nnoremap <c-h> :%s//gc<left><left><left>
+cnoremap <c-h> <CR>:%s///gc<left><left><left>
 
 """""""""""""""""""""""""""""""""""""
 " Map from spacemacs
 """""""""""""""""""""""""""""""""""""
+" nunmap <Space>
 nnoremap <Space>wh <C-w>h
 nnoremap <Space>wj <C-w>j
 nnoremap <Space>wk <C-w>k
@@ -352,6 +368,9 @@ nnoremap <Space>w/ :vs<CR>
 nnoremap <Space>w- :sp<CR>
 nnoremap <Space>ww <C-w>w
 nnoremap <Space>w= <C-w>=
+nnoremap <Space>wd :close<CR>
+nnoremap <Space>wx :bd<CR>:close<CR>
+nnoremap <Space>wo <C-w><C-o>
 nnoremap <c-down>  2<C-w>-
 nnoremap <c-up>    2<C-w>+
 nnoremap <c-left>  2<C-w><
@@ -366,16 +385,22 @@ nnoremap <Space>7  7<C-w><C-w>
 nnoremap <Space>8  8<C-w><C-w>
 nnoremap <Space>9  9<C-w><C-w>
 nnoremap <Space>fr :CtrlPMRUFiles<CR>
+" nnoremap <Space>ff :CtrlP %<CR>
+nnoremap <Space>ss :CtrlPLine %<CR>
 nnoremap <Space><Tab> :b#<CR>
-nnoremap <Space>bb :CtrlPBuffer<CR>
-nnoremap <Space>wx :q<CR>
 nnoremap ]e        :move +1<CR>
 nnoremap [e        :move -2<CR>
 nnoremap <Space><Space> :
 nnoremap <Space>fvd :OpenVimrcDotFile<CR>
+nnoremap <Space>fvR :source ~/.vimrc<CR>
 nnoremap <Space>mcc :w<CR>:!python %<CR>
 nnoremap <Space>bd :bd<CR>
-map <Space>ba :1,1000 bd<CR>
+nnoremap <Space>bn :bn<CR>
+nnoremap <Space>bp :bp<CR>
+nnoremap <Space>bb :CtrlPBuffer<CR>
+nnoremap <Space>bx :bd<CR>:close<CR>
+nnoremap <Space>qq :qa<CR>
+nnoremap <Space>hd :help 
 
 """""""""""""""""""""""""""""""""""""
 " Configuration Section
@@ -501,6 +526,7 @@ set updatetime=1000
     nmap <c-p> :CtrlP .<CR>
     " let g:ctrlp_map = '<c-p>'
     let g:ctrlp_working_path_mode=2
+    let g:ctrlp_show_hidden = 1
 " }}}
 
 

@@ -68,9 +68,32 @@ inoremap <c-y> <c-o>y
 nnoremap <A-l> gt
 nnoremap <A-h> gT
 
-nnoremap Y "+y
-nnoremap D "+d
-nnoremap P "+p
+nnoremap y "+y
+nnoremap d "+d
+nnoremap p "+p
+nnoremap Y "+Y
+nnoremap D "+D
+nnoremap P "+P
+
+"""""""""""""""""""""""""""""""""""""
+" Map from spacemacs
+"""""""""""""""""""""""""""""""""""""
+nnoremap <Space>wh <C-w>h
+nnoremap <Space>wj <C-w>j
+nnoremap <Space>wk <C-w>k
+nnoremap <Space>wl <C-w>l
+nnoremap <Space>wH <C-w>H
+nnoremap <Space>wJ <C-w>J
+nnoremap <Space>wK <C-w>K
+nnoremap <Space>wL <C-w>L
+nnoremap <Space>w/ :vs<CR>
+nnoremap <Space>w- :sp<CR>
+nnoremap <Space>ww <C-w>w
+nnoremap <Space>w= <C-w>=
+nnoremap <Space>wd :q<CR>
+nnoremap <Space>wx :q<CR>
+nnoremap <Space><Tab> :b#<CR>
+
 
 """""""""""""""""""""""""""""""""""""
 " Configuration Section

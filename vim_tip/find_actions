@@ -7,6 +7,12 @@ gT          Go to previous tab
 <a-k>       Add multiple cursor above
 <c-n>       Find and extend multiple cursor in visual mode
 <c-f>       Search by lines using CtrlP(Find Strings everywhere)
+<c-d>       Ctrlp: toggle between the string mode and full regexp mode.
+<c-t>       Ctrlp: Open the selected file in a new 'tab'.
+<c-v>       Ctrlp: Open the selected file in a 'vertical' split.
+<c-r>       Ctrlp: toggle regexp search 
+<c-d>       Ctrlp: toggle search by file name
+<c-s>       Ctrlp: Open the selected file in a 'horizontal' split.
 <Space>f    Search by lines using Ag in directories(Find Strings everywhere)
 <c-w><c-_>  Expand current split vertically
 <c-w><c-|>  Expand current split horizontally
@@ -97,6 +103,7 @@ gv          Start Visual mode with the same area as the previous area and the sa
 :'<,'>      Type : in visual mode to invoke this command.Execute command to manipulate the selected text
 D           Delete using system register
 Y           Yank using system register
+<C-r>       Paste content of the subsequent register (used in inserting).
 <A-h>       Move left in insert mode
 <A-j>       Move down in insert mode
 <A-k>       Move up in insert mode
@@ -135,3 +142,5 @@ yss         Vim-Surround: add surround around the sentence
 DiffSaved   Difference between buffer and file
 CompareClipboard    Check difference between current buffer and clipboard
 zz          Scroll the current line to the center of the window
+<c-h>       Replace (replace strings in current buffer)
+*<c-h>/     Replace word under cursor
