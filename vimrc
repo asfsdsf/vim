@@ -3,90 +3,72 @@
 
 set nocompatible              " be improved, required
 set encoding=utf8 
-"""" START Vundle Configuration
-filetype off                  " required
+"""" START vim-plug Configuration
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+" set the runtime path to include vim-plug and initialize
+call plug#begin('~/.vim/plugged')
 """ All of your Plugins must be added before the following line
 
 " Utility
-Plugin 'file:///home/ban/Software/vim/plugins/toggle_maximize.vim/'  " toggle maximize window
-Plugin 'scrooloose/nerdtree'  " file tree
-Plugin 'majutsushi/tagbar'  " file names at top bar
-Plugin 'ervandew/supertab'  " perform all your vim insert mode completions with Tab
-Plugin 'junegunn/fzf.vim'  " fuzzy find
-Plugin 'junegunn/fzf'  " fuzzy find together with plugin above
+Plug '~/Software/vim/plugins/toggle_maximize.vim/'  " toggle maximize window
+Plug 'scrooloose/nerdtree'  " file tree
+Plug 'majutsushi/tagbar'  " file names at top bar
+Plug 'ervandew/supertab'  " perform all your vim insert mode completions with Tab
+Plug 'junegunn/fzf.vim'  " fuzzy find
+Plug 'junegunn/fzf'  " fuzzy find together with plugin above
 " To recompile YouCompleteMe, run:
 " python3 install.py --clang-completer --ts-completer --java-completer
-Plugin 'Valloric/YouCompleteMe'  " auto complete engine
-Plugin 'rdnetto/YCM-Generator'  " generate .ycm_extra_conf.py file according to CMakeList.txt for YouCompleteMe
-Plugin 'davidhalter/jedi-vim'  "Using the jedi autocompletion library for VIM.
-Plugin 'benmills/vimux'  " vim plugin to interact with tmux
-Plugin 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
-" Plugin 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
-Plugin 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
-Plugin 'w0rp/ale'  " Syntax checking for python
-Plugin 'wellle/targets.vim' " Vim plugin that provides additional text objects
-Plugin 'sbdchd/neoformat' " A (Neo)vim plugin for formatting code.
-Plugin 'tpope/vim-fugitive' " A git wrapper for vim
+Plug 'Valloric/YouCompleteMe'  " auto complete engine
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'} " generate .ycm_extra_conf.py file according to CMakeList.txt for YouCompleteMe
+Plug 'davidhalter/jedi-vim'  "Using the jedi autocompletion library for VIM.
+Plug 'benmills/vimux'  " vim plugin to interact with tmux
+Plug 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
+" Plug 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
+Plug 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
+Plug 'w0rp/ale'  " Syntax checking for python
+Plug 'wellle/targets.vim' " Vim plugin that provides additional text objects
+Plug 'sbdchd/neoformat' " A (Neo)vim plugin for formatting code.
+Plug 'tpope/vim-fugitive' " A git wrapper for vim
 
 " Language support
-Plugin 'mattn/emmet-vim'  " for html
+Plug 'mattn/emmet-vim'  " for html
 
 " Generic Programming Support
-" Plugin 'Raimondi/delimitMate' " enable an auto-close chars feature
-" Plugin 'jiangmiao/auto-pairs' " enable an auto-close chars feature
-Plugin 'Raimondi/delimitMate'  " enable an auto-close chars feature
-Plugin 'tomtom/tcomment_vim'  " extensible & universal comment vim-plugin that also handles embedded filetypes
-Plugin 'tpope/vim-surround'  " surround.vim: quoting/parenthesizing made simple
-Plugin 'SirVer/ultisnips'  " Track the engine.
-Plugin 'honza/vim-snippets'  " Snippets are separated from the engine. Add this if you want them:
+" Plug 'Raimondi/delimitMate' " enable an auto-close chars feature
+" Plug 'jiangmiao/auto-pairs' " enable an auto-close chars feature
+Plug 'Raimondi/delimitMate'  " enable an auto-close chars feature
+Plug 'tomtom/tcomment_vim'  " extensible & universal comment vim-plugin that also handles embedded filetypes
+Plug 'tpope/vim-surround'  " surround.vim: quoting/parenthesizing made simple
+Plug 'SirVer/ultisnips'  " Track the engine.
+Plug 'honza/vim-snippets'  " Snippets are separated from the engine. Add this if you want them:
 
 " Theme / Interface
-Plugin 'vim-airline/vim-airline'  " beautiful bar at bottom
-Plugin 'vim-airline/vim-airline-themes'  " beautiful bar at bottom
-Plugin 'ryanoasis/vim-devicons'  " iconize symbols
-Plugin 'morhetz/gruvbox'  "retro groove color scheme for Vim
+Plug 'vim-airline/vim-airline'  " beautiful bar at bottom
+Plug 'vim-airline/vim-airline-themes'  " beautiful bar at bottom
+Plug 'ryanoasis/vim-devicons'  " iconize symbols
+Plug 'morhetz/gruvbox'  "retro groove color scheme for Vim
 
 " The following theme is copied from https://coderoncode.com/tools/2017/04/16/vim-the-perfect-ide.html
 " And I don't clearly know their specific functionality
-Plugin 'sjl/badwolf'
-Plugin 'tomasr/molokai'
-Plugin 'zenorocha/dracula-theme', {'rtp': 'vim/'}
-Plugin 'junegunn/limelight.vim'
-Plugin 'mkarmona/colorsbox'
-Plugin 'romainl/Apprentice'
-Plugin 'Lokaltog/vim-distinguished'
-Plugin 'chriskempson/base16-vim'
-Plugin 'w0ng/vim-hybrid'
-Plugin 'AlessandroYorba/Sierra'
-Plugin 'daylerees/colour-schemes'
-Plugin 'effkay/argonaut.vim'
-Plugin 'ajh17/Spacegray.vim'
-Plugin 'atelierbram/Base2Tone-vim'
-Plugin 'colepeters/spacemacs-theme.vim'
+Plug 'sjl/badwolf'
+Plug 'tomasr/molokai'
+Plug 'zenorocha/dracula-theme', {'rtp': 'vim/'}
+Plug 'junegunn/limelight.vim'
+Plug 'mkarmona/colorsbox'
+Plug 'romainl/Apprentice'
+Plug 'Lokaltog/vim-distinguished'
+Plug 'chriskempson/base16-vim'
+Plug 'w0ng/vim-hybrid'
+Plug 'AlessandroYorba/Sierra'
+Plug 'daylerees/colour-schemes'
+Plug 'effkay/argonaut.vim'
+Plug 'ajh17/Spacegray.vim'
+Plug 'atelierbram/Base2Tone-vim'
+Plug 'colepeters/spacemacs-theme.vim'
 
 
-
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-" filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
+" required
+call plug#end()
 " Put your non-Plugin stuff after this line
 """""""""""""""""""""""""""""""""""""
 " Mappings configurationn
