@@ -16,6 +16,7 @@ Plug 'majutsushi/tagbar'  " file names at top bar
 Plug 'ervandew/supertab'  " perform all your vim insert mode completions with Tab
 Plug 'junegunn/fzf.vim'  " fuzzy find
 Plug 'junegunn/fzf'  " fuzzy find together with plugin above
+Plug 'mbbill/undotree'  " show undo history
 " To recompile YouCompleteMe, run:
 " python3 install.py --clang-completer --ts-completer --java-completer
 Plug 'Valloric/YouCompleteMe'  " auto complete engine
@@ -25,7 +26,9 @@ Plug 'benmills/vimux'  " vim plugin to interact with tmux
 Plug 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
 " Plug 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
 Plug 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
+Plug 'terryma/vim-expand-region'  " Expand region like emacs
 Plug 'w0rp/ale'  " Syntax checking for python
+Plug 'neomake/neomake'  " Asynchronous linting and make framework for Neovim/Vim
 Plug 'wellle/targets.vim' " Vim plugin that provides additional text objects
 Plug 'sbdchd/neoformat' " A (Neo)vim plugin for formatting code.
 Plug 'tpope/vim-fugitive' " A git wrapper for vim
@@ -87,22 +90,22 @@ call plug#end()
 " let g:multi_cursor_quit_key            = '<Esc>'
 
 " vim-visual-multi Mappings
-let g:VM_no_meta_mappings=0
-let g:VM_maps = {}
-let g:VM_maps["Select Operator"]          = 'gs'
-let g:VM_maps["Add Cursor At Pos"]        = 'g<space>'
-let g:VM_maps["Start Regex Search"]       = 'g/'
-let g:VM_maps["Select All"]               = '<leader>A'
-let g:VM_maps["Add Cursor Down"]          = '<A-j>'
-let g:VM_maps["Add Cursor Up"]            = '<A-k>'
-let g:VM_maps["Visual Regex"]             = 'g/'
-let g:VM_maps["Visual All"]               = '<A-A>'
-let g:VM_maps["Visual Add"]               = '<A-a>'
-let g:VM_maps["Visual Find"]              = '<C-f>'
-let g:VM_maps["Visual Cursors"]           = '<C-c>'
-let g:VM_maps["Find Under"]               = '<c-n>'
-let g:VM_maps["Find Subword Under"]       = '<c-n>'
-
+" let g:VM_no_meta_mappings=0
+" let g:VM_maps = {}
+" let g:VM_maps["Select Operator"]          = 'gs'
+" let g:VM_maps["Add Cursor At Pos"]        = 'g<space>'
+" let g:VM_maps["Start Regex Search"]       = 'g/'
+" let g:VM_maps["Select All"]               = '<leader>A'
+" let g:VM_maps["Add Cursor Down"]          = '<A-j>'
+" let g:VM_maps["Add Cursor Up"]            = '<A-k>'
+" let g:VM_maps["Visual Regex"]             = 'g/'
+" let g:VM_maps["Visual All"]               = '<A-A>'
+" let g:VM_maps["Visual Add"]               = '<A-a>'
+" let g:VM_maps["Visual Find"]              = '<C-f>'
+" let g:VM_maps["Visual Cursors"]           = '<C-c>'
+" let g:VM_maps["Find Under"]               = '<c-n>'
+" let g:VM_maps["Find Subword Under"]       = '<c-n>'
+"
 map <Space>0 :NERDTreeToggle<CR>
 map <C-m> :TagbarToggle<CR>
 
@@ -156,8 +159,8 @@ endif
 
 let base16colorspace=256  " Access colors present in 256 colorspace
 " colorscheme spacegray
-colorscheme spacemacs-theme
-" colorscheme gruvbox
+" colorscheme spacemacs-theme
+colorscheme gruvbox
 
 let g:spacegray_underline_search = 1
 let g:spacegray_italicize_comments = 1
@@ -193,7 +196,6 @@ let g:gruvbox_contrast = 'hard'
 """""""""""""""""""""""""""""""""""""
 " custom functin
 """""""""""""""""""""""""""""""""""""
-nmap <space>a :FindActions<CR>
 
 function! s:Python_print()
     if expand('%:p')=="/home/ban/Software/vim/python_for_vim.py"
@@ -207,7 +209,7 @@ function! s:Python_print()
 endfunction
 com! PythonPrint call s:Python_print()
 
-" open and edit find actions file which provide useful keymaps.(Use <Space>a to
+" open and edit find actions file which provide useful keymaps.(Use <Space>aa to
 " access the keymaps)
 com! OpenFindActionsFile 12sp ~/Software/vim/vim_tip/find_actions
 
@@ -238,6 +240,18 @@ function! s:DiffWithSaved()
   exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
 endfunction
 com! DiffSaved call s:DiffWithSaved()
+
+function! s:OpenDirectoryFile(dir_path)
+    12sp /home/ban/Software/vim/open_file_help.sh
+    exec "normal! \<c-w>J"
+    put =a:dir_path
+    exec "normal!k\"pdd"
+    startinsert!
+endfunction
+com!OpenSoftwareInstallRecord call s:OpenDirectoryFile('~/Documents/Notes/software_installation_record')
+com!OpenProgrammingNotes call s:OpenDirectoryFile('~/Documents/Notes/programming')
+com!OpenCustomCommand call s:OpenDirectoryFile('~/Programming/shell/command')
+com!OpenGraduateStudy call s:OpenDirectoryFile('~/Documents/learn/study')
 
 function! s:Compared_with_clipboard()
     diffthis
@@ -289,8 +303,6 @@ nnoremap <A-K> <C-W>k
 nnoremap <A-L> <C-W>l
 nnoremap <A-H> <C-W>h
 
-nnoremap Y "+y
-nnoremap D "+d
 
 nnoremap <Space>sf :Ag<CR>
 " inoremap <s-Enter> <Esc>o
@@ -342,16 +354,35 @@ nnoremap <Space>fvd :OpenVimrcDotFile<CR>
 nnoremap <Space>fvR :source ~/.vimrc<CR>
 nnoremap <Space>mcc :w<CR>:!python %<CR>
 nnoremap <Space>bd :bd<CR>
+nnoremap <Space>bm :messages<CR>
 nnoremap <Space>bn :bn<CR>
 nnoremap <Space>bp :bp<CR>
 nnoremap <Space>bb :CtrlPBuffer<CR>
 nnoremap <Space>bx :bd<CR>:close<CR>
 nnoremap <Space>qq :qa<CR>
 nnoremap <Space>hd :help 
+nmap <space>aa :FindActions<CR>
+nmap <space>ag :!gedit %<CR>
+nmap <space>au :UndotreeTsoggle<CR>
+nnoremap <space>as :terminal<CR>
+tnoremap <C-w> <C-\><C-n>
+tnoremap <C-w>h <C-\><C-n><C-w>h
+tnoremap <C-w>j <C-\><C-n><C-w>j
+tnoremap <C-w>k <C-\><C-n><C-w>k
+tnoremap <C-w>l <C-\><C-n><C-w>l
+map <Space>v <Plug>(expand_region_expand)
 
 """""""""""""""""""""""""""""""""""""
 " Configuration Section
 """""""""""""""""""""""""""""""""""""
+
+" turn off key timeout
+set notimeout
+
+" set system clipboard as default clipboard
+set clipboard+=unnamedplus
+
+
 " smart case for / search
 set ignorecase
 set smartcase
@@ -467,6 +498,15 @@ set updatetime=1000
 
 
 
+" undotree {{{
+if has("persistent_undo")
+    set undodir=~/.undodir/
+    set undofile
+endif
+" }}}
+
+
+
 " CtrlP {{{
     let g:ctrlp_extensions = [ 'line' ]
     nnoremap <c-f> :CtrlPLine %<CR>
@@ -483,6 +523,7 @@ set updatetime=1000
     " let g:ale_sign_warning = '⚠'
     " " suppress the display of errors when you move the cursor onto their line (prevent cursor from disappearing)
     " let g:ale_echo_cursor = 0
+
 
     nmap <silent> <Space>ep <Plug>(ale_previous_wrap)
     nmap <silent> <Space>eN <Plug>(ale_previous_wrap)
@@ -502,6 +543,11 @@ set updatetime=1000
     " error there
 " }}}
 
+
+
+" {{{ neomake
+    call neomake#configure#automake('nrwi', 500)
+" }}}
 
 
 " {{{ flake8

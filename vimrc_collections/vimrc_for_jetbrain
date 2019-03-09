@@ -1,19 +1,4 @@
 set encoding=utf8 
-""""""""""""""""""""""""""""""""""""
-" Mappings configurationn
-"""""""""""""""""""""""""""""""""""""
-
-" vim-multiple-cursor Mappings
-" let g:multi_cursor_use_default_mapping=0
-" let g:multi_cursor_start_word_key      = '<A-j>'
-" let g:multi_cursor_select_all_word_key = '<A-n>'
-" let g:multi_cursor_start_key           = 'g<A-j>'
-" let g:multi_cursor_select_all_key      = 'g<A-n>'
-" let g:multi_cursor_next_key            = '<A-j>'
-" let g:multi_cursor_prev_key            = '<A-k>'
-" let g:multi_cursor_skip_key            = '<A-x>'
-" let g:multi_cursor_quit_key            = '<Esc>'
-"
 
 """""""""""""""""""""""""""""""""""""
 " display
@@ -42,6 +27,9 @@ let base16colorspace=256  " Access colors present in 256 colorspace
 """""""""""""""""""""""""""""""""""""
 " custom functin
 """""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""
+" Mappings configurationn
+"""""""""""""""""""""""""""""""""""""
 " nnoremap <c-w><c-o> :call MaximizeToggle()<CR>
 " nnoremap <c-w><o> :call MaximizeToggle()<CR>
 
@@ -57,7 +45,7 @@ inoremap <c-j> <down>
 inoremap <c-k> <up>
 inoremap <c-l> <right>
 
-inoremap <c-b> <c-o>^
+inoremap <c-a> <c-o>^
 inoremap <c-e> <c-o>$
 
 inoremap <c-p> <c-o>p
@@ -67,13 +55,6 @@ inoremap <c-y> <c-o>y
 " Easier moving in tabs and windows
 nnoremap <A-l> gt
 nnoremap <A-h> gT
-
-nnoremap y "+y
-nnoremap d "+d
-nnoremap p "+p
-nnoremap Y "+Y
-nnoremap D "+D
-nnoremap P "+P
 
 """""""""""""""""""""""""""""""""""""
 " Map from spacemacs
@@ -92,12 +73,14 @@ nnoremap <Space>ww <C-w>w
 nnoremap <Space>w= <C-w>=
 nnoremap <Space>wd :q<CR>
 nnoremap <Space>wx :q<CR>
-nnoremap <Space><Tab> :b#<CR>
-
 
 """""""""""""""""""""""""""""""""""""
 " Configuration Section
 """""""""""""""""""""""""""""""""""""
+
+" disable prefix key time out
+set notimeout
+
 " smart case for / search
 set ignorecase
 set smartcase
@@ -124,3 +107,62 @@ set hidden
 
 " make scroll leave a margin for 3 lines
 set scrolloff=3
+
+"""""""""""""""""""""""""""""""""""""
+" IdeaVim Specific Configuration
+"""""""""""""""""""""""""""""""""""""
+
+" copy with system register
+" set clipboard+=unnamed
+set clipboard+=unnamedplus
+
+nnoremap <Space><Tab> :action VimFilePrevious<CR>
+nnoremap <Space>fvd :e ~/Software/vim/vimrc_collections/vimrc_for_jetbrain<CR>
+nnoremap <Space>fr :action RecentFiles<CR>
+nnoremap <Space>ff :action GotoFile<CR>
+nnoremap <Space>fc :action GotoClass<CR>
+nnoremap <Space>fp :action SelectInProjectView<CR>
+nnoremap <Space>fvR :source ~/Software/vim/vimrc_collections/vimrc_for_jetbrain<CR>
+nnoremap <Space>aa :action GotoAction<CR>
+nnoremap <Space>mrf :action ReformatCode<CR>
+nnoremap <Space>mrn :action RenameElement<CR>
+nnoremap <Space>mh :action TypeHierarchy<CR>
+nnoremap <Space>mcc :action Run<CR>
+nnoremap <Space>mcr :action Rerun<CR>
+nnoremap <Space>mcd :action Debug<CR>
+nnoremap <Space>mb :action Build<CR>
+nnoremap <Space>mo :action OverrideMethods<CR>
+nnoremap <Space>mgu :action GotoSuperMethod<CR>
+nnoremap <Space>0 :action ActivateProjectToolWindow<CR>
+nnoremap ,rf :action ReformatCode<CR>
+nnoremap ,rn :action RenameElement<CR>
+nnoremap <Space>mh :action TypeHierarchy<CR>
+nnoremap ,h :action TypeHierarchy<CR>
+nnoremap ,cc :action Run<CR>
+nnoremap ,cr :action Rerun<CR>
+nnoremap ,cd :action Debug<CR>
+nnoremap ,b :action Build<CR>
+nnoremap ,o :action OverrideMethods<CR>
+nnoremap ,gu :action GotoSuperMethod<CR>
+nnoremap zm :action CollapseAllRegions<CR>
+nnoremap zr :action ExpandAllRegions<CR>
+nnoremap za $:action CollapseSelection<CR>
+nnoremap <c-s> :action SurroundWith<CR>
+vnoremap <c-s> :action SurroundWith<CR>
+nnoremap <c-/> :action CommentByLineComment<CR>
+inoremap <c-e> <c-o>$<right>
+nnoremap <Space>; :action CommentByLineComment<CR>
+vnoremap <Space>; :action CommentByBlockComment<CR>
+vnoremap <c-/> :action CommentByBlockComment<CR>
+nnoremap <Space>wm :action RestoreDefaultLayout<CR>
+nnoremap <Space>en :action GotoNextError<CR>
+nnoremap <Space>ep :action GotoPreviousError<CR>
+nnoremap <Space>eN :action GotoPreviousError<CR>
+nnoremap ]] :action MethodDown<CR>
+nnoremap [[ :action MethodUp<CR>
+nnoremap <c-h> :action Replace<CR>
+nnoremap <f11> :action ToggleFullScreen<CR>
+inoremap <c-/> <c-o>:action VimUndo<CR>
+inoremap <c-s-/> <c-o>:action VimRedo<CR>
+nnoremap g; `^
+

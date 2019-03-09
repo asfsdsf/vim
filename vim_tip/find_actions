@@ -3,9 +3,6 @@ g;          Go to last edited location
 <c-^>       Switch to next buffer tab
 gt          Go to next tab
 gT          Go to previous tab
-<a-j>       Add multiple cursor below
-<a-k>       Add multiple cursor above
-<c-n>       Find and extend multiple cursor in visual mode
 <c-f>       Search by lines using CtrlP(Find Strings everywhere)
 <c-d>       Ctrlp: toggle between the string mode and full regexp mode.
 <c-t>       Ctrlp: Open the selected file in a new 'tab'.
@@ -29,6 +26,9 @@ gT          Go to previous tab
 <c-w>l      Move to the "far right" window(split)
 <c-t>       Open in new tab(CtrlP or fzf)
 <c-m>       Open ctags
+<a-j>       Multiple cursor: Add multiple cursor below
+<a-k>       Multiple cursor: Add multiple cursor above
+<c-n>       Multiple cursor: Find and extend multiple cursor in visual mode
 z<          Multiple cursor: align at cursors by character
 ]           Multiple cursor: find next
 [           Multiple cursor: find previous
@@ -144,3 +144,8 @@ CompareClipboard    Check difference between current buffer and clipboard
 zz          Scroll the current line to the center of the window
 <c-h>       Replace (replace strings in current buffer)
 *<c-h>/     Replace word under cursor
+SPC ag      Open current file with gedit
+SPC au      Open undo tree
+SPC as      Open terminal
+:set wrap!  Turn off soft wrap
+
