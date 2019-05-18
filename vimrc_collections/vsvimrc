@@ -1,0 +1,165 @@
+set encoding=utf8 
+
+"""""""""""""""""""""""""""""""""""""
+" display
+"""""""""""""""""""""""""""""""""""""
+set showcmd                          "show key strokes
+
+" Show linenumbers
+set number relativenumber
+set ruler " Always show cursor position
+
+" Enable highlighting of the current lines
+set cursorline
+
+" Theme and Styling
+set t_Co=256
+set background=dark
+
+if (has("termguicolors"))
+  set termguicolors
+endif
+
+let base16colorspace=256  " Access colors present in 256 colorspace
+" colorscheme spacegray
+" colorscheme spacemacs-theme
+
+"""""""""""""""""""""""""""""""""""""
+" custom functin
+"""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""
+" Mappings configurationn
+"""""""""""""""""""""""""""""""""""""
+" nnoremap <c-w><c-o> :call MaximizeToggle()<CR>
+" nnoremap <c-w><o> :call MaximizeToggle()<CR>
+
+" Moving in insert mode
+
+inoremap <A-h> <c-left>
+inoremap <A-j> <c-o>o
+inoremap <A-k> <c-o>O
+inoremap <A-l> <c-right>
+
+inoremap <c-h> <left>
+inoremap <c-j> <down>
+inoremap <c-k> <up>
+inoremap <c-l> <right>
+
+inoremap <c-a> <c-o>^
+inoremap <c-e> <c-o>$
+
+inoremap <c-p> <c-o>p
+inoremap <c-d> <c-o>d
+inoremap <c-y> <c-o>y
+
+" Easier moving in tabs and windows
+nnoremap <A-l> gt
+nnoremap <A-h> gT
+
+"""""""""""""""""""""""""""""""""""""
+" Map from spacemacs
+"""""""""""""""""""""""""""""""""""""
+nnoremap <Space>wh <C-w>h
+nnoremap <Space>wj <C-w>j
+nnoremap <Space>wk <C-w>k
+nnoremap <Space>wl <C-w>l
+nnoremap <Space>wH <C-w>H
+nnoremap <Space>wJ <C-w>J
+nnoremap <Space>wK <C-w>K
+nnoremap <Space>wL <C-w>L
+nnoremap <Space>w/ :vs<CR>
+nnoremap <Space>w- :sp<CR>
+nnoremap <Space>ww <C-w>w
+nnoremap <Space>w= <C-w>=
+nnoremap <Space>wd :q<CR>
+nnoremap <Space>wx :q<CR>
+
+"""""""""""""""""""""""""""""""""""""
+" Configuration Section
+"""""""""""""""""""""""""""""""""""""
+
+" disable prefix key time out
+set notimeout
+
+" smart case for / search
+set ignorecase
+set smartcase
+
+" highlight all search matches
+:set hlsearch
+
+" highlight the next match while you're still typing out your search pattern
+:set hlsearch incsearch
+
+" set more visual hints in command-line mode
+set wildmenu
+
+" Indention Options
+set autoindent " New lines inherit the indentation of previous lines
+set expandtab " Convert tabs to spaces
+set shiftwidth=4 " When shifting, indent using four spaces
+set tabstop=4 " Indent using four spaces
+set smarttab
+set expandtab
+
+" make scroll leave a margin for 3 lines
+set scrolloff=3
+
+"""""""""""""""""""""""""""""""""""""
+" Vsvim Specific Configuration
+"""""""""""""""""""""""""""""""""""""
+set clipboard=unnamed
+set number
+
+nnoremap <Space>fvd :e C:\Users\73952\vimfiles\vsvimrc<CR>
+nnoremap <Space>fvR :source C:\Users\73952\vimfiles\vsvimrc<CR>
+
+vnoremap <c-[> <esc>
+xnoremap <c-[> <esc>
+nnoremap <c-]> :vsc Edit.FindAllReferences<CR>
+
+nnoremap <Space>aa :vsc Window.QuickLaunch<CR>
+nnoremap <Space>ak :vsc Tools.CustomizeKeyboard<CR>
+
+inoremap <c-e> <c-o>$<right>
+
+nnoremap <c-h> :vsc Edit.Replace<CR>
+
+nnoremap <Space>mrf :vsc Edit.FormatDocument<CR>
+nnoremap ,rf :vsc Edit.FormatDocument<CR>
+nnoremap <Space>mm :vsc VAssistX.ListMethodsInCurrentFile<CR>
+nnoremap ,m :vsc VAssistX.ListMethodsInCurrentFile<CR>
+nnoremap <Space>mrn :vsc Refactor.Rename<CR>
+nnoremap ,rn :vsc Refactor.Rename<CR>
+nnoremap <Space>mcr :vsc Debug.StartWithoutDebugging<CR>
+nnoremap ,cr :vsc Debug.StartWithoutDebugging<CR>
+nnoremap <Space>mcc :vsc Build.Compile<CR>
+nnoremap ,cc :vsc Build.Compile<CR>
+nnoremap <Space>mcd :vsc Debug.Start<CR>
+nnoremap ,cd :vsc Debug.Start<CR>
+nnoremap <Space>mcb :vsc Build.BuildOnlyProject<CR>
+nnoremap ,cb :vsc Build.BuildOnlyProject<CR>
+
+nnoremap <Space>; :vsc Edit.CommentSelection<CR>
+nnoremap <c-/> :vsc Edit.CommentSelection<CR>
+vnoremap <Space>; :vsc Edit.CommentSelection<CR>
+vnoremap <c-/> :vsc Edit.CommentSelection<CR>
+
+nnoremap zm :vsc Edit.CollapseAllOutLining<CR>
+nnoremap zr :vsc Edit.ExpandAllOutLining<CR>
+
+nnoremap <Space>` :vsc Window.PreiousPane<CR>
+nnoremap <Space>wm :vsc View.FullScreen<CR>
+nnoremap <f11> :vsc View.FullScreen<CR>
+
+nnoremap <Space>fr :vsc Edit.GoToRecentFile<CR>
+nnoremap <Space>ff :vsc Edit.GoToFile<CR>
+nnoremap <Space>0 :vsc View.SolutionExplorer<CR>
+
+nnoremap <Space>en :vsc View.NextError<CR>
+nnoremap <Space>eN :vsc View.PreviousError<CR>
+nnoremap <Space>ep :vsc View.PreviousError<CR>
+nnoremap gr :vsc Edit.FindAllReferences<CR>
+nnoremap <Space>fo :vsc File.OpenContainingFolder<CR>
+
+
