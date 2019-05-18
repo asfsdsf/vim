@@ -148,4 +148,6 @@ SPC ag      Open current file with gedit
 SPC au      Open undo tree
 SPC as      Open terminal
 :set wrap!  Turn off soft wrap
+:!python    Run selected code by python (in visual mode)
+<c-r>"      Paste in ex mode (command mode)
 
