@@ -1,0 +1,186 @@
+
+{
+  "vim.easymotion": true,
+  "vim.sneak": true,
+  "vim.incsearch": true,
+  "vim.useSystemClipboard": true,
+  "vim.useCtrlKeys": true,
+  "vim.hlsearch": true,
+  "vim.insertModeKeyBindingsNonRecursive": [
+    // move when editing
+    {
+      "before": ["<c-h>"],
+      "after": ["left"]
+    },
+    {
+      "before": ["<c-l>"],
+      "after": ["right"]
+    },
+    {
+      "before": ["<c-j>"],
+      "after": ["down"]
+    },
+    {
+      "before": ["<c-k>"],
+      "after": ["up"]
+    },
+    {
+      "before": ["<c-e>"],
+      "commands": ["cursorEnd"]
+    },
+    {
+      "before": ["<c-a>"],
+      "commands": ["cursorHome"]
+    },
+  ],
+  "vim.visualModeKeyBindingsNonRecursive": [
+    {
+      "before":["c-/"],
+      "commands":[
+        "editor.action.blockComment"
+      ]
+    }
+  ],
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<leader>", "d"],
+      "after": ["d", "d"]
+    },
+    // fix insert mode shortcut
+    {
+      "before": ["i"],
+      "after": ["i","left","right"]
+    },
+    {
+      "before": ["I"],
+      "after": ["I","left","right"]
+    },
+    {
+      "before": ["A"],
+      "after": ["A","left","right"]
+    },
+    {
+      "before": ["o"],
+      "after": ["o","left","right"]
+    },
+    {
+      "before": ["O"],
+      "after": ["O","left","right"]
+    },
+
+    // window commands
+    // use alt+w to maximize pane
+    // use alt+ctrl+w to undo maximize pane
+    {
+        "before":["<leader>","w","-"],
+        "after":[":","s","p","<CR>"]
+    },
+    {
+        "before":["<leader>","w","/"],
+        "after":[":","v","s","p","<CR>"]
+    },
+    {
+        "before":["<leader>","w","d"],
+        "after":[":","q","<CR>"]
+    },
+    {
+        "before":["<leader>","w","h"],
+        "after":["<c-w>","h"]
+    },
+    {
+        "before":["<leader>","w","j"],
+        "after":["<c-w>","j"]
+    },
+    {
+        "before":["<leader>","w","k"],
+        "after":["<c-w>","k"]
+    },
+    {
+        "before":["<leader>","w","l"],
+        "after":["<c-w>","l"]
+    },
+
+    // multiline commands
+    // use ctrl+left click to multi select
+
+    // files
+    {
+        "before":["<leader>","f","f"],
+        "commands":[
+          "workbench.action.files.openFile"
+        ]
+    },
+    {
+        "before":["<leader>","f","d"],
+        "commands":[
+          "workbench.action.files.openFolder"
+        ]
+    },
+    {
+        "before":["<leader>","f","r"],
+        "commands":[
+          "workbench.action.openRecent"
+        ]
+    },
+    {
+        "before":["<leader>","0"],
+        "commands":[
+          "workbench.view.explorer"
+        ]
+    },
+
+    // go to errors
+    {
+        "before":["<leader>","e","n"],
+        "commands":[
+          "editor.action.marker.nextInFiles"
+        ]
+    },
+    {
+        "before":["<leader>","e","N"],
+        "commands":[
+          "editor.action.marker.previousFiles"
+        ]
+    },
+    {
+        "before":["<leader>","e","p"],
+        "commands":[
+          "editor.action.marker.previousFiles"
+        ]
+    },
+
+    // else
+    {
+        "before":["<leader>","u"],
+        "commands":[
+          "editor.action.smartSelect.expand"
+        ]
+    },
+    {
+        "before":["<leader>",";"],
+        "commands":[
+          "editor.action.commentLine"
+        ]
+    },
+    {
+        "before":["<c-h>"],
+        "commands":[
+          "editor.action.startFindReplaceAction"
+        ]
+    },
+    {
+        "before":["<leader>","a","a"],
+        "commands":[
+          "workbench.action.showCommands"
+        ]
+    }
+
+  ],
+
+  //settings 
+  "vim.leader": "<space>",
+  "vim.handleKeys": {
+    "<C-f>": false,
+    "<c-i>":false,
+  }
+}

@@ -24,7 +24,9 @@ Plug 'davidhalter/jedi-vim'  "Using the jedi autocompletion library for VIM.
 Plug 'benmills/vimux'  " vim plugin to interact with tmux
 Plug 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
 " Plug 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
-Plug 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
+Plugalias enw='emacsclient --tty'
+alias e='emacsclient -c'
+ 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
 Plug 'w0rp/ale'  " Syntax checking for python
 Plug 'wellle/targets.vim' " Vim plugin that provides additional text objects
 Plug 'sbdchd/neoformat' " A (Neo)vim plugin for formatting code.

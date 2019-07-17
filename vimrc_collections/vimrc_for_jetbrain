@@ -36,7 +36,7 @@ let base16colorspace=256  " Access colors present in 256 colorspace
 " Moving in insert mode
 
 inoremap <A-h> <c-left>
-inoremap <A-j> <c-o>o
+" inoremap <A-j> <c-o>o  disabled for conflict with multi-cursor
 inoremap <A-k> <c-o>O
 inoremap <A-l> <c-right>
 
@@ -124,6 +124,7 @@ nnoremap <Space>fc :action GotoClass<CR>
 nnoremap <Space>fp :action SelectInProjectView<CR>
 nnoremap <Space>fvR :source ~/Software/vim/vimrc_collections/vimrc_for_jetbrain<CR>
 nnoremap <Space>aa :action GotoAction<CR>
+nnoremap <Space>p :action ParameterInfo<CR>
 nnoremap <Space>mrf :action ReformatCode<CR>
 nnoremap <Space>mrn :action RenameElement<CR>
 nnoremap <Space>mh :action TypeHierarchy<CR>
@@ -133,11 +134,12 @@ nnoremap <Space>mcd :action Debug<CR>
 nnoremap <Space>mb :action Build<CR>
 nnoremap <Space>mo :action OverrideMethods<CR>
 nnoremap <Space>mgu :action GotoSuperMethod<CR>
+nnoremap <Space>mgs :action GoToSymbol<CR>
+nnoremap <Space>gd :action GotoImplementation<CR>
 nnoremap <Space>0 :action ActivateProjectToolWindow<CR>
 nnoremap <Space>bs :action NewScratchBuffer<CR>
 nnoremap ,rf :action ReformatCode<CR>
 nnoremap ,rn :action RenameElement<CR>
-nnoremap <Space>mh :action TypeHierarchy<CR>
 nnoremap ,h :action TypeHierarchy<CR>
 nnoremap ,cc :action Run<CR>
 nnoremap ,cr :action Rerun<CR>
@@ -145,6 +147,8 @@ nnoremap ,cd :action Debug<CR>
 nnoremap ,b :action Build<CR>
 nnoremap ,o :action OverrideMethods<CR>
 nnoremap ,gu :action GotoSuperMethod<CR>
+nnoremap ,gs :action GotoSymbol<CR>
+nnoremap ,gd :action GotoImplementation<CR>
 nnoremap zm :action CollapseAllRegions<CR>
 nnoremap zr :action ExpandAllRegions<CR>
 nnoremap za $:action CollapseSelection<CR>

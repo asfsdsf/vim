@@ -16,6 +16,7 @@ Plug 'majutsushi/tagbar'  " file names at top bar
 Plug 'ervandew/supertab'  " perform all your vim insert mode completions with Tab
 Plug 'junegunn/fzf.vim'  " fuzzy find
 Plug 'junegunn/fzf'  " fuzzy find together with plugin above
+Plug 'easymotion/vim-easymotion'  " Vim motions on speed! http://www.vim.org/scripts/script.php…
 Plug 'mbbill/undotree'  " show undo history
 " To recompile YouCompleteMe, run:
 " python3 install.py --clang-completer --ts-completer --java-completer
@@ -312,6 +313,14 @@ nnoremap <Space>sf :Ag<CR>
 nnoremap <c-h> :%s//gc<left><left><left>
 cnoremap <c-h> <CR>:%s///gc<left><left><left>
 
+" don't copy when using c and C to change text
+nnoremap c "9c
+nnoremap C "9C
+nnoremap x "9x
+nnoremap X "9X
+nnoremap d "9d
+nnoremap D "9D
+
 """""""""""""""""""""""""""""""""""""
 " Map from spacemacs
 """""""""""""""""""""""""""""""""""""
@@ -350,7 +359,7 @@ nnoremap <Space>ss :CtrlPLine %<CR>
 nnoremap <Space><Tab> :b#<CR>
 nnoremap ]e        :move +1<CR>
 nnoremap [e        :move -2<CR>
-nnoremap <Space><Space> :
+" nnoremap <Space><Space> :
 nnoremap <Space>fvd :OpenVimrcDotFile<CR>
 nnoremap <Space>fvR :source ~/.vimrc<CR>
 nnoremap <Space>mcc :w<CR>:!python %<CR>
@@ -500,6 +509,11 @@ set updatetime=1000
       \   'cat /home/ban/Software/vim/vim_tip/find_actions '.shellescape(<q-args>), 1)
 " }}}
 
+
+
+" easymotion {{{
+    map <Leader> <Plug>(easymotion-prefix)
+" }}}
 
 
 " undotree {{{
