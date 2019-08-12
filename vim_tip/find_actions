@@ -150,4 +150,5 @@ SPC as      Open terminal
 :set wrap!  Turn off soft wrap
 :!python    Run selected code by python (in visual mode)
 <c-r>"      Paste in ex mode (command mode)
+:cd %:p:h   Set current directory to working directory
 

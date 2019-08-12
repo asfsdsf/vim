@@ -253,6 +253,7 @@ endfunction
 com!OpenSoftwareInstallRecord call s:OpenDirectoryFile('~/Documents/Notes/software_installation_record')
 com!OpenProgrammingNotes call s:OpenDirectoryFile('~/Documents/Notes/programming')
 com!OpenCustomCommand call s:OpenDirectoryFile('~/Programming/shell/command')
+com!OpenCommandComplete call s:OpenDirectoryFile('~/Programming/shell/autocomplete/my_complete')
 com!OpenGraduateStudy call s:OpenDirectoryFile('~/Documents/learn/study')
 
 function! s:Compared_with_clipboard()
@@ -318,8 +319,6 @@ nnoremap c "9c
 nnoremap C "9C
 nnoremap x "9x
 nnoremap X "9X
-nnoremap d "9d
-nnoremap D "9D
 
 """""""""""""""""""""""""""""""""""""
 " Map from spacemacs
@@ -592,4 +591,37 @@ endif
     " If you want :UltiSnipsEdit to split your window.
     let g:UltiSnipsEditSplit="vertical"
 " }}}
-"
+
+
+
+" {{{ vimux
+    nmap <space>vp :call VimuxPromptCommand()<CR>
+    nmap <space>vo :call VimuxOpenRunner()<CR>
+    nmap <space>vl :call VimuxRunLastCommand()<CR>
+    nmap <space>vc :call VimuxCloseRunner()<CR>
+    function! VimuxSlimeVisual()
+        call VimuxRunCommand(@v)
+    endfunction
+    vmap <space>vs "vy :call VimuxSlimeVisual()<CR>
+    function! VimuxSlimeNormal()
+        call VimuxRunCommand(getline("."))
+    endfunction
+    nmap <space>vs :call VimuxSlimeNormal()<CR>
+
+    " toggle using vim for repl in another pane
+    function! VimuxForRepl()
+        if !exists("b:VimuxForReplFlag")
+            let b:VimuxForReplFlag=0
+        endif
+
+        if b:VimuxForReplFlag
+            iunmap <enter>
+            let b:VimuxForReplFlag=0
+        else
+            inoremap <enter> <c-o>:call VimuxSlimeNormal()<CR><enter>
+            let b:VimuxForReplFlag=1
+        endif
+    endfunction
+    nmap <space>vr :call VimuxForRepl()<CR>
+" }}}
+
