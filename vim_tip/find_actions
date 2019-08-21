@@ -10,7 +10,7 @@ gT          Go to previous tab
 <c-r>       Ctrlp: toggle regexp search 
 <c-d>       Ctrlp: toggle search by file name
 <c-s>       Ctrlp: Open the selected file in a 'horizontal' split.
-<Space>f    Search by lines using Ag in directories(Find Strings everywhere)
+<Space>/    Search by lines using Ag in current working directory(Find Strings everywhere)
 <c-w><c-_>  Expand current split vertically
 <c-w><c-|>  Expand current split horizontally
 <c-w><c-w>  Switch to next split
@@ -26,9 +26,10 @@ gT          Go to previous tab
 <c-w>l      Move to the "far right" window(split)
 <c-t>       Open in new tab(CtrlP or fzf)
 <c-m>       Open ctags
-<a-j>       Multiple cursor: Add multiple cursor below
-<a-k>       Multiple cursor: Add multiple cursor above
+<a-c-j>     Multiple cursor: Add multiple cursor below(down)
+<a-c-k>     Multiple cursor: Add multiple cursor above(up)
 <c-n>       Multiple cursor: Find and extend multiple cursor in visual mode
+<a-n>       Multiple cursor: Add number(default 1/1/ means 1 2 3 ...)
 z<          Multiple cursor: align at cursors by character
 ]           Multiple cursor: find next
 [           Multiple cursor: find previous
@@ -39,6 +40,8 @@ g/          Multiple cursor: start regex search
 <c-c>       Multiple cursor: change match case type
 Q           Multiple cursor: cancel current selection
 q           Multiple cursor: cancel current selection in cursor mode and ignore curret selection and find the next in visual mode
+<c-LeftMouse>   Multiple cursor: add cursor at clicked position
+<c-RightMouse>  Multiple cursor: select clicked word
 h           Move left
 j           Move down
 k           Move up
@@ -150,5 +153,10 @@ SPC as      Open terminal
 :set wrap!  Turn off soft wrap
 :!python    Run selected code by python (in visual mode)
 <c-r>"      Paste in ex mode (command mode)
-:cd %:p:h   Set current directory to working directory
-
+:cd %:p:h   Set current directory to working directory (mapped to SPC cd)
+=           Is an operator (by default, it formats/indents text).
+SPC yf      YouCompleteMe(YCM): fix it of ycm
+SPC yr      YouCompleteMe(YCM): restart server
+SPC yg      YouCompleteMe(YCM): generate .ycm_extra_conf.py according to CMakeLists.txt
+SPC yd      YouCompleteMe(YCM): go to documentation
+SPC yb      YouCompleteMe(YCM): go to definition/declaration

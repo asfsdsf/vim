@@ -30,6 +30,7 @@ Plug 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
 Plug 'terryma/vim-expand-region'  " Expand region like emacs
 Plug 'mtth/scratch.vim'  "  Unobtrusive scratch window
 Plug 'w0rp/ale'  " Syntax checking for python
+Plug 'Chiel92/vim-autoformat'  " Provide easy code formatting in Vim by integrating existing code formatters.
 Plug 'neomake/neomake'  " Asynchronous linting and make framework for Neovim/Vim
 Plug 'wellle/targets.vim' " Vim plugin that provides additional text objects
 Plug 'sbdchd/neoformat' " A (Neo)vim plugin for formatting code.
@@ -75,61 +76,6 @@ Plug 'colepeters/spacemacs-theme.vim'
 " required
 call plug#end()
 " Put your non-Plugin stuff after this line
-"""""""""""""""""""""""""""""""""""""
-" Mappings configurationn
-"""""""""""""""""""""""""""""""""""""
-
-"
-" vim-multiple-cursor Mappings
-" let g:multi_cursor_use_default_mapping=0
-" let g:multi_cursor_start_word_key      = '<A-j>'
-" let g:multi_cursor_select_all_word_key = '<A-n>'
-" let g:multi_cursor_start_key           = 'g<A-j>'
-" let g:multi_cursor_select_all_key      = 'g<A-n>'
-" let g:multi_cursor_next_key            = '<A-j>'
-" let g:multi_cursor_prev_key            = '<A-k>'
-" let g:multi_cursor_skip_key            = '<A-x>'
-" let g:multi_cursor_quit_key            = '<Esc>'
-
-" vim-visual-multi Mappings
-" let g:VM_no_meta_mappings=0
-" let g:VM_maps = {}
-" let g:VM_maps["Select Operator"]          = 'gs'
-" let g:VM_maps["Add Cursor At Pos"]        = 'g<space>'
-" let g:VM_maps["Start Regex Search"]       = 'g/'
-" let g:VM_maps["Select All"]               = '<leader>A'
-" let g:VM_maps["Add Cursor Down"]          = '<A-j>'
-" let g:VM_maps["Add Cursor Up"]            = '<A-k>'
-" let g:VM_maps["Visual Regex"]             = 'g/'
-" let g:VM_maps["Visual All"]               = '<A-A>'
-" let g:VM_maps["Visual Add"]               = '<A-a>'
-" let g:VM_maps["Visual Find"]              = '<C-f>'
-" let g:VM_maps["Visual Cursors"]           = '<C-c>'
-" let g:VM_maps["Find Under"]               = '<c-n>'
-" let g:VM_maps["Find Subword Under"]       = '<c-n>'
-"
-map <Space>0 :NERDTreeToggle<CR>
-map <C-m> :TagbarToggle<CR>
-
-" YouCompleteMe Mappings
-nnoremap <c-b> :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap <c-f> :YcmCompleter GoToDeclaration<CR>
-nnoremap <leader>q :YcmCompleter GetDoc<CR>
-" <c-e> :cancel completion
-
-" Mapping selecting Mappings
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
-
-" Insert mode completion
-imap <c-x><c-k> <plug>(fzf-complete-word)
-imap <c-x><c-f> <plug>(fzf-complete-path)
-imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-imap <c-x><c-l> <plug>(fzf-complete-line)
-
-" Advanced customization using autoload functions
-inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '14%'})
 """""""""""""""""""""""""""""""""""""
 " Initialization
 """""""""""""""""""""""""""""""""""""
@@ -271,54 +217,144 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
 autocmd FileType python nnoremap <buffer> <Space>r :w <bar> !/home/ban/Programming/Python/Anaconda/bin/python %<CR>
 
 
+"""""""""""""""""""""""""""""""""""""
+" Mappings configurationn
+"""""""""""""""""""""""""""""""""""""
+
+"{{{ vim-multiple-cursor Mappings 
+    " vim-visual-multi Mappings
+    " let g:VM_no_meta_mappings=0
+    let g:VM_mouse_mappings = 1
+    let g:VM_maps = {}
+    let g:VM_maps["Mouse Cursor"]                = '<C-LeftMouse>'
+    let g:VM_maps["Mouse Word"]                  = '<C-RightMouse>'
+    let g:VM_maps["Mouse Column"]                = '<M-C-RightMouse>'
+    " let g:VM_maps["Select Operator"]          = 'gs'
+    " let g:VM_maps["Add Cursor At Pos"]        = 'g<space>'
+    " let g:VM_maps["Start Regex Search"]       = 'g/'
+    " let g:VM_maps["Select All"]               = '<leader>A'
+    let g:VM_maps["Add Cursor Down"]            = '<A-C-j>'
+    let g:VM_maps["Add Cursor Up"]              = '<A-C-k>'
+    let g:VM_maps["Numbers"]                    = '<A-n>'
+    let g:VM_maps["Visual Regex"]               = 'g/'
+    " let g:VM_maps["Visual All"]               = '<A-A>'
+    " let g:VM_maps["Visual Add"]               = '<A-a>'
+    " let g:VM_maps["Visual Find"]              = '<C-f>'
+    " let g:VM_maps["Visual Cursors"]           = '<C-c>'
+    " let g:VM_maps["Find Under"]               = '<c-n>'
+    " let g:VM_maps["Find Subword Under"]       = '<c-n>'
+    "
+    map <Space>0 :NERDTreeToggle<CR>
+    map <C-m> :TagbarToggle<CR>
+"}}}
+
+
+"{{{ fugit Mappings
+    " git status
+    nnoremap <Space>gs :Gstatus<CR>
+    " in Gstatus window:
+    " -	        add/reset file (works in visual mode too)
+    " <Enter>	open current file in the window below
+    " p	        run `git add –patch` for current file
+    " C	        invoke :Gcommit
+    nnoremap <Space>gd :Gvdiffsplit<CR>
+    nnoremap <Space>gc :Gcommit<CR>
+    nnoremap <Space>gm :Gmove<CR>
+    nnoremap <Space>gS :Gstage<CR>
+    nnoremap <Space>gU :Gunstage<CR>
+    nnoremap <Space>gr :Gread<CR>
+    nnoremap <Space>gw :Gwrite<CR>
+"}}}
+
+
+"{{{ YouCompleteMe Mappings
+    nnoremap <Space>yb :YcmCompleter GoTo<CR>
+    nnoremap <Space>yB :YcmCompleter GoToDeclaration<CR>
+    nnoremap <Space>yd :YcmCompleter GetDoc<CR>
+    nnoremap <Space>yf :YcmCompleter FixIt<CR>
+    nnoremap <Space>yr :YcmRestartServer<CR>
+    nnoremap <Space>yg :![[ -e CMakeLists.txt ]] && rm .ycm_extra_conf.py<CR>:YcmGenerateConfig<CR>
+    " <c-e> :cancel completion
+"}}}
+
+
+"{{{ Mapping selecting Mappings
+    nmap <leader><tab> <plug>(fzf-maps-n)
+    xmap <leader><tab> <plug>(fzf-maps-x)
+    omap <leader><tab> <plug>(fzf-maps-o)
+"}}}
+
+
+"{{{ Insert mode completion
+    imap <c-x><c-k> <plug>(fzf-complete-word)
+    imap <c-x><c-f> <plug>(fzf-complete-path)
+    imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+    imap <c-x><c-l> <plug>(fzf-complete-line)
+
+    " Advanced customization using autoload functions
+    inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '14%'})
+"}}}
+
+
 " autocmd InsertLeave * :update
 
-" nnoremap <c-w><c-o> :call MaximizeToggle()<CR>
-" nnoremap <c-w><o> :call MaximizeToggle()<CR>
-
-" directly use s to perform surround
-nmap s ys
-
-" Moving in insert mode
-
-inoremap <A-h> <c-left>
-inoremap <A-j> <c-o>o
-inoremap <A-k> <c-o>O
-inoremap <A-l> <c-right>
-
-inoremap <c-h> <left>
-inoremap <c-j> <down>
-inoremap <c-k> <up>
-inoremap <c-l> <right>
-
-inoremap <c-a> <c-o>^
-inoremap <c-e> <c-o>$
-
-inoremap <c-p> <c-o>p
-inoremap <c-d> <c-o>d
-inoremap <c-y> <c-o>y
-
-" Easier moving in tabs and windows
-nnoremap <A-right> gt
-nnoremap <A-left> gT
-nnoremap <A-J> <C-W>j
-nnoremap <A-K> <C-W>k
-nnoremap <A-L> <C-W>l
-nnoremap <A-H> <C-W>h
+"{{{ directly use s to perform surround
+    nmap s ys
+"}}}
 
 
-nnoremap <Space>sf :Ag<CR>
-" inoremap <s-Enter> <Esc>o
+"{{{ Moving in insert mode
 
-" map for replacement
-nnoremap <c-h> :%s//gc<left><left><left>
-cnoremap <c-h> <CR>:%s///gc<left><left><left>
+    inoremap <A-h> <c-left>
+    inoremap <A-j> <c-o>o
+    inoremap <A-k> <c-o>O
+    inoremap <A-l> <c-right>
+    
+    inoremap <c-h> <left>
+    inoremap <c-j> <down>
+    inoremap <c-k> <up>
+    inoremap <c-l> <right>
+    
+    inoremap <c-a> <c-o>^
+    inoremap <c-e> <c-o>$
+    
+    inoremap <c-H> <backspace>
+    inoremap <c-L> <delete>
+    
+    " inoremap <s-Enter> <Esc>o
+    
+    inoremap <c-p> <c-o>p
+    inoremap <c-d> <c-o>d
+    inoremap <c-y> <c-o>y
+"}}}
 
-" don't copy when using c and C to change text
-nnoremap c "9c
-nnoremap C "9C
-nnoremap x "9x
-nnoremap X "9X
+
+"{{{ Easier moving in tabs and windows
+    nnoremap <A-right> gt
+    nnoremap <A-left> gT
+    nnoremap <A-J> <C-W>j
+    nnoremap <A-K> <C-W>k
+    nnoremap <A-L> <C-W>l
+    nnoremap <A-H> <C-W>h
+"}}}
+
+
+"{{{ map for replacement
+    nnoremap <c-h> :%s//gc<left><left><left>
+    xnoremap <c-h> :s//gc<left><left><left>
+    cnoremap <c-h> <CR>:%s///gc<left><left><left>
+"}}}
+
+
+"{{{ format file
+    " nnoremap <a-c-l> :w<CR>ggdG:.!clang-format %:p<CR>:w<CR>  # use plugin vim-clang-format instead
+    
+"{{{ don't copy when using c and C to change text
+    nnoremap c "9c
+    nnoremap C "9C
+    nnoremap x "9x
+    nnoremap X "9X
+"}}}
 
 """""""""""""""""""""""""""""""""""""
 " Map from spacemacs
@@ -353,6 +389,8 @@ nnoremap <Space>7  7<C-w><C-w>
 nnoremap <Space>8  8<C-w><C-w>
 nnoremap <Space>9  9<C-w><C-w>
 nnoremap <Space>fr :CtrlPMRUFiles<CR>
+nnoremap <c-c><c-o> gf
+nnoremap <Space>fo :!nautilus "<cfile>"& <CR>
 " nnoremap <Space>ff :CtrlP %<CR>
 nnoremap <Space>ss :CtrlPLine %<CR>
 nnoremap <Space><Tab> :b#<CR>
@@ -362,6 +400,7 @@ nnoremap [e        :move -2<CR>
 nnoremap <Space>fvd :OpenVimrcDotFile<CR>
 nnoremap <Space>fvR :source ~/.vimrc<CR>
 nnoremap <Space>mcc :w<CR>:!python %<CR>
+nnoremap <Space>/  :Ag<CR>
 nnoremap <Space>bd :bd<CR>
 nnoremap <Space>bm :messages<CR>
 nnoremap <Space>bn :bn<CR>
@@ -371,6 +410,7 @@ nnoremap <Space>bs :Scratch<CR>
 nnoremap <Space>bx :bd<CR>:close<CR>
 nnoremap <Space>qq :qa<CR>
 nnoremap <Space>hd :help 
+nnoremap <Space>cd :cd %:h<CR>:cd `git rev-parse --show-toplevel`<CR>
 nmap <space>aa :FindActions<CR>
 nmap <space>ag :!gedit %<CR>
 nmap <space>au :UndotreeToggle<CR>
@@ -451,6 +491,11 @@ set updatetime=1000
     " To recompile YouCompleteMe:
     " in ~/.nvim/plugged/YouCompleteMe
     " python3 install.py --clang-completer --ts-completer --java-completer
+
+    " To generate .ycm_extra_conf.py according to CMakeList.txt, run:
+    " :YcmGenerateConfig
+
+    let g:ycm_always_populate_location_list = 1
     " open keyword completion
     let g:ycm_seed_identifiers_with_syntax=1
     let g:ycm_python_binary_path = '/usr/bin/python'
@@ -515,6 +560,7 @@ set updatetime=1000
 " }}}
 
 
+
 " undotree {{{
 if has("persistent_undo")
     set undodir=~/.undodir/
@@ -530,6 +576,7 @@ endif
     let g:scratch_height = 15
     let g:scratch_autohide = 0
 " }}}
+
 
 
 " CtrlP {{{
@@ -557,10 +604,12 @@ endif
     " Available Linters: 'flake8', 'mypy', 'prospector', 'pycodestyle', 'pyflakes', 'pylint', 'pyls', 'pyre', 'vulture'
     let g:ale_linters = {
     \   'python': ['flake8','pylint'],
+    \   'c':[],
     \}
 
     let g:ale_fixer= {
     \   'python': ['autopep8'],
+    \   'c':[],
     \}
 
     " to suppress errors by flake8 globally,use OpenFlake8Config
@@ -573,6 +622,7 @@ endif
 " {{{ neomake
     call neomake#configure#automake('nrwi', 500)
 " }}}
+
 
 
 " {{{ flake8
@@ -590,6 +640,14 @@ endif
 
     " If you want :UltiSnipsEdit to split your window.
     let g:UltiSnipsEditSplit="vertical"
+" }}}
+
+
+
+" {{{ Chiel92/vim-autoformat
+    let g:formatdef_clangformat ="'clang-format -lines='.a:firstline.':'.a:lastline.' --assume-filename=\"'.expand('%:p').'\" -style=\"{ AlignTrailingComments: true, '.(&textwidth ? 'ColumnLimit: '.&textwidth.', ' : '').(&expandtab ? 'UseTab: Never, IndentWidth: '.shiftwidth() : 'UseTab: Always').'}\"'"
+    nnoremap <a-c-l> :Autoformat<CR>
+    xnoremap <a-c-l> :Autoformat<CR>
 " }}}
 
 
