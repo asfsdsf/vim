@@ -74,8 +74,6 @@ m           NerdTree: open nerdtree menu to do some operation(Create dir,delete 
 <Space>en   Go to next error
 <Space>en   Go to previous error
 <c-/><c-/>  Comment the line
-<c-f>       YouCompleteMe(YCM): go to definition (else declaration if no definition found)
-<c-b>       YouCompleteMe(YCM): go to declaration
 <c-y>       YouCompleteMe(YCM): comfirm selection
 <c-e>       YouCompleteMe(YCM): cancel completion and redisplay origin word
 <c-v>       snippets: trigger snippets
@@ -146,6 +144,7 @@ DiffSaved   Difference between buffer and file
 CompareClipboard    Check difference between current buffer and clipboard
 zz          Scroll the current line to the center of the window
 <c-h>       Replace (replace strings in current buffer)
+(y/n/a/q/l/^E/^Y),Replace keymap for gc: y: yes one match, n: no one match, a: all matched, q: quit replace, l: yes one match then quit, ^E and ^Y: scroll 
 *<c-h>/     Replace word under cursor
 SPC ag      Open current file with gedit
 SPC au      Open undo tree
@@ -160,3 +159,25 @@ SPC yr      YouCompleteMe(YCM): restart server
 SPC yg      YouCompleteMe(YCM): generate .ycm_extra_conf.py according to CMakeLists.txt
 SPC yd      YouCompleteMe(YCM): go to documentation
 SPC yb      YouCompleteMe(YCM): go to definition/declaration
+c-]         ctags: go(jump) to symbol
+c-t         ctags: go(jump) back symbol to definition
+:!ctags -R    ctags: generate tags
+SPC gs      Git: git status (show status)
+SPC gd      Git: diff with HEAD
+SPC gc      Git: git commit
+SPC gfm     Git: git move
+SPC gfr     Git: git remove
+SPC ga      Git: git add(stage)
+SPC gb      Git: show git commit time in detail(every line)
+SPC gr      Git: git unstage(revert)
+SPC gl      Git: git browse history. see commit log. show all commit
+SPC gn      Git: show next commit of current file
+[q          Git: show next commit of current file
+SPC gp      Git: show previous commit of current file
+SPC gN      Git: show previous commit of current file
+]q          Git: show previous commit of current file
+-	        Git: (in git status)add/reset file (works in visual mode too)
+<Enter>	    Git: (in git status)open current file in the window below
+p	        Git: (in git status)run `git add –patch` for current file
+C	        Git: (in git status)invoke :Gcommit
+ 

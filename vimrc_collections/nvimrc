@@ -249,7 +249,7 @@ autocmd FileType python nnoremap <buffer> <Space>r :w <bar> !/home/ban/Programmi
 "}}}
 
 
-"{{{ fugit Mappings
+"{{{ fugitive Mappings
     " git status
     nnoremap <Space>gs :Gstatus<CR>
     " in Gstatus window:
@@ -259,11 +259,20 @@ autocmd FileType python nnoremap <buffer> <Space>r :w <bar> !/home/ban/Programmi
     " C	        invoke :Gcommit
     nnoremap <Space>gd :Gvdiffsplit<CR>
     nnoremap <Space>gc :Gcommit<CR>
-    nnoremap <Space>gm :Gmove<CR>
-    nnoremap <Space>gS :Gstage<CR>
-    nnoremap <Space>gU :Gunstage<CR>
+    nnoremap <Space>gfm :Gmove<CR>
+    nnoremap <Space>gfr :Gremove<CR>
+    " revert current file
     nnoremap <Space>gr :Gread<CR>
-    nnoremap <Space>gw :Gwrite<CR>
+    " stage current file
+    nnoremap <Space>ga :Gwrite<CR>
+    " show commit time
+    nnoremap <Space>gb :Gblame<CR>
+    nnoremap <Space>gl :0Glog<CR>
+    nnoremap <Space>gn :cnext<CR>
+    nnoremap [q :cnext<CR>
+    nnoremap <Space>gp :cprev<CR>
+    nnoremap ]q :cprev<CR>
+    nnoremap <Space>gN :cprev<CR>
 "}}}
 
 
@@ -318,8 +327,8 @@ autocmd FileType python nnoremap <buffer> <Space>r :w <bar> !/home/ban/Programmi
     inoremap <c-a> <c-o>^
     inoremap <c-e> <c-o>$
     
-    inoremap <c-H> <backspace>
-    inoremap <c-L> <delete>
+    inoremap <c-Space> <backspace>
+    " inoremap <c-s-l> <delete>
     
     " inoremap <s-Enter> <Esc>o
     
@@ -421,6 +430,19 @@ tnoremap <C-w>j <C-\><C-n><C-w>j
 tnoremap <C-w>k <C-\><C-n><C-w>k
 tnoremap <C-w>l <C-\><C-n><C-w>l
 map <Space>v <Plug>(expand_region_expand)
+function! OpenUrlUnderCursor()
+    let path="/usr/bin/google-chrome-stable"
+    execute "normal BvEy"
+    let url=matchstr(@0, '[a-z]*:\/\/[^ >,;]*')
+    if url != ""
+        " silent exec "!open -a ".path." '".url."'" | redraw! 
+        silent exec "!/usr/bin/google-chrome-stable '".url."'&" | redraw!
+        echo "opened ".url
+    else
+        echo "No URL under cursor."
+    endif
+endfunction
+nmap <c-c><c-o> :call OpenUrlUnderCursor()<CR>
 
 """""""""""""""""""""""""""""""""""""
 " Configuration Section
