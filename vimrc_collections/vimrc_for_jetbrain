@@ -48,7 +48,7 @@ inoremap <c-l> <right>
 inoremap <c-a> <c-o>^
 inoremap <c-e> <c-o>$
 
-inoremap <c-p> <c-o>p
+inoremap <c-v> <c-o>p
 inoremap <c-d> <c-o>d
 inoremap <c-y> <c-o>y
 

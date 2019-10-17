@@ -159,6 +159,7 @@ SPC yr      YouCompleteMe(YCM): restart server
 SPC yg      YouCompleteMe(YCM): generate .ycm_extra_conf.py according to CMakeLists.txt
 SPC yd      YouCompleteMe(YCM): go to documentation
 SPC yb      YouCompleteMe(YCM): go to definition/declaration
+c-b         YouCompleteMe(YCM): go to definition/declaration
 c-]         ctags: go(jump) to symbol
 c-t         ctags: go(jump) back symbol to definition
 :!ctags -R    ctags: generate tags
@@ -180,4 +181,15 @@ SPC gN      Git: show previous commit of current file
 <Enter>	    Git: (in git status)open current file in the window below
 p	        Git: (in git status)run `git add –patch` for current file
 C	        Git: (in git status)invoke :Gcommit
- 
+SPC fo      Open file under the cursor with default system software
+SPC fd      Open the folder containing current file
+:e!<CR>     Refresh changed content of file(buffer) opened in vi(m)
+SPC pf      Fuzzy search/find current working directory
+c-w T       Move current window to new tab
+,cc         Run c,cpp file(Support CMakeLists)
+,cm         Make c,cpp file(Support CMakeLists)
+SPC fe      Edit file under the cursor in current window (tmux environment required).
+c-n         Vim-gdb: frame down(next frame)
+c-p         Vim-gdb: frame up(previous frame)
+<F8>        Vim-gdb: set breakpoint at the cursor line
+
