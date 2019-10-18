@@ -23,7 +23,11 @@ Plug 'mbbill/undotree'  " show undo history
 " in ~/.nvim/plugged/YouCompleteMe
 Plug 'Valloric/YouCompleteMe'  " auto complete engine
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'} " generate .ycm_extra_conf.py file according to CMakeList.txt for YouCompleteMe
-Plug 'davidhalter/jedi-vim'  "Using the jedi autocompletion library for VIM.
+Plug 'tenfyzhong/CompleteParameter.vim'  " Complete parameter after select the completion. Integration with YouCompleteMe(ycm), deoplete, neocomplete.
+Plug 'davidhalter/jedi-vim'  " Using the jedi autocompletion library for VIM.
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " Interactive command execution in Vim.
+Plug 'Shougo/deol.nvim'  " shell interface for NeoVim and Vim8.
+" Plug 'Shougo/vimshell.vim'  " shell interface for NeoVim and Vim8.
 Plug 'benmills/vimux'  " vim plugin to interact with tmux
 Plug 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
 " Plug 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
@@ -55,6 +59,7 @@ Plug 'vim-airline/vim-airline'  " beautiful bar at bottom
 Plug 'vim-airline/vim-airline-themes'  " beautiful bar at bottom
 Plug 'ryanoasis/vim-devicons'  " iconize symbols
 Plug 'morhetz/gruvbox'  "retro groove color scheme for Vim
+Plug 'mhinz/vim-startify'  " The fancy start screen for Vim.
 
 " The following theme is copied from https://coderoncode.com/tools/2017/04/16/vim-the-perfect-ide.html
 " And I don't clearly know their specific functionality
@@ -387,7 +392,6 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     
     " freefem++ file type
     au BufNewFile,BufRead *.edp			setf edp
-    au FileType edp  nnoremap ,cc :w<CR>:!FreeFem++ %:p<CR>
     au FileType edp  nnoremap ,cc :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
 "}}}
 
@@ -405,6 +409,7 @@ nnoremap <Space>wJ <C-w>J
 nnoremap <Space>wK <C-w>K
 nnoremap <Space>wL <C-w>L
 nnoremap <Space>w/ :vs<CR>
+tnoremap <ESC>   <C-\><C-n>
 nnoremap <Space>w- :sp<CR>
 nnoremap <Space>ww <C-w>w
 nnoremap <Space>w= <C-w>=
@@ -458,11 +463,11 @@ nmap <space>aa :FindActions<CR>
 nmap <space>ag :!gedit %<CR>
 nmap <space>au :UndotreeToggle<CR>
 nnoremap <space>as :terminal<CR>
-tnoremap <C-w> <C-\><C-n>
-tnoremap <C-w>h <C-\><C-n><C-w>h
-tnoremap <C-w>j <C-\><C-n><C-w>j
-tnoremap <C-w>k <C-\><C-n><C-w>k
-tnoremap <C-w>l <C-\><C-n><C-w>l
+" tnoremap <C-w> <C-\><C-n>
+" tnoremap <C-w>h <C-\><C-n><C-w>h
+" tnoremap <C-w>j <C-\><C-n><C-w>j
+" tnoremap <C-w>k <C-\><C-n><C-w>k
+" tnoremap <C-w>l <C-\><C-n><C-w>l
 map <Space>v <Plug>(expand_region_expand)
 function! OpenUrlUnderCursor()
     let path="/usr/bin/google-chrome-stable"
@@ -741,6 +746,15 @@ endif
 
 
 
-" {{{
+" {{{ vim-gdb
     nnoremap ,qq :GdbSaveBreakpoints<CR>:sleep 1<CR>:GdbDebugStop<CR>
+" }}}
+
+
+" {{{ CompleteParameter.vim
+" remap ( for conflict with plug delimitMate
+imap <expr> (
+            \ pumvisible() ?
+            \ complete_parameter#pre_complete('()') :
+            \ "\<Plug>delimitMate("
 " }}}
