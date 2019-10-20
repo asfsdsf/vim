@@ -153,11 +153,11 @@ let g:gruvbox_contrast = 'hard'
 """""""""""""""""""""""""""""""""""""
 
 function! s:Python_print()
-    if expand('%:p')=="/home/ban/Software/vim/python_for_vim.py"
+    if expand('%:p')==$HOME."/Software/vim/python_for_vim.py"
         wq
-        r !python /home/ban/Software/vim/python_for_vim.py
+        r !python $HOME/Software/vim/python_for_vim.py
     else
-        vsplit /home/ban/Software/vim/python_for_vim.py
+        vsplit $HOME/Software/vim/python_for_vim.py
         execute "normal!gg\"pdG"
 "        echo "press P to use last python file"
     endif
@@ -175,7 +175,7 @@ com! OpenTodoFile 12sp ~/Software/vim/TODO
 com! OpenFlake8Config 12sp ~/.config/flake8
 
 function! g:OpenFileByCtrlP()
-    12sp /home/ban/Software/vim/open_file_help.sh
+    12sp $HOME/Software/vim/open_file_help.sh
     exec "normal! \<c-w>J"
     r!pwd
     exec "normal!k\"pdd"
@@ -194,7 +194,7 @@ endfunction
 com! DiffSaved call s:DiffWithSaved()
 
 function! s:OpenDirectoryFile(dir_path)
-    12sp /home/ban/Software/vim/open_file_help.sh
+    12sp $HOME/Software/vim/open_file_help.sh
     exec "normal! \<c-w>J"
     put =a:dir_path
     exec "normal!k\"pdd"
@@ -358,11 +358,6 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     cnoremap <c-h> <CR>:%s///gc<left><left><left>
 "}}}
 
-
-"{{{ format file
-    " nnoremap <a-c-l> :w<CR>ggdG:.!clang-format %:p<CR>:w<CR>  # use plugin vim-clang-format instead
-"}}}
-
     
 "{{{ don't copy when using c and C to change text
     nnoremap c "9c
@@ -376,19 +371,20 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     " to see more filetype, run command : echo join(map(split(globpath(&rtp, 'ftplugin/*.vim'), '\n'), 'fnamemodify(v:val, ":t:r")'), "\n")
 
     " run current python buffer
-    autocmd FileType python nnoremap <buffer> <Space>r :w <bar> !/home/ban/Programming/Python/Anaconda/bin/python %<CR>
+    autocmd FileType python nnoremap <buffer> <Space>r :w <bar> !$HOME/Programming/Python/Anaconda/bin/python %<CR>
     " c/c++ jump to
     autocmd FileType c,cpp nnoremap <buffer> <c-b> :YcmCompleter GoTo<CR>
     autocmd FileType c,cpp nnoremap <buffer> ,cc :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --less-output")<CR><CR>
     autocmd FileType c,cpp nnoremap <buffer> ,cm :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --make-only")<CR><CR>
-    autocmd FileType c,cpp nnoremap <buffer> ,cd :w<CR>:GdbStart gdb -q -command="/home/ban/Software/vim/gdb_init" `make_find_executable` <CR>
+    autocmd FileType c,cpp nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
 
     autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cc :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && cmake_run ".expand('%:t')." --less-output")<CR><CR>"}}}
     autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cm :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && cmake_run ".expand('%:t')." --make-only")<CR><CR>
+    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
 
-    autocmd BufRead,BufNewFile  /home/ban/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
-    autocmd BufRead,BufNewFile  /home/ban/Software/vim/open_file_help.sh imap <buffer> <c-h> <c-w><c-w>
-    autocmd BufRead,BufNewFile  /home/ban/Software/vim/open_file_help.sh inoremap <buffer> <CR> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("e ".mycurf)<CR>
+    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
+    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-h> <c-w><c-w>
+    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh inoremap <buffer> <CR> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("e ".mycurf)<CR>
     
     " freefem++ file type
     au BufNewFile,BufRead *.edp			setf edp
@@ -409,6 +405,7 @@ nnoremap <Space>wJ <C-w>J
 nnoremap <Space>wK <C-w>K
 nnoremap <Space>wL <C-w>L
 nnoremap <Space>w/ :vs<CR>
+" map <ESC> to exit insert mode in shell buffer
 tnoremap <ESC>   <C-\><C-n>
 nnoremap <Space>w- :sp<CR>
 nnoremap <Space>ww <C-w>w
@@ -429,6 +426,9 @@ nnoremap <Space>6  6<C-w><C-w>
 nnoremap <Space>7  7<C-w><C-w>
 nnoremap <Space>8  8<C-w><C-w>
 nnoremap <Space>9  9<C-w><C-w>
+" insert dividing line
+nnoremap <Space>id :r !echo "*************************************"<CR>:TComment<CR>
+
 nnoremap <Space>fr :CtrlPMRUFiles<CR>
 nnoremap <c-c><c-o> gf
 " nnoremap <Space>fo :!nautilus "<cfile>"& <CR>
@@ -458,7 +458,7 @@ nnoremap <Space>bs :Scratch<CR>
 nnoremap <Space>bx :bd<CR>:close<CR>
 nnoremap <Space>qq :qa<CR>
 nnoremap <Space>hd :help 
-nnoremap <Space>cd :cd %:h<CR>:cd `git rev-parse --show-toplevel`<CR>
+nnoremap <Space>cd :cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>
 nmap <space>aa :FindActions<CR>
 nmap <space>ag :!gedit %<CR>
 nmap <space>au :UndotreeToggle<CR>
@@ -611,7 +611,7 @@ set updatetime=1000
     " help search command 
     command! -bang -nargs=* FindActions
       \ call fzf#vim#grep(
-      \   'cat /home/ban/Software/vim/vim_tip/find_actions '.shellescape(<q-args>), 1)
+      \   'cat $HOME/Software/vim/vim_tip/find_actions '.shellescape(<q-args>), 1)
 " }}}
 
 
@@ -632,7 +632,7 @@ endif
 
 
 " Scratch {{{
-    let g:scratch_persistence_file = '/home/ban/Software/vim/Scratch'
+    let g:scratch_persistence_file = "$HOME/Software/vim/Scratch"
     let g:scratch_no_mappings = 1
     let g:scratch_height = 15
     let g:scratch_autohide = 0
@@ -705,10 +705,21 @@ endif
 
 
 
-" {{{ Chiel92/vim-autoformat
-    let g:formatdef_clangformat ="'clang-format -lines='.a:firstline.':'.a:lastline.' --assume-filename=\"'.expand('%:p').'\" -style=\"{ AlignTrailingComments: true, '.(&textwidth ? 'ColumnLimit: '.&textwidth.', ' : '').(&expandtab ? 'UseTab: Never, IndentWidth: '.shiftwidth() : 'UseTab: Always').'}\"'"
-    nnoremap <a-c-l> :Autoformat<CR>
-    xnoremap <a-c-l> :Autoformat<CR>
+" {{{ vim-autoformat
+    " let g:formatdef_clangformat ="'clang-format -lines='.a:firstline.':'.a:lastline.' --assume-filename=\"'.expand('%:p').'\" -style=\"{ AlignTrailingComments: true, '.(&textwidth ? 'ColumnLimit: '.&textwidth.', ' : '').(&expandtab ? 'UseTab: Never, IndentWidth: '.shiftwidth() : 'UseTab: Always').'}\"'"
+    " nnoremap ,f :Autoformat<CR>
+    " xnoremap ,f :Autoformat<CR>
+" }}}
+
+
+
+" {{{ neoformat
+    nnoremap ,f :Neoformat<CR>
+    xnoremap ,f :Neoformat<CR>
+    
+    " autocmd FileType edp  nnoremap ,f :Neoformat! cpp<CR>:w<CR>:nnoremap ,cc call VimuxRunCommand("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
+    " autocmd FileType edp  xnoremap ,f :Neoformat! cpp<CR>:w<CR>:nnoremap ,cc call VimuxRunCommand("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
+
 " }}}
 
 
