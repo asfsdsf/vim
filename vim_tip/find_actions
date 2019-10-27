@@ -184,7 +184,7 @@ C	        Git: (in git status)invoke :Gcommit
 SPC fo      Open file under the cursor with default system software
 SPC fd      Open the folder containing current file
 :e!<CR>     Refresh changed content of file(buffer) opened in vi(m)
-SPC pf      Fuzzy search/find current working directory
+SPC pf      Fuzzy search/find current working directory(project file)
 c-w T       Move current window to new tab
 ,cc         Run c,cpp file(Support CMakeLists)
 ,cm         Make c,cpp file(Support CMakeLists)

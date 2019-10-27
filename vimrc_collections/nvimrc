@@ -35,7 +35,7 @@ Plug 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
 Plug 'terryma/vim-expand-region'  " Expand region like emacs
 Plug 'mtth/scratch.vim'  " Unobtrusive scratch window
 Plug 'w0rp/ale'  " Syntax checking for python
-Plug 'sakhnik/nvim-gdb', { 'branch': 'legacy' }
+Plug 'sakhnik/nvim-gdb', { 'do': ':UpdateRemotePlugins' }
 Plug 'Chiel92/vim-autoformat'  " Provide easy code formatting in Vim by integrating existing code formatters.
 Plug 'neomake/neomake'  " Asynchronous linting and make framework for Neovim/Vim
 Plug 'wellle/targets.vim' " Vim plugin that provides additional text objects
@@ -211,6 +211,7 @@ function! s:Compared_with_clipboard()
     diffthis
     vnew ~/Software/vim/clipboard
     execute 'normal!gg"_dG"+P'
+    w
     diffthis
 endfunction
 com!CompareClipboard call s:Compared_with_clipboard()
@@ -349,6 +350,8 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     nnoremap <A-K> <C-W>k
     nnoremap <A-L> <C-W>l
     nnoremap <A-H> <C-W>h
+    " prevent conflict with tmux
+    nnoremap <c-a> l
 "}}}
 
 
@@ -368,10 +371,15 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
 
 
 "{{{ filetype specific keymap
-    " to see more filetype, run command : echo join(map(split(globpath(&rtp, 'ftplugin/*.vim'), '\n'), 'fnamemodify(v:val, ":t:r")'), "\n")
+    " to see more filetype, run command :
+    " echo join(map(split(globpath(&rtp, 'ftplugin/*.vim'), '\n'), 'fnamemodify(v:val, ":t:r")'), "\n")
 
     " run current python buffer
-    autocmd FileType python nnoremap <buffer> <Space>r :w <bar> !$HOME/Programming/Python/Anaconda/bin/python %<CR>
+    autocmd FileType python nnoremap <buffer> ,cc :w<CR>:!$HOME/Programming/Python/Anaconda/bin/python %<CR>
+    " debug current python buffer
+    autocmd FileType python nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartPDB python -m pdb <c-r>%<CR>
+    " debug current bash buffer
+    autocmd FileType sh nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartBashDB bashdb <c-r>%<CR>
     " c/c++ jump to
     autocmd FileType c,cpp nnoremap <buffer> <c-b> :YcmCompleter GoTo<CR>
     autocmd FileType c,cpp nnoremap <buffer> ,cc :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --less-output")<CR><CR>
@@ -382,7 +390,7 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cm :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && cmake_run ".expand('%:t')." --make-only")<CR><CR>
     autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
 
-    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
+autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-h> <c-w><c-w>
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh inoremap <buffer> <CR> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("e ".mycurf)<CR>
     
@@ -427,7 +435,7 @@ nnoremap <Space>7  7<C-w><C-w>
 nnoremap <Space>8  8<C-w><C-w>
 nnoremap <Space>9  9<C-w><C-w>
 " insert dividing line
-nnoremap <Space>id :r !echo "*************************************"<CR>:TComment<CR>
+nnoremap <Space>id :r !echo "**********************************************"<CR>:TComment<CR>5l
 
 nnoremap <Space>fr :CtrlPMRUFiles<CR>
 nnoremap <c-c><c-o> gf
@@ -449,7 +457,7 @@ nnoremap <Space>fvd :OpenVimrcDotFile<CR>
 nnoremap <Space>fvR :source ~/.vimrc<CR>
 nnoremap <Space>mcc :w<CR>:!python %<CR>
 nnoremap <Space>/  :Ag<CR>
-nnoremap <Space>bd :bd<CR>
+nnoremap <Space>bd :bn<CR>:bd#<CR>
 nnoremap <Space>bm :messages<CR>
 nnoremap <Space>bn :bn<CR>
 nnoremap <Space>bp :bp<CR>
