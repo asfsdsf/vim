@@ -185,11 +185,14 @@ SPC fo      Open file under the cursor with default system software
 SPC fd      Open the folder containing current file
 :e!<CR>     Refresh changed content of file(buffer) opened in vi(m)
 SPC pf      Fuzzy search/find current working directory(project file)
-c-w T       Move current window to new tab
+<c-w> T     Move current window to new tab
 ,cc         Run c,cpp file(Support CMakeLists)
 ,cm         Make c,cpp file(Support CMakeLists)
-SPC fe      Edit file under the cursor in current window (tmux environment required).
-c-n         Vim-gdb: frame down(next frame)
-c-p         Vim-gdb: frame up(previous frame)
+gd          Edit file under the cursor with nvim in current window
+<c-n>       Vim-gdb: frame down(next frame)
+<c-p>       Vim-gdb: frame up(previous frame)
 <F8>        Vim-gdb: set breakpoint at the cursor line
+,f          Format file
+<c-o>       Switch between select mode and visual mode
+SPC hc      Translate between Chinese and English
 
