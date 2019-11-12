@@ -2,3 +2,4 @@ python_for_vim.py
 vimrc_collection/
 plugins/
 clipboard
+*.swp

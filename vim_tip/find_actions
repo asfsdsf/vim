@@ -195,4 +195,5 @@ gd          Edit file under the cursor with nvim in current window
 ,f          Format file
 <c-o>       Switch between select mode and visual mode
 SPC hc      Translate between Chinese and English
+:set mouse=a Enable mouse
 

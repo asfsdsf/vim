@@ -125,6 +125,18 @@ set foldmethod=indent
 set foldnestmax=10
 set nofoldenable
 
+" conflict config for nvim and vim
+if(!has("nvim"))
+    set clipboard^=unnamed,unnamedplus
+    " imap <c-[> <esc>
+    " conlict with tmux(color will be gone without this)
+    if exists('+termguicolors')
+        let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+        let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+        set termguicolors
+    endif
+endif
+
 if (has("termguicolors"))
   set termguicolors
 endif
@@ -391,20 +403,28 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     " echo join(map(split(globpath(&rtp, 'ftplugin/*.vim'), '\n'), 'fnamemodify(v:val, ":t:r")'), "\n")
 
     " run current python buffer
-    autocmd FileType python nnoremap <buffer> ,cc :w<CR>:!$HOME/Programming/Python/Anaconda/bin/python %<CR>
-    " debug current python buffer
-    autocmd FileType python nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartPDB python -m pdb <c-r>%<CR>
-    " debug current bash buffer
-    autocmd FileType sh nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartBashDB bashdb <c-r>%<CR>
+    autocmd FileType python nnoremap <buffer> ,cc :w<CR>:!python3 %<CR>
     " c/c++ jump to
     autocmd FileType c,cpp nnoremap <buffer> <c-b> :YcmCompleter GoTo<CR>
     autocmd FileType c,cpp nnoremap <buffer> ,cc :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --less-output")<CR><CR>
     autocmd FileType c,cpp nnoremap <buffer> ,cm :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --make-only")<CR><CR>
-    autocmd FileType c,cpp nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
+
+    if has('nvim')
+        " debug current python buffer
+        autocmd FileType python nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartPDB python -m pdb <c-r>%<CR>
+        " debug current bash buffer
+        autocmd FileType sh nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartBashDB bashdb <c-r>%<CR>
+        " debug current c/cpp project
+        autocmd FileType c,cpp nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
+        " debug current c/cpp project
+        autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
+    else
+        autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>:exec "Termdebug " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>hstart<CR>source .gdb_breakpoints<CR>
+        " autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>:exec "Termdebug -command=~/Software/vim/gdb_init " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>h
+    endif
 
     autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cc :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && cmake_run ".expand('%:t')." --less-output")<CR><CR>"}}}
     autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cm :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && cmake_run ".expand('%:t')." --make-only")<CR><CR>
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
 
     " keymap for open_file_help file(e.g. Used to OpenTodoFile)
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
@@ -432,12 +452,12 @@ nnoremap <Space>wK <C-w>K
 nnoremap <Space>wL <C-w>L
 nnoremap <Space>w/ :vs<CR>
 " map <ESC> to exit insert mode in shell buffer
-tnoremap <ESC>   <C-\><C-n>
+" tnoremap <ESC>   <C-\><C-n>
 nnoremap <Space>w- :sp<CR>
 nnoremap <Space>ww <C-w>w
 nnoremap <Space>w= <C-w>=
 nnoremap <Space>wd :close<CR>
-nnoremap <Space>wx :bd<CR>:close<CR>
+nnoremap <Space>wx :bn<CR>:bd#<CR>:close<CR>
 nnoremap <Space>wo <C-w><C-o>
 nnoremap <c-down>  2<C-w>-
 nnoremap <c-up>    2<C-w>+
@@ -480,14 +500,18 @@ nnoremap <Space>bn :bn<CR>
 nnoremap <Space>bp :bp<CR>
 nnoremap <Space>bb :CtrlPBuffer<CR>
 nnoremap <Space>bs :Scratch<CR>
-nnoremap <Space>bx :bd<CR>:close<CR>
+nnoremap <Space>bx :bn<CR>:bd#<CR>:close<CR>
 nnoremap <Space>qq :qa<CR>
 nnoremap <Space>hd :help 
 nnoremap <Space>cd :cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>
 nmap <space>aa :FindActions<CR>
 nmap <space>ag :!gedit %<CR>
 nmap <space>au :UndotreeToggle<CR>
-nnoremap <space>as :terminal<CR>
+if has('nvim')
+    nnoremap <space>as :terminal<CR>
+else
+    nnoremap <space>as :vertical terminal ++curwin<CR>
+endif
 " tnoremap <C-w> <C-\><C-n>
 " tnoremap <C-w>h <C-\><C-n><C-w>h
 " tnoremap <C-w>j <C-\><C-n><C-w>j
@@ -513,7 +537,54 @@ nmap <c-c><c-o> :call OpenUrlUnderCursor()<CR>
 """""""""""""""""""""""""""""""""""""
 
 " turn off key timeout
-set notimeout
+if has('nvim')
+    set notimeout
+else
+" set alt map
+function! Terminal_MetaMode(mode)
+    set ttimeout
+    if $TMUX != ''
+        set ttimeoutlen=30
+    elseif &ttimeoutlen > 80 || &ttimeoutlen <= 0
+        set ttimeoutlen=80
+    endif
+    if has('nvim') || has('gui_running')
+        return
+    endif
+    function! s:metacode(mode, key)
+        if a:mode == 0
+            exec "set <M-".a:key.">=\e".a:key
+        else
+            exec "set <M-".a:key.">=\e]{0}".a:key."~"
+        endif
+    endfunc
+    for i in range(10)
+        call s:metacode(a:mode, nr2char(char2nr('0') + i))
+    endfor
+    for i in range(26)
+        call s:metacode(a:mode, nr2char(char2nr('a') + i))
+        call s:metacode(a:mode, nr2char(char2nr('A') + i))
+    endfor
+    if a:mode != 0
+        for c in [',', '.', '/', ';', '[', ']', '{', '}']
+            call s:metacode(a:mode, c)
+        endfor
+        for c in ['?', ':', '-', '_']
+            call s:metacode(a:mode, c)
+        endfor
+    else
+        for c in [',', '.', '/', ';', '{', '}']
+            call s:metacode(a:mode, c)
+        endfor
+        for c in ['?', ':', '-', '_']
+            call s:metacode(a:mode, c)
+        endfor
+    endif
+endfunc
+ " Comment following line to disable meta key as alt
+call Terminal_MetaMode(0)
+
+endif
 
 " set system clipboard as default clipboard
 set clipboard+=unnamedplus
@@ -548,6 +619,10 @@ set scrolloff=3
 
 " set updatetime to 1 second.This is used for CursorHold event
 set updatetime=1000
+
+" {{{ vimdebug
+    " let g:termdebug_wide = 163
+" }}}
 
 
 
@@ -805,7 +880,11 @@ endif
 
 
 " {{{ vim-gdb
-    nnoremap ,qq :GdbSaveBreakpoints<CR>:sleep 1<CR>:GdbDebugStop<CR>
+    if has('nvim')
+        nnoremap ,qq :GdbSaveBreakpoints<CR>:sleep 1<CR>:GdbDebugStop<CR>
+    else
+        tnoremap <c-q> save breakpoints .gdb_breakpoints<CR>
+    endif
 " }}}
 
 
