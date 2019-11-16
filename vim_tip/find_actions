@@ -2,6 +2,7 @@
 g;          Go to last edited location
 <c-^>       Switch to next buffer tab
 gt          Go to next tab
+:tabnew     Open new tab
 gT          Go to previous tab
 <c-f>       Search by lines using CtrlP(Find Strings everywhere)
 <c-d>       Ctrlp: toggle between the string mode and full regexp mode.
@@ -40,8 +41,10 @@ g/          Multiple cursor: start regex search
 <c-c>       Multiple cursor: change match case type
 Q           Multiple cursor: cancel current selection
 q           Multiple cursor: cancel current selection in cursor mode and ignore curret selection and find the next in visual mode
+<a-j>       Multiple cursor: (visual) add cursor at the start of line in visual mode
 <c-LeftMouse>   Multiple cursor: add cursor at clicked position
 <c-RightMouse>  Multiple cursor: select clicked word
+:set mouse=a    Enable mouse mode
 h           Move left
 j           Move down
 k           Move up

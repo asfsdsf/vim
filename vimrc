@@ -53,7 +53,7 @@ else
     packadd termdebug
 endif
 Plug 'Chiel92/vim-autoformat'  " Provide easy code formatting in Vim by integrating existing code formatters.
-Plug 'neomake/neomake'  " Asynchronous linting and make framework for Neovim/Vim
+Plug 'neomake/neomake'  " Asynchronous linting and make framework for Neovim/Vim (auto async make)
 Plug 'wellle/targets.vim' " Vim plugin that provides additional text objects
 Plug 'sbdchd/neoformat' " A (Neo)vim plugin for formatting code.
 Plug 'tpope/vim-fugitive' " A git wrapper for vim
@@ -125,9 +125,14 @@ set foldmethod=indent
 set foldnestmax=10
 set nofoldenable
 
+set mouse=a
+
 " conflict config for nvim and vim
 if(!has("nvim"))
+    " Use system clipboard
     set clipboard^=unnamed,unnamedplus
+    " Prevent Vim from clearing the clipboard on exit
+    autocmd VimLeave * call system("xsel -ib", getreg('+'))
     " imap <c-[> <esc>
     " conlict with tmux(color will be gone without this)
     if exists('+termguicolors')
@@ -135,6 +140,8 @@ if(!has("nvim"))
         let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
         set termguicolors
     endif
+else
+    set clipboard+=unnamedplus
 endif
 
 if (has("termguicolors"))
@@ -277,6 +284,13 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     " let g:VM_maps["Visual Cursors"]           = '<C-c>'
     " let g:VM_maps["Find Under"]               = '<c-n>'
     " let g:VM_maps["Find Subword Under"]       = '<c-n>'
+    if has('nvim')
+
+    else
+        
+    endif
+    vmap <A-j> g/^<CR><tab>
+
     "
     map <Space>0 :NERDTreeToggle<CR>
     map <C-m> :TagbarToggle<CR>
@@ -301,7 +315,7 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     nnoremap <Space>ga :Gwrite<CR>
     " show commit time
     nnoremap <Space>gb :Gblame<CR>
-    nnoremap <Space>gl :0Glog<CR>
+    nnoremap <Space>gl :let g:glog_cursor=line(".")<CR>:0Glog<CR>
     nnoremap <Space>gn :cnext<CR>
     nnoremap [q :cnext<CR>
     nnoremap <Space>gp :cprev<CR>
@@ -316,7 +330,8 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     nnoremap <Space>yd :YcmCompleter GetDoc<CR>
     nnoremap <Space>yf :YcmCompleter FixIt<CR>
     nnoremap <Space>yr :YcmRestartServer<CR>
-    nnoremap <Space>yg :![[ -e CMakeLists.txt ]] && rm .ycm_extra_conf.py<CR>:YcmGenerateConfig<CR>
+    " Note here replace of FlagsForFile is due to use of clangd.
+    nnoremap <Space>yg :![[ -e CMakeLists.txt ]] && rm .ycm_extra_conf.py<CR>:YcmGenerateConfig<CR>:!sed -i 's/FlagsForFile/Settings/g' .ycm_extra_conf.py<CR>
     " <c-e> :cancel completion
 "}}}
 
@@ -403,6 +418,7 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     " echo join(map(split(globpath(&rtp, 'ftplugin/*.vim'), '\n'), 'fnamemodify(v:val, ":t:r")'), "\n")
 
     " run current python buffer
+    autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:!octave %<CR>
     autocmd FileType python nnoremap <buffer> ,cc :w<CR>:!python3 %<CR>
     " c/c++ jump to
     autocmd FileType c,cpp nnoremap <buffer> <c-b> :YcmCompleter GoTo<CR>
@@ -434,6 +450,11 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     " freefem++ file type
     au BufNewFile,BufRead *.edp			setf edp
     au FileType edp  nnoremap ,cc :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
+
+    " fugitive glog: auto jump to the same line
+    au! BufLeave  fugitive://*  let g:glog_cursor=line(".")
+    " au! BufEnter  fugitive://*  exec g:glog_cursor 
+    au! BufEnter  fugitive://*  exec "if exists('g:glog_cursor')\n exec g:glog_cursor\n endif\n"
 "}}}
 
 
@@ -457,7 +478,7 @@ nnoremap <Space>w- :sp<CR>
 nnoremap <Space>ww <C-w>w
 nnoremap <Space>w= <C-w>=
 nnoremap <Space>wd :close<CR>
-nnoremap <Space>wx :bn<CR>:bd#<CR>:close<CR>
+nnoremap <Space>wx :bp<cr>:bd #<cr>:close<CR>
 nnoremap <Space>wo <C-w><C-o>
 nnoremap <c-down>  2<C-w>-
 nnoremap <c-up>    2<C-w>+
@@ -494,13 +515,16 @@ nnoremap <Space>fvd :OpenVimrcDotFile<CR>
 execute "nnoremap <Space>fvR :source" . b:dot_file_path . "<CR>"
 nnoremap <Space>mcc :w<CR>:!python %<CR>
 nnoremap <Space>/  :Ag<CR>
+" map * to search selection
+vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
 nnoremap <Space>bd :bn<CR>:bd#<CR>
 nnoremap <Space>bm :messages<CR>
 nnoremap <Space>bn :bn<CR>
 nnoremap <Space>bp :bp<CR>
 nnoremap <Space>bb :CtrlPBuffer<CR>
 nnoremap <Space>bs :Scratch<CR>
-nnoremap <Space>bx :bn<CR>:bd#<CR>:close<CR>
+nnoremap <Space>bx :bp<cr>:bd #<cr>:close<CR>
+
 nnoremap <Space>qq :qa<CR>
 nnoremap <Space>hd :help 
 nnoremap <Space>cd :cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>
@@ -586,8 +610,6 @@ call Terminal_MetaMode(0)
 
 endif
 
-" set system clipboard as default clipboard
-set clipboard+=unnamedplus
 
 
 " smart case for / search
@@ -794,6 +816,11 @@ endif
 
 " {{{ neomake
     call neomake#configure#automake('nrwi', 500)
+    " disable lint/syntax check
+    let g:neomake_python_enabled_makers = []
+    let g:neomake_c_enabled_makers = []
+    let g:neomake_cpp_enabled_makers = []
+    let g:neomake_javascript_enabled_makers = []
 " }}}
 
 
@@ -813,6 +840,14 @@ endif
 
 
 " {{{ snippets
+    " snippets of vim-snippets are in folders under:
+    " /home/ban/.vim/plugged/vim-snippets/UltiSnips
+    " /home/ban/.vim/plugged/vim-snippets/snippets
+    "
+    " custom snippets are in folders under:
+    " /home/ban/.vim/UltiSnips
+    " Use :UltiSnipsEdit to edit custom snippet with current file type.
+    "
     " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
     let g:UltiSnipsExpandTrigger="<c-v>"
     let g:UltiSnipsJumpForwardTrigger="<c-f>"
@@ -882,8 +917,10 @@ endif
 " {{{ vim-gdb
     if has('nvim')
         nnoremap ,qq :GdbSaveBreakpoints<CR>:sleep 1<CR>:GdbDebugStop<CR>
+        tnoremap <c-b> save breakpoints .gdb_breakpoints<CR>q<CR>
     else
-        tnoremap <c-q> save breakpoints .gdb_breakpoints<CR>
+        nnoremap ,qq :call TermDebugSendCommand('save breakpoints .gdb_breakpoints')<CR>:call TermDebugSendCommand('q')<CR>
+        tnoremap <c-b> save breakpoints .gdb_breakpoints<CR>q<CR>
     endif
 " }}}
 
