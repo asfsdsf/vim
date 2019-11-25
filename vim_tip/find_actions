@@ -199,4 +199,13 @@ gd          Edit file under the cursor with nvim in current window
 <c-o>       Switch between select mode and visual mode
 SPC hc      Translate between Chinese and English
 :set mouse=a Enable mouse
+q/          Open search history in command-line window. And edit to search with auto-completion
+q:          Open command history in command-line window. And edit to execute with auto-completion
+c-f         In command/Ex mode, enter command-line window to edit with auto-completion
+c-n         In insert mode, search for all buffers to autocomplete
+SPC :       Vimux: promt to run command
+SPC vp      Vimux: run repl in current buffer
+SPC vr      Vimux: rerun previous command
+SPC vo      Vimux: open pane in tmux if there is only one pane
+SPC vc      Vimux: close pane that is opened by SPC vo command
 

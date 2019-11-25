@@ -36,7 +36,6 @@ Plug 'Valloric/YouCompleteMe'  " auto complete engine
 " generate .ycm_extra_conf.py file according to CMakeList.txt for YouCompleteMe
 Plug 'rdnetto/YCM-Generator',{ 'branch': 'develop'} 
 " Plug 'tenfyzhong/CompleteParameter.vim'  " Complete parameter after select the completion. Integration with YouCompleteMe(ycm), deoplete, neocomplete.
-Plug 'davidhalter/jedi-vim'  " Using the jedi autocompletion library for VIM.
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " Interactive command execution in Vim.
 Plug 'Shougo/deol.nvim'  " shell interface for NeoVim and Vim8.
 " Plug 'Shougo/vimshell.vim'  " shell interface for NeoVim and Vim8.
@@ -46,7 +45,7 @@ Plug 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
 Plug 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
 Plug 'terryma/vim-expand-region'  " Expand region like emacs
 Plug 'mtth/scratch.vim'  " Unobtrusive scratch window
-Plug 'w0rp/ale'  " Syntax checking for python
+" Plug 'w0rp/ale'  " Syntax checking for python
 if has('nvim')
     Plug 'sakhnik/nvim-gdb', { 'do': ':UpdateRemotePlugins' }
 else
@@ -133,7 +132,6 @@ if(!has("nvim"))
     set clipboard^=unnamed,unnamedplus
     " Prevent Vim from clearing the clipboard on exit
     autocmd VimLeave * call system("xsel -ib", getreg('+'))
-    " imap <c-[> <esc>
     " conlict with tmux(color will be gone without this)
     if exists('+termguicolors')
         let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -291,9 +289,13 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     endif
     vmap <A-j> g/^<CR><tab>
 
-    "
+"}}}
+
+
+"{{{ tagbar & NERDTree
     map <Space>0 :NERDTreeToggle<CR>
-    map <C-m> :TagbarToggle<CR>
+    map <Space><CR> :TagbarToggle<CR>
+    map <A-m> :TagbarToggle<CR>
 "}}}
 
 
@@ -417,13 +419,35 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     " to see more filetype, run command :
     " echo join(map(split(globpath(&rtp, 'ftplugin/*.vim'), '\n'), 'fnamemodify(v:val, ":t:r")'), "\n")
 
+    " Run to another window if in tmux mode. Else run directly
+    fun! Run_to_tmux_or_directly(command_str)
+        if exists('$TMUX')
+            call VimuxRunCommand(a:command_str)
+            call feedkeys("<CR>")
+        else
+            exec "!" . a:command_str
+        endif
+    endf
+
     " run current python buffer
     autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:!octave %<CR>
-    autocmd FileType python nnoremap <buffer> ,cc :w<CR>:!python3 %<CR>
+    autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("octave " . expand("%:p"))<CR>
+    autocmd FileType python nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("python3 " . expand("%:p"))<CR>
     " c/c++ jump to
     autocmd FileType c,cpp nnoremap <buffer> <c-b> :YcmCompleter GoTo<CR>
-    autocmd FileType c,cpp nnoremap <buffer> ,cc :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --less-output")<CR><CR>
-    autocmd FileType c,cpp nnoremap <buffer> ,cm :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --make-only")<CR><CR>
+    " python jumpy to
+    autocmd FileType python nnoremap <buffer> <c-b> :YcmCompleter GoTo<CR>
+
+    " run current c/cpp project
+    autocmd FileType c,cpp nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --less-output")<CR>
+
+    " run c/cpp with mpi
+    autocmd FileType c,cpp nnoremap <buffer> ,cp :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --less-output --make-only")<CR>:call Run_to_tmux_or_directly("mpirun -n 4 `make_find_executable`")<CR>
+    autocmd FileType c,cpp nnoremap <buffer> ,cm :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --make-only")<CR>
+
+    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && cmake_run ".expand('%:t')." --less-output")<CR>"}}}
+    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cm :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && cmake_run ".expand('%:t')." --make-only")<CR>
+    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cp :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --less-output --make-only")<CR>:call Run_to_tmux_or_directly("mpirun -n 4 `make_find_executable`")<CR>
 
     if has('nvim')
         " debug current python buffer
@@ -439,22 +463,65 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
         " autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>:exec "Termdebug -command=~/Software/vim/gdb_init " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>h
     endif
 
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cc :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && cmake_run ".expand('%:t')." --less-output")<CR><CR>"}}}
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cm :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && cmake_run ".expand('%:t')." --make-only")<CR><CR>
-
     " keymap for open_file_help file(e.g. Used to OpenTodoFile)
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-h> <c-w><c-w>
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh inoremap <buffer> <CR> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("e ".mycurf)<CR>
     
     " freefem++ file type
-    au BufNewFile,BufRead *.edp			setf edp
-    au FileType edp  nnoremap ,cc :w<CR>:call VimuxRunCommand("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
+    au BufNewFile,BufRead *.edp setf edp
+    au FileType  edp nnoremap ,cc :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
 
     " fugitive glog: auto jump to the same line
     au! BufLeave  fugitive://*  let g:glog_cursor=line(".")
     " au! BufEnter  fugitive://*  exec g:glog_cursor 
     au! BufEnter  fugitive://*  exec "if exists('g:glog_cursor')\n exec g:glog_cursor\n endif\n"
+
+    " command-line window enter insert mode automatically
+	au CmdwinEnter [:/?]  startinsert
+
+    " Set filetype to be same with previous file when searching because
+    " autocomplete will search all buffer with same filetype 
+    au BufEnter * let g:previous_buf_filetype=&filetype
+    au CmdwinEnter [/?]  exec "set filetype=" . g:previous_buf_filetype
+
+    function! s:ChangeFileTypeIfReplacing()
+        if stridx(getline('.'),"s/") >= 0
+            exec "set filetype=" . g:previous_buf_filetype
+        endif
+    endfunction
+
+
+    " Set filetype to be the same with previous file when replacing in
+    " command-line mode
+    au CmdwinEnter [:] call s:ChangeFileTypeIfReplacing()
+
+    " execute the command under the cursor and then have the command-line window open again
+	autocmd CmdwinEnter * map <buffer> <F5> <CR>q:
+
+    " Debug mode auto command
+	" au CmdwinEnter [>] do something
+
+    function! VimEnterExec()
+        if !exists("b:VimEterExecFlag")
+            let b:VimEterExecFlag=0
+        endif
+
+        if b:VimEterExecFlag
+            iunmap <buffer> <enter>
+            vunmap <buffer> <enter>
+            nunmap <buffer> <enter>
+            let b:VimEterExecFlag=0
+        else
+            inoremap <buffer> <enter> <c-o>$<c-o>:exec getline(".")<CR><CR>
+            vnoremap <buffer> <enter> "vy :@v<CR>
+            nnoremap <buffer> <enter> :exec getline(".")<CR>j
+
+            let b:VimEterExecFlag=1
+        endif
+    endfunction
+
+    autocmd FileType vim nnoremap <space>vp :call VimEnterExec()<CR>
 "}}}
 
 
@@ -478,7 +545,7 @@ nnoremap <Space>w- :sp<CR>
 nnoremap <Space>ww <C-w>w
 nnoremap <Space>w= <C-w>=
 nnoremap <Space>wd :close<CR>
-nnoremap <Space>wx :bp<cr>:bd #<cr>:close<CR>
+nnoremap <Space>wx :bp<cr>:silent! exec "bd #"<CR>:close<CR>
 nnoremap <Space>wo <C-w><C-o>
 nnoremap <c-down>  2<C-w>-
 nnoremap <c-up>    2<C-w>+
@@ -497,6 +564,17 @@ nnoremap <Space>9  9<C-w><C-w>
 nnoremap <Space>id :r !echo "**********************************************"<CR>:TComment<CR>5l
 
 nnoremap <Space>fr :CtrlPMRUFiles<CR>
+" goto
+" tags (symbols) in current file finder mapping
+nnoremap ,gt :CtrlPBufTag<CR>
+" tags (symbols) in all files finder mapping
+nnoremap ,gT :CtrlPBufTagAll<CR>
+" recent changes in current buffer
+nnoremap ,gc :CtrlPChange<CR>
+" recent changes in all buffers
+nnoremap ,gC :CtrlPChangeAll<CR>
+" TODO nnoremap ,gj CtrlpJumps
+
 nnoremap <c-c><c-o> gf
 " nnoremap <Space>fo :!nautilus "<cfile>"& <CR>
 " open file under the cursor with default system software
@@ -514,7 +592,7 @@ nnoremap [e        :move -2<CR>
 nnoremap <Space>fvd :OpenVimrcDotFile<CR>
 execute "nnoremap <Space>fvR :source" . b:dot_file_path . "<CR>"
 nnoremap <Space>mcc :w<CR>:!python %<CR>
-nnoremap <Space>/  :Ag<CR>
+nnoremap <Space>/  :Ag!<CR>
 " map * to search selection
 vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
 nnoremap <Space>bd :bn<CR>:bd#<CR>
@@ -523,7 +601,7 @@ nnoremap <Space>bn :bn<CR>
 nnoremap <Space>bp :bp<CR>
 nnoremap <Space>bb :CtrlPBuffer<CR>
 nnoremap <Space>bs :Scratch<CR>
-nnoremap <Space>bx :bp<cr>:bd #<cr>:close<CR>
+nnoremap <Space>bx :bp<cr>:silent! exec "bd #"<CR>:close<CR>
 
 nnoremap <Space>qq :qa<CR>
 nnoremap <Space>hd :help 
@@ -674,7 +752,8 @@ set updatetime=1000
     " To recompile YouCompleteMe:
     " in ~/.vim/plugged/YouCompleteMe for vim
     " in ~/.nvim/plugged/YouCompleteMe for nvim
-    " python3 install.py --clang-completer --ts-completer --java-completer
+    " python3 install.py --clang-completer  # for nvim
+    " python3 install.py --clangd-completer  # for vim
 
     " To generate .ycm_extra_conf.py according to CMakeList.txt, run:
     " :YcmGenerateConfig
@@ -682,14 +761,13 @@ set updatetime=1000
     let g:ycm_always_populate_location_list = 1
     " open keyword completion
     let g:ycm_seed_identifiers_with_syntax=1
-    let g:ycm_python_binary_path = '/usr/bin/python'
+    " let g:ycm_python_binary_path = 'python3'
     "blacklist for youcompleteme
     let g:ycm_filetype_blacklist = {
             \ 'tagbar' : 1,
             \ 'gitcommit' : 1,
             \}
     let g:ycm_autoclose_preview_window_after_completion = 1
-    let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
 
     " Let clangd fully control code completion
     let g:ycm_clangd_uses_ycmd_caching = 0
@@ -699,6 +777,15 @@ set updatetime=1000
     
     let g:ycm_disable_signature_help = 0
     let g:ycm_auto_trigger = 1
+
+    " python completion settings
+    " let g:ycm_python_interpreter_path = '/usr/bin/python'
+    " let g:ycm_python_sys_path = []
+    " let g:ycm_extra_conf_vim_data = [
+      " \  'g:ycm_python_interpreter_path',
+      " \  'g:ycm_python_sys_path'
+      " \]
+    let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py'
 " }}}
 
 
@@ -708,7 +795,9 @@ set updatetime=1000
     let g:fzf_action = {
       \ 'ctrl-t': 'tab split',
       \ 'ctrl-x': 'split',
-      \ 'ctrl-v': 'vsplit' }
+      \ 'ctrl-v': 'vsplit',
+      \ 'ctrl-f': 'read @/',
+      \}
 
     " Default fzf layout
     " - down / up / left / right
@@ -744,6 +833,28 @@ set updatetime=1000
     command! -bang -nargs=* FindActions
       \ call fzf#vim#grep(
       \   'cat $HOME/Software/vim/vim_tip/find_actions '.shellescape(<q-args>), 1)
+
+    " preview when fzf
+    command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse']}), <bang>0)
+
+    command! -bang -nargs=* Ag
+    \ call fzf#vim#ag(<q-args>,
+    \ <bang>0 ? fzf#vim#with_preview('up:60%')
+    \ : fzf#vim#with_preview('right:50%:hidden', '?'),
+    \ <bang>0)
+
+    function!SearchChangesFun()
+        redir => g:changes_text
+        silent changes
+        redir end
+        
+    endfunction
+
+    command! -bang -nargs=* SearchChanges
+    \ call fzf#vim#grep(
+    \ 'git grep --line-number '.shellescape(<q-args>), 0,
+    \ fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
 " }}}
 
 
@@ -873,18 +984,23 @@ endif
     
     " following command contains bug: after command, ,cc will be mapped to cpp
     " run command
-    " autocmd FileType edp  nnoremap ,f :Neoformat! cpp<CR>:w<CR>:nnoremap ,cc call VimuxRunCommand("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
-    " autocmd FileType edp  xnoremap ,f :Neoformat! cpp<CR>:w<CR>:nnoremap ,cc call VimuxRunCommand("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
 
 " }}}
 
 
 
 " {{{ vimux
-    nmap <space>vp :call VimuxPromptCommand()<CR>
+    " when origin filetype==""
+    let g:VimuxReplDefaultFiletype='python'
+    let g:VimuxOrientation = "h"
+    let g:VimuxHeight = "50"
+
+    nmap <space>: :call VimuxPromptCommand()<CR>
+    nmap <space>v: :call VimuxPromptCommand()<CR>
     nmap <space>vo :call VimuxOpenRunner()<CR>
     nmap <space>vl :call VimuxRunLastCommand()<CR>
     nmap <space>vc :call VimuxCloseRunner()<CR>
+    nmap <space>vr :call VimuxRunCommand("!!\n")<CR>
     function! VimuxSlimeVisual()
         call VimuxRunCommand(@v)
     endfunction
@@ -893,7 +1009,6 @@ endif
         call VimuxRunCommand(getline("."))
     endfunction
     nmap <space>vs :call VimuxSlimeNormal()<CR>
-
     " toggle using vim for repl in another pane
     function! VimuxForRepl()
         if !exists("b:VimuxForReplFlag")
@@ -901,15 +1016,30 @@ endif
         endif
 
         if b:VimuxForReplFlag
-            iunmap <enter>
+            iunmap <buffer> <enter>
+            vunmap <buffer> <enter>
+            nunmap <buffer> <enter>
             let b:VimuxForReplFlag=0
         else
-            inoremap <enter> <c-o>:call VimuxSlimeNormal()<CR><enter>
+            inoremap <buffer> <enter> <c-o>$<c-o>:call VimuxSlimeNormal()<CR><enter>
+            vnoremap <buffer> <enter> "vy :call VimuxSlimeVisual()<CR>
+            nnoremap <buffer> <enter> :call VimuxSlimeNormal()<CR>j
+
             let b:VimuxForReplFlag=1
+
+            if(&filetype=='')
+                exec "set filetype=" . g:VimuxReplDefaultFiletype
+            endif
+
+            " set initial code for specific filetype
+            if(&filetype=='python')
+                VimuxRunCommand("python3")
+            endif
+
+            " if(&filetype=='vim') see function VimEnterExec
         endif
     endfunction
-    " nmap <space>vr :call VimuxForRepl()<CR>
-    nmap <space>vr :call VimuxRunCommand("!!\n")<CR>
+    nmap <space>vp :call VimuxForRepl()<CR>
 " }}}
 
 
