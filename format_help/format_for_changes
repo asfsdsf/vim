@@ -1,0 +1,8 @@
+#!/bin/bash
+# see function Changes_results in vimrc
+filepath="$HOME/Software/vim/odd_txt_for_vim.txt"
+filename="$1"
+
+awk 'NR>2{$1 = "";$2 = $2":";$3 = ""; print $0 ; }' "$filepath" | sed 's/^ //g' | tac | awk 'NR>1{print "'"${filename}"':"$0}' > "$filepath.tmp" && mv "$filepath.tmp" "$filepath"
+
+

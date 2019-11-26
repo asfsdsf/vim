@@ -529,7 +529,7 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
 " Map from spacemacs
 """""""""""""""""""""""""""""""""""""
 " nunmap <Space>
-nnoremap <Space><Space> :
+nnoremap <Space><Space> :<c-f>
 nnoremap <Space>wh <C-w>h
 nnoremap <Space>wj <C-w>j
 nnoremap <Space>wk <C-w>k
@@ -569,11 +569,12 @@ nnoremap <Space>fr :CtrlPMRUFiles<CR>
 nnoremap ,gt :CtrlPBufTag<CR>
 " tags (symbols) in all files finder mapping
 nnoremap ,gT :CtrlPBufTagAll<CR>
-" recent changes in current buffer
-nnoremap ,gc :CtrlPChange<CR>
 " recent changes in all buffers
 nnoremap ,gC :CtrlPChangeAll<CR>
-" TODO nnoremap ,gj CtrlpJumps
+" recent changes in current buffer
+nnoremap ,gc :SearchChanges!<CR>
+" recent jumps in current buffer
+nnoremap ,gj :JumpsResults!<CR>
 
 nnoremap <c-c><c-o> gf
 " nnoremap <Space>fo :!nautilus "<cfile>"& <CR>
@@ -844,17 +845,29 @@ set updatetime=1000
     \ : fzf#vim#with_preview('right:50%:hidden', '?'),
     \ <bang>0)
 
-    function!SearchChangesFun()
-        redir => g:changes_text
+    function! Changes_results(query,fullscreen)
+        redir! > ~/Software/vim/odd_txt_for_vim.txt
         silent changes
         redir end
-        
-    endfunction
+        exec "silent !~/Software/vim/format_help/format_for_changes " . expand("%")
 
-    command! -bang -nargs=* SearchChanges
-    \ call fzf#vim#grep(
-    \ 'git grep --line-number '.shellescape(<q-args>), 0,
-    \ fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
+        call fzf#vim#grep(
+        \ 'cat ~/Software/vim/odd_txt_for_vim.txt ' , 0,fzf#vim#with_preview({'options': '--layout=reverse'},'up:60%'), a:fullscreen)
+    endfunction
+    command! -nargs=* -bang SearchChanges call Changes_results(<q-args>, <bang>0)
+
+    function! Jumps_results(query,fullscreen)
+        redir! > ~/Software/vim/odd_txt_for_vim.txt
+        silent jumps
+        redir end
+        exec "silent !~/Software/vim/format_help/format_for_jumps " . expand("%")
+
+        call fzf#vim#grep(
+        \ 'cat ~/Software/vim/odd_txt_for_vim.txt ' , 0,fzf#vim#with_preview('up:60%'), a:fullscreen)
+    endfunction
+    command! -nargs=* -bang JumpsResults call Jumps_results(<q-args>, <bang>0)
+
+
 " }}}
 
 
@@ -1024,6 +1037,7 @@ endif
             inoremap <buffer> <enter> <c-o>$<c-o>:call VimuxSlimeNormal()<CR><enter>
             vnoremap <buffer> <enter> "vy :call VimuxSlimeVisual()<CR>
             nnoremap <buffer> <enter> :call VimuxSlimeNormal()<CR>j
+            VimuxRunCommand("cd " . expand("%:p:h"))
 
             let b:VimuxForReplFlag=1
 

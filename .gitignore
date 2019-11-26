@@ -2,4 +2,7 @@ python_for_vim.py
 vimrc_collection/
 plugins/
 clipboard
+odd_txt_for_vim.txt
+__Scratch__
 *.swp
+test/*
