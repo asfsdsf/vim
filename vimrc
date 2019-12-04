@@ -365,14 +365,17 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
 
 "{{{ Moving in insert mode
 
-    inoremap <A-h> <c-left>
+    inoremap <A-b> <c-left>
     inoremap <A-j> <c-o>o
     inoremap <A-k> <c-o>O
+    inoremap <A-f> <c-right>
     inoremap <A-l> <c-right>
     
-    inoremap <c-h> <left>
+    inoremap <c-b> <left>
     inoremap <c-j> <down>
     inoremap <c-k> <up>
+    inoremap <c-f> <right>
+
     inoremap <c-l> <right>
     
     inoremap <c-a> <c-o>^
@@ -383,7 +386,6 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     
     " inoremap <s-Enter> <Esc>o
     
-    inoremap <c-p> <c-o>p
     inoremap <c-d> <c-o>d
 "}}}
 
@@ -439,28 +441,27 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     autocmd FileType python nnoremap <buffer> <c-b> :YcmCompleter GoTo<CR>
 
     " run current c/cpp project
-    autocmd FileType c,cpp nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --less-output")<CR>
-
+    autocmd FileType c,cpp nnoremap <buffer> ,cc :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output")<CR>
+    autocmd FileType c,cpp nnoremap <buffer> ,cm :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --make-only")<CR>
     " run c/cpp with mpi
-    autocmd FileType c,cpp nnoremap <buffer> ,cp :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --less-output --make-only")<CR>:call Run_to_tmux_or_directly("mpirun -n 4 `make_find_executable`")<CR>
-    autocmd FileType c,cpp nnoremap <buffer> ,cm :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --make-only")<CR>
+    autocmd FileType c,cpp nnoremap <buffer> ,cp :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output --make-only && mpirun -n 4 `make_find_executable`")<CR>
 
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && cmake_run ".expand('%:t')." --less-output")<CR>"}}}
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cm :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && cmake_run ".expand('%:t')." --make-only")<CR>
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cp :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && cmake_run ".expand('%:p')." --less-output --make-only")<CR>:call Run_to_tmux_or_directly("mpirun -n 4 `make_find_executable`")<CR>
-
+    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cc :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:t')." --less-output")<CR>
+    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cm :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:t')." --make-only")<CR>
+    " run c/cpp with mpi
+    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cp :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output --make-only && mpirun -n 4 `make_find_executable`")<CR>
     if has('nvim')
         " debug current python buffer
         autocmd FileType python nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartPDB python -m pdb <c-r>%<CR>
         " debug current bash buffer
         autocmd FileType sh nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartBashDB bashdb <c-r>%<CR>
         " debug current c/cpp project
-        autocmd FileType c,cpp nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
+        autocmd FileType c,cpp nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
         " debug current c/cpp project
-        autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
+        autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
     else
-        autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>:exec "Termdebug " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>hstart<CR>source .gdb_breakpoints<CR>
-        " autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>:exec "Termdebug -command=~/Software/vim/gdb_init " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>h
+        autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:exec "Termdebug " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>hstart<CR>source .gdb_breakpoints<CR>
+        " autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:exec "Termdebug -command=~/Software/vim/gdb_init " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>h
     endif
 
     " keymap for open_file_help file(e.g. Used to OpenTodoFile)
@@ -563,7 +564,7 @@ nnoremap <Space>9  9<C-w><C-w>
 " insert dividing line
 nnoremap <Space>id :r !echo "**********************************************"<CR>:TComment<CR>5l
 
-nnoremap <Space>fr :CtrlPMRUFiles<CR>
+nnoremap <Space>fr :FzfMrf!<CR>
 " goto
 " tags (symbols) in current file finder mapping
 nnoremap ,gt :CtrlPBufTag<CR>
@@ -606,7 +607,7 @@ nnoremap <Space>bx :bp<cr>:silent! exec "bd #"<CR>:close<CR>
 
 nnoremap <Space>qq :qa<CR>
 nnoremap <Space>hd :help 
-nnoremap <Space>cd :cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null`<CR>
+nnoremap <Space>cd :cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>
 nmap <space>aa :FindActions<CR>
 nmap <space>ag :!gedit %<CR>
 nmap <space>au :UndotreeToggle<CR>
@@ -703,6 +704,9 @@ set smartcase
 
 " set more visual hints in command-line mode
 set wildmenu
+
+" maximum number of lines saved for each register would be 50, the maximum size of saved items is 10 KB and the effect of 'hlsearch' is disabled when loading the viminfo file.
+set viminfo='500,<50,s10,h
 
 " Indention Options
 set autoindent " New lines inherit the indentation of previous lines
@@ -863,11 +867,11 @@ set updatetime=1000
         exec "silent !~/Software/vim/format_help/format_for_jumps " . expand("%")
 
         call fzf#vim#grep(
-        \ 'cat ~/Software/vim/odd_txt_for_vim.txt ' , 0,fzf#vim#with_preview('up:60%'), a:fullscreen)
+        \ 'cat ~/Software/vim/odd_txt_for_vim.txt ' , 0,fzf#vim#with_preview({'options': '--layout=reverse'},'up:60%'), a:fullscreen)
     endfunction
     command! -nargs=* -bang JumpsResults call Jumps_results(<q-args>, <bang>0)
 
-
+    command! -bang -nargs=* FzfMrf call fzf#vim#history(fzf#vim#with_preview({'options': '--layout=reverse'},<bang>0?'up:60%':'right:50%'),<bang>0)
 " }}}
 
 
@@ -883,6 +887,13 @@ if has("persistent_undo")
     set undodir=~/.undodir/
     set undofile
 endif
+" }}}
+
+
+
+" TCommentO
+    let g:tcomment_opleader1="<space>;"
+    nnoremap <space>;;  :TComment<CR>
 " }}}
 
 
@@ -979,6 +990,7 @@ endif
 
     " If you want :UltiSnipsEdit to split your window.
     let g:UltiSnipsEditSplit="vertical"
+
 " }}}
 
 
@@ -1008,14 +1020,15 @@ endif
     let g:VimuxOrientation = "h"
     let g:VimuxHeight = "50"
 
-    nmap <space>: :call VimuxPromptCommand()<CR>
+    nmap <space>: :call VimuxPromptCommand()<CR><c-f>:exec "set filetype=" . g:previous_buf_filetype<CR>
     nmap <space>v: :call VimuxPromptCommand()<CR>
     nmap <space>vo :call VimuxOpenRunner()<CR>
     nmap <space>vl :call VimuxRunLastCommand()<CR>
     nmap <space>vc :call VimuxCloseRunner()<CR>
     nmap <space>vr :call VimuxRunCommand("!!\n")<CR>
     function! VimuxSlimeVisual()
-        call VimuxRunCommand(@v)
+        let s:vimux_slime_delete_blank_line=substitute(@v,"\n\n\\+","\n","g")
+        call VimuxRunCommand(s:vimux_slime_delete_blank_line)
     endfunction
     vmap <space>vs "vy :call VimuxSlimeVisual()<CR>
     function! VimuxSlimeNormal()
@@ -1054,6 +1067,11 @@ endif
         endif
     endfunction
     nmap <space>vp :call VimuxForRepl()<CR>
+
+    function!VimuxCdWorkingDirectory()
+        call VimuxRunCommand("cd ".expand('%:p:h'))
+        call VimuxRunCommand("cd `git rev-parse --show-toplevel 2>/dev/null || echo .`")
+    endfunction
 " }}}
 
 

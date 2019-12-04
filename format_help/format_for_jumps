@@ -3,5 +3,5 @@
 filepath="$HOME/Software/vim/odd_txt_for_vim.txt"
 filename="$1"
 
-awk $'{if(system("$HOME/Software/vim/format_help/jumps_auxiliary \'"$4"\'")==0 && NR >2 ){print $4":"$2 }   if(system("$HOME/Software/vim/format_help/jumps_auxiliary \'"$4"\'")!=0 && NR > 2 ){$1 = ""; second = $2;$2 = "";$3 = ""; print "'"${filename}"':"second " " $0 ; } }' "$filepath" | sed 's/^ //g' | tac | awk 'NR>1{print $0}' > "$filepath.tmp" && mv "$filepath.tmp" "$filepath"
+awk $'{if(system("$HOME/Software/vim/format_help/jumps_auxiliary \'"$4"\'")==0 && NR >2 ){print $4":"$2":"}   if(system("$HOME/Software/vim/format_help/jumps_auxiliary \'"$4"\'")!=0 && NR > 2 ){$1 = ""; second = $2;$2 = "";$3 = ""; print "'"${filename}"':"second ": " $0 ; } }' "$filepath" | sed 's/^ //g' | tac | awk 'NR>1{print $0}' > "$filepath.tmp" && mv "$filepath.tmp" "$filepath"
 
