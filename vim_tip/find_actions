@@ -190,6 +190,7 @@ SPC fd      Open the folder containing current file
 SPC pf      Fuzzy search/find current working directory(project file)
 <c-w> T     Move current window to new tab
 ,cc         Run c,cpp file(Support CMakeLists)
+,cp         Run c,cpp file(Support CMakeLists) with mpirun (Use :SetMpiProcessors to set mpirun -n num)
 ,cm         Make c,cpp file(Support CMakeLists)
 gd          Edit file under the cursor with nvim in current window
 <c-n>       Vim-gdb: frame down(next frame)
@@ -208,4 +209,4 @@ SPC vp      Vimux: run repl in current buffer
 SPC vr      Vimux: rerun previous command
 SPC vo      Vimux: open pane in tmux if there is only one pane
 SPC vc      Vimux: close pane that is opened by SPC vo command
-
+SetMpiProcessors    Set the numer of mpi processors for mpirun when execute c/cpp using ,cp command

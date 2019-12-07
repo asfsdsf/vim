@@ -441,27 +441,29 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     autocmd FileType python nnoremap <buffer> <c-b> :YcmCompleter GoTo<CR>
 
     " run current c/cpp project
-    autocmd FileType c,cpp nnoremap <buffer> ,cc :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output")<CR>
-    autocmd FileType c,cpp nnoremap <buffer> ,cm :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --make-only")<CR>
+    autocmd FileType c,cpp nnoremap <buffer> ,cc :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output")<CR>
+    autocmd FileType c,cpp nnoremap <buffer> ,cm :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --make-only")<CR>
     " run c/cpp with mpi
-    autocmd FileType c,cpp nnoremap <buffer> ,cp :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output --make-only && mpirun -n 4 `make_find_executable`")<CR>
+    let g:mpi_processors_num=4
+    com! -nargs=1 SetMpiProcessors let g:mpi_processors_num=<args>
+    autocmd FileType c,cpp nnoremap <buffer> ,cp :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output --make-only && mpirun -n ".g:mpi_processors_num." `make_find_executable`")<CR>
 
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cc :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:t')." --less-output")<CR>
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cm :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:t')." --make-only")<CR>
+    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cc :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:t')." --less-output")<CR>
+    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cm :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:t')." --make-only")<CR>
     " run c/cpp with mpi
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cp :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output --make-only && mpirun -n 4 `make_find_executable`")<CR>
+    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cp :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output --make-only && mpirun -n ".g:mpi_processors_num." `make_find_executable`")<CR>
     if has('nvim')
         " debug current python buffer
         autocmd FileType python nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartPDB python -m pdb <c-r>%<CR>
         " debug current bash buffer
         autocmd FileType sh nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartBashDB bashdb <c-r>%<CR>
         " debug current c/cpp project
-        autocmd FileType c,cpp nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
+        autocmd FileType c,cpp nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:silent! Gcd<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
         " debug current c/cpp project
-        autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
+        autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:silent! Gcd<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
     else
-        autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:exec "Termdebug " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>hstart<CR>source .gdb_breakpoints<CR>
-        " autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>:exec "Termdebug -command=~/Software/vim/gdb_init " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>h
+        autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:silent! Gcd<CR>:exec "Termdebug " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>hstart<CR>source .gdb_breakpoints<CR>
+        " autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:silent! Gcd<CR>:exec "Termdebug -command=~/Software/vim/gdb_init " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>h
     endif
 
     " keymap for open_file_help file(e.g. Used to OpenTodoFile)
@@ -503,6 +505,7 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     " Debug mode auto command
 	" au CmdwinEnter [>] do something
 
+    " enter repl for tmux window
     function! VimEnterExec()
         if !exists("b:VimEterExecFlag")
             let b:VimEterExecFlag=0
@@ -574,6 +577,7 @@ nnoremap ,gT :CtrlPBufTagAll<CR>
 nnoremap ,gC :CtrlPChangeAll<CR>
 " recent changes in current buffer
 nnoremap ,gc :SearchChanges!<CR>
+nnoremap <A-c> :SearchChanges!<CR>
 " recent jumps in current buffer
 nnoremap ,gj :JumpsResults!<CR>
 
@@ -602,12 +606,13 @@ nnoremap <Space>bm :messages<CR>
 nnoremap <Space>bn :bn<CR>
 nnoremap <Space>bp :bp<CR>
 nnoremap <Space>bb :CtrlPBuffer<CR>
+" nnoremap <Space>bb :silent! FzfBuffers!<CR>
 nnoremap <Space>bs :Scratch<CR>
 nnoremap <Space>bx :bp<cr>:silent! exec "bd #"<CR>:close<CR>
 
 nnoremap <Space>qq :qa<CR>
 nnoremap <Space>hd :help 
-nnoremap <Space>cd :cd %:h<CR>:cd `git rev-parse --show-toplevel 2>/dev/null <bar><bar> echo .`<CR>
+nnoremap <Space>cd :cd %:h<CR>:silent! Gcd<CR>
 nmap <space>aa :FindActions<CR>
 nmap <space>ag :!gedit %<CR>
 nmap <space>au :UndotreeToggle<CR>
@@ -872,6 +877,19 @@ set updatetime=1000
     command! -nargs=* -bang JumpsResults call Jumps_results(<q-args>, <bang>0)
 
     command! -bang -nargs=* FzfMrf call fzf#vim#history(fzf#vim#with_preview({'options': '--layout=reverse'},<bang>0?'up:60%':'right:50%'),<bang>0)
+
+    function! s:buffer_list()
+      let l:list = filter(range(1, bufnr('$')),
+      \ "bufexists(v:val) && buflisted(v:val) && filereadable(expand('#' . v:val . ':p'))"
+      \ )
+      return map(l:list, 'bufname(v:val)')
+    endfunction
+
+    function! Fzf_buffers(query,fullscreen)
+      call fzf#vim#grep(
+      \ s:buffer_list() , 0,fzf#vim#with_preview({'options': '--layout=reverse'},'up:60%'), a:fullscreen)
+    endfunction
+    command! -nargs=* -bang FzfBuffers call Fzf_buffers(<q-args>, <bang>0)
 " }}}
 
 
@@ -1027,7 +1045,11 @@ endif
     nmap <space>vc :call VimuxCloseRunner()<CR>
     nmap <space>vr :call VimuxRunCommand("!!\n")<CR>
     function! VimuxSlimeVisual()
+        " delete empty line (for python)
         let s:vimux_slime_delete_blank_line=substitute(@v,"\n\n\\+","\n","g")
+        " add empty line to jump out of block (for python)
+        let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\n\(\s[^\n]\+\n\)\(\w\)','\n\1\n\2','g')
+
         call VimuxRunCommand(s:vimux_slime_delete_blank_line)
     endfunction
     vmap <space>vs "vy :call VimuxSlimeVisual()<CR>
@@ -1069,8 +1091,8 @@ endif
     nmap <space>vp :call VimuxForRepl()<CR>
 
     function!VimuxCdWorkingDirectory()
-        call VimuxRunCommand("cd ".expand('%:p:h'))
-        call VimuxRunCommand("cd `git rev-parse --show-toplevel 2>/dev/null || echo .`")
+        call VimuxRunCommand(" cd ".expand('%:p:h'))
+        call VimuxRunCommand(" cd `git rev-parse --show-toplevel 2>/dev/null || echo .`")
     endfunction
 " }}}
 
