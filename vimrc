@@ -36,6 +36,7 @@ Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " Interactive command execution in V
 Plug 'Shougo/deol.nvim'  " shell interface for NeoVim and Vim8.
 " Plug 'Shougo/vimshell.vim'  " shell interface for NeoVim and Vim8.
 Plug 'benmills/vimux'  " vim plugin to interact with tmux
+Plug 'christoomey/vim-tmux-navigator'  " Seamless navigation between tmux panes and vim splits
 Plug 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
 " Plug 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
 Plug 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
@@ -404,6 +405,7 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
 
 
 "{{{ map for replacement
+    nnoremap <A-H> :%s//gc<left><left><left>
     nnoremap <c-h> :%s//gc<left><left><left>
     xnoremap <c-h> :s//gc<left><left><left>
     cnoremap <c-h> <CR>:%s///gc<left><left><left>
@@ -625,6 +627,7 @@ nnoremap <Space>lL :call LoadLayout(1)<CR>
 nnoremap <Space>qq :qa<CR>
 nnoremap <Space>hd :help 
 nnoremap <Space>cd :cd %:h<CR>:silent! Gcd<CR>
+nnoremap <Space>tw :ToggleWrap<CR>
 nmap <space>aa :FindActions<CR>
 nmap <space>ag :!gedit %<CR>
 nmap <space>au :UndotreeToggle<CR>
@@ -687,6 +690,16 @@ function! LoadLayout(toInputName)
     endif
 endfunction
 
+function s:Toggle_Wrap()
+    if &wrap
+        windo set wrap!
+    else
+        windo set wrap
+    endif
+
+endfunction
+" com!ToggleWrap windo set wrap
+com!ToggleWrap call s:Toggle_Wrap()
 
 """""""""""""""""""""""""""""""""""""
 " Configuration Section
@@ -1173,6 +1186,30 @@ endif
 " }}}
 
 
+
+" {{{ vim-tmux-navigator
+    let g:tmux_navigator_no_mappings = 1
+
+    nnoremap <silent> <A-h> :TmuxNavigateLeft<CR>
+    nnoremap <silent> <A-j> :TmuxNavigateDown<CR>
+    nnoremap <silent> <A-k> :TmuxNavigateUp<CR>
+    nnoremap <silent> <A-l> :TmuxNavigateRight<CR>
+    nnoremap <silent> <A-u> :TmuxNavigatePrevious<CR>
+    " Maximize considering all vim panes and tmux panes
+    function! ToggleMaximizeTmux()
+        if g:isToggledVertically || g:isToggledHorizontally
+            silent! call ToggleMaximize()
+            silent! !tmux resize-pane -Z
+        else
+            silent! !tmux resize-pane -Z 
+            redraw
+            sleep 100m
+            silent! call ToggleMaximize()
+        endif
+        
+    endfunction
+    nnoremap <silent> <A-z> :call ToggleMaximizeTmux()<CR>
+" }}}
 
 " {{{ vim-gdb
     if has('nvim')

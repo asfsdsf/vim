@@ -155,6 +155,8 @@ SPC ag      Open current file with gedit
 SPC au      Open undo tree
 SPC as      Open terminal
 :set wrap!  Turn off soft wrap
+:set wrap   Turn on soft wrap
+SPC tw      Toggle soft wrap for all panes
 :!python    Run selected code by python (in visual mode)
 <c-r>"      Paste in ex mode (command mode)
 :cd %:p:h   Set current directory to working directory (mapped to SPC cd)
@@ -216,3 +218,5 @@ SPC ls      Save layout(session) with dir base name as layout(session) name
 SPC lS      Save layout(session) with user input as layout(session) name
 SPC lr      Load layout(session) with dir base name as layout(session) name
 SPC lR      Load layout(session) with prompt window for help to choose
+A-u         Previous vim pane or tmux pane
+A-z         Toggle maximize panes in tmux
