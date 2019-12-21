@@ -26,6 +26,8 @@ gT          Go to previous tab
 <c-w>k      Move to the "far up" window(split)
 <c-w>l      Move to the "far right" window(split)
 <c-t>       Open in new tab(CtrlP or fzf)
+<a-a>       Fzf: Select all. (Then <enter> to open quickfix window with all selections to easily open them)
+<a-d>       Fzf: Deselect all.
 <c-m>       Open ctags
 <a-c-j>     Multiple cursor: Add multiple cursor below(down)
 <a-c-k>     Multiple cursor: Add multiple cursor above(up)
@@ -210,3 +212,7 @@ SPC vr      Vimux: rerun previous command
 SPC vo      Vimux: open pane in tmux if there is only one pane
 SPC vc      Vimux: close pane that is opened by SPC vo command
 SetMpiProcessors    Set the numer of mpi processors for mpirun when execute c/cpp using ,cp command
+SPC ls      Save layout(session) with dir base name as layout(session) name
+SPC lS      Save layout(session) with user input as layout(session) name
+SPC lr      Load layout(session) with dir base name as layout(session) name
+SPC lR      Load layout(session) with prompt window for help to choose
