@@ -32,6 +32,7 @@ Plug 'mbbill/undotree'  " show undo history
 Plug 'Valloric/YouCompleteMe'  " auto complete engine
 " generate .ycm_extra_conf.py file according to CMakeList.txt for YouCompleteMe
 Plug 'rdnetto/YCM-Generator',{ 'branch': 'develop'} 
+Plug 'lervag/vimtex'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " Interactive command execution in Vim.
 Plug 'Shougo/deol.nvim'  " shell interface for NeoVim and Vim8.
 " Plug 'Shougo/vimshell.vim'  " shell interface for NeoVim and Vim8.
@@ -156,7 +157,7 @@ colorscheme gruvbox
 let g:spacegray_underline_search = 1
 let g:spacegray_italicize_comments = 1
 
-let g:gruvbox_contrast = 'hard'
+" let g:gruvbox_contrast_dark = 'hard'
 
 " Vim-Airline {{{
     let g:airline#extensions#tabline#enabled = 1
@@ -371,6 +372,7 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     inoremap <A-j> <c-o>o
     inoremap <A-k> <c-o>O
     inoremap <A-f> <c-right>
+    inoremap <A-h> <c-left>
     inoremap <A-l> <c-right>
     
     inoremap <c-b> <left>
@@ -386,7 +388,7 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     inoremap <c-Space> <backspace>
     " inoremap <c-s-l> <delete>
     
-    " inoremap <s-Enter> <Esc>o
+    " inoremap <s-Enter> <c-o>o
     
     inoremap <c-d> <c-o>d
 "}}}
@@ -470,6 +472,23 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
         autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:silent! Gcd<CR>:exec "Termdebug " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>hstart<CR>source .gdb_breakpoints<CR>
         " autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:silent! Gcd<CR>:exec "Termdebug -command=~/Software/vim/gdb_init " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>h
     endif
+
+    " latex mode save abbreviation
+    autocmd FileType tex vnoremap <buffer> <m-s> "vy:call VisualSetAbbreviation()<CR>
+    autocmd FileType tex nnoremap <buffer> <m-s> :call ShowAbbreviations()<CR>
+    autocmd FileType tex inoremap <buffer> <m-s> <c-o>:call ShowAbbreviations()<CR>
+    autocmd FileType tex LoadAbbreviations
+    autocmd BufRead,BufNewFile */abbrev_defs.vim nnoremap <buffer> <m-s> :b#<CR>
+    autocmd BufRead,BufNewFile */abbrev_defs.vim inoremap <buffer> <m-s> <c-o>:b#<CR>
+    " latex mode specified mappings
+    autocmd FileType tex call DefLatexMappings()
+    " start vim server for latex preview
+    autocmd FileType tex call StartLatexServer()
+    " enable auto save for real-time preview
+    autocmd FileType tex autocmd TextChangedI <buffer> call LatexAutoSave(5)
+    autocmd FileType tex autocmd CursorHoldI,CursorHold <buffer> silent up
+    autocmd FileType tex autocmd TextChanged <buffer> call LatexAutoSave(0)
+
 
     " keymap for open_file_help file(e.g. Used to OpenTodoFile)
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
@@ -604,9 +623,10 @@ nnoremap ]e        :move +1<CR>
 nnoremap [e        :move -2<CR>
 " nnoremap <Space><Space> :
 nnoremap <Space>fvd :OpenVimrcDotFile<CR>
-execute "nnoremap <Space>fvR :source" . b:dot_file_path . "<CR>"
+execute "nnoremap <Space>fvR :source " . b:dot_file_path . "<CR>"
 nnoremap <Space>mcc :w<CR>:!python %<CR>
 nnoremap <Space>/  :Ag!<CR>
+nnoremap <c-f>  :AgCurrentFile<CR>
 " map * to search selection
 vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
 nnoremap <Space>bd :bn<CR>:bd#<CR>
@@ -914,6 +934,16 @@ set updatetime=1000
     \ : fzf#vim#with_preview('right:50%:hidden', '?'),
     \ <bang>0)
 
+    " function! RipgrepFzf(query, fullscreen)
+    "   let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
+    "   let initial_command = printf(command_fmt, shellescape(a:query))
+    "   let reload_command = printf(command_fmt, '{q}')
+    "   let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+    "   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+    " endfunction
+    "
+    " command! -nargs=* -bang AgCurrentFile call RipgrepFzf(<q-args>, <bang>0)
+
     function! Changes_results(query,fullscreen)
         redir! > ~/Software/vim/odd_txt_for_vim.txt
         silent changes
@@ -1001,7 +1031,7 @@ endif
 
 " CtrlP {{{
     let g:ctrlp_extensions = [ 'line' ]
-    nnoremap <c-f> :CtrlPLine %<CR>
+    " nnoremap <c-f> :CtrlPLine %<CR>
     nmap <c-p> :CtrlP .<CR>
     " let g:ctrlp_map = '<c-p>'
     let g:ctrlp_working_path_mode=2
@@ -1221,6 +1251,94 @@ endif
     endif
 " }}}
 
+
+
+" {{{ abbreviation (This is a functionality of vim rather than a plugin
+    function!PrintIt(to_print)
+        return a:to_print
+    endfunction
+    function!VisualSetAbbreviation ()
+        cd %:h
+        " iabbrev will set abbreviation for insert mode
+        let l:abb_name = input('Please input abbreviation: ')
+        exec "iabbrev " . l:abb_name . " " . @v
+        silent call SaveAbbr(l:abb_name)
+    endfunction
+    vnoremap <Space>va "vy:call VisualSetAbbreviation()<CR>
+
+    function! SaveAbbr(abb_name)
+        redir >> ./abbrev_defs.vim
+        "foo.txt is the file in which you wish to add your abbreviations. For me, it
+        "is ~/.vim/ftplugin/tex.vim
+        echo "iabbrev " . a:abb_name . " " . @v
+        redir END
+    endfunction
+
+    function! LoadAbbr()
+        if filereadable("./abbrev_defs.vim")
+            source ./abbrev_defs.vim
+        else
+            echo "there is no abbrev_defs.vim file in current directory"
+        endif
+    endfunction
+    com! LoadAbbreviations call LoadAbbr()
+
+    function! ShowAbbreviations()
+        e ./abbrev_defs.vim
+    endfunction
+
+    "Replace S-F8 by any other shortcut you wish
+" }}}
+
+
+
+" {{{ 
+    let g:vimtex_view_general_viewer = 'zathura'
+    let g:vimtex_view_method='zathura'
+    let g:vimtex_compiler_callback_hooks = ['ZathuraHook']
+    let g:vimtex_fold_enabled=1
+    let g:vimtex_quickfix_open_on_warning=0
+    let g:vimtex_quickfix_mode=0
+
+    " Note: The Zathura and MuPDF viewers, if used, add a hook to this list in
+    "       order to store the viewer X window ID in order to prevent multiple
+    "       viewer windows.
+    function! ZathuraHook(status)
+      echom a:status
+    endfunction
+
+    let g:vimtex_mappings_enabled = 0
+    let g:vimtex_latexmk_options='-pdf -pdflatex="xelatex -synctex=1 \%S \%O" -verbose -file-line-error -interaction=nonstopmode'
+    " let g:vimtex_compiler_progname=v:progname
+    function! DefLatexMappings()
+        nmap <buffer> ,i <plug>(vimtex-info)
+        nmap <buffer> ,b <plug>(vimtex-compile)
+        nmap <buffer> ,c <plug>(vimtex-clean)
+        nmap <buffer> ,v <plug>(vimtex-view)
+        nmap <buffer> ,r <plug>(vimtex-reverse-search)
+        nmap <buffer> ,e <plug>(vimtex-errors)
+        inoremap <buffer> <c-j> _{}<left>
+        inoremap <buffer> <c-k> ^{}<left>
+        inoremap <buffer> <c-o> $$<left>
+        inoremap <buffer> <c-b> \textbf{}<left>
+    endfunction
+    function!StartLatexServer()
+        if empty(v:servername) && exists('*remote_startserver')
+          call remote_startserver('VIM')
+        endif
+    endfunction
+
+    let g:latex_auto_save_count=0
+    function!LatexAutoSave(save_count)
+        if g:latex_auto_save_count > a:save_count
+            let g:latex_auto_save_count=0
+            silent write
+        else
+            let g:latex_auto_save_count=g:latex_auto_save_count + 1
+        endif
+    endfunction
+
+" }}}
 
 
 " {{{ ranger (Interactive with ranger - a file manager installed by sudo apt
