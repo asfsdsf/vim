@@ -114,6 +114,9 @@ set ruler " Always show cursor position
 " Enable highlighting of the current lines
 set cursorline
 
+" make sure column line will be preserved when swiching buffer
+set nostartofline
+
 " Theme and Styling
 set t_Co=256
 set background=dark
@@ -257,10 +260,18 @@ autocmd QuitPre ~/Software/vim/clipboard :diffoff
 " auto update difference
 autocmd TextChanged ~/Software/vim/clipboard :diffupdate
 
-
+" Goto (nth_add_1 - 1)  buffer shown in top bar
+function! g:GotoNthBuffer(nth_add_1)
+    " let g:previous_buf_name=bufname("#")
+    bfirst
+    exec a:nth_add_1 . "bn"
+    " let g:current_buf_name=bufname("%")
+    " exec "buffer " . g:previous_buf_name
+    " exec "buffer " . g:current_buf_name
+endfunction
 
 """""""""""""""""""""""""""""""""""""
-" Mappings configurationn
+" Basic mappings configurationn
 """""""""""""""""""""""""""""""""""""
 
 "{{{ vim-multiple-cursor Mappings 
@@ -395,13 +406,16 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
 
 
 "{{{ Easier moving in tabs and windows
-    nnoremap <A-right> gt
-    nnoremap <A-left> gT
+    nnoremap <Space>tn gt
+    nnoremap <Space>tN gT
+    nnoremap <Space>tp gT
+    nnoremap <A-n> :bn<CR>
+    nnoremap <A-p> :bp<CR>
     nnoremap <A-J> <C-W>j
     nnoremap <A-K> <C-W>k
     nnoremap <A-L> <C-W>l
     nnoremap <A-H> <C-W>h
-    " prevent conflict with tmux
+    " prevent conflict(type mistake) with tmux
     nnoremap <c-a> l
 "}}}
 
@@ -477,18 +491,30 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     autocmd FileType tex vnoremap <buffer> <m-s> "vy:call VisualSetAbbreviation()<CR>
     autocmd FileType tex nnoremap <buffer> <m-s> :call ShowAbbreviations()<CR>
     autocmd FileType tex inoremap <buffer> <m-s> <c-o>:call ShowAbbreviations()<CR>
-    autocmd FileType tex LoadAbbreviations
     autocmd BufRead,BufNewFile */abbrev_defs.vim nnoremap <buffer> <m-s> :b#<CR>
     autocmd BufRead,BufNewFile */abbrev_defs.vim inoremap <buffer> <m-s> <c-o>:b#<CR>
+
+    " latex mode jump to bibtex
+    autocmd FileType tex nnoremap <buffer> <m-r> :e $HOME/Software/latex/bibtex/bib/ref.bib<CR>
+    autocmd BufRead,BufNewFile $HOME/Software/latex/bibtex/bib/ref.bib nnoremap <buffer> <m-r> :b#<CR>
+    autocmd FileType tex LoadAbbreviations
     " latex mode specified mappings
     autocmd FileType tex call DefLatexMappings()
     " start vim server for latex preview
     autocmd FileType tex call StartLatexServer()
     " enable auto save for real-time preview
     autocmd FileType tex autocmd TextChangedI <buffer> call LatexAutoSave(5)
-    autocmd FileType tex autocmd CursorHoldI,CursorHold <buffer> silent up
+    autocmd FileType tex autocmd CursorHoldI,CursorHold <buffer> silent update
     autocmd FileType tex autocmd TextChanged <buffer> call LatexAutoSave(0)
 
+    " keymap for c/c++ file type
+    autocmd FileType c,cpp imap <buffer> <a-;> <c-e>;<CR>
+
+
+    " translation auto repl
+    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd TextChangedI <buffer> call TranslateCount(5)
+    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd TextChanged <buffer> call TranslateCount(0)
+    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd CursorHoldI,CursorHold <buffer> call TranslateCount(0)
 
     " keymap for open_file_help file(e.g. Used to OpenTodoFile)
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
@@ -497,7 +523,10 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
     
     " freefem++ file type
     au BufNewFile,BufRead *.edp setf edp
+    au BufNewFile,BufRead *.idp setf edp
     au FileType  edp nnoremap ,cc :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
+    " load completion.edp for better completion
+    au FileType  edp call s:LoadFreefemCompletion()
 
     " fugitive glog: auto jump to the same line
     au! BufLeave  fugitive://*  let g:glog_cursor=line(".")
@@ -591,6 +620,10 @@ nnoremap <Space>9  9<C-w><C-w>
 " insert dividing line
 nnoremap <Space>id :r !echo "**********************************************"<CR>:TComment<CR>5l
 
+" folding
+nnoremap <Space>z+ zR
+nnoremap <Space>z- zM
+
 nnoremap <Space>fr :FzfMrf!<CR>
 " goto
 " tags (symbols) in current file finder mapping
@@ -626,17 +659,33 @@ nnoremap <Space>fvd :OpenVimrcDotFile<CR>
 execute "nnoremap <Space>fvR :source " . b:dot_file_path . "<CR>"
 nnoremap <Space>mcc :w<CR>:!python %<CR>
 nnoremap <Space>/  :Ag!<CR>
-nnoremap <c-f>  :AgCurrentFile<CR>
+vnoremap <Space>/  "vy:exec "Ag!" . escape(@v,'/\()*+?[]$^<bar>')<CR>
+nnoremap <c-f>  :w<CR>:AgCurrentFile!<CR>
 " map * to search selection
-vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
+vnoremap * "vy/\V<C-R>=escape(@v,'/\')<CR><CR>
 nnoremap <Space>bd :bn<CR>:bd#<CR>
 nnoremap <Space>bm :messages<CR>
 nnoremap <Space>bn :bn<CR>
+nnoremap ]b :bn<CR>
 nnoremap <Space>bp :bp<CR>
+nnoremap [b :bp<CR>
 " nnoremap <Space>bb :CtrlPBuffer<CR>
 nnoremap <Space>bb :FzfBuffers!<CR>
 nnoremap <Space>bs :Scratch<CR>
 nnoremap <Space>bx :bp<cr>:silent! exec "bd #"<CR>:close<CR>
+nnoremap <Space>b1 :bfirst<CR>
+nnoremap <Space>b2 :call g:GotoNthBuffer("1")<CR>
+nnoremap <Space>b3 :call g:GotoNthBuffer("2")<CR>
+nnoremap <Space>b4 :call g:GotoNthBuffer("3")<CR>
+nnoremap <Space>b5 :call g:GotoNthBuffer("4")<CR>
+nnoremap <Space>b6 :call g:GotoNthBuffer("5")<CR>
+nnoremap <Space>b7 :call g:GotoNthBuffer("6")<CR>
+nnoremap <Space>b8 :call g:GotoNthBuffer("7")<CR>
+nnoremap <Space>b9 :call g:GotoNthBuffer("8")<CR>
+
+nnoremap <Space>tn gt
+nnoremap <Space>tN gT
+nnoremap <Space>tp gT
 
 " save layout
 nnoremap <Space>ls :call SaveLayout(0)<CR>
@@ -934,15 +983,13 @@ set updatetime=1000
     \ : fzf#vim#with_preview('right:50%:hidden', '?'),
     \ <bang>0)
 
-    " function! RipgrepFzf(query, fullscreen)
-    "   let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
-    "   let initial_command = printf(command_fmt, shellescape(a:query))
-    "   let reload_command = printf(command_fmt, '{q}')
-    "   let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
-    "   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
-    " endfunction
-    "
-    " command! -nargs=* -bang AgCurrentFile call RipgrepFzf(<q-args>, <bang>0)
+    command! -nargs=* -bang AgCurrentFile 
+    \ call fzf#vim#grep(
+    \ 'cat_to_fzf_ag_format ' . expand('%') ,
+    \ 0,
+    \ fzf#vim#with_preview({'options': '--layout=reverse'},'up:60%'),
+    \ <bang>0)
+
 
     function! Changes_results(query,fullscreen)
         redir! > ~/Software/vim/odd_txt_for_vim.txt
@@ -1095,6 +1142,27 @@ endif
     nnoremap <silent> <Space>hc :<C-u>Ydc<CR>
     vnoremap <silent> <Space>hc "vy :call Translate()<CR>
     noremap <Space>htc :<C-u>Yde<CR>
+
+    function! s:TranslateRepl()
+        if &modified
+            silent write
+            silent! exec '!translate "$(< $HOME/Software/baiduTranslate/software/toBeTranslate.txt)" > /tmp/oddtranslate && cat /tmp/oddtranslate > $HOME/Software/baiduTranslate/software/translated.txt'
+        endif
+    endfunction
+    let g:translate_count=0
+    " call s:TranslateRepl() if this method is called translateCount times
+    " This method is called with the help of autocmd
+    " translation output will be redirect to
+    " $HOME/Software/baiduTranslate/software/translated.txt
+    " Use watch -t -n 0.3 cat translated.txt to watch
+    function! TranslateCount(translateCount)
+        if g:translate_count >= a:translateCount
+            let g:translate_count=0
+            call s:TranslateRepl()
+        else
+            let g:translate_count=g:translate_count + 1
+        endif
+    endfunction
 " }}}
 
 
@@ -1116,8 +1184,8 @@ endif
     "
     " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
     let g:UltiSnipsExpandTrigger="<c-v>"
-    let g:UltiSnipsJumpForwardTrigger="<c-f>"
-    let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+    let g:UltiSnipsJumpForwardTrigger="<m-n>"
+    let g:UltiSnipsJumpBackwardTrigger="<m-p>"  " disable this due to conflict with latex c-b bold font
 
     " If you want :UltiSnipsEdit to split your window.
     let g:UltiSnipsEditSplit="vertical"
@@ -1159,9 +1227,9 @@ endif
     nmap <space>vr :call VimuxRunCommand("!!\n")<CR>
     function! VimuxSlimeVisual()
         " delete empty line (for python)
-        let s:vimux_slime_delete_blank_line=substitute(@v,"\n\n\\+","\n","g")
+        let s:vimux_slime_delete_blank_line=substitute(@v,'\n\n\+','\n','g')
         " add empty line to jump out of block (for python)
-        let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\n\(\s[^\n]\+\n\)\(\w\)','\n\1\n\2','g')
+        let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\(\n\s[^\n]\+\n\)\(\S\)','\1\n\2','g')
 
         call VimuxRunCommand(s:vimux_slime_delete_blank_line)
     endfunction
@@ -1275,6 +1343,7 @@ endif
     endfunction
 
     function! LoadAbbr()
+        cd %:h
         if filereadable("./abbrev_defs.vim")
             source ./abbrev_defs.vim
         else
@@ -1292,7 +1361,7 @@ endif
 
 
 
-" {{{ 
+" {{{ vimtex
     let g:vimtex_view_general_viewer = 'zathura'
     let g:vimtex_view_method='zathura'
     let g:vimtex_compiler_callback_hooks = ['ZathuraHook']
@@ -1315,6 +1384,7 @@ endif
         nmap <buffer> ,b <plug>(vimtex-compile)
         nmap <buffer> ,c <plug>(vimtex-clean)
         nmap <buffer> ,v <plug>(vimtex-view)
+        inoremap <buffer> <m-v> <c-o>:VimtexView<CR>
         nmap <buffer> ,r <plug>(vimtex-reverse-search)
         nmap <buffer> ,e <plug>(vimtex-errors)
         inoremap <buffer> <c-j> _{}<left>
@@ -1330,7 +1400,7 @@ endif
 
     let g:latex_auto_save_count=0
     function!LatexAutoSave(save_count)
-        if g:latex_auto_save_count > a:save_count
+        if g:latex_auto_save_count >= a:save_count
             let g:latex_auto_save_count=0
             silent write
         else
@@ -1338,6 +1408,21 @@ endif
         endif
     endfunction
 
+" }}}
+
+
+
+" {{{ freefem++
+    let g:freefemCompletionNotLoaded=1
+    function!s:LoadFreefemCompletion()
+        if g:freefemCompletionNotLoaded
+            let g:freefemCompletionNotLoaded=0
+            view $HOME/Software/freefem++/freefem_include/completion.edp
+            set filetype=edp
+            echo "Completion.edp is loaded for completion of custom header functions"
+            b#
+        endif
+    endfunction
 " }}}
 
 

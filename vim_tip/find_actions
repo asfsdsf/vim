@@ -220,3 +220,20 @@ SPC lr      Load layout(session) with dir base name as layout(session) name
 SPC lR      Load layout(session) with prompt window for help to choose
 A-u         Previous vim pane or tmux pane
 A-z         Toggle maximize panes in tmux
+zM          Folding: fold all
+zR          Folding: unfold all
+SPC z-      Folding: fold all
+SPC z+      Folding: unfold all
+zj          Folding: go to next fold
+zk          Folding: go to previous fold
+A-s         Latex: (visual mode) save abbreviation
+A-s         Latex: (normal, insert mode) jump to abbreviation, (Press A-s again will jump back)
+A-r         Latex: jump to bibtex (Press A-r again will jump back)
+,i          Latex: show latex information
+,b          Latex: toggle latex autocompile
+,v          Latex: view and jump to pdf
+,e          Latex: show latex errors
+c-j         Latex: (insert mode) insert _{}<left>
+c-k         Latex: (insert mode) insert ^{}<left>
+c-o         Latex: (insert mode) insert $$<left>
+c-b         Latex: (insert mode) insert \textbf{}<left>
