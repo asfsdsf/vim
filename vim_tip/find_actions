@@ -1,6 +1,8 @@
 ~/Software/vim/vim_tip/find_actions
 g;          Go to last edited location
 <c-^>       Switch to next buffer tab
+<a-n>       Switch to next buffer tab
+<a-p>       Switch to previous buffer tab
 gt          Go to next tab
 :tabnew     Open new tab
 gT          Go to previous tab
@@ -196,7 +198,8 @@ SPC pf      Fuzzy search/find current working directory(project file)
 ,cc         Run c,cpp file(Support CMakeLists)
 ,cp         Run c,cpp file(Support CMakeLists) with mpirun (Use :SetMpiProcessors to set mpirun -n num)
 ,cm         Make c,cpp file(Support CMakeLists)
-gd          Edit file under the cursor with nvim in current window
+gf          Edit file under the cursor with nvim in current window
+gd          Go to definition
 <c-n>       Vim-gdb: frame down(next frame)
 <c-p>       Vim-gdb: frame up(previous frame)
 <F8>        Vim-gdb: set breakpoint at the cursor line

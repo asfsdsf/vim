@@ -30,6 +30,7 @@ Plug 'mbbill/undotree'  " show undo history
 " in ~/.vim/plugged/YouCompleteMe for vim
 " in ~/.nvim/plugged/YouCompleteMe for nvim
 Plug 'Valloric/YouCompleteMe'  " auto complete engine
+Plug 'JuliaEditorSupport/julia-vim'  " Vim support for Julia. http://julialang.org/
 " generate .ycm_extra_conf.py file according to CMakeList.txt for YouCompleteMe
 Plug 'rdnetto/YCM-Generator',{ 'branch': 'develop'} 
 Plug 'lervag/vimtex'
@@ -929,6 +930,12 @@ set updatetime=1000
 
 
 
+" julia-vim {{{
+    let g:julia#doc#juliapath=$HOME.'/Software/julia/julia-1.3.1/bin/julia'
+" }}}
+
+
+
 " Fzf {{{ 
     " This is the default extra key bindings
     let g:fzf_action = {
@@ -1271,6 +1278,9 @@ endif
             if(&filetype=='matlab')
                 VimuxRunCommand("octave --no-window-system")
             endif
+            if(&filetype=='julia')
+                VimuxRunCommand("julia")
+            endif
 
             " if(&filetype=='vim') see function VimEnterExec
         endif
@@ -1288,11 +1298,11 @@ endif
 " {{{ vim-tmux-navigator
     let g:tmux_navigator_no_mappings = 1
 
-    nnoremap <silent> <A-h> :TmuxNavigateLeft<CR>
-    nnoremap <silent> <A-j> :TmuxNavigateDown<CR>
-    nnoremap <silent> <A-k> :TmuxNavigateUp<CR>
-    nnoremap <silent> <A-l> :TmuxNavigateRight<CR>
-    nnoremap <silent> <A-u> :TmuxNavigatePrevious<CR>
+    nnoremap <silent> <A-h> :call CloseMaximize()<CR>:TmuxNavigateLeft<CR>
+    nnoremap <silent> <A-j> :call CloseMaximize()<CR>:TmuxNavigateDown<CR>
+    nnoremap <silent> <A-k> :call CloseMaximize()<CR>:TmuxNavigateUp<CR>
+    nnoremap <silent> <A-l> :call CloseMaximize()<CR>:TmuxNavigateRight<CR>
+    nnoremap <silent> <A-u> :call CloseMaximize()<CR>:TmuxNavigatePrevious<CR>
     " Maximize considering all vim panes and tmux panes
     function! ToggleMaximizeTmux()
         if g:isToggledVertically || g:isToggledHorizontally
@@ -1305,6 +1315,12 @@ endif
             silent! call ToggleMaximize()
         endif
         
+    endfunction
+    function!CloseMaximize()
+        if g:isToggledVertically || g:isToggledHorizontally
+            silent! call ToggleMaximize()
+        endif
+
     endfunction
     nnoremap <silent> <A-z> :call ToggleMaximizeTmux()<CR>
 " }}}
