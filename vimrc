@@ -308,7 +308,7 @@ endfunction
 
 
 "{{{ tagbar & NERDTree
-    map <Space>0 :NERDTreeToggle<CR>
+    map <Space>0 :call CloseMaximize()<CR>:NERDTreeToggle<CR>
     map <Space><CR> :TagbarToggle<CR>
     map <A-m> :TagbarToggle<CR>
 "}}}
@@ -519,6 +519,7 @@ endfunction
 
     " keymap for open_file_help file(e.g. Used to OpenTodoFile)
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
+    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-c> <c-o>:bd!<CR>
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-h> <c-w><c-w>
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh inoremap <buffer> <CR> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("e ".mycurf)<CR>
     
@@ -535,6 +536,7 @@ endfunction
     au! BufEnter  fugitive://*  exec "if exists('g:glog_cursor')\n exec g:glog_cursor\n endif\n"
 
     " command-line window enter insert mode automatically
+    " after :/?, type <c-f> to edit
 	au CmdwinEnter [:/?]  startinsert
 
     " Set filetype to be same with previous file when searching because
@@ -588,36 +590,36 @@ endfunction
 """""""""""""""""""""""""""""""""""""
 " nunmap <Space>
 nnoremap <Space><Space> :<c-f>
-nnoremap <Space>wh <C-w>h
-nnoremap <Space>wj <C-w>j
-nnoremap <Space>wk <C-w>k
-nnoremap <Space>wl <C-w>l
-nnoremap <Space>wH <C-w>H
-nnoremap <Space>wJ <C-w>J
-nnoremap <Space>wK <C-w>K
-nnoremap <Space>wL <C-w>L
-nnoremap <Space>w/ :vs<CR>
+nnoremap <silent> <Space>wh :call CloseMaximize()<CR><C-w>h
+nnoremap <silent> <Space>wj :call CloseMaximize()<CR><C-w>j
+nnoremap <silent> <Space>wk :call CloseMaximize()<CR><C-w>k
+nnoremap <silent> <Space>wl :call CloseMaximize()<CR><C-w>l
+nnoremap <Space>wH :call CloseMaximize()<CR><C-w>H
+nnoremap <Space>wJ :call CloseMaximize()<CR><C-w>J
+nnoremap <Space>wK :call CloseMaximize()<CR><C-w>K
+nnoremap <Space>wL :call CloseMaximize()<CR><C-w>L
+nnoremap <Space>w/ :call CloseMaximize()<CR>:vs<CR>
 " map <ESC> to exit insert mode in shell buffer
 " tnoremap <ESC>   <C-\><C-n>
-nnoremap <Space>w- :sp<CR>
-nnoremap <Space>ww <C-w>w
-nnoremap <Space>w= <C-w>=
-nnoremap <Space>wd :close<CR>
-nnoremap <Space>wx :bp<cr>:silent! exec "bd #"<CR>:close<CR>
-nnoremap <Space>wo <C-w><C-o>
+nnoremap <Space>w- :call CloseMaximize()<CR>:sp<CR>
+nnoremap <Space>ww :call CloseMaximize()<CR><C-w>w
+nnoremap <Space>w= :call CloseMaximize()<CR><C-w>=
+nnoremap <Space>wd :call CloseMaximize()<CR>:close<CR>
+nnoremap <Space>wx :call CloseMaximize()<CR>:bp<cr>:silent! exec "bd #"<CR>:close<CR>
+nnoremap <Space>wo :call CloseMaximize()<CR><C-w><C-o>
 nnoremap <c-down>  2<C-w>-
 nnoremap <c-up>    2<C-w>+
 nnoremap <c-left>  2<C-w><
 nnoremap <c-right> 2<C-w>>
-nnoremap <Space>1  1<C-w><C-w>
-nnoremap <Space>2  2<C-w><C-w>
-nnoremap <Space>3  3<C-w><C-w>
-nnoremap <Space>4  4<C-w><C-w>
-nnoremap <Space>5  5<C-w><C-w>
-nnoremap <Space>6  6<C-w><C-w>
-nnoremap <Space>7  7<C-w><C-w>
-nnoremap <Space>8  8<C-w><C-w>
-nnoremap <Space>9  9<C-w><C-w>
+nnoremap <Space>1  :call CloseMaximize()<CR>1<C-w><C-w>
+nnoremap <Space>2  :call CloseMaximize()<CR>2<C-w><C-w>
+nnoremap <Space>3  :call CloseMaximize()<CR>3<C-w><C-w>
+nnoremap <Space>4  :call CloseMaximize()<CR>4<C-w><C-w>
+nnoremap <Space>5  :call CloseMaximize()<CR>5<C-w><C-w>
+nnoremap <Space>6  :call CloseMaximize()<CR>6<C-w><C-w>
+nnoremap <Space>7  :call CloseMaximize()<CR>7<C-w><C-w>
+nnoremap <Space>8  :call CloseMaximize()<CR>8<C-w><C-w>
+nnoremap <Space>9  :call CloseMaximize()<CR>9<C-w><C-w>
 " insert dividing line
 nnoremap <Space>id :r !echo "**********************************************"<CR>:TComment<CR>5l
 
@@ -673,7 +675,7 @@ nnoremap [b :bp<CR>
 " nnoremap <Space>bb :CtrlPBuffer<CR>
 nnoremap <Space>bb :FzfBuffers!<CR>
 nnoremap <Space>bs :Scratch<CR>
-nnoremap <Space>bx :bp<cr>:silent! exec "bd #"<CR>:close<CR>
+nnoremap <Space>bx :call CloseMaximize()<CR>:bp<cr>:silent! exec "bd #"<CR>:close<CR>
 nnoremap <Space>b1 :bfirst<CR>
 nnoremap <Space>b2 :call g:GotoNthBuffer("1")<CR>
 nnoremap <Space>b3 :call g:GotoNthBuffer("2")<CR>
@@ -1323,6 +1325,7 @@ endif
 
     endfunction
     nnoremap <silent> <A-z> :call ToggleMaximizeTmux()<CR>
+    inoremap <silent> <A-z> <c-o>:call ToggleMaximizeTmux()<CR>
 " }}}
 
 " {{{ vim-gdb
