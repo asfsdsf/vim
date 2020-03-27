@@ -55,6 +55,8 @@ Plug 'neomake/neomake'  " Asynchronous linting and make framework for Neovim/Vim
 Plug 'wellle/targets.vim' " Vim plugin that provides additional text objects
 Plug 'sbdchd/neoformat' " A (Neo)vim plugin for formatting code.
 Plug 'tpope/vim-fugitive' " A git wrapper for vim
+Plug 'airblade/vim-gitgutter'  " A Vim plugin which shows a git diff in the sign column and stages/previews/undoes hunks and partial hunks.
+Plug 'Xuyuanp/nerdtree-git-plugin'  " A plugin of NERDTree showing git status
 Plug 'ianva/vim-youdao-translater' " translation plugin for vim  http://ianva.github.com
 
 " Language support
@@ -621,7 +623,7 @@ nnoremap <Space>7  :call CloseMaximize()<CR>7<C-w><C-w>
 nnoremap <Space>8  :call CloseMaximize()<CR>8<C-w><C-w>
 nnoremap <Space>9  :call CloseMaximize()<CR>9<C-w><C-w>
 " insert dividing line
-nnoremap <Space>id :r !echo "**********************************************"<CR>:TComment<CR>5l
+nnoremap <Space>id :r !echo "-----------------------------------------------------------------------"<CR>:TComment<CR>5l
 
 " folding
 nnoremap <Space>z+ zR
@@ -1304,7 +1306,7 @@ endif
     nnoremap <silent> <A-j> :call CloseMaximize()<CR>:TmuxNavigateDown<CR>
     nnoremap <silent> <A-k> :call CloseMaximize()<CR>:TmuxNavigateUp<CR>
     nnoremap <silent> <A-l> :call CloseMaximize()<CR>:TmuxNavigateRight<CR>
-    nnoremap <silent> <A-u> :call CloseMaximize()<CR>:TmuxNavigatePrevious<CR>
+    nnoremap <silent> <A-p> :call CloseMaximize()<CR>:TmuxNavigatePrevious<CR>
     " Maximize considering all vim panes and tmux panes
     function! ToggleMaximizeTmux()
         if g:isToggledVertically || g:isToggledHorizontally
