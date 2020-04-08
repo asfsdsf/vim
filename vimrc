@@ -18,6 +18,7 @@ call plug#begin(b:plug_path)
 Plug '~/Software/vim/plugins/toggle_maximize.vim/'  " toggle maximize window
 Plug 'scrooloose/nerdtree'  " file tree
 Plug 'majutsushi/tagbar'  " file names at top bar
+Plug 'vimwiki/vimwiki'  " Personal Wiki for Vim http://vimwiki.github.io/
 Plug 'ervandew/supertab'  " perform all your vim insert mode completions with Tab
 Plug 'junegunn/fzf.vim'  " fuzzy find
 Plug 'junegunn/fzf'  " fuzzy find together with plugin above
@@ -78,8 +79,6 @@ Plug 'ryanoasis/vim-devicons'  " iconize symbols
 Plug 'morhetz/gruvbox'  "retro groove color scheme for Vim
 Plug 'mhinz/vim-startify'  " The fancy start screen for Vim.
 
-" The following theme is copied from https://coderoncode.com/tools/2017/04/16/vim-the-perfect-ide.html
-" And I don't clearly know their specific functionality
 Plug 'sjl/badwolf'
 Plug 'tomasr/molokai'
 Plug 'zenorocha/dracula-theme', {'rtp': 'vim/'}
@@ -1450,39 +1449,39 @@ endif
 " {{{ ranger (Interactive with ranger - a file manager installed by sudo apt
 " install ranger)
 
-" Start ranger using ":RangerChooser" or the keybinding "<Space>r".  Once you
-" select one or more files, press enter and ranger will quit again and vim 
-" will open the selected files.
+    " Start ranger using ":RangerChooser" or the keybinding "<Space>r".  Once you
+    " select one or more files, press enter and ranger will quit again and vim 
+    " will open the selected files.
 
-function! RangeChooser()
-    let temp = tempname()
-    " The option "--choosefiles" was added in ranger 1.5.1. Use the next line
-    " with ranger 1.4.2 through 1.5.0 instead.
-    "exec 'silent !ranger --choosefile=' . shellescape(temp)
-    if has("gui_running")
-        exec 'silent !xterm -e ranger --choosefiles=' . shellescape(temp)
-    else
-        exec 'silent !ranger --choosefiles=' . shellescape(temp)
-    endif
-    if !filereadable(temp)
+    function! RangeChooser()
+        let temp = tempname()
+        " The option "--choosefiles" was added in ranger 1.5.1. Use the next line
+        " with ranger 1.4.2 through 1.5.0 instead.
+        "exec 'silent !ranger --choosefile=' . shellescape(temp)
+        if has("gui_running")
+            exec 'silent !xterm -e ranger --choosefiles=' . shellescape(temp)
+        else
+            exec 'silent !ranger --choosefiles=' . shellescape(temp)
+        endif
+        if !filereadable(temp)
+            redraw!
+            " Nothing to read.
+            return
+        endif
+        let names = readfile(temp)
+        if empty(names)
+            redraw!
+            " Nothing to open.
+            return
+        endif
+        " Edit the first item.
+        exec 'edit ' . fnameescape(names[0])
+        " Add any remaning items to the arg list/buffer list.
+        for name in names[1:]
+            exec 'argadd ' . fnameescape(name)
+        endfor
         redraw!
-        " Nothing to read.
-        return
-    endif
-    let names = readfile(temp)
-    if empty(names)
-        redraw!
-        " Nothing to open.
-        return
-    endif
-    " Edit the first item.
-    exec 'edit ' . fnameescape(names[0])
-    " Add any remaning items to the arg list/buffer list.
-    for name in names[1:]
-        exec 'argadd ' . fnameescape(name)
-    endfor
-    redraw!
-endfunction
-command! -bar RangerChooser call RangeChooser()
-nnoremap <Space>r :<C-U>RangerChooser<CR>
+    endfunction
+    command! -bar RangerChooser call RangeChooser()
+    nnoremap <Space>r :<C-U>RangerChooser<CR>
 " }}}
