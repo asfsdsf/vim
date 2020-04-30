@@ -27,7 +27,7 @@ Plug 'mbbill/undotree'  " show undo history
 " To recompile YouCompleteMe, run:
 " python3 install.py --clang-completer --ts-completer --java-completer
 " python3 install.py --clangd-completer --ts-completer --java-completer
-" Note that clangd is still in heavy development.
+" Note that clangd is still in heavy development.(Require Vim 8.1.1875 or later)
 " in ~/.vim/plugged/YouCompleteMe for vim
 " in ~/.nvim/plugged/YouCompleteMe for nvim
 Plug 'Valloric/YouCompleteMe'  " auto complete engine
@@ -393,6 +393,7 @@ endfunction
     inoremap <c-k> <up>
     inoremap <c-f> <right>
 
+    inoremap <c-h> <left>
     inoremap <c-l> <right>
     
     inoremap <c-a> <c-o>^
