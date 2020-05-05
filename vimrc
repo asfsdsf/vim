@@ -281,30 +281,36 @@ endfunction
     " let g:VM_no_meta_mappings=0
     let g:VM_mouse_mappings = 1
     let g:VM_maps = {}
-    let g:VM_maps["Mouse Cursor"]                = '<C-LeftMouse>'
-    let g:VM_maps["Mouse Word"]                  = '<C-RightMouse>'
-    let g:VM_maps["Mouse Column"]                = '<M-C-RightMouse>'
-    " let g:VM_maps["Select Operator"]          = 'gs'
-    " let g:VM_maps["Add Cursor At Pos"]        = 'g<space>'
-    " let g:VM_maps["Start Regex Search"]       = 'g/'
-    " let g:VM_maps["Select All"]               = '<leader>A'
-    let g:VM_maps["Add Cursor Down"]            = '<A-C-j>'
-    let g:VM_maps["Add Cursor Up"]              = '<A-C-k>'
-    let g:VM_maps["Numbers"]                    = '<A-n>'
+    let g:VM_maps["Mouse Cursor"]               = '<C-LeftMouse>'
+    let g:VM_maps["Mouse Word"]                 = '<C-RightMouse>'
+    let g:VM_maps["Mouse Column"]               = '<M-C-RightMouse>'
+    let g:VM_maps["Start Regex Search"]         = 'g/'
+    let g:VM_maps["Add Cursor Down"]            = '<A-J>'
+    let g:VM_maps["Add Cursor Up"]              = '<A-K>'
+
+    " It is visual-multi mode map
+    let g:VM_maps["Numbers"]                    = '1'
+
+    " It is normal mode map
     let g:VM_maps["Visual Regex"]               = 'g/'
-    " let g:VM_maps["Visual All"]               = '<A-A>'
-    " let g:VM_maps["Visual Add"]               = '<A-a>'
-    " let g:VM_maps["Visual Find"]              = '<C-f>'
-    " let g:VM_maps["Visual Cursors"]           = '<C-c>'
-    " let g:VM_maps["Find Under"]               = '<c-n>'
-    " let g:VM_maps["Find Subword Under"]       = '<c-n>'
+
+    " It is normal mode map
+    let g:VM_maps["Select All"]                 = '<A-A>'
+
+    " Select all that match visual selection (it is a visual map)
+    let g:VM_maps["Visual All"]                 = '<A-A>'
+
+    let g:VM_maps["Align Char"]                 = 'z<'
+
+    " It is normal map and visual map
+    " let g:VM_maps["Find Under"]                 = '<c-n>'
+    " let g:VM_maps["Find Subword Under"]         = '<c-n>'
+    " q skip current selection
     if has('nvim')
 
     else
         
     endif
-    vmap <A-j> g/^<CR><tab>
-
 "}}}
 
 
@@ -913,6 +919,10 @@ set updatetime=1000
             \}
     let g:ycm_autoclose_preview_window_after_completion = 1
 
+    " disable prompt to ask whether load .ycm_extra_conf.py file
+    " (automatically load .ycm_extra_conf.py file)
+    let g:ycm_confirm_extra_conf = 0
+
     " Let clangd fully control code completion
     let g:ycm_clangd_uses_ycmd_caching = 0
     " Use installed clangd, not YCM-bundled clangd which doesn't get updates.
@@ -1306,7 +1316,7 @@ endif
     nnoremap <silent> <A-j> :call CloseMaximize()<CR>:TmuxNavigateDown<CR>
     nnoremap <silent> <A-k> :call CloseMaximize()<CR>:TmuxNavigateUp<CR>
     nnoremap <silent> <A-l> :call CloseMaximize()<CR>:TmuxNavigateRight<CR>
-    nnoremap <silent> <A-p> :call CloseMaximize()<CR>:TmuxNavigatePrevious<CR>
+    nnoremap <silent> <A-o> :call CloseMaximize()<CR>:TmuxNavigatePrevious<CR>
     " Maximize considering all vim panes and tmux panes
     function! ToggleMaximizeTmux()
         if g:isToggledVertically || g:isToggledHorizontally

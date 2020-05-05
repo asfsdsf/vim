@@ -123,7 +123,11 @@ set clipboard+=unnamedplus
 
 nnoremap <Space><Tab> :action VimFilePrevious<CR>
 nnoremap <Space>fvd :e ~/Software/vim/vimrc_collections/vimrc_for_jetbrain<CR>
-nnoremap <Space>fr :action are/vim/vimrc_collections/vimrc_for_jetbrain<CR>
+nnoremap <Space>ff :action GotoFile<CR>
+nnoremap <Space>fc :action GotoClass<CR>
+nnoremap <Space>fp :action SelectInProjectView<CR>
+nnoremap <Space>fvR :source ~/Software/vim/vimrc_collections/vimrc_for_jetbrain<CR>
+nnoremap <Space>fr :action RecentFiles<CR>
 nnoremap <Space>aa :action GotoAction<CR>
 nnoremap <Space>at :action ActivateTerminalToolWindow<CR>
 nnoremap <Space>as :action ActivateTerminalToolWindow<CR>
@@ -176,3 +180,12 @@ inoremap <c-s-/> <c-o>:action VimRedo<CR>
 nnoremap g; :action JumpToLastChange<CR>
 nnoremap ? :!/home/ban/Programming/shell/command/ideavim_help
 nnoremap <Space>z :action ToggleZenMode<CR>
+
+
+"""""""""""""""""""""""""""""""""""""
+" Jetbrain keymap
+"""""""""""""""""""""""""""""""""""""
+
+" Multiple cursor
+" <a-j> add selection for next occurrence for multiple cursor
+" <c-s-a-mouse left click> add selection for mouse click for multiple cursor

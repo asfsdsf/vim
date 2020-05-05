@@ -31,23 +31,21 @@ gT          Go to previous tab
 <a-a>       Fzf: Select all. (Then <enter> to open quickfix window with all selections to easily open them)
 <a-d>       Fzf: Deselect all.
 <c-m>       Open ctags
-<a-c-j>     Multiple cursor: Add multiple cursor below(down)
-<a-c-k>     Multiple cursor: Add multiple cursor above(up)
-<c-n>       Multiple cursor: Find and extend multiple cursor in visual mode
-<a-n>       Multiple cursor: Add number(default 1/1/ means 1 2 3 ...)
-z<          Multiple cursor: align at cursors by character
-]           Multiple cursor: find next
-[           Multiple cursor: find previous
-}           Multiple cursor: goto next
-{           Multiple cursor: goto previous
-g/          Multiple cursor: start regex search
-<leader>a   Multiple cursor: select all that match pattern
-<c-c>       Multiple cursor: change match case type
-Q           Multiple cursor: cancel current selection
-q           Multiple cursor: cancel current selection in cursor mode and ignore curret selection and find the next in visual mode
-<a-j>       Multiple cursor: (visual) add cursor at the start of line in visual mode
-<c-LeftMouse>   Multiple cursor: add cursor at clicked position
-<c-RightMouse>  Multiple cursor: select clicked word
+<a-s-j>     Multiple cursor: (normal,visual-multi) Add multiple cursor below(down)
+<a-s-k>     Multiple cursor: (normal,visual-multi) Add multiple cursor above(up)
+<c-n>       Multiple cursor: (normal,visual-multi) Find and extend multiple cursor in visual mode
+1           Multiple cursor: (visual-multi) Add number(default 1/2/ means 1 3 5 ...)
+z<          Multiple cursor: (visual-multi) align at cursors by character
+]           Multiple cursor: (visual-multi)find next
+[           Multiple cursor: (visual-multi)find previous
+g/          Multiple cursor: (normal) start regex search
+<a-s-a>     Multiple cursor: (normal,visual,visual-multi) select all that match pattern
+<tab>       Multiple cursor: (visual-multi) change match case type
+Q           Multiple cursor: (visual-multi-visual) cancel current selection
+q           Multiple cursor: (visual-multi-visual) cancel current selection in cursor mode and ignore curret selection and find the next in visual mode
+<c-LeftMouse>    Multiple cursor: (normal,visual-multi) add cursor at clicked position
+<c-RightMouse>   Multiple cursor: (normal,visual-multi) select clicked word
+<M-C-RightMouse> Multiple cursor: (normal,visual-multi) select all lines between mouse click and current cursor
 :set mouse=a    Enable mouse mode
 h           Move left
 j           Move down
