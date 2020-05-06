@@ -18,7 +18,7 @@ call plug#begin(b:plug_path)
 Plug '~/Software/vim/plugins/toggle_maximize.vim/'  " toggle maximize window
 Plug 'scrooloose/nerdtree'  " file tree
 Plug 'majutsushi/tagbar'  " file names at top bar
-Plug 'vimwiki/vimwiki'  " Personal Wiki for Vim http://vimwiki.github.io/
+" Plug 'vimwiki/vimwiki'  " Personal Wiki for Vim http://vimwiki.github.io/
 Plug 'ervandew/supertab'  " perform all your vim insert mode completions with Tab
 Plug 'junegunn/fzf.vim'  " fuzzy find
 Plug 'junegunn/fzf'  " fuzzy find together with plugin above
@@ -381,7 +381,7 @@ endfunction
 " autocmd InsertLeave * :update
 
 "{{{ directly use s to perform surround
-    nmap s ys
+    " nmap s ys  " change this key to easymotion's jumptoanywhere
 "}}}
 
 
@@ -1068,6 +1068,12 @@ set updatetime=1000
 
 " easymotion {{{
     map <Leader> <Plug>(easymotion-prefix)
+    nmap s <Plug>(easymotion-jumptoanywhere)
+    nmap \j <Plug>(easymotion-bd-jk)
+    nmap \k <Plug>(easymotion-bd-jk)
+    nmap \w <Plug>(easymotion-bd-w)
+    nmap \n <Plug>(easymotion-bd-n)
+    nmap \f <Plug>(easymotion-overwin-f)
 " }}}
 
 

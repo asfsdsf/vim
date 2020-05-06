@@ -6,6 +6,14 @@ g;          Go to last edited location
 gt          Go to next tab
 :tabnew     Open new tab
 gT          Go to previous tab
+\           Easymotion: prefix key of easy motion (\ is <leader>)
+s
+\s          Easymotion: find char bidirection
+\f          Easymotion: find char in all windows
+\j          Easymotion: go to line
+\k          Easymotion: go to line
+\w          Easamotion: go to word
+\n          Easamotion: go to matches
 <c-f>       Search by lines using CtrlP(Find Strings everywhere)
 <c-d>       Ctrlp: toggle between the string mode and full regexp mode.
 <c-t>       Ctrlp: Open the selected file in a new 'tab'.
