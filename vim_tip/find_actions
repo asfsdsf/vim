@@ -187,15 +187,18 @@ SPC ga      Git: git add(stage)
 SPC gb      Git: show git commit time in detail(every line)
 SPC gr      Git: git unstage(revert)
 SPC gl      Git: git browse history. see commit log. show all commit
-SPC gn      Git: show next commit of current file
-[q          Git: show next commit of current file
-SPC gp      Git: show previous commit of current file
-SPC gN      Git: show previous commit of current file
-]q          Git: show previous commit of current file
+[c          Git: show next hunk(next change with HEAD in file)
+]c          Git: show previous hunk(next change with HEAD in file)
+SPC gn      Git: (in git log)show next commit of current file
+[q          Git: (in git log)show next commit of current file
+SPC gp      Git: (in git log)show previous commit of current file
+SPC gN      Git: (in git log)show previous commit of current file
+]q          Git: (in git log)show previous commit of current file
 -	        Git: (in git status)add/reset file (works in visual mode too)
 <Enter>	    Git: (in git status)open current file in the window below
 p	        Git: (in git status)run `git add –patch` for current file
-C	        Git: (in git status)invoke :Gcommit
+cc          Git: (in git status)invoke :Gcommit
+c?          Git: (in git status)show help for git status commands
 :Gblame     Git: git blame,Show details about change time of every line
 SPC fo      Open file under the cursor with default system software
 SPC fd      Open the folder containing current file

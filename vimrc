@@ -23,6 +23,7 @@ Plug 'ervandew/supertab'  " perform all your vim insert mode completions with Ta
 Plug 'junegunn/fzf.vim'  " fuzzy find
 Plug 'junegunn/fzf'  " fuzzy find together with plugin above
 Plug 'easymotion/vim-easymotion'  " Vim motions on speed! http://www.vim.org/scripts/script.php…
+Plug 'lilydjwg/fcitx.vim'  " (auto switch chinese input method) keep and restore fcitx state when leaving/re-entering insert mode 
 Plug 'mbbill/undotree'  " show undo history
 " To recompile YouCompleteMe, run:
 " python3 install.py --clang-completer --ts-completer --java-completer
@@ -115,6 +116,8 @@ set ruler " Always show cursor position
 
 " Enable highlighting of the current lines
 set cursorline
+" highlight current column
+set cursorcolumn
 
 " make sure column line will be preserved when swiching buffer
 set nostartofline
@@ -322,13 +325,17 @@ endfunction
 
 
 "{{{ fugitive Mappings
+    " [c        show next hunk(next change with HEAD in file)
+    " ]c        show previous hunk(next change with HEAD in file)
+
     " git status
     nnoremap <Space>gs :Gstatus<CR>
     " in Gstatus window:
     " -	        add/reset file (works in visual mode too)
     " <Enter>	open current file in the window below
     " p	        run `git add –patch` for current file
-    " C	        invoke :Gcommit
+    " cc        invoke :Gcommit (Then ZZ to save and commit)
+    " c?        Show help
     nnoremap <Space>gd :Gvdiffsplit<CR>
     nnoremap <Space>gc :Gcommit<CR>
     nnoremap <Space>gfm :Gmove<CR>
@@ -339,11 +346,14 @@ endfunction
     nnoremap <Space>ga :Gwrite<CR>
     " show commit time
     nnoremap <Space>gb :Gblame<CR>
+
     nnoremap <Space>gl :let g:glog_cursor=line(".")<CR>:0Glog<CR>
+    " keymap for Glog mode
     nnoremap <Space>gn :cnext<CR>
     nnoremap [q :cnext<CR>
     nnoremap <Space>gp :cprev<CR>
     nnoremap ]q :cprev<CR>
+
     nnoremap <Space>gN :cprev<CR>
 "}}}
 
@@ -415,9 +425,12 @@ endfunction
 
 
 "{{{ Easier moving in tabs and windows
-    nnoremap <Space>tn gt
-    nnoremap <Space>tN gT
-    nnoremap <Space>tp gT
+    " Map from spacemacs
+    nnoremap <Space>tl gt
+    nnoremap <Space>th gT
+    nnoremap <Space>tn :tabnew<CR>
+    nnoremap <Space>tc :tabclose<CR>
+
     nnoremap <A-n> :bn<CR>
     nnoremap <A-p> :bp<CR>
     nnoremap <A-J> <C-W>j
@@ -694,9 +707,11 @@ nnoremap <Space>b7 :call g:GotoNthBuffer("6")<CR>
 nnoremap <Space>b8 :call g:GotoNthBuffer("7")<CR>
 nnoremap <Space>b9 :call g:GotoNthBuffer("8")<CR>
 
-nnoremap <Space>tn gt
-nnoremap <Space>tN gT
-nnoremap <Space>tp gT
+" see also: Easier moving in tabs and windows
+nnoremap <Space>tl gt
+nnoremap <Space>th gT
+nnoremap <Space>tn :tabnew<CR>
+nnoremap <Space>tc :tabclose<CR>
 
 " save layout
 nnoremap <Space>ls :call SaveLayout(0)<CR>
