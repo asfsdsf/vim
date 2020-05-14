@@ -358,6 +358,61 @@ endfunction
 "}}}
 
 
+
+"{{{ cscope settings
+" call cscope_build in project root dir first
+if has("cscope")
+
+    " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
+    set cscopetag
+
+    " check cscope for definition of a symbol before checking ctags: set to 1
+    " if you want the reverse search order.
+    set csto=0
+
+    " add any cscope database in current directory
+    if filereadable("cscope.out")
+        cs add cscope.out  
+    " else add the database pointed to by environment variable 
+    elseif $CSCOPE_DB != ""
+        cs add $CSCOPE_DB
+    endif
+
+    " show msg when any other cscope db added
+    set cscopeverbose  
+
+    "   's'   symbol: find all references to the token under cursor
+    "   'g'   global: find global definition(s) of the token under cursor
+    "   'c'   calls:  find all calls to the function name under cursor
+    "   't'   text:   find all instances of the text under cursor
+    "   'e'   egrep:  egrep search for the word under cursor
+    "   'f'   file:   open the filename under cursor
+    "   'i'   includes: find files that include the filename under cursor
+    "   'd'   called: find functions that function under cursor calls
+    
+    nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>	
+    " nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+    nmap <C-\>i :cs find i <C-R>=expand("%:p:t")<CR>$<CR>
+    nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>	
+
+    nmap <Space>ss :cs find s <C-R>=expand("<cword>")<CR><CR>	
+    nmap <Space>sg :cs find g <C-R>=expand("<cword>")<CR><CR>	
+    nmap <Space>sc :cs find c <C-R>=expand("<cword>")<CR><CR>	
+    nmap <Space>st :cs find t <C-R>=expand("<cword>")<CR><CR>	
+    nmap <Space>se :cs find e <C-R>=expand("<cword>")<CR><CR>	
+    nmap <Space>sf :cs find f <C-R>=expand("<cfile>")<CR><CR>	
+    nmap <Space>si :cs find i <C-R>=expand("%:p:t")<CR>$<CR>
+    nmap <Space>sd :cs find d <C-R>=expand("<cword>")<CR><CR>	
+endif
+"}}}
+
+
+
 "{{{ YouCompleteMe Mappings
     nnoremap <Space>yb :YcmCompleter GoTo<CR>
     nnoremap <Space>yB :YcmCompleter GoToDeclaration<CR>
@@ -674,7 +729,7 @@ if exists("$TERMINOLOGY")
     nnoremap <Space>ft :silent! !terminology -d %:p:h &<CR>
 endif
 " nnoremap <Space>ff :CtrlP %<CR>
-nnoremap <Space>ss :CtrlPLine %<CR>
+" nnoremap <Space>ss :CtrlPLine %<CR>  " Use <c-f> instead
 nnoremap <Space><Tab> :b#<CR>
 nnoremap ]e        :move +1<CR>
 nnoremap [e        :move -2<CR>

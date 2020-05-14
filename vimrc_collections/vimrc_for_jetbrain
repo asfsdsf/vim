@@ -183,9 +183,10 @@ nnoremap <Space>z :action ToggleZenMode<CR>
 
 
 """""""""""""""""""""""""""""""""""""
-" Jetbrain keymap
+" Show Jetbrain keymap
 """""""""""""""""""""""""""""""""""""
 
 " Multiple cursor
 " <a-j> add selection for next occurrence for multiple cursor
 " <c-s-a-mouse left click> add selection for mouse click for multiple cursor
+" <mouse middle drag> add selection in the same column for multiple cursor
