@@ -37,7 +37,9 @@ endif
 Plug 'Shougo/unite.vim'  " Fuzzy search command
 Plug 'JuliaEditorSupport/julia-vim'  " Vim support for Julia. http://julialang.org/
 " generate .ycm_extra_conf.py file according to CMakeList.txt for YouCompleteMe
-Plug 'rdnetto/YCM-Generator',{ 'branch': 'develop'} 
+if !empty($DISPLAY)  " if not on server
+    Plug 'rdnetto/YCM-Generator',{ 'branch': 'develop'} 
+endif
 Plug 'lervag/vimtex'  " A modern vim plugin for editing LaTeX files.
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " Interactive command execution in Vim.
 Plug 'Shougo/deol.nvim'  " shell interface for NeoVim and Vim8.
