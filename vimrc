@@ -31,11 +31,14 @@ Plug 'mbbill/undotree'  " show undo history
 " Note that clangd is still in heavy development.(Require Vim 8.1.1875 or later)
 " in ~/.vim/plugged/YouCompleteMe for vim
 " in ~/.nvim/plugged/YouCompleteMe for nvim
-Plug 'Valloric/YouCompleteMe'  " auto complete engine
+if !empty($DISPLAY)  " if not on server
+    Plug 'Valloric/YouCompleteMe'  " auto complete engine
+endif
+Plug 'Shougo/unite.vim'  " Fuzzy search command
 Plug 'JuliaEditorSupport/julia-vim'  " Vim support for Julia. http://julialang.org/
 " generate .ycm_extra_conf.py file according to CMakeList.txt for YouCompleteMe
 Plug 'rdnetto/YCM-Generator',{ 'branch': 'develop'} 
-Plug 'lervag/vimtex'
+Plug 'lervag/vimtex'  " A modern vim plugin for editing LaTeX files.
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " Interactive command execution in Vim.
 Plug 'Shougo/deol.nvim'  " shell interface for NeoVim and Vim8.
 " Plug 'Shougo/vimshell.vim'  " shell interface for NeoVim and Vim8.
@@ -422,6 +425,9 @@ endif
     " Note here replace of FlagsForFile is due to use of clangd.
     nnoremap <Space>yg :![[ -e CMakeLists.txt ]] && rm .ycm_extra_conf.py<CR>:YcmGenerateConfig<CR>:!sed -i 's/FlagsForFile/Settings/g' .ycm_extra_conf.py<CR>
     " <c-e> :cancel completion
+
+    " disable c-y to stop completion to prevent comfliction with paste using <c-y>
+    let g:ycm_key_list_stop_completion = ['']
 "}}}
 
 
@@ -476,6 +482,8 @@ endif
     " inoremap <s-Enter> <c-o>o
     
     inoremap <c-d> <c-o>d
+
+    nnoremap <enter> o<esc>
 "}}}
 
 
@@ -595,7 +603,7 @@ endif
 
     " keymap for open_file_help file(e.g. Used to OpenTodoFile)
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
-    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-c> <c-o>:bd!<CR>
+    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-c> <esc>:bd!<CR>
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-h> <c-w><c-w>
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh inoremap <buffer> <CR> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("e ".mycurf)<CR>
     
@@ -664,135 +672,139 @@ endif
 """""""""""""""""""""""""""""""""""""
 " Map from spacemacs
 """""""""""""""""""""""""""""""""""""
-" nunmap <Space>
-nnoremap <Space><Space> :<c-f>
-nnoremap <silent> <Space>wh :call CloseMaximize()<CR><C-w>h
-nnoremap <silent> <Space>wj :call CloseMaximize()<CR><C-w>j
-nnoremap <silent> <Space>wk :call CloseMaximize()<CR><C-w>k
-nnoremap <silent> <Space>wl :call CloseMaximize()<CR><C-w>l
-nnoremap <Space>wH :call CloseMaximize()<CR><C-w>H
-nnoremap <Space>wJ :call CloseMaximize()<CR><C-w>J
-nnoremap <Space>wK :call CloseMaximize()<CR><C-w>K
-nnoremap <Space>wL :call CloseMaximize()<CR><C-w>L
-nnoremap <Space>w/ :call CloseMaximize()<CR>:vs<CR>
-" map <ESC> to exit insert mode in shell buffer
-" tnoremap <ESC>   <C-\><C-n>
-nnoremap <Space>w- :call CloseMaximize()<CR>:sp<CR>
-nnoremap <Space>ww :call CloseMaximize()<CR><C-w>w
-nnoremap <Space>w= :call CloseMaximize()<CR><C-w>=
-nnoremap <Space>wd :call CloseMaximize()<CR>:close<CR>
-nnoremap <Space>wx :call CloseMaximize()<CR>:bp<cr>:silent! exec "bd #"<CR>:close<CR>
-nnoremap <Space>wo :call CloseMaximize()<CR><C-w><C-o>
-nnoremap <c-down>  2<C-w>-
-nnoremap <c-up>    2<C-w>+
-nnoremap <c-left>  2<C-w><
-nnoremap <c-right> 2<C-w>>
-nnoremap <Space>1  :call CloseMaximize()<CR>1<C-w><C-w>
-nnoremap <Space>2  :call CloseMaximize()<CR>2<C-w><C-w>
-nnoremap <Space>3  :call CloseMaximize()<CR>3<C-w><C-w>
-nnoremap <Space>4  :call CloseMaximize()<CR>4<C-w><C-w>
-nnoremap <Space>5  :call CloseMaximize()<CR>5<C-w><C-w>
-nnoremap <Space>6  :call CloseMaximize()<CR>6<C-w><C-w>
-nnoremap <Space>7  :call CloseMaximize()<CR>7<C-w><C-w>
-nnoremap <Space>8  :call CloseMaximize()<CR>8<C-w><C-w>
-nnoremap <Space>9  :call CloseMaximize()<CR>9<C-w><C-w>
-" insert dividing line
-nnoremap <Space>id :r !echo "-----------------------------------------------------------------------"<CR>:TComment<CR>5l
+    " nunmap <Space>
+    " nnoremap <Space><Space> :<c-f>  " Replaced by unite.vim 
+    nnoremap <silent> <Space>wh :call CloseMaximize()<CR><C-w>h
+    nnoremap <silent> <Space>wj :call CloseMaximize()<CR><C-w>j
+    nnoremap <silent> <Space>wk :call CloseMaximize()<CR><C-w>k
+    nnoremap <silent> <Space>wl :call CloseMaximize()<CR><C-w>l
+    nnoremap <Space>wH :call CloseMaximize()<CR><C-w>H
+    nnoremap <Space>wJ :call CloseMaximize()<CR><C-w>J
+    nnoremap <Space>wK :call CloseMaximize()<CR><C-w>K
+    nnoremap <Space>wL :call CloseMaximize()<CR><C-w>L
+    nnoremap <Space>w/ :call CloseMaximize()<CR>:vs<CR>
+    " map <ESC> to exit insert mode in shell buffer
+    " tnoremap <ESC>   <C-\><C-n>
+    nnoremap <Space>w- :call CloseMaximize()<CR>:sp<CR>
+    nnoremap <Space>ww :call CloseMaximize()<CR><C-w>w
+    nnoremap <Space>w= :call CloseMaximize()<CR><C-w>=
+    nnoremap <Space>wd :call CloseMaximize()<CR>:close<CR>
+    nnoremap <Space>wx :call CloseMaximize()<CR>:bp<cr>:silent! exec "bd #"<CR>:close<CR>
+    nnoremap <Space>wo :call CloseMaximize()<CR><C-w><C-o>
+    nnoremap <c-down>  2<C-w>-
+    nnoremap <c-up>    2<C-w>+
+    nnoremap <c-left>  2<C-w><
+    nnoremap <c-right> 2<C-w>>
+    nnoremap <Space>1  :call CloseMaximize()<CR>1<C-w><C-w>
+    nnoremap <Space>2  :call CloseMaximize()<CR>2<C-w><C-w>
+    nnoremap <Space>3  :call CloseMaximize()<CR>3<C-w><C-w>
+    nnoremap <Space>4  :call CloseMaximize()<CR>4<C-w><C-w>
+    nnoremap <Space>5  :call CloseMaximize()<CR>5<C-w><C-w>
+    nnoremap <Space>6  :call CloseMaximize()<CR>6<C-w><C-w>
+    nnoremap <Space>7  :call CloseMaximize()<CR>7<C-w><C-w>
+    nnoremap <Space>8  :call CloseMaximize()<CR>8<C-w><C-w>
+    nnoremap <Space>9  :call CloseMaximize()<CR>9<C-w><C-w>
+    " insert dividing line
+    nnoremap <Space>id :r !echo "-----------------------------------------------------------------------"<CR>:TComment<CR>5l
 
-" folding
-nnoremap <Space>z+ zR
-nnoremap <Space>z- zM
+    " folding
+    nnoremap <Space>z+ zR
+    nnoremap <Space>z- zM
 
-nnoremap <Space>fr :FzfMrf!<CR>
-" goto
-" tags (symbols) in current file finder mapping
-nnoremap ,gt :CtrlPBufTag<CR>
-" tags (symbols) in all files finder mapping
-nnoremap ,gT :CtrlPBufTagAll<CR>
-" recent changes in all buffers
-nnoremap ,gC :CtrlPChangeAll<CR>
-" recent changes in current buffer
-nnoremap ,gc :SearchChanges!<CR>
-nnoremap <A-c> :SearchChanges!<CR>
-" recent jumps in current buffer
-nnoremap ,gj :JumpsResults!<CR>
+    nnoremap <Space>fr :FzfMrf!<CR>
+    " goto
+    " tags (symbols) in current file finder mapping
+    nnoremap ,gt :CtrlPBufTag<CR>
+    " tags (symbols) in all files finder mapping
+    nnoremap ,gT :CtrlPBufTagAll<CR>
+    " recent changes in all buffers
+    nnoremap ,gC :CtrlPChangeAll<CR>
+    " recent changes in current buffer
+    nnoremap ,gc :SearchChanges!<CR>
+    nnoremap <A-c> :SearchChanges!<CR>
+    " recent jumps in current buffer
+    nnoremap ,gj :JumpsResults!<CR>
 
-nnoremap <c-c><c-o> gf
-" nnoremap <Space>fo :!nautilus "<cfile>"& <CR>
-" open file under the cursor with default system software
-nnoremap <Space>fo :!cd %:p:h && xdg-open "<cfile>" & <CR>
-" open the folder containing current file
-nnoremap <Space>fd :!nautilus %:p:h &<CR>
-" open the terminal with current file path as working directory
-nnoremap <Space>ft :silent! !gnome-terminal --working-directory=%:p:h &<CR>
-if exists("$TERMINOLOGY")
-    nnoremap <Space>ft :silent! !terminology -d %:p:h &<CR>
-endif
-" nnoremap <Space>ff :CtrlP %<CR>
-" nnoremap <Space>ss :CtrlPLine %<CR>  " Use <c-f> instead
-nnoremap <Space><Tab> :b#<CR>
-nnoremap ]e        :move +1<CR>
-nnoremap [e        :move -2<CR>
-" nnoremap <Space><Space> :
-nnoremap <Space>fvd :OpenVimrcDotFile<CR>
-execute "nnoremap <Space>fvR :source " . b:dot_file_path . "<CR>"
-nnoremap <Space>mcc :w<CR>:!python %<CR>
-nnoremap <Space>/  :Ag!<CR>
-vnoremap <Space>/  "vy:exec "Ag!" . escape(@v,'/\()*+?[]$^<bar>')<CR>
-nnoremap <c-f>  :w<CR>:AgCurrentFile!<CR>
-" map * to search selection
-vnoremap * "vy/\V<C-R>=escape(@v,'/\')<CR><CR>
-nnoremap <Space>bd :bn<CR>:bd#<CR>
-nnoremap <Space>bm :messages<CR>
-nnoremap <Space>bn :bn<CR>
-nnoremap ]b :bn<CR>
-nnoremap <Space>bp :bp<CR>
-nnoremap [b :bp<CR>
-" nnoremap <Space>bb :CtrlPBuffer<CR>
-nnoremap <Space>bb :FzfBuffers!<CR>
-nnoremap <Space>bs :Scratch<CR>
-nnoremap <Space>bx :call CloseMaximize()<CR>:bp<cr>:silent! exec "bd #"<CR>:close<CR>
-nnoremap <Space>b1 :bfirst<CR>
-nnoremap <Space>b2 :call g:GotoNthBuffer("1")<CR>
-nnoremap <Space>b3 :call g:GotoNthBuffer("2")<CR>
-nnoremap <Space>b4 :call g:GotoNthBuffer("3")<CR>
-nnoremap <Space>b5 :call g:GotoNthBuffer("4")<CR>
-nnoremap <Space>b6 :call g:GotoNthBuffer("5")<CR>
-nnoremap <Space>b7 :call g:GotoNthBuffer("6")<CR>
-nnoremap <Space>b8 :call g:GotoNthBuffer("7")<CR>
-nnoremap <Space>b9 :call g:GotoNthBuffer("8")<CR>
+    nnoremap <c-c><c-o> gf
+    " nnoremap <Space>fo :!nautilus "<cfile>"& <CR>
+    " open file under the cursor with default system software
+    nnoremap <Space>fo :!cd %:p:h && xdg-open "<cfile>" & <CR>
+    " open the folder containing current file
+    nnoremap <Space>fd :!nautilus %:p:h &<CR>
+    nnoremap <Space>fO :!nautilus %:p:h &<CR>
+    " open the terminal with current file path as working directory
+    nnoremap <Space>ft :silent! !gnome-terminal --working-directory=%:p:h &<CR>
+    if exists("$TERMINOLOGY")
+        nnoremap <Space>ft :silent! !terminology -d %:p:h &<CR>
+    endif
+    " nnoremap <Space>ff :CtrlP %<CR>
+    " nnoremap <Space>ss :CtrlPLine %<CR>  " Use <c-f> instead
+    nnoremap <Space><Tab> :b#<CR>
+    nnoremap ]e        :move +1<CR>
+    nnoremap [e        :move -2<CR>
+    " nnoremap <Space><Space> :
+    nnoremap <Space>fvd :OpenVimrcDotFile<CR>
+    execute "nnoremap <Space>fvR :source " . b:dot_file_path . "<CR>"
+    nnoremap <Space>mcc :w<CR>:!python %<CR>
+    nnoremap <Space>/  :Ag!<CR>
+    vnoremap <Space>/  "vy:exec "Ag!" . escape(@v,'/\()*+?[]$^<bar>')<CR>
+    nnoremap <c-f>  :w<CR>:AgCurrentFile!<CR>
 
-" see also: Easier moving in tabs and windows
-nnoremap <Space>tl gt
-nnoremap <Space>th gT
-nnoremap <Space>tn :tabnew<CR>
-nnoremap <Space>tc :tabclose<CR>
+    inoremap <c-y> <c-r>+
 
-" save layout
-nnoremap <Space>ls :call SaveLayout(0)<CR>
-nnoremap <Space>lS :call SaveLayout(1)<CR>
-nnoremap <Space>ll :call LoadLayout(0)<CR>
-nnoremap <Space>lL :call LoadLayout(1)<CR>
+    " map * to search selection
+    vnoremap * "vy/\V<C-R>=escape(@v,'/\')<CR><CR>
+    nnoremap <Space>bd :bn<CR>:bd#<CR>
+    nnoremap <Space>bm :messages<CR>
+    nnoremap <Space>bn :bn<CR>
+    nnoremap ]b :bn<CR>
+    nnoremap <Space>bp :bp<CR>
+    nnoremap [b :bp<CR>
+    " nnoremap <Space>bb :CtrlPBuffer<CR>
+    nnoremap <Space>bb :FzfBuffers!<CR>
+    nnoremap <Space>bs :Scratch<CR>
+    nnoremap <Space>bx :call CloseMaximize()<CR>:bp<cr>:silent! exec "bd #"<CR>:close<CR>
+    nnoremap <Space>b1 :bfirst<CR>
+    nnoremap <Space>b2 :call g:GotoNthBuffer("1")<CR>
+    nnoremap <Space>b3 :call g:GotoNthBuffer("2")<CR>
+    nnoremap <Space>b4 :call g:GotoNthBuffer("3")<CR>
+    nnoremap <Space>b5 :call g:GotoNthBuffer("4")<CR>
+    nnoremap <Space>b6 :call g:GotoNthBuffer("5")<CR>
+    nnoremap <Space>b7 :call g:GotoNthBuffer("6")<CR>
+    nnoremap <Space>b8 :call g:GotoNthBuffer("7")<CR>
+    nnoremap <Space>b9 :call g:GotoNthBuffer("8")<CR>
 
-nnoremap <Space>qq :qa<CR>
-nnoremap <Space>hd :help 
-nnoremap <Space>cd :cd %:h<CR>:silent! Gcd<CR>
-nnoremap <Space>tw :ToggleWrap<CR>
-nmap <space>aa :FindActions<CR>
-nmap <space>ag :!gedit %<CR>
-nmap <space>au :UndotreeToggle<CR>
-if has('nvim')
-    nnoremap <space>as :terminal<CR>
-else
-    nnoremap <space>as :vertical terminal ++curwin<CR>
-endif
-" tnoremap <C-w> <C-\><C-n>
-" tnoremap <C-w>h <C-\><C-n><C-w>h
-" tnoremap <C-w>j <C-\><C-n><C-w>j
-" tnoremap <C-w>k <C-\><C-n><C-w>k
-" tnoremap <C-w>l <C-\><C-n><C-w>l
-map <Space>v <Plug>(expand_region_expand)
-nmap <c-c><c-o> :call OpenUrlUnderCursor()<CR>
+    " see also: Easier moving in tabs and windows
+    nnoremap <Space>tl gt
+    nnoremap <Space>th gT
+    nnoremap <Space>tn :tabnew<CR>
+    nnoremap <Space>tc :tabclose<CR>
+
+    " save layout
+    nnoremap <Space>ls :call SaveLayout(0)<CR>
+    nnoremap <Space>lS :call SaveLayout(1)<CR>
+    nnoremap <Space>ll :call LoadLayout(0)<CR>
+    nnoremap <Space>lL :call LoadLayout(1)<CR>
+
+    nnoremap <Space>qq :qa<CR>
+    nnoremap <Space>hd :help 
+    nnoremap <Space>cd :cd %:h<CR>:silent! Gcd<CR>
+    nnoremap <Space>tw :ToggleWrap<CR>
+    nmap <space>aa :FindActions<CR>
+    nmap <space>ag :!gedit %<CR>
+    nmap <space>au :UndotreeToggle<CR>
+    if has('nvim')
+        nnoremap <space>as :terminal<CR>
+    else
+        nnoremap <space>as :vertical terminal ++curwin<CR>
+    endif
+    " tnoremap <C-w> <C-\><C-n>
+    " tnoremap <C-w>h <C-\><C-n><C-w>h
+    " tnoremap <C-w>j <C-\><C-n><C-w>j
+    " tnoremap <C-w>k <C-\><C-n><C-w>k
+    " tnoremap <C-w>l <C-\><C-n><C-w>l
+    map <Space>v <Plug>(expand_region_expand)
+    nmap <c-c><c-o> :call OpenUrlUnderCursor()<CR>
 
 " *** functions for spacemacs maps *************
 function! OpenUrlUnderCursor()
@@ -1014,8 +1026,22 @@ set updatetime=1000
 
 
 
+" YouCompleteMe {{{
+    nnoremap <Space><Space>  :Unite -start-insert -buffer-name=command  command<CR>
+" }}}
+
+
+
 " julia-vim {{{
     let g:julia#doc#juliapath=$HOME.'/Software/julia/julia-1.3.1/bin/julia'
+" }}}
+
+
+
+" emmet-vim {{{ 
+    " Enable just for html/css
+    let g:user_emmet_install_global = 0
+    autocmd FileType html,css EmmetInstall
 " }}}
 
 
@@ -1272,11 +1298,11 @@ endif
 
 " {{{ snippets
     " snippets of vim-snippets are in folders under:
-    " /home/ban/.vim/plugged/vim-snippets/UltiSnips
-    " /home/ban/.vim/plugged/vim-snippets/snippets
+    " ~/.vim/plugged/vim-snippets/UltiSnips
+    " ~/.vim/plugged/vim-snippets/snippets
     "
     " custom snippets are in folders under:
-    " /home/ban/.vim/UltiSnips
+    " ~/.vim/UltiSnips
     " Use :UltiSnipsEdit to edit custom snippet with current file type.
     "
     " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.

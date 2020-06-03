@@ -201,6 +201,7 @@ cc          Git: (in git status)invoke :Gcommit
 c?          Git: (in git status)show help for git status commands
 :Gblame     Git: git blame,Show details about change time of every line
 SPC fo      Open file under the cursor with default system software
+SPC ft      Open the terminal with current file path as working directory
 SPC fd      Open the folder containing current file
 :e!<CR>     Refresh changed content of file(buffer) opened in vi(m)
 SPC pf      Fuzzy search/find current working directory(project file)
@@ -250,3 +251,11 @@ c-j         Latex: (insert mode) insert _{}<left>
 c-k         Latex: (insert mode) insert ^{}<left>
 c-o         Latex: (insert mode) insert $$<left>
 c-b         Latex: (insert mode) insert \textbf{}<left>
+SPC ss      Cscope: symbol: find all references to the token under cursor
+SPC sg      Cscope: global: find global definition(s) of the token under cursor
+SPC sc      Cscope: calls:  find all calls to the function name under cursor
+SPC st      Cscope: text:   find all instances of the text under cursor
+SPC se      Cscope: egrep:  egrep search for the word under cursor
+SPC sf      Cscope: file:   open the filename under cursor
+SPC si      Cscope: includes: find files that include the current file
+SPC sd      Cscope: called: find functions that function under cursor calls

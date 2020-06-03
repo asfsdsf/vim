@@ -76,7 +76,8 @@ nnoremap <Space>w/ :vs<CR>
 nnoremap <Space>w- :sp<CR>
 nnoremap <Space>ww <C-w>w
 nnoremap <Space>w= <C-w>=
-nnoremap <Space>wd :q<CR>
+nnoremap <Space>bd :q<CR>
+nnoremap <Space>wd :action CloseAllEditors<CR>
 nnoremap <Space>wx :q<CR>
 
 """""""""""""""""""""""""""""""""""""
@@ -178,9 +179,9 @@ nnoremap <f11> :action ToggleFullScreen<CR>
 inoremap <c-/> <c-o>:action VimUndo<CR>
 inoremap <c-s-/> <c-o>:action VimRedo<CR>
 nnoremap g; :action JumpToLastChange<CR>
-nnoremap ? :!/home/ban/Programming/shell/command/ideavim_help
+nnoremap ? :!/home/ban/Programming/shell/command/ideavim_help<CR>
 nnoremap <Space>z :action ToggleZenMode<CR>
-
+nnoremap <Space>qq :action Exit<CR>
 
 """""""""""""""""""""""""""""""""""""
 " Show Jetbrain keymap
@@ -190,3 +191,5 @@ nnoremap <Space>z :action ToggleZenMode<CR>
 " <a-j> add selection for next occurrence for multiple cursor
 " <c-s-a-mouse left click> add selection for mouse click for multiple cursor
 " <mouse middle drag> add selection in the same column for multiple cursor
+" <c-s-s>  Toggle vim emulation
+" <c-s-x>  Open/edit current file in vim
