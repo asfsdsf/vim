@@ -15,7 +15,7 @@ call plug#begin(b:plug_path)
 """ All of your Plugins must be added before the following line
 
 " Utility
-Plug '~/Software/vim/plugins/toggle_maximize.vim/'  " toggle maximize window
+Plug 'asfsdsf/toggle_maximize.vim'  " toggle maximize window
 Plug 'scrooloose/nerdtree'  " file tree
 Plug 'majutsushi/tagbar'  " file names at top bar
 " Plug 'vimwiki/vimwiki'  " Personal Wiki for Vim http://vimwiki.github.io/
@@ -70,7 +70,6 @@ Plug 'ianva/vim-youdao-translater' " translation plugin for vim  http://ianva.gi
 Plug 'mattn/emmet-vim'  " for html
 
 " Generic Programming Support
-" Plug 'Raimondi/delimitMate' " enable an auto-close chars feature
 " Plug 'jiangmiao/auto-pairs' " enable an auto-close chars feature
 Plug 'Raimondi/delimitMate'  " enable an auto-close chars feature
 Plug 'tomtom/tcomment_vim'  " extensible & universal comment vim-plugin that also handles embedded filetypes
@@ -95,7 +94,7 @@ Plug 'Lokaltog/vim-distinguished'
 Plug 'chriskempson/base16-vim'
 Plug 'w0ng/vim-hybrid'
 Plug 'AlessandroYorba/Sierra'
-Plug 'daylerees/colour-schemes'
+" Plug 'daylerees/colour-schemes'
 Plug 'effkay/argonaut.vim'
 Plug 'ajh17/Spacegray.vim'
 Plug 'atelierbram/Base2Tone-vim'
@@ -317,7 +316,7 @@ endfunction
     if has('nvim')
 
     else
-        
+
     endif
 "}}}
 
@@ -394,7 +393,7 @@ if has("cscope")
     "   'f'   file:   open the filename under cursor
     "   'i'   includes: find files that include the filename under cursor
     "   'd'   called: find functions that function under cursor calls
-    
+
     nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
     nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
     nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
@@ -466,7 +465,7 @@ endif
     inoremap <A-f> <c-right>
     inoremap <A-h> <c-left>
     inoremap <A-l> <c-right>
-    
+
     inoremap <c-b> <left>
     inoremap <c-j> <down>
     inoremap <c-k> <up>
@@ -474,15 +473,15 @@ endif
 
     inoremap <c-h> <left>
     inoremap <c-l> <right>
-    
+
     inoremap <c-a> <c-o>^
     inoremap <c-e> <c-o>$
-    
+
     inoremap <c-Space> <backspace>
     " inoremap <c-s-l> <delete>
-    
+
     " inoremap <s-Enter> <c-o>o
-    
+
     inoremap <c-d> <c-o>d
 
     nnoremap <enter> o<esc>
@@ -514,7 +513,7 @@ endif
     cnoremap <c-h> <CR>:%s///gc<left><left><left>
 "}}}
 
-    
+
 "{{{ don't copy when using c and C to change text
     nnoremap c "9c
     nnoremap C "9C
@@ -608,7 +607,7 @@ endif
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-c> <esc>:bd!<CR>
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-h> <c-w><c-w>
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh inoremap <buffer> <CR> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("e ".mycurf)<CR>
-    
+
     " freefem++ file type
     au BufNewFile,BufRead *.edp setf edp
     au BufNewFile,BufRead *.idp setf edp
@@ -1012,7 +1011,7 @@ set updatetime=1000
     " Use installed clangd, not YCM-bundled clangd which doesn't get updates.
     let g:ycm_clangd_binary_path = exepath("clangd")
 
-    
+
     let g:ycm_disable_signature_help = 0
     let g:ycm_auto_trigger = 1
 
@@ -1028,8 +1027,16 @@ set updatetime=1000
 
 
 
-" YouCompleteMe {{{
+" unite.vim {{{
     nnoremap <Space><Space>  :Unite -start-insert -buffer-name=command  command<CR>
+    function! s:UniteSettings()
+        au InsertLeave <buffer> :UniteClose
+        imap <buffer> <TAB>   <Plug>(unite_select_next_line)
+        imap <buffer> <s-TAB>   <Plug>(unite_select_previous_line)
+    endfunction
+
+    au FileType unite call s:UniteSettings()
+    " inoremap <buffer><silent> <c-g> <Plug>(unite_exit)
 " }}}
 
 
@@ -1330,7 +1337,7 @@ endif
 " {{{ neoformat
     " nnoremap ,f :Neoformat<CR>
     " xnoremap ,f :Neoformat<CR>
-    
+
     " following command contains bug: after command, ,cc will be mapped to cpp
     " run command
 
@@ -1432,7 +1439,7 @@ endif
             sleep 100m
             silent! call ToggleMaximize()
         endif
-        
+
     endfunction
     function!CloseMaximize()
         if g:isToggledVertically || g:isToggledHorizontally
