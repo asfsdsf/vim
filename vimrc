@@ -322,9 +322,11 @@ endfunction
 
 
 "{{{ tagbar & NERDTree
-    map <Space>0 :call CloseMaximize()<CR>:NERDTreeToggle<CR>
-    map <Space><CR> :TagbarToggle<CR>
-    map <A-m> :TagbarToggle<CR>
+    nnoremap <Space>0 :call CloseMaximize()<CR>:NERDTreeToggle<CR>
+    nnoremap <Space><CR> :TagbarToggle<CR>
+    nnoremap <A-m> :TagbarToggle<CR>
+    " order tags by order in the file instead of by name. Press s to toggle.
+    let g:tagbar_sort = 0
 "}}}
 
 
@@ -999,6 +1001,7 @@ set updatetime=1000
     let g:ycm_filetype_blacklist = {
             \ 'tagbar' : 1,
             \ 'gitcommit' : 1,
+            \ 'unite' : 1,
             \}
     let g:ycm_autoclose_preview_window_after_completion = 1
 
