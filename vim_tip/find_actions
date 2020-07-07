@@ -211,6 +211,7 @@ SPC pf      Fuzzy search/find current working directory(project file)
 ,cm         Make c,cpp file(Support CMakeLists)
 gf          Edit file under the cursor with nvim in current window
 gd          Go to definition
+<c-g>       Show current file path
 <c-n>       Vim-gdb: frame down(next frame)
 <c-p>       Vim-gdb: frame up(previous frame)
 <F8>        Vim-gdb: set breakpoint at the cursor line

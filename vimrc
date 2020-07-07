@@ -19,7 +19,7 @@ Plug 'asfsdsf/toggle_maximize.vim'  " toggle maximize window
 Plug 'scrooloose/nerdtree'  " file tree
 Plug 'majutsushi/tagbar'  " file names at top bar
 " Plug 'vimwiki/vimwiki'  " Personal Wiki for Vim http://vimwiki.github.io/
-Plug 'ervandew/supertab'  " perform all your vim insert mode completions with Tab
+" Plug 'ervandew/supertab'  " perform all your vim insert mode completions with Tab
 Plug 'junegunn/fzf.vim'  " fuzzy find
 Plug 'junegunn/fzf'  " fuzzy find together with plugin above
 Plug 'easymotion/vim-easymotion'  " Vim motions on speed! http://www.vim.org/scripts/script.php…
@@ -32,8 +32,14 @@ Plug 'mbbill/undotree'  " show undo history
 " in ~/.vim/plugged/YouCompleteMe for vim
 " in ~/.nvim/plugged/YouCompleteMe for nvim
 if !empty($DISPLAY)  " if not on server
-    Plug 'Valloric/YouCompleteMe'  " auto complete engine
+    " Plug 'Valloric/YouCompleteMe'  " auto complete engine
+    " :CocInstall coc-json
+    " :CocInstall coc-python
+    " :CocInstall coc-pairs
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}  " Intellisense engine for Vim8 & Neovim, full language server protocol support as VSCode
 endif
+
+
 Plug 'Shougo/unite.vim'  " Fuzzy search command
 Plug 'JuliaEditorSupport/julia-vim'  " Vim support for Julia. http://julialang.org/
 " generate .ycm_extra_conf.py file according to CMakeList.txt for YouCompleteMe
@@ -71,7 +77,7 @@ Plug 'mattn/emmet-vim'  " for html
 
 " Generic Programming Support
 " Plug 'jiangmiao/auto-pairs' " enable an auto-close chars feature
-Plug 'Raimondi/delimitMate'  " enable an auto-close chars feature
+" Plug 'Raimondi/delimitMate'  " enable an auto-close chars feature
 Plug 'tomtom/tcomment_vim'  " extensible & universal comment vim-plugin that also handles embedded filetypes
 Plug 'tpope/vim-surround'  " surround.vim: quoting/parenthesizing made simple
 Plug 'SirVer/ultisnips'  " Track the engine.
@@ -1030,6 +1036,106 @@ set updatetime=1000
 
 
 
+" coc.nvim {{{
+    " To open configuration file:
+    " :CocConfig
+    "
+    let g:coc_global_extensions = [
+    \ 'coc-ultisnips',
+    \ 'coc-json',
+    \ 'coc-html',
+    \ 'coc-css',
+    \ 'coc-python',
+    \ 'coc-highlight',
+    \ 'coc-pairs',
+    \ ]
+
+	set statusline^=%{coc#status()}
+
+    let g:coc_snippet_next = '<TAB>'
+    let g:coc_snippet_prev = '<S-TAB>'
+
+    " Following is replacement for coc-settings.json
+	call coc#config('languageserver', {
+		\ "kotlin": {
+        \ "command": "kotlin-language-server",
+        \ "filetypes": ["kotlin"]
+        \ }
+		\})
+    " User configuration object, define this variable when
+    " you can't use coc#config()
+    let g:coc_user_config={
+        \ "python.autoComplete.addBrackets": v:true,
+        \ "diagnostic.errorSign": '⚠',
+        \ "diagnostic.warningSign": '⚐',
+        \ "diagnostic.infoSign": '⚐',
+        \ "diagnostic.hintSign": '⚐',
+        \ "diagnostic.signOffset": 9999,
+        \ "coc.preferences.enableFloatHighlight": v:false,
+        \}
+
+    " Highlight the symbol and its references when holding the cursor.
+    autocmd CursorHold * silent call CocActionAsync('highlight')
+
+    " To enable highlight current symbol on CursorHold
+    autocmd CursorHold * silent call CocActionAsync('highlight')
+
+
+    " use <tab> for trigger completion and navigate to the next complete item
+    function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~ '\s'
+    endfunction
+    
+    function! s:show_documentation()
+      if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+      else
+        call CocAction('doHover')
+      endif
+    endfunction
+
+    " Use tab and s-tab for trigger completion with characters ahead and navigate.
+    inoremap <silent><expr> <Tab>
+          \ pumvisible() ? "\<C-n>" :
+          \ <SID>check_back_space() ? "\<Tab>" :
+          \ coc#refresh()
+
+    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+
+    inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+    " Use <c-n> and <c-p> to trigger completion.
+    inoremap <silent><expr> <c-p> coc#refresh()
+    inoremap <silent><expr> <c-n> coc#refresh()
+
+    " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+    nmap <silent> <Space>ep <Plug>(coc-diagnostic-prev)
+    nmap <silent> <Space>eN <Plug>(coc-diagnostic-prev)
+    nmap <silent> <Space>en <Plug>(coc-diagnostic-next)
+    " GoTo code navigation.
+    nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gy <Plug>(coc-type-definition)
+    nmap <silent> gi <Plug>(coc-implementation)
+    nmap <silent> gr <Plug>(coc-references)
+    " Use K to show documentation in preview window.
+    nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+    " Map function and class text objects such as select inside function vif
+    " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+    xmap if <Plug>(coc-funcobj-i)
+    omap if <Plug>(coc-funcobj-i)
+    xmap af <Plug>(coc-funcobj-a)
+    omap af <Plug>(coc-funcobj-a)
+    xmap ic <Plug>(coc-classobj-i)
+    omap ic <Plug>(coc-classobj-i)
+    xmap ac <Plug>(coc-classobj-a)
+    omap ac <Plug>(coc-classobj-a)
+" }}}
+
+
+
 " unite.vim {{{
     nnoremap <Space><Space>  :Unite -start-insert -buffer-name=command  command<CR>
     function! s:UniteSettings()
@@ -1229,9 +1335,10 @@ endif
     " let g:ale_echo_cursor = 0
 
 
-    nmap <silent> <Space>ep <Plug>(ale_previous_wrap)
-    nmap <silent> <Space>eN <Plug>(ale_previous_wrap)
-    nmap <silent> <Space>en <Plug>(ale_next_wrap)
+    " Following 3 commands are replaced by coc.nvim
+    " nmap <silent> <Space>ep <Plug>(ale_previous_wrap)
+    " nmap <silent> <Space>eN <Plug>(ale_previous_wrap)
+    " nmap <silent> <Space>en <Plug>(ale_next_wrap)
 
     " Available Linters: 'flake8', 'mypy', 'prospector', 'pycodestyle', 'pyflakes', 'pylint', 'pyls', 'pyre', 'vulture'
     let g:ale_linters = {
