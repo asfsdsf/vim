@@ -1074,13 +1074,11 @@ set updatetime=1000
         \ "coc.preferences.enableFloatHighlight": v:false,
         \}
 
-    " Highlight the symbol and its references when holding the cursor.
     if !empty($DISPLAY)  " if not on server
+        " Highlight the symbol and its references when holding the cursor.
         autocmd CursorHold * silent call CocActionAsync('highlight')
     endif
 
-    " To enable highlight current symbol on CursorHold
-    autocmd CursorHold * silent call CocActionAsync('highlight')
 
 
     " use <tab> for trigger completion and navigate to the next complete item
