@@ -78,8 +78,8 @@ Plug 'mattn/emmet-vim'  " for html
 " Plug 'Raimondi/delimitMate'  " enable an auto-close chars feature
 Plug 'tomtom/tcomment_vim'  " extensible & universal comment vim-plugin that also handles embedded filetypes
 Plug 'tpope/vim-surround'  " surround.vim: quoting/parenthesizing made simple
-Plug 'SirVer/ultisnips'  " Track the engine.
-Plug 'honza/vim-snippets'  " Snippets are separated from the engine. Add this if you want them:
+" Plug 'SirVer/ultisnips'  " Track the engine.
+" Plug 'honza/vim-snippets'  " Snippets are separated from the engine. Add this if you want them:
 
 " Theme / Interface
 Plug 'vim-airline/vim-airline'  " beautiful bar at bottom
