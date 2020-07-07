@@ -23,7 +23,6 @@ Plug 'majutsushi/tagbar'  " file names at top bar
 Plug 'junegunn/fzf.vim'  " fuzzy find
 Plug 'junegunn/fzf'  " fuzzy find together with plugin above
 Plug 'easymotion/vim-easymotion'  " Vim motions on speed! http://www.vim.org/scripts/script.php…
-Plug 'lilydjwg/fcitx.vim'  " (auto switch chinese input method) keep and restore fcitx state when leaving/re-entering insert mode 
 Plug 'mbbill/undotree'  " show undo history
 " To recompile YouCompleteMe, run:
 " python3 install.py --clang-completer --ts-completer --java-completer
@@ -33,10 +32,9 @@ Plug 'mbbill/undotree'  " show undo history
 " in ~/.nvim/plugged/YouCompleteMe for nvim
 if !empty($DISPLAY)  " if not on server
     " Plug 'Valloric/YouCompleteMe'  " auto complete engine
-    " :CocInstall coc-json
-    " :CocInstall coc-python
-    " :CocInstall coc-pairs
+    " sudo apt install nodejs yarnpkg
     Plug 'neoclide/coc.nvim', {'branch': 'release'}  " Intellisense engine for Vim8 & Neovim, full language server protocol support as VSCode
+    Plug 'lilydjwg/fcitx.vim'  " (auto switch chinese input method) keep and restore fcitx state when leaving/re-entering insert mode 
 endif
 
 
@@ -1056,12 +1054,14 @@ set updatetime=1000
     let g:coc_snippet_prev = '<S-TAB>'
 
     " Following is replacement for coc-settings.json
-	call coc#config('languageserver', {
-		\ "kotlin": {
-        \ "command": "kotlin-language-server",
-        \ "filetypes": ["kotlin"]
-        \ }
-		\})
+    if !empty($DISPLAY)  " if not on server
+        call coc#config('languageserver', {
+            \ "kotlin": {
+            \ "command": "kotlin-language-server",
+            \ "filetypes": ["kotlin"]
+            \ }
+            \})
+    endif
     " User configuration object, define this variable when
     " you can't use coc#config()
     let g:coc_user_config={
@@ -1075,7 +1075,9 @@ set updatetime=1000
         \}
 
     " Highlight the symbol and its references when holding the cursor.
-    autocmd CursorHold * silent call CocActionAsync('highlight')
+    if !empty($DISPLAY)  " if not on server
+        autocmd CursorHold * silent call CocActionAsync('highlight')
+    endif
 
     " To enable highlight current symbol on CursorHold
     autocmd CursorHold * silent call CocActionAsync('highlight')
