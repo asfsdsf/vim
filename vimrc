@@ -78,8 +78,8 @@ Plug 'mattn/emmet-vim'  " for html
 " Plug 'Raimondi/delimitMate'  " enable an auto-close chars feature
 Plug 'tomtom/tcomment_vim'  " extensible & universal comment vim-plugin that also handles embedded filetypes
 Plug 'tpope/vim-surround'  " surround.vim: quoting/parenthesizing made simple
-" Plug 'SirVer/ultisnips'  " Track the engine.
-" Plug 'honza/vim-snippets'  " Snippets are separated from the engine. Add this if you want them:
+Plug 'SirVer/ultisnips'  " Track the engine.
+Plug 'honza/vim-snippets'  " Snippets are separated from the engine. Add this if you want them:
 
 " Theme / Interface
 Plug 'vim-airline/vim-airline'  " beautiful bar at bottom
@@ -1037,6 +1037,8 @@ set updatetime=1000
 " coc.nvim {{{
     " To open configuration file:
     " :CocConfig
+    " To install clangd
+    " :CocCommand clangd.install
     "
     let g:coc_global_extensions = [
     \ 'coc-ultisnips',
@@ -1046,6 +1048,9 @@ set updatetime=1000
     \ 'coc-python',
     \ 'coc-highlight',
     \ 'coc-pairs',
+    \ 'coc-sh',
+    \ 'coc-cmake',
+    \ 'coc-clangd',
     \ ]
 
 	set statusline^=%{coc#status()}
@@ -1066,8 +1071,8 @@ set updatetime=1000
     " you can't use coc#config()
     let g:coc_user_config={
         \ "python.autoComplete.addBrackets": v:true,
-        \ "diagnostic.errorSign": '⚠',
-        \ "diagnostic.warningSign": '⚐',
+        \ "diagnostic.errorSign": '✗',
+        \ "diagnostic.warningSign": '⚠',
         \ "diagnostic.infoSign": '⚐',
         \ "diagnostic.hintSign": '⚐',
         \ "diagnostic.signOffset": 9999,
@@ -1132,6 +1137,10 @@ set updatetime=1000
     omap ic <Plug>(coc-classobj-i)
     xmap ac <Plug>(coc-classobj-a)
     omap ac <Plug>(coc-classobj-a)
+
+    " Generate clangd compile_commands.json according to Cmakelists.txt
+    nnoremap <Space>cg :cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("generate_clangd_json")<CR>
+    nnoremap <Space>cr :CocRestart<CR>
 " }}}
 
 
