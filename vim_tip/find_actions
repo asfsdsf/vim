@@ -16,11 +16,11 @@ s
 \n          Easamotion: go to matches
 <c-f>       Search by lines using CtrlP(Find Strings everywhere)
 <c-d>       Ctrlp: toggle between the string mode and full regexp mode.
-<c-t>       Ctrlp: Open the selected file in a new 'tab'.
-<c-v>       Ctrlp: Open the selected file in a 'vertical' split.
+<c-t>       Ctrlp: open the selected file in a new 'tab'.
+<c-v>       Ctrlp: open the selected file in a 'vertical' split.
 <c-r>       Ctrlp: toggle regexp search 
 <c-d>       Ctrlp: toggle search by file name
-<c-s>       Ctrlp: Open the selected file in a 'horizontal' split.
+<c-s>       Ctrlp: open the selected file in a 'horizontal' split.
 <Space>/    Search by lines using Ag in current working directory(Find Strings everywhere)
 <c-w><c-_>  Expand current split vertically
 <c-w><c-|>  Expand current split horizontally
@@ -36,8 +36,8 @@ s
 <c-w>k      Move to the "far up" window(split)
 <c-w>l      Move to the "far right" window(split)
 <c-t>       Open in new tab(CtrlP or fzf)
-<a-a>       Fzf: Select all. (Then <enter> to open quickfix window with all selections to easily open them)
-<a-d>       Fzf: Deselect all.
+<a-a>       Fzf: select all. (Then <enter> to open quickfix window with all selections to easily open them)
+<a-d>       Fzf: deselect all.
 <c-m>       Open ctags
 <a-s-j>     Multiple cursor: (normal,visual-multi) Add multiple cursor below(down)
 <a-s-k>     Multiple cursor: (normal,visual-multi) Add multiple cursor above(up)
@@ -65,7 +65,7 @@ ngg         Go to nth line
 :noh        cancel all current highlight
 :r!command  execute external command and read output to current buffer
 o: open in prev window
-t           NerdTree: Open in new tab
+t           NerdTree: open in new tab
 <Space>0    Open NerdTree
 go          NerdTree: preview   (File node mappings) 
 t           NerdTree: open in new tab   (File node mappings) 
@@ -78,8 +78,8 @@ o           NerdTree: open & close node   (Directory node mappings)
 O           NerdTree: recursively open node   (Directory node mappings) 
 t           NerdTree: open in new tab   (Directory node mappings) 
 T           NerdTree: open in new tab silently   (Directory node mappings) 
-R           NerdTree: Refresh current root directory
-r           NerdTree: Refresh cursor directory
+R           NerdTree: refresh current root directory
+r           NerdTree: refresh cursor directory
 x           NerdTree: close parent of node   (Directory node mappings) 
 X           NerdTree: close all child nodes of current node recursively   (Directory node mappings) 
 e           NerdTree: explore selected dir   (Directory node mappings) 
@@ -200,7 +200,8 @@ p	        Git: (in git status)run `git add –patch` for current file
 cc          Git: (in git status)invoke :Gcommit
 c?          Git: (in git status)show help for git status commands
 :Gblame     Git: git blame,Show details about change time of every line
-SPC fo      Open file under the cursor with default system software
+SPC fO      Open file under the cursor with default system software
+SPC fo      Open current file with default system software
 SPC ft      Open the terminal with current file path as working directory
 SPC fd      Open the folder containing current file
 :e!<CR>     Refresh changed content of file(buffer) opened in vi(m)
@@ -260,3 +261,16 @@ SPC se      Cscope: egrep:  egrep search for the word under cursor
 SPC sf      Cscope: file:   open the filename under cursor
 SPC si      Cscope: includes: find files that include the current file
 SPC sd      Cscope: called: find functions that function under cursor calls
+gd          Coc.nvim: go to definition
+gy          Coc.nvim: go to type definition
+gi          Coc.nvim: go to implementation
+gr          Coc.nvim: go to references
+SPC cg      Coc.nvim: (c/c++) generate compile_commands.json for clangd completion according to CMakeLists.txt
+SPC cr      Coc.nvim: restart coc server
+SPC ci      Coc.nvim: (python) set python interpreter
+SPC cc      Coc.nvim: run coc command
+c-n         Coc.nvim: (insert mode) force to trigger completion
+c-p         Coc.nvim: (insert mode) show signature help (show parameters)
+SPC ca      Coc.nvim: (visual mode) choose and do coc action on selected region
+c-s         Freeze terminal (make you stuck) in vim
+c-q         Unfreeze terminal (if you stuck with c-s in vim)

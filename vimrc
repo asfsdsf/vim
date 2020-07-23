@@ -491,6 +491,8 @@ endif
     inoremap <c-d> <c-o>d
 
     nnoremap <enter> o<esc>
+
+    inoremap <c-s> <c-o>:update<CR>
 "}}}
 
 
@@ -735,10 +737,11 @@ endif
     nnoremap <c-c><c-o> gf
     " nnoremap <Space>fo :!nautilus "<cfile>"& <CR>
     " open file under the cursor with default system software
-    nnoremap <Space>fo :!cd %:p:h && xdg-open "<cfile>" & <CR>
+    nnoremap <Space>fO :!cd %:p:h && xdg-open "<cfile>" & <CR>
     " open the folder containing current file
     nnoremap <Space>fd :!nautilus %:p:h &<CR>
-    nnoremap <Space>fO :!nautilus %:p:h &<CR>
+    " open current file with default system software
+    nnoremap <Space>fo :!cd %:p:h && xdg-open %:p & <CR>
     " open the terminal with current file path as working directory
     nnoremap <Space>ft :silent! !gnome-terminal --working-directory=%:p:h &<CR>
     if exists("$TERMINOLOGY")
@@ -810,8 +813,6 @@ endif
     " tnoremap <C-w>j <C-\><C-n><C-w>j
     " tnoremap <C-w>k <C-\><C-n><C-w>k
     " tnoremap <C-w>l <C-\><C-n><C-w>l
-    map <Space>v <Plug>(expand_region_expand)
-    nmap <c-c><c-o> :call OpenUrlUnderCursor()<CR>
 
 " *** functions for spacemacs maps *************
 function! OpenUrlUnderCursor()
@@ -1058,6 +1059,8 @@ set updatetime=1000
     let g:coc_snippet_next = '<TAB>'
     let g:coc_snippet_prev = '<S-TAB>'
 
+    autocmd FileType c,cpp let b:coc_pairs_disabled = ['<']
+
     " Following is replacement for coc-settings.json
     if !empty($DISPLAY)  " if not on server
         call coc#config('languageserver', {
@@ -1074,7 +1077,7 @@ set updatetime=1000
         \ "diagnostic.errorSign": '✗',
         \ "diagnostic.warningSign": '⚠',
         \ "diagnostic.infoSign": '⚐',
-        \ "diagnostic.hintSign": '⚐',
+        \ "diagnostic.hintSign": '🔔',
         \ "diagnostic.signOffset": 9999,
         \ "coc.preferences.enableFloatHighlight": v:false,
         \}
@@ -1111,9 +1114,12 @@ set updatetime=1000
 
     inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-    " Use <c-n> and <c-p> to trigger completion.
-    inoremap <silent><expr> <c-p> coc#refresh()
+    " Use <c-n> to trigger completion.
     inoremap <silent><expr> <c-n> coc#refresh()
+
+    " Use <c-p> to show signature help
+    inoremap <silent> <c-p> <c-o>:call CocActionAsync('showSignatureHelp')<CR>
+
 
     " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
     nmap <silent> <Space>ep <Plug>(coc-diagnostic-prev)
@@ -1141,6 +1147,14 @@ set updatetime=1000
     " Generate clangd compile_commands.json according to Cmakelists.txt
     nnoremap <Space>cg :cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("generate_clangd_json")<CR>
     nnoremap <Space>cr :CocRestart<CR>
+    " Applying codeAction to the selected region.
+    " " Example: `<leader>aap` for current paragraph
+    xmap <space>ca  <Plug>(coc-codeaction-selected)
+    nmap <space>ca  <Plug>(coc-codeaction-selected)
+    " Change python interpreter
+    autocmd FileType python nnoremap <buffer> <space>ci :CocCommand python.setInterpreter<CR>
+    " Run coc command
+    nnoremap <space>cc :CocCommand<CR>
 " }}}
 
 
@@ -1618,6 +1632,19 @@ endif
     endfunction
 
     "Replace S-F8 by any other shortcut you wish
+" }}}
+
+
+
+" {{{ terryma/vim-expand-region
+    nmap <a-w> <Plug>(expand_region_expand)
+    xmap <a-w> <Plug>(expand_region_expand)
+    nmap <c-c><c-o> :call OpenUrlUnderCursor()<CR>
+
+    " Default value of g:expand_region_text_objects={'ie':0,'ip':0,'iw':0,'iB':1,'il':0,'iW':0,'i''':0,'ib':1,'i]':1,'i"':0}
+    " 1 means recursive.
+    " See more with :help expand_region
+    let g:expand_region_text_objects={'ip':0,'iw':0,'iB':1,'aB':1,'ab':1,'iW':0,'a''':0,'ib':1,'a]':1,'a"':0}
 " }}}
 
 
