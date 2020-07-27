@@ -463,34 +463,38 @@ endif
 "}}}
 
 
-"{{{ Moving in insert mode
+"{{{ Moving in insert/command-line mode and normal mode
 
-    inoremap <A-b> <c-left>
+    " map! map to insert and command-line mode
+    noremap! <A-b> <c-left>
     inoremap <A-j> <c-o>o
     inoremap <A-k> <c-o>O
-    inoremap <A-f> <c-right>
-    inoremap <A-h> <c-left>
-    inoremap <A-l> <c-right>
+    noremap! <A-f> <c-right>
+    noremap! <A-h> <c-left>
+    noremap! <A-l> <c-right>
 
-    inoremap <c-b> <left>
-    inoremap <c-j> <down>
-    inoremap <c-k> <up>
-    inoremap <c-f> <right>
+    noremap! <c-b> <left>
+    noremap! <c-j> <down>
+    noremap! <c-k> <up>
+    noremap! <c-f> <right>
 
-    inoremap <c-h> <left>
-    inoremap <c-l> <right>
+    noremap! <c-h> <left>
+    noremap! <c-l> <right>
 
     inoremap <c-a> <c-o>^
     inoremap <c-e> <c-o>$
-
-    inoremap <c-Space> <backspace>
-    " inoremap <c-s-l> <delete>
-
-    " inoremap <s-Enter> <c-o>o
-
-    inoremap <c-d> <c-o>d
+    cnoremap <c-a> <home>
+    cnoremap <c-e> <end>
 
     nnoremap <enter> o<esc>
+
+    nnoremap gm %
+    vnoremap gm %
+
+    nnoremap H ^
+    nnoremap L $
+    vnoremap H ^
+    vnoremap L $
 
     inoremap <c-s> <c-o>:update<CR>
 "}}}
@@ -518,7 +522,6 @@ endif
     nnoremap <A-H> :%s//gc<left><left><left>
     nnoremap <c-h> :%s//gc<left><left><left>
     xnoremap <c-h> :s//gc<left><left><left>
-    cnoremap <c-h> <CR>:%s///gc<left><left><left>
 "}}}
 
 
@@ -829,6 +832,7 @@ function! OpenUrlUnderCursor()
 endfunction
 
 let g:custom_layout_path="~/Software/vim/session"
+let g:custom_layout_manual_path="~/Software/vim/session/manual-saving"
 function! SaveLayout(toInputName)
     cd %:h
     silent! Gcd
@@ -836,9 +840,11 @@ function! SaveLayout(toInputName)
         call inputsave()
         let s:input_layout_name=input('Please input layout(session) name: ')
         call inputrestore()
-        let s:layout_path=g:custom_layout_path . "/" . s:input_layout_name . ".vim"
+        let s:layout_path=g:custom_layout_manual_path . "/" . s:input_layout_name . ".vim"
     else
-        let s:layout_path=g:custom_layout_path . "/" . system("printf `basename " . getcwd() . "`.vim")
+        let s:layout_dir=g:custom_layout_path . system("printf " . getcwd())
+        silent exec "!mkdir -p " . s:layout_dir
+        let s:layout_path=s:layout_dir . "/Session.vim"
     endif
     exec "mksession! " . s:layout_path
 endfunction
@@ -847,14 +853,15 @@ function! LoadLayout(toInputName)
     if a:toInputName
         12sp $HOME/Software/vim/open_file_help.sh
         exec "normal! \<c-w>J"
-        exec "r!echo " . g:custom_layout_path
+        exec "r!echo " . g:custom_layout_manual_path
         exec "normal!k\"pdd"
         startinsert!
 
         iunmap <buffer> <enter>
         inoremap <buffer> <enter> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("source ".mycurf)<CR>
     else
-        let s:layout_path=g:custom_layout_path . "/" . system("printf `basename " . getcwd() . "`.vim")
+        let s:layout_dir=g:custom_layout_path . system("printf " . getcwd())
+        let s:layout_path=s:layout_dir . "/Session.vim"
         exec "source " . s:layout_path
 
     endif
@@ -1040,6 +1047,8 @@ set updatetime=1000
     " :CocConfig
     " To install clangd
     " :CocCommand clangd.install
+    " To use it with python:
+    " pip install jedi pylint neovim
     "
     let g:coc_global_extensions = [
     \ 'coc-ultisnips',
@@ -1490,6 +1499,7 @@ endif
     nmap <space>vl :call VimuxRunLastCommand()<CR>
     nmap <space>vc :call VimuxCloseRunner()<CR>
     nmap <space>vr :call VimuxRunCommand("!!\n")<CR>
+
     function! VimuxSlimeVisual()
         " delete empty line (for python)
         let s:vimux_slime_delete_blank_line=substitute(@v,'\n\n\+','\n','g')
@@ -1498,11 +1508,20 @@ endif
 
         call VimuxRunCommand(s:vimux_slime_delete_blank_line)
     endfunction
+
+    function! VimuxShowPythonDocVisual()
+        let s:to_search_object= "print(" . @v . ".__doc__)"
+        call VimuxRunCommand(s:to_search_object)
+    endfunction
+
     vmap <space>vs "vy :call VimuxSlimeVisual()<CR>
+
     function! VimuxSlimeNormal()
         call VimuxRunCommand(getline("."))
     endfunction
+
     nmap <space>vs :call VimuxSlimeNormal()<CR>
+
     " toggle using vim for repl in another pane
     function! VimuxForRepl()
         if !exists("b:VimuxForReplFlag")
@@ -1513,6 +1532,9 @@ endif
             iunmap <buffer> <enter>
             vunmap <buffer> <enter>
             nunmap <buffer> <enter>
+            if(&filetype=='python')
+                vunmap <buffer> K
+            endif
             let b:VimuxForReplFlag=0
         else
             inoremap <buffer> <enter> <c-o>$<c-o>:call VimuxSlimeNormal()<CR><enter>
@@ -1528,6 +1550,7 @@ endif
 
             " set initial code for specific filetype
             if(&filetype=='python')
+                vnoremap <buffer> K     "vy :call VimuxShowPythonDocVisual()<CR>
                 VimuxRunCommand("python3")
             endif
             if(&filetype=='javascript')
@@ -1543,12 +1566,14 @@ endif
             " if(&filetype=='vim') see function VimEnterExec
         endif
     endfunction
+
     nmap <space>vp :call VimuxForRepl()<CR>
 
     function!VimuxCdWorkingDirectory()
         call VimuxRunCommand(" cd ".expand('%:p:h'))
         call VimuxRunCommand(" cd `git rev-parse --show-toplevel 2>/dev/null || echo .`")
     endfunction
+
 " }}}
 
 
