@@ -327,6 +327,7 @@ endfunction
 
 "{{{ tagbar & NERDTree
     nnoremap <Space>0 :call CloseMaximize()<CR>:NERDTreeToggle<CR>
+    nnoremap <Space>fp :call CloseMaximize()<CR>:NERDTreeFind<CR>
     nnoremap <Space><CR> :TagbarToggle<CR>
     nnoremap <A-m> :TagbarToggle<CR>
     " order tags by order in the file instead of by name. Press s to toggle.
@@ -1043,6 +1044,11 @@ set updatetime=1000
 
 
 " coc.nvim {{{
+    " To use coc.nvim:
+    " sudo apt intall nodejs
+    " sudo apt install npm
+    " npm install -g yarn
+    "
     " To open configuration file:
     " :CocConfig
     " To install clangd
@@ -1096,7 +1102,22 @@ set updatetime=1000
         autocmd CursorHold * silent call CocActionAsync('highlight')
     endif
 
-
+    " " map <up> and <down> and <c-u> and <c-d> to scroll in coc.nvim floating windows such as
+    " " documentation window
+    if has('nvim')
+        nnoremap <silent><expr> <down> coc#util#has_float() ? coc#util#float_scroll(1) : "\<down>"
+        nnoremap <silent><expr> <up> coc#util#has_float() ? coc#util#float_scroll(0) : "\<up>"
+        inoremap <silent><expr> <down> coc#util#has_float() ? <SID>coc_float_scroll(1) : "\<down>"
+        inoremap <silent><expr> <up> coc#util#has_float() ? <SID>coc_float_scroll(0) : "\<up>"
+        vnoremap <silent><expr> <down> coc#util#has_float() ? <SID>coc_float_scroll(1) : "\<down>"
+        vnoremap <silent><expr> <up> coc#util#has_float() ? <SID>coc_float_scroll(0) : "\<up>"
+        nnoremap <silent><expr> <c-d> coc#util#has_float() ? coc#util#float_scroll(1) : "\<c-d>"
+        nnoremap <silent><expr> <c-u> coc#util#has_float() ? coc#util#float_scroll(0) : "\<c-u>"
+        inoremap <silent><expr> <c-d> coc#util#has_float() ? <SID>coc_float_scroll(1) : "\<c-d>"
+        inoremap <silent><expr> <c-u> coc#util#has_float() ? <SID>coc_float_scroll(0) : "\<c-u>"
+        vnoremap <silent><expr> <c-d> coc#util#has_float() ? <SID>coc_float_scroll(1) : "\<c-d>"
+        vnoremap <silent><expr> <c-u> coc#util#has_float() ? <SID>coc_float_scroll(0) : "\<c-u>"
+    endif
 
     " use <tab> for trigger completion and navigate to the next complete item
     function! s:check_back_space() abort
