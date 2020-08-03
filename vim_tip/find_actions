@@ -153,6 +153,7 @@ cs          Vim-Surround: change surround type t1 to t2 with motion
 ds          Vim-Surround: delete surround type t
 ys          Vim-Surround: add surround type t with motion
 yss         Vim-Surround: add surround around the sentence
+S           Vim-Surround: (visual) add surround type t with motion
 DiffSaved   Difference between buffer and file
 CompareClipboard    Check difference between current buffer and clipboard
 zz          Scroll the current line to the center of the window

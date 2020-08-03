@@ -15,6 +15,7 @@ call plug#begin(b:plug_path)
 """ All of your Plugins must be added before the following line
 
 " Utility
+Plug '~/Software/vim/plugins/mysnippets/'
 Plug 'asfsdsf/toggle_maximize.vim'  " toggle maximize window
 Plug 'scrooloose/nerdtree'  " file tree
 Plug 'majutsushi/tagbar'  " file names at top bar
@@ -254,6 +255,7 @@ function! s:OpenDirectoryFile(dir_path)
     startinsert!
 endfunction
 com!OpenSoftwareInstallRecord call s:OpenDirectoryFile('~/Documents/Notes/software_installation_record')
+com!OpenMySnippets call s:OpenDirectoryFile('~/Software/vim/plugins/mysnippets/UltiSnips')
 com!OpenProgrammingNotes call s:OpenDirectoryFile('~/Documents/Notes/programming')
 com!OpenCustomCommand call s:OpenDirectoryFile('~/Programming/shell/command')
 com!OpenBashComplete call s:OpenDirectoryFile('~/Programming/shell/autocomplete/my_complete')
@@ -1089,6 +1091,7 @@ set updatetime=1000
     " you can't use coc#config()
     let g:coc_user_config={
         \ "python.autoComplete.addBrackets": v:true,
+        \ "python.autoComplete.extraPaths": ["~/Programming/Python/Custom_module:"],
         \ "diagnostic.errorSign": '✗',
         \ "diagnostic.warningSign": '⚠',
         \ "diagnostic.infoSign": '⚐',
@@ -1102,21 +1105,55 @@ set updatetime=1000
         autocmd CursorHold * silent call CocActionAsync('highlight')
     endif
 
-    " " map <up> and <down> and <c-u> and <c-d> to scroll in coc.nvim floating windows such as
-    " " documentation window
+    " scroll popup window with <c-d> and <c-u> in insert mode
+    inoremap <silent><expr> <c-d> pumvisible() ? "\<down>\<down>\<down>\<down>\<down>\<down>\<down>\<down>" : "\<c-d>"
+    inoremap <silent><expr> <c-u> pumvisible() ? "\<up>\<up>\<up>\<up>\<up>\<up>\<up>\<up>" : "\<c-u>"
+
+    " map <up> and <down> and <c-u> and <c-d> to scroll in coc.nvim floating windows such as
+    " documentation window
     if has('nvim')
         nnoremap <silent><expr> <down> coc#util#has_float() ? coc#util#float_scroll(1) : "\<down>"
         nnoremap <silent><expr> <up> coc#util#has_float() ? coc#util#float_scroll(0) : "\<up>"
-        inoremap <silent><expr> <down> coc#util#has_float() ? <SID>coc_float_scroll(1) : "\<down>"
-        inoremap <silent><expr> <up> coc#util#has_float() ? <SID>coc_float_scroll(0) : "\<up>"
-        vnoremap <silent><expr> <down> coc#util#has_float() ? <SID>coc_float_scroll(1) : "\<down>"
-        vnoremap <silent><expr> <up> coc#util#has_float() ? <SID>coc_float_scroll(0) : "\<up>"
         nnoremap <silent><expr> <c-d> coc#util#has_float() ? coc#util#float_scroll(1) : "\<c-d>"
         nnoremap <silent><expr> <c-u> coc#util#has_float() ? coc#util#float_scroll(0) : "\<c-u>"
-        inoremap <silent><expr> <c-d> coc#util#has_float() ? <SID>coc_float_scroll(1) : "\<c-d>"
-        inoremap <silent><expr> <c-u> coc#util#has_float() ? <SID>coc_float_scroll(0) : "\<c-u>"
-        vnoremap <silent><expr> <c-d> coc#util#has_float() ? <SID>coc_float_scroll(1) : "\<c-d>"
-        vnoremap <silent><expr> <c-u> coc#util#has_float() ? <SID>coc_float_scroll(0) : "\<c-u>"
+    else
+        " For vim to scroll floating window
+        function misc#popup#find_cursor_popup(...)
+            let radius = get(a:000, 0, 2)
+            let srow = screenrow()
+            let scol = screencol()
+
+            " it's necessary to test entire rect, as some popup might be quite small
+            for r in range(srow - radius, srow + radius)
+                for c in range(scol - radius, scol + radius)
+                    let winid = popup_locate(r, c)
+                    if winid != 0
+                        return winid
+                    endif
+                endfor
+            endfor
+
+            return 0
+        endfunction
+
+        " For vim to scroll floating window
+        function misc#popup#scroll_cursor_popup(down)
+            let winid = misc#popup#find_cursor_popup()
+            if winid == 0
+                return 0
+            endif
+
+            let pp = popup_getpos(winid)
+            call popup_setoptions( winid,
+                        \ {'firstline' : pp.firstline + ( a:down ? 1 : -1 ) } )
+
+            return 1
+        endfunction
+
+        nnoremap <expr> <c-d> misc#popup#scroll_cursor_popup(1) ? '<esc>' : '<c-d>'
+        nnoremap <expr> <c-u> misc#popup#scroll_cursor_popup(0) ? '<esc>' : '<c-u>'
+        nnoremap <expr> <down> misc#popup#scroll_cursor_popup(1) ? '<esc>' : '<down>'
+        nnoremap <expr> <up> misc#popup#scroll_cursor_popup(0) ? '<esc>' : '<up>'
     endif
 
     " use <tab> for trigger completion and navigate to the next complete item
@@ -1479,11 +1516,16 @@ endif
     "
     " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
     let g:UltiSnipsExpandTrigger="<c-v>"
-    let g:UltiSnipsJumpForwardTrigger="<m-n>"
-    let g:UltiSnipsJumpBackwardTrigger="<m-p>"  " disable this due to conflict with latex c-b bold font
+    " let g:UltiSnipsJumpForwardTrigger="<m-n>"
+    " let g:UltiSnipsJumpBackwardTrigger="<m-p>"  " disable this due to conflict with latex c-b bold font
+    let g:UltiSnipsJumpForwardTrigger="<c-f>"
+    let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 
     " If you want :UltiSnipsEdit to split your window.
     let g:UltiSnipsEditSplit="vertical"
+
+	"doxygen" sphinx" google" numpy" jedi" 
+    let g:ultisnips_python_style="numpy"
 
 " }}}
 
