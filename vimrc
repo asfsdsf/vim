@@ -89,21 +89,16 @@ Plug 'ryanoasis/vim-devicons'  " iconize symbols
 Plug 'morhetz/gruvbox'  "retro groove color scheme for Vim
 Plug 'mhinz/vim-startify'  " The fancy start screen for Vim.
 
-Plug 'sjl/badwolf'
-Plug 'tomasr/molokai'
-Plug 'zenorocha/dracula-theme', {'rtp': 'vim/'}
-Plug 'junegunn/limelight.vim'
-Plug 'mkarmona/colorsbox'
-Plug 'romainl/Apprentice'
-Plug 'Lokaltog/vim-distinguished'
-Plug 'chriskempson/base16-vim'
-Plug 'w0ng/vim-hybrid'
-Plug 'AlessandroYorba/Sierra'
-" Plug 'daylerees/colour-schemes'
-Plug 'effkay/argonaut.vim'
-Plug 'ajh17/Spacegray.vim'
-Plug 'atelierbram/Base2Tone-vim'
-Plug 'colepeters/spacemacs-theme.vim'
+Plug 'sjl/badwolf'  " A color scheme for Vim, pieced together by Steve Losh.
+Plug 'tomasr/molokai' " Molokai Color Scheme for Vim
+Plug 'dracula/vim', { 'as': 'dracula' } " Dracula Theme, dark theme
+Plug 'junegunn/limelight.vim'  " adjustable color scheme
+Plug 'romainl/Apprentice' " dark, low-contrast colorscheme for Vim based on the awesome Sorcerer by Jeet Sukumaran.
+Plug 'chriskempson/base16-vim' " base16 vim theme. Consist many themes
+Plug 'AlessandroYorba/Sierra' " a vim color scheme
+Plug 'ajh17/Spacegray.vim' " Spacegray is a colorscheme for Vim loosely modeled after the spacegray theme for Xcode.
+Plug 'atelierbram/Base2Tone-vim' " colorschemes for Vim – one of the syntax-highlighting applications containing the colorschemes of Base2Tone which were based on Duotone Themes by Simurai for Atom.
+Plug 'colepeters/spacemacs-theme.vim' " A theme modelled after nashamri/spacemacs-theme
 
 
 " required
@@ -166,10 +161,27 @@ if exists("$TERMINOLOGY")
     set notermguicolors
 endif
 
+" toggle between light and dark theme
+function! ToggleTheme()
+    if (&background=='dark')
+        set background=light
+        AirlineTheme base16_monokai
+        exec 'colorscheme ' . g:light_color_scheme
+    else
+        set background=dark
+        AirlineTheme hybrid
+        exec 'colorscheme ' . g:dark_color_scheme
+    endif
+endfunction
+
 let base16colorspace=256  " Access colors present in 256 colorspace
 " colorscheme spacegray
 " colorscheme spacemacs-theme
-colorscheme gruvbox
+let g:gruvbox_contrast_light = 'soft'
+let g:dark_color_scheme='gruvbox'
+let g:light_color_scheme='gruvbox'
+exec 'colorscheme ' . g:dark_color_scheme
+" colorscheme gruvbox
 
 let g:spacegray_underline_search = 1
 let g:spacegray_italicize_comments = 1
@@ -721,6 +733,9 @@ endif
     nnoremap <Space>9  :call CloseMaximize()<CR>9<C-w><C-w>
     " insert dividing line
     nnoremap <Space>id :r !echo "-----------------------------------------------------------------------"<CR>:TComment<CR>5l
+
+    " switch theme
+    nnoremap <Space>Tn :call ToggleTheme()<CR>
 
     " folding
     nnoremap <Space>z+ zR
@@ -1511,9 +1526,11 @@ endif
     " ~/.vim/plugged/vim-snippets/snippets
     "
     " custom snippets are in folders under:
-    " ~/.vim/UltiSnips
-    " Use :UltiSnipsEdit to edit custom snippet with current file type.
-    "
+    " ~/Software/vim/plugins/mysnippets/UltiSnips/
+    " Use :OpenMySnippets to edit custom snippet with current file type.
+    " Note that ultisnips use `command` to call bash command.
+    " And use `!p snip.rv = command` to call python command
+
     " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
     let g:UltiSnipsExpandTrigger="<c-v>"
     " let g:UltiSnipsJumpForwardTrigger="<m-n>"
@@ -1526,6 +1543,10 @@ endif
 
 	"doxygen" sphinx" google" numpy" jedi" 
     let g:ultisnips_python_style="numpy"
+
+    let g:snips_author='zky'
+    let g:snips_email='739521505@qq.com'
+    let g:snips_github='https://github.com/asfsdsf'
 
 " }}}
 

@@ -76,7 +76,8 @@ nnoremap <Space>w/ :vs<CR>
 nnoremap <Space>w- :sp<CR>
 nnoremap <Space>ww <C-w>w
 nnoremap <Space>w= <C-w>=
-nnoremap <Space>bd :q<CR>
+nnoremap <Space>wn :action EditSourceInNewWindow<CR>
+wnnoremap <Space>bd :q<CR>
 nnoremap <Space>wd :action CloseAllEditors<CR>
 nnoremap <Space>wx :q<CR>
 
@@ -131,6 +132,7 @@ xnoremap L $
 nnoremap <Space><Tab> :action VimFilePrevious<CR>
 nnoremap <Space>fvd :e ~/Software/vim/vimrc_collections/vimrc_for_jetbrain<CR>
 nnoremap <Space>ff :action GotoFile<CR>
+nnoremap <Space>pf :action GotoFile<CR>
 nnoremap <Space>fc :action GotoClass<CR>
 nnoremap <Space>fp :action SelectInProjectView<CR>
 nnoremap <Space>fvR :source ~/Software/vim/vimrc_collections/vimrc_for_jetbrain<CR>
@@ -163,9 +165,10 @@ nnoremap ,o :action OverrideMethods<CR>
 nnoremap ,gu :action GotoSuperMethod<CR>
 nnoremap ,gs :action GotoSymbol<CR>
 nnoremap ,gd :action GotoImplementation<CR>
-nnoremap zm :action CollapseAllRegions<CR>
-nnoremap zr :action ExpandAllRegions<CR>
-nnoremap za $:action CollapseSelection<CR>
+nnoremap zm :action CollapseRegion<CR>
+nnoremap zM :action CollapseAllRegions<CR>
+nnoremap zr :action ExpandRegion<CR>
+nnoremap zR :action ExpandAllRegions<CR>
 nnoremap <c-s> :action SurroundWith<CR>
 vnoremap <c-s> :action SurroundWith<CR>
 nnoremap <c-/> :action CommentByLineComment<CR>
