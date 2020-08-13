@@ -240,15 +240,18 @@ com! OpenTodoFile 12sp ~/Software/vim/TODO
 
 com! OpenFlake8Config 12sp ~/.config/flake8
 
-function! g:OpenFileByCtrlP()
+function! g:OpenFileByPath()
     12sp $HOME/Software/vim/open_file_help.sh
     exec "normal! \<c-w>J"
     r!pwd
     exec "normal!k\"pdd"
     startinsert!
 endfunction
-nnoremap <Space>ff :call OpenFileByCtrlP()<CR>
+nnoremap <Space>ff :call OpenFileByPath()<CR>
 nnoremap <Space>pf :Files!<CR>
+" Copy current file path
+" nnoremap <Space>fy :silent exec '!printf ' . expand('%:p') . ' <bar> xclip -selection clipboard'<CR>
+nnoremap <Space>fy :let @+ = expand("%:p")<CR>
 
 function! s:DiffWithSaved()
   let filetype=&ft
@@ -501,8 +504,6 @@ endif
     cnoremap <c-a> <home>
     cnoremap <c-e> <end>
 
-    nnoremap <enter> o<esc>
-
     nnoremap gm %
     vnoremap gm %
 
@@ -568,6 +569,7 @@ endif
     " run current python buffer
     autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:!octave %<CR>
     autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("octave " . expand("%:p"))<CR>
+    autocmd FileType matlab nnoremap <buffer> K :exec "e " . system('ag -l "^function .+\W' . expand('<cword>') . '\W" $HOME/Software/ifem/ifem/')<CR><CR>
     autocmd FileType python nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("python3 " . expand("%:p"))<CR>
 
     " run current javascript buffer
@@ -1133,7 +1135,7 @@ set updatetime=1000
         nnoremap <silent><expr> <c-u> coc#util#has_float() ? coc#util#float_scroll(0) : "\<c-u>"
     else
         " For vim to scroll floating window
-        function misc#popup#find_cursor_popup(...)
+        function Find_cursor_popup(...)
             let radius = get(a:000, 0, 2)
             let srow = screenrow()
             let scol = screencol()
@@ -1152,23 +1154,23 @@ set updatetime=1000
         endfunction
 
         " For vim to scroll floating window
-        function misc#popup#scroll_cursor_popup(down)
-            let winid = misc#popup#find_cursor_popup()
+        function Scroll_cursor_popup(down)
+            let winid = Find_cursor_popup()
             if winid == 0
                 return 0
             endif
 
             let pp = popup_getpos(winid)
             call popup_setoptions( winid,
-                        \ {'firstline' : pp.firstline + ( a:down ? 1 : -1 ) } )
+                        \ {'firstline' : pp.firstline + ( a:down ? 8 : -8 ) } )
 
             return 1
         endfunction
 
-        nnoremap <expr> <c-d> misc#popup#scroll_cursor_popup(1) ? '<esc>' : '<c-d>'
-        nnoremap <expr> <c-u> misc#popup#scroll_cursor_popup(0) ? '<esc>' : '<c-u>'
-        nnoremap <expr> <down> misc#popup#scroll_cursor_popup(1) ? '<esc>' : '<down>'
-        nnoremap <expr> <up> misc#popup#scroll_cursor_popup(0) ? '<esc>' : '<up>'
+        nnoremap <expr> <c-d> Scroll_cursor_popup(1) ? '<esc>' : '<c-d>'
+        nnoremap <expr> <c-u> Scroll_cursor_popup(0) ? '<esc>' : '<c-u>'
+        nnoremap <expr> <down> Scroll_cursor_popup(1) ? '<esc>' : '<down>'
+        nnoremap <expr> <up> Scroll_cursor_popup(0) ? '<esc>' : '<up>'
     endif
 
     " use <tab> for trigger completion and navigate to the next complete item
@@ -1624,7 +1626,8 @@ endif
             inoremap <buffer> <enter> <c-o>$<c-o>:call VimuxSlimeNormal()<CR><enter>
             vnoremap <buffer> <enter> "vy :call VimuxSlimeVisual()<CR>
             nnoremap <buffer> <enter> :call VimuxSlimeNormal()<CR>j
-            VimuxRunCommand("cd " . expand("%:p:h"))
+            " VimuxRunCommand("cd " . expand("%:p:h"))
+            call VimuxCdWorkingDirectory()
 
             let b:VimuxForReplFlag=1
 
