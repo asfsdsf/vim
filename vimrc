@@ -249,6 +249,7 @@ function! g:OpenFileByPath()
 endfunction
 nnoremap <Space>ff :call OpenFileByPath()<CR>
 nnoremap <Space>pf :Files!<CR>
+nnoremap <f5> :e<CR>
 " Copy current file path
 " nnoremap <Space>fy :silent exec '!printf ' . expand('%:p') . ' <bar> xclip -selection clipboard'<CR>
 nnoremap <Space>fy :let @+ = expand("%:p")<CR>
@@ -563,13 +564,30 @@ endif
         endif
     endf
 
+    fun! MatlabGoToDefinition()
+        " --- Show ifem definition ----------------------------------------------
+        let l:word_under_cursor = expand("<cword>")
+        let l:ifem_file_path=system('ag -l "^function .+\W' . expand('<cword>') . '\W" $HOME/Software/ifem/ifem/')
+        if l:ifem_file_path != ''
+            exec "view " . l:ifem_file_path
+        else
+        " --- Show octave help---------------------------------------------------
+            e /tmp/odd_for_vim_matlab.md
+            1,$d
+            exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
+            exec "normal! ggd/----------------------------\<cr>"
+            write
+        endif
+    endf
+
     " jump to
     autocmd FileType c,cpp,python,java,javascript nnoremap <buffer> <c-b> :YcmCompleter GoTo<CR>
 
     " run current python buffer
     autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:!octave %<CR>
     autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("octave " . expand("%:p"))<CR>
-    autocmd FileType matlab nnoremap <buffer> K :exec "e " . system('ag -l "^function .+\W' . expand('<cword>') . '\W" $HOME/Software/ifem/ifem/')<CR><CR>
+    autocmd FileType matlab nnoremap <buffer> K :call MatlabGoToDefinition()<CR>
+    autocmd FileType matlab nnoremap <buffer> gd :call MatlabGoToDefinition()<CR>
     autocmd FileType python nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("python3 " . expand("%:p"))<CR>
 
     " run current javascript buffer
@@ -702,7 +720,7 @@ endif
 " Map from spacemacs
 """""""""""""""""""""""""""""""""""""
     " nunmap <Space>
-    " nnoremap <Space><Space> :<c-f>  " Replaced by unite.vim 
+    nnoremap <Space><Space> :<c-f>
     nnoremap <silent> <Space>wh :call CloseMaximize()<CR><C-w>h
     nnoremap <silent> <Space>wj :call CloseMaximize()<CR><C-w>j
     nnoremap <silent> <Space>wk :call CloseMaximize()<CR><C-w>k
@@ -775,7 +793,6 @@ endif
     nnoremap <Space><Tab> :b#<CR>
     nnoremap ]e        :move +1<CR>
     nnoremap [e        :move -2<CR>
-    " nnoremap <Space><Space> :
     nnoremap <Space>fvd :OpenVimrcDotFile<CR>
     execute "nnoremap <Space>fvR :source " . b:dot_file_path . "<CR>"
     nnoremap <Space>mcc :w<CR>:!python %<CR>
@@ -1078,12 +1095,12 @@ set updatetime=1000
     let g:coc_global_extensions = [
     \ 'coc-ultisnips',
     \ 'coc-json',
-    \ 'coc-html',
+    " \ 'coc-html',
     \ 'coc-css',
     \ 'coc-python',
     \ 'coc-highlight',
     \ 'coc-pairs',
-    \ 'coc-sh',
+    " \ 'coc-sh',
     \ 'coc-cmake',
     \ 'coc-clangd',
     \ ]
@@ -1244,7 +1261,7 @@ set updatetime=1000
 
 
 " unite.vim {{{
-    nnoremap <Space><Space>  :Unite -start-insert -buffer-name=command  command<CR>
+    " nnoremap <Space><Space>  :Unite -start-insert -buffer-name=command  command<CR>
     function! s:UniteSettings()
         au InsertLeave <buffer> :UniteClose
         imap <buffer> <TAB>   <Plug>(unite_select_next_line)

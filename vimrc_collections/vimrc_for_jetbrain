@@ -77,7 +77,7 @@ nnoremap <Space>w- :sp<CR>
 nnoremap <Space>ww <C-w>w
 nnoremap <Space>w= <C-w>=
 nnoremap <Space>wn :action EditSourceInNewWindow<CR>
-wnnoremap <Space>bd :q<CR>
+nnoremap <Space>bd :q<CR>
 nnoremap <Space>wd :action CloseAllEditors<CR>
 nnoremap <Space>wx :q<CR>
 
@@ -161,6 +161,8 @@ nnoremap ,cc :action Run<CR>
 nnoremap ,cr :action Rerun<CR>
 nnoremap ,cd :action Debug<CR>
 nnoremap ,b :action Build<CR>
+vnoremap <CR> :action ExecuteInPyConsoleAction<CR>
+nnoremap <CR> :action ExecuteInPyConsoleAction<CR>
 nnoremap ,o :action OverrideMethods<CR>
 nnoremap ,gu :action GotoSuperMethod<CR>
 nnoremap ,gs :action GotoSymbol<CR>
