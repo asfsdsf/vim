@@ -1095,12 +1095,10 @@ set updatetime=1000
     let g:coc_global_extensions = [
     \ 'coc-ultisnips',
     \ 'coc-json',
-    " \ 'coc-html',
     \ 'coc-css',
     \ 'coc-python',
     \ 'coc-highlight',
     \ 'coc-pairs',
-    " \ 'coc-sh',
     \ 'coc-cmake',
     \ 'coc-clangd',
     \ ]
