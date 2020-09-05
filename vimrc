@@ -1777,7 +1777,7 @@ endif
 
 
 " {{{ vimtex
-    let g:vimtex_flavor='plain'
+    let g:tex_flavor='latex'  " for compatibility with vim version >= 8.2
     let g:vimtex_view_general_viewer = 'zathura'
     let g:vimtex_view_method='zathura'
     let g:vimtex_compiler_callback_hooks = ['ZathuraHook']
