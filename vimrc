@@ -500,6 +500,8 @@ endif
     noremap! <c-h> <left>
     noremap! <c-l> <right>
 
+    noremap! <c-y> <c-r>+
+
     inoremap <c-a> <c-o>^
     inoremap <c-e> <c-o>$
     cnoremap <c-a> <home>
@@ -752,7 +754,7 @@ endif
     nnoremap <Space>8  :call CloseMaximize()<CR>8<C-w><C-w>
     nnoremap <Space>9  :call CloseMaximize()<CR>9<C-w><C-w>
     " insert dividing line
-    nnoremap <Space>id :r !echo "-----------------------------------------------------------------------"<CR>:TComment<CR>5l
+    nnoremap <Space>id :r !echo "***********************************************************************"<CR>:TComment<CR>5l
 
     " switch theme
     nnoremap <Space>Tn :call ToggleTheme()<CR>
@@ -800,7 +802,6 @@ endif
     vnoremap <Space>/  "vy:exec "Ag!" . escape(@v,'/\()*+?[]$^<bar>')<CR>
     nnoremap <c-f>  :w<CR>:AgCurrentFile!<CR>
 
-    inoremap <c-y> <c-r>+
 
     " map * to search selection
     vnoremap * "vy/\V<C-R>=escape(@v,'/\')<CR><CR>
@@ -1146,8 +1147,8 @@ set updatetime=1000
     if has('nvim')
         nnoremap <silent><expr> <down> coc#util#has_float() ? coc#util#float_scroll(1) : "\<down>"
         nnoremap <silent><expr> <up> coc#util#has_float() ? coc#util#float_scroll(0) : "\<up>"
-        nnoremap <silent><expr> <c-d> coc#util#has_float() ? coc#util#float_scroll(1) : "\<c-d>"
-        nnoremap <silent><expr> <c-u> coc#util#has_float() ? coc#util#float_scroll(0) : "\<c-u>"
+        " nnoremap <silent><expr> <c-d> coc#util#has_float() ? coc#util#float_scroll(1) : "\<c-d>"
+        " nnoremap <silent><expr> <c-u> coc#util#has_float() ? coc#util#float_scroll(0) : "\<c-u>"
     else
         " For vim to scroll floating window
         function Find_cursor_popup(...)
@@ -1182,8 +1183,8 @@ set updatetime=1000
             return 1
         endfunction
 
-        nnoremap <expr> <c-d> Scroll_cursor_popup(1) ? '<esc>' : '<c-d>'
-        nnoremap <expr> <c-u> Scroll_cursor_popup(0) ? '<esc>' : '<c-u>'
+        " nnoremap <expr> <c-d> Scroll_cursor_popup(1) ? '<esc>' : '<c-d>'
+        " nnoremap <expr> <c-u> Scroll_cursor_popup(0) ? '<esc>' : '<c-u>'
         nnoremap <expr> <down> Scroll_cursor_popup(1) ? '<esc>' : '<down>'
         nnoremap <expr> <up> Scroll_cursor_popup(0) ? '<esc>' : '<up>'
     endif

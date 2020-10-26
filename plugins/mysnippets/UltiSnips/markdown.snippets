@@ -1,0 +1,28 @@
+###########################################################################
+#                            GLOBAL SETTINGS                              #
+###########################################################################
+
+# most of snippets of plugins are -49 and -50
+# priority of all.snippets is -60
+# Set priority to -48 to overwrite snippets of those plugins
+priority -48
+
+
+snippet sympy "sympy block " w
+sympy $1 sympy$0
+endsnippet
+
+priority 10000
+snippet 'sympy(.*)sympy' "evaluate sympy" wr
+`!p
+from sympy import *
+x, y, z, t = symbols('x y z t')
+k, m, n = symbols('k m n', integer=True)
+f, g, h = symbols('f g h', cls=Function)
+init_printing()
+snip.rv = eval('latex(' + match.group(1).replace('\\', '') \
+    .replace('^', '**') \
+    .replace('{', '(') \
+    .replace('}', ')') + ')')
+`
+endsnippet

@@ -11,6 +11,7 @@ priority -48
 ###########################################################################
 snippet getopts "parse positional parameters" b
 __ScriptVersion="${1:version}"
+__BaseName=$(basename "\$0")
 
 #===  FUNCTION  ================================================================
 #         NAME:  usage
@@ -18,11 +19,13 @@ __ScriptVersion="${1:version}"
 #===============================================================================
 function usage ()
 {
-	echo "Usage :  $${0:0} [options] [--]
+	echo "Usage :  $__BaseName [options] [--]
 
 	Options:
 	-h|help       Display this message
-	-v|version    Display script version"
+	-v|version    Display script version
+
+	Examples:"
 
 }    # ----------  end of function usage  ----------
 
@@ -36,7 +39,7 @@ do
 
 	h|help     )  usage; exit 0   ;;
 
-	v|version  )  echo "$${0:0} -- Version $__ScriptVersion"; exit 0   ;;
+	v|version  )  echo "$__BaseName -- Version $__ScriptVersion"; exit 0   ;;
 
 	* )  echo -e "\n  Option does not exist : $OPTARG\n"
 		  usage; exit 1   ;;

@@ -53,10 +53,6 @@ inoremap <c-f> <right>
 inoremap <c-a> <c-o>^
 inoremap <c-e> <c-o>$
 
-inoremap <c-v> <c-o>p
-inoremap <c-d> <c-o>d
-inoremap <c-y> <c-o>y
-
 " Easier moving in tabs and windows
 nnoremap <A-l> gt
 nnoremap <A-h> gT
@@ -80,7 +76,6 @@ nnoremap <Space>wn :action EditSourceInNewWindow<CR>
 nnoremap <Space>bd :q<CR>
 nnoremap <Space>wd :action CloseAllEditors<CR>
 nnoremap <Space>wx :q<CR>
-
 """""""""""""""""""""""""""""""""""""
 " Configuration Section
 """""""""""""""""""""""""""""""""""""
@@ -161,8 +156,8 @@ nnoremap ,cc :action Run<CR>
 nnoremap ,cr :action Rerun<CR>
 nnoremap ,cd :action Debug<CR>
 nnoremap ,b :action Build<CR>
-vnoremap <CR> :action ExecuteInPyConsoleAction<CR>
-nnoremap <CR> :action ExecuteInPyConsoleAction<CR>
+" vnoremap <CR> :action ExecuteInPyConsoleAction<CR>
+" nnoremap <CR> :action ExecuteInPyConsoleAction<CR>
 nnoremap ,o :action OverrideMethods<CR>
 nnoremap ,gu :action GotoSuperMethod<CR>
 nnoremap ,gs :action GotoSymbol<CR>
@@ -185,6 +180,8 @@ nnoremap <Space>eN :action GotoPreviousError<CR>
 nnoremap <Space><tab> :action Switcher<CR><CR>
 nnoremap ]] :action MethodDown<CR>
 nnoremap [[ :action MethodUp<CR>
+vnoremap ]] :action MethodDown<CR>
+vnoremap [[ :action MethodUp<CR>
 nnoremap <c-h> :action Replace<CR>
 nnoremap <f11> :action ToggleFullScreen<CR>
 inoremap <c-/> <c-o>:action VimUndo<CR>
