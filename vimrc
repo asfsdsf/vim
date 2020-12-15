@@ -1,3 +1,12 @@
+""" Variable g:vimrc_has_been_sourced is defined at the end of this file to judge whether it is the first time to source vimrc
+""" For example, when you need to
+" call airline#add_statusline_func('WindowNumber')
+"
+""" this function can only be added once. Hence you can
+" if !exists('g:vimrc_has_been_sourced')
+"     call airline#add_statusline_func('WindowNumber')
+" endif 
+
 if has('nvim')
     let b:plug_path='~/.nvim/plugged'
     let b:dot_file_path='~/Software/vim/vimrc'
@@ -203,8 +212,10 @@ let g:spacegray_italicize_comments = 1
         return 0
     endfunction
 
-    call airline#add_statusline_func('WindowNumber')
-    call airline#add_inactive_statusline_func('WindowNumber')
+    if !exists('g:vimrc_has_been_sourced')
+        call airline#add_statusline_func('WindowNumber')
+        call airline#add_inactive_statusline_func('WindowNumber')
+    endif
 " }}}
 
 
@@ -1104,7 +1115,9 @@ set updatetime=1000
     \ 'coc-clangd',
     \ ]
 
-	set statusline^=%{coc#status()}
+    if !exists('g:vimrc_has_been_sourced')
+        set statusline^=%{coc#status()}
+    endif
 
     let g:coc_snippet_next = '<TAB>'
     let g:coc_snippet_prev = '<S-TAB>'
@@ -1882,3 +1895,15 @@ endif
     command! -bar RangerChooser call RangeChooser()
     nnoremap <Space>r :<C-U>RangerChooser<CR>
 " }}}
+
+
+
+" Variable used to judge whether it is the first time to source vimrc
+" " For example, when you need to
+" call airline#add_statusline_func('WindowNumber')
+" " this function can only be added once. Hence you can
+" if exists('g:vimrc_has_been_sourced')
+"     call airline#add_statusline_func('WindowNumber')
+" endif 
+let g:vimrc_has_been_sourced = 1
+
