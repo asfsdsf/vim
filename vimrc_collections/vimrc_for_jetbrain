@@ -1,5 +1,6 @@
 set encoding=utf8
 
+" Ideavim reference manual: http://ideavim.sourceforge.net/vim/index.html
 """""""""""""""""""""""""""""""""""""
 " display
 """""""""""""""""""""""""""""""""""""
@@ -25,8 +26,44 @@ let base16colorspace=256  " Access colors present in 256 colorspace
 " colorscheme spacemacs-theme
 
 """""""""""""""""""""""""""""""""""""
+" Configuration Section
+"""""""""""""""""""""""""""""""""""""
+
+" disable prefix key time out
+set notimeout
+
+" smart case for / search
+set ignorecase
+set smartcase
+
+" highlight all search matches
+:set hlsearch
+
+" highlight the next match while you're still typing out your search pattern
+:set hlsearch incsearch
+
+" set more visual hints in command-line mode
+set wildmenu
+
+" Indention Options
+set autoindent " New lines inherit the indentation of previous lines
+set expandtab " Convert tabs to spaces
+set shiftwidth=4 " When shifting, indent using four spaces
+set tabstop=4 " Indent using four spaces
+set smarttab
+set expandtab
+
+" Enable hidden buffers
+set hidden
+
+" make scroll leave a margin for 3 lines
+set scrolloff=3
+
+"""""""""""""""""""""""""""""""""""""
 " custom functin
 """""""""""""""""""""""""""""""""""""
+" Not support yet
+
 """"""""""""""""""""""""""""""""""""
 " Mappings configurationn
 """""""""""""""""""""""""""""""""""""
@@ -77,40 +114,6 @@ nnoremap <Space>bd :q<CR>
 nnoremap <Space>wd :action CloseAllEditors<CR>
 nnoremap <Space>wx :q<CR>
 """""""""""""""""""""""""""""""""""""
-" Configuration Section
-"""""""""""""""""""""""""""""""""""""
-
-" disable prefix key time out
-set notimeout
-
-" smart case for / search
-set ignorecase
-set smartcase
-
-" highlight all search matches
-:set hlsearch
-
-" highlight the next match while you're still typing out your search pattern
-:set hlsearch incsearch
-
-" set more visual hints in command-line mode
-set wildmenu
-
-" Indention Options
-set autoindent " New lines inherit the indentation of previous lines
-set expandtab " Convert tabs to spaces
-set shiftwidth=4 " When shifting, indent using four spaces
-set tabstop=4 " Indent using four spaces
-set smarttab
-set expandtab
-
-" Enable hidden buffers
-set hidden
-
-" make scroll leave a margin for 3 lines
-set scrolloff=3
-
-"""""""""""""""""""""""""""""""""""""
 " IdeaVim Specific Configuration
 """""""""""""""""""""""""""""""""""""
 
@@ -126,12 +129,14 @@ xnoremap H ^
 xnoremap L $
 nnoremap <Space><Tab> :action VimFilePrevious<CR>
 nnoremap <Space>fvd :e ~/Software/vim/vimrc_collections/vimrc_for_jetbrain<CR>
+nnoremap <Space>fvD :e ~/.ideavimrc<CR>
 nnoremap <Space>ff :action GotoFile<CR>
 nnoremap <Space>pf :action GotoFile<CR>
 nnoremap <Space>fc :action GotoClass<CR>
 nnoremap <Space>fp :action SelectInProjectView<CR>
 nnoremap <Space>fvR :source ~/Software/vim/vimrc_collections/vimrc_for_jetbrain<CR>
 nnoremap <Space>fr :action RecentFiles<CR>
+nnoremap <Space>fd :action ShowFilePath<CR>
 nnoremap <Space>aa :action GotoAction<CR>
 nnoremap <Space>at :action ActivateTerminalToolWindow<CR>
 nnoremap <Space>as :action ActivateTerminalToolWindow<CR>
@@ -188,16 +193,46 @@ inoremap <c-/> <c-o>:action VimUndo<CR>
 inoremap <c-s-/> <c-o>:action VimRedo<CR>
 nnoremap g; :action JumpToLastChange<CR>
 nnoremap ? :!/home/ban/Programming/shell/command/ideavim_help<CR>
+" run_custom_command is put in /usr/local/bin
+nnoremap ? :!run_custom_command ideavim_help<CR>
 nnoremap <Space>z :action ToggleZenMode<CR>
 nnoremap <Space>qq :action Exit<CR>
+
+"""""""""""""""""""""""""""""""""""""
+" External tools
+"""""""""""""""""""""""""""""""""""""
+nnoremap <Space>tv :action Tool_External Tools_vim<cr>
+nnoremap <Space>te :action Tool_External Tools_emacs<cr>
+nnoremap <Space>tt :action Tool_External Tools_terminal<cr>
+nnoremap <Space>ft :action Tool_External Tools_terminal<cr>
+nnoremap <Space>tl :action Tool_External Tools_output_latex<cr>
+nnoremap <Space>ta :action ExternalTools_External Tools<cr>
 
 """""""""""""""""""""""""""""""""""""
 " Show Jetbrain keymap
 """""""""""""""""""""""""""""""""""""
 
 " Multiple cursor
-" <a-j> add selection for next occurrence for multiple cursor
-" <c-s-a-mouse left click> add selection for mouse click for multiple cursor
-" <mouse middle drag> add selection in the same column for multiple cursor
-" <c-s-s>  Toggle vim emulation
-" <c-s-x>  Open/edit current file in vim
+" <a-j>                     Multiple cursor: add selection for next occurrence for multiple cursor
+" <c-s-a-mouse left click>  Multiple cursor: add selection for mouse click for multiple cursor
+" <mouse middle drag>       Multiple cursor: add selection in the same column for multiple cursor
+" <c-s-s>                   Multiple cursor: Toggle vim emulation
+" <c-s-x>                   Multiple cursor: Open/edit current file in vim
+
+"""""""""""""""""""""""""""""""""""""
+" Jupyter Notebook
+"""""""""""""""""""""""""""""""""""""
+" <c-a>         Jupyter Notebook: add cell above
+" <c-b>         Jupyter Notebook: add cell below
+" <a-s-enter>   Jupyter Notebook: debug cell
+" <c-enter>     Jupyter Notebook: run cell
+" <s-enter>     Jupyter Notebook: run cell and select below
+" <a-c-s-enter> Jupyter Notebook: run all
+" <c-k>         Jupyter Notebook: select cell above
+" <c-j>         Jupyter Notebook: select cell below
+" #%%           Jupyter Notebook: write this to begin code block
+" #%% md        Jupyter Notebook: write this to begin markdown block
+
+"""""""""""""""""""""""""""""""""""""
+" Test space (all code below can be deleted freely)
+"""""""""""""""""""""""""""""""""""""

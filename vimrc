@@ -92,6 +92,7 @@ Plug 'SirVer/ultisnips'  " Track the engine.
 Plug 'honza/vim-snippets'  " Snippets are separated from the engine. Add this if you want them:
 
 " Theme / Interface
+" Plug 'nathanaelkane/vim-indent-guides'  " visually displaying indent levels in Vim.
 Plug 'vim-airline/vim-airline'  " beautiful bar at bottom
 Plug 'vim-airline/vim-airline-themes'  " beautiful bar at bottom
 Plug 'ryanoasis/vim-devicons'  " iconize symbols
@@ -131,6 +132,13 @@ set ruler " Always show cursor position
 set cursorline
 " highlight current column
 set cursorcolumn
+
+" have indent guides enabled by default
+let g:indent_guides_enable_on_vim_startup = 1
+" set indent line size to one
+let g:indent_guides_guide_size = 1
+" set indent line start level to 2
+let g:indent_guides_start_level=2
 
 " make sure column line will be preserved when swiching buffer
 set nostartofline
@@ -259,7 +267,9 @@ function! g:OpenFileByPath()
     startinsert!
 endfunction
 nnoremap <Space>ff :call OpenFileByPath()<CR>
-nnoremap <Space>pf :Files!<CR>
+nnoremap <Space>fF <plug>(fzf-complete-path)
+nnoremap <Space>pf :GFiles!<CR>
+nnoremap <Space>pF :Files!<CR>
 nnoremap <f5> :e<CR>
 " Copy current file path
 " nnoremap <Space>fy :silent exec '!printf ' . expand('%:p') . ' <bar> xclip -selection clipboard'<CR>
@@ -468,7 +478,7 @@ endif
 "}}}
 
 
-"{{{ Mapping selecting Mappings
+"{{{ Mapping selecting Mappings. Help describe keys
     nmap <leader><tab> <plug>(fzf-maps-n)
     xmap <leader><tab> <plug>(fzf-maps-x)
     omap <leader><tab> <plug>(fzf-maps-o)
@@ -811,7 +821,12 @@ endif
     nnoremap <Space>mcc :w<CR>:!python %<CR>
     nnoremap <Space>/  :Ag!<CR>
     vnoremap <Space>/  "vy:exec "Ag!" . escape(@v,'/\()*+?[]$^<bar>')<CR>
+    " Search lines in all buffers
+    nnoremap <Space>b/ :Lines<CR>
+    " search inside current buffer
     nnoremap <c-f>  :w<CR>:AgCurrentFile!<CR>
+    " search inside current buffer
+    nnoremap <c-f>  :BLines<CR>
 
 
     " map * to search selection
@@ -849,7 +864,7 @@ endif
     nnoremap <Space>lL :call LoadLayout(1)<CR>
 
     nnoremap <Space>qq :qa<CR>
-    nnoremap <Space>hd :help 
+    nnoremap <Space>hdk :Maps<CR>
     nnoremap <Space>cd :cd %:h<CR>:silent! Gcd<CR>
     nnoremap <Space>tw :ToggleWrap<CR>
     nmap <space>aa :FindActions<CR>
@@ -1584,6 +1599,12 @@ endif
 
 
 " {{{ vim-autoformat
+    " Need clang-format which can be installed by sudo apt install clang-format
+
+    let g:autoformat_autoindent = 0
+    let g:autoformat_retab = 0
+    let g:autoformat_remove_trailing_spaces = 0
+    
     let g:formatdef_clangformat ="'clang-format -lines='.a:firstline.':'.a:lastline.' --assume-filename=\"'.expand('%:p').'\" -style=\"{ AlignTrailingComments: true, '.(&textwidth ? 'ColumnLimit: '.&textwidth.', ' : '').(&expandtab ? 'UseTab: Never, IndentWidth: '.shiftwidth() : 'UseTab: Always').'}\"'"
     nnoremap ,f :Autoformat<CR>
     xnoremap ,f :Autoformat<CR>
