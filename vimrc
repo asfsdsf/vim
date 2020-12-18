@@ -66,6 +66,7 @@ Plug 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
 Plug 'terryma/vim-expand-region'  " Expand region like emacs
 Plug 'mtth/scratch.vim'  " Unobtrusive scratch window
 " Plug 'w0rp/ale'  " Syntax checking for python
+Plug 'puremourning/vimspector'  " A multi-language debugging plugin for Vim
 if has('nvim')
     Plug 'sakhnik/nvim-gdb', { 'do': ':UpdateRemotePlugins' }
 else
@@ -1102,6 +1103,32 @@ set updatetime=1000
       " \  'g:ycm_python_sys_path'
       " \]
     let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py'
+" }}}
+
+
+
+" vimspector {{{
+    " Run following to install
+    " :VimspectorInstall
+    " Use CodeLLDB instead of vscode-cpptools in macOS
+
+    let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
+
+    nnoremap <Space>dd :call vimspector#Launch()<CR>
+    nnoremap <Space>dc :call vimspector#Continue()<CR> 
+    nnoremap ,cd :call vimspector#Launch()<CR> 
+    nnoremap <Space>dp :call vimspector#Pause()<CR>
+    nnoremap <Space>dr :call vimspector#Restart()<CR>
+    nnoremap <Space>de :call vimspector#Stop()<CR>
+    nnoremap <Space>dq :call vimspector#Reset()<CR>
+    nnoremap <Space>db :call vimspector#ToggleBreakpoint()<CR>
+    nnoremap <Space>dB :call vimspector#ToggleConditionalBreakpoint()<CR>
+    nnoremap <Space>dfb :call vimspector#AddFunctionBreakpoint()<CR>
+    nnoremap <Space>ds :call vimspector#StepInto()<CR>
+    nnoremap <Space>dn :call vimspector#StepOver()<CR>
+    nnoremap <Space>do :call vimspector#StepOut()<CR>
+    nnoremap <Space>dt :call vimspector#RunToCursor()<CR>
+
 " }}}
 
 
