@@ -1,0 +1,43 @@
+{
+  "configurations": {
+    "RunSciPython": {
+      "adapter": "debugpy",
+      "configuration": {
+        "name": "run",
+        "type": "python",
+        "request": "launch",
+        "cwd": "${workspaceRoot}",
+        "python": "~/Programming/Python/VirtualEnv/sci_compute/bin/python",
+        "stopOnEntry": true,
+        "console": "externalTerminal",
+        "debugOptions": [],
+        "program": "${file}"
+      }
+    },
+    "CodeLLDB": {
+      "adapter": "CodeLLDB",
+      "configuration": {
+        "request": "launch",
+        "program": {
+            "shell": ["make_find_executable"]
+        },
+        "stopAtEntry": true
+      }
+    },
+    "vscode-cpptools":{
+      "adapter": "vscode-cpptools",
+      "variables": {
+        "Executable": {
+            "shell" : ["make_find_executable"]
+        }
+      },
+      "configuration": {
+        "request": "launch",
+        "program": "${Executable}",
+        "stopAtEntry": true,
+        "MIMode": "gdb"
+      }
+    }
+  }
+}
+
