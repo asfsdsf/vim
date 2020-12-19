@@ -1144,7 +1144,6 @@ set updatetime=1000
     nnoremap gq :call vimspector#Reset()<CR>
     nnoremap gb :call vimspector#ToggleBreakpoint()<CR>
     nnoremap gB :call vimspector#ToggleConditionalBreakpoint()<CR>
-    nnoremap gfb :call vimspector#AddFunctionBreakpoint()<CR>
     nnoremap gs :call vimspector#StepInto()<CR>
     nnoremap gn :call vimspector#StepOver()<CR>
     nnoremap go :call vimspector#StepOut()<CR>
