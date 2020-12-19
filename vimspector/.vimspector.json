@@ -12,6 +12,12 @@
         "console": "externalTerminal",
         "debugOptions": [],
         "program": "${file}"
+      },
+      "breakpoints": {
+        "exception": {
+          "caught": "Y",
+          "uncaught": "Y"
+        }
       }
     },
     "CodeLLDB": {
