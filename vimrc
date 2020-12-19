@@ -1219,11 +1219,12 @@ set updatetime=1000
 
     " map <up> and <down> and <c-u> and <c-d> to scroll in coc.nvim floating windows such as
     " documentation window
-    if has('nvim')
-        nnoremap <silent><expr> <down> coc#util#has_float() ? coc#util#float_scroll(1) : "\<down>"
-        nnoremap <silent><expr> <up> coc#util#has_float() ? coc#util#float_scroll(0) : "\<up>"
-        " nnoremap <silent><expr> <c-d> coc#util#has_float() ? coc#util#float_scroll(1) : "\<c-d>"
-        " nnoremap <silent><expr> <c-u> coc#util#has_float() ? coc#util#float_scroll(0) : "\<c-u>"
+    " If nvim >= 0.4.0 or vim >= 8.1.0750
+    if has('nvim-0.4.0') || has('patch-8.2.0750')
+        nnoremap <silent><nowait><expr> <down> coc#float#has_scroll() ? coc#float#scroll(1) : "\<down>"
+        nnoremap <silent><nowait><expr> <up> coc#float#has_scroll() ? coc#float#scroll(0) : "\<up>"
+        nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+        nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
     else
         " For vim to scroll floating window
         function Find_cursor_popup(...)
