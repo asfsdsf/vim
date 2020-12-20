@@ -1685,10 +1685,13 @@ endif
     nmap <space>vr :call VimuxRunCommand("!!\n")<CR>
 
     function! VimuxSlimeVisual()
-        " delete empty line (for python)
+        " delete empty line (mainly for python)
         let s:vimux_slime_delete_blank_line=substitute(@v,'\n\n\+','\n','g')
-        " add empty line to jump out of block (for python)
-        let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\(\n\s[^\n]\+\n\)\(\S\)','\1\n\2','g')
+        if(&filetype=='python')
+            " add empty line to jump out of block (for python, ipython does
+            " not need the following line)
+            " let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\(\n\s[^\n]\+\n\)\(\S\)','\1\n\2','g')
+        endif
 
         call VimuxRunCommand(s:vimux_slime_delete_blank_line)
     endfunction
