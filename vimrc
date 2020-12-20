@@ -1120,13 +1120,13 @@ set updatetime=1000
     let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
 
 
-    nnoremap <Space>dd :call vimspector#Continue()<CR>
-    nnoremap <Space>dc :call vimspector#Continue()<CR> 
-    nnoremap ,cd :call vimspector#Continue()<CR> 
+    nnoremap <Space>dd :GitGutterDisable<CR>:call vimspector#Continue()<CR>
+    nnoremap <Space>dc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
+    nnoremap ,cd :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
     nnoremap <Space>dp :call vimspector#Pause()<CR>
     nnoremap <Space>dr :call vimspector#Restart()<CR>
     nnoremap <Space>de :call vimspector#Stop()<CR>
-    nnoremap <Space>dq :call vimspector#Reset()<CR>
+    nnoremap <Space>dq :GitGutterEnable<CR>:call vimspector#Reset()<CR>
     nnoremap <Space>db :call vimspector#ToggleBreakpoint()<CR>
     nnoremap <Space>dB :call vimspector#ToggleConditionalBreakpoint()<CR>
     nnoremap <Space>dfb :call vimspector#AddFunctionBreakpoint()<CR>
@@ -1138,10 +1138,10 @@ set updatetime=1000
     " Copy .vimspector.json file to current directory for further config in project directory.
     nnoremap <Space>dg :cd %:h<CR>:silent! Gcd<CR>:!cp ~/Software/vim/vimspector/.vimspector.json .<CR>:e .vimspector.json<CR>
 
-    nnoremap gc :call vimspector#Continue()<CR> 
+    nnoremap gc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
     nnoremap gp :call vimspector#Pause()<CR>
     nnoremap ge :call vimspector#Stop()<CR>
-    nnoremap gq :call vimspector#Reset()<CR>
+    nnoremap gq :GitGutterEnable<CR>:call vimspector#Reset()<CR>
     nnoremap gb :call vimspector#ToggleBreakpoint()<CR>
     nnoremap gB :call vimspector#ToggleConditionalBreakpoint()<CR>
     nnoremap gs :call vimspector#StepInto()<CR>
@@ -1739,7 +1739,7 @@ endif
             " set initial code for specific filetype
             if(&filetype=='python')
                 vnoremap <buffer> K     "vy :call VimuxShowPythonDocVisual()<CR>
-                VimuxRunCommand("python3")
+                VimuxRunCommand("ipython3")
             endif
             if(&filetype=='javascript')
                 VimuxRunCommand("node")
