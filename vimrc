@@ -1690,7 +1690,10 @@ endif
         if(&filetype=='python')
             " add empty line to jump out of block (for python, ipython does
             " not need the following line)
-            " let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\(\n\s[^\n]\+\n\)\(\S\)','\1\n\2','g')
+            let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\(\n\s[^\n]\+\n\)\(\S\)','\1\n\2','g')
+            " don't jump for else: and elif: (for python)
+            let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\n\nelse:','\nelse:','g')
+            let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\n\(\nelif\W\)','\1','g')
         endif
 
         call VimuxRunCommand(s:vimux_slime_delete_blank_line)
@@ -1739,7 +1742,7 @@ endif
             " set initial code for specific filetype
             if(&filetype=='python')
                 vnoremap <buffer> K     "vy :call VimuxShowPythonDocVisual()<CR>
-                VimuxRunCommand("ipython3")
+                VimuxRunCommand("python3")
             endif
             if(&filetype=='javascript')
                 VimuxRunCommand("node")
