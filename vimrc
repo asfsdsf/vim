@@ -1119,7 +1119,12 @@ set updatetime=1000
 
     let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
 
-    autocmd FileType VimspectorPrompt inoremap <buffer> <tab> <c-x><c-o>
+    " map <tab> for auto completion in Vimspector console (<c-x><c-o> is omni
+    " commpletion
+    autocmd FileType VimspectorPrompt inoremap <buffer> <silent><expr> <Tab>
+          \ pumvisible() ? "\<C-n>" :
+          \ <SID>check_back_space() ? "\<Tab>" :
+          \ "\<c-x>\<c-o>"
 
     nnoremap <Space>dd :GitGutterDisable<CR>:call vimspector#Continue()<CR>
     nnoremap <Space>dc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
