@@ -1166,6 +1166,7 @@ set updatetime=1000
     " To use it with python:
     " pip install jedi pylint neovim
     "
+    " coc-omni is for vimspector's console completion
     let g:coc_global_extensions = [
     \ 'coc-ultisnips',
     \ 'coc-json',
@@ -1175,7 +1176,9 @@ set updatetime=1000
     \ 'coc-pairs',
     \ 'coc-cmake',
     \ 'coc-clangd',
+    \ 'coc-omni'
     \ ]
+    let g:coc_source_omni_filetypes=["VimspectorPrompt"]
 
     if !exists('g:vimrc_has_been_sourced')
         set statusline^=%{coc#status()}
@@ -1185,6 +1188,7 @@ set updatetime=1000
     let g:coc_snippet_prev = '<S-TAB>'
 
     autocmd FileType c,cpp let b:coc_pairs_disabled = ['<']
+    autocmd FileType VimspectorPrompt let b:coc_pairs_disabled = ["(", "[", "{", "<", "'", "\"", "`"]
 
     " Following is replacement for coc-settings.json
     if !empty($DISPLAY)  " if not on server
@@ -1194,6 +1198,7 @@ set updatetime=1000
             \ "filetypes": ["kotlin"]
             \ }
             \})
+        call coc#config('coc.source.omni.filetypes',["VimspectorPrompt"])
     endif
     " User configuration object, define this variable when
     " you can't use coc#config()
