@@ -1119,6 +1119,7 @@ set updatetime=1000
 
     let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
 
+    autocmd FileType VimspectorPrompt inoremap <buffer> <tab> <c-x><c-o>
 
     nnoremap <Space>dd :GitGutterDisable<CR>:call vimspector#Continue()<CR>
     nnoremap <Space>dc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
