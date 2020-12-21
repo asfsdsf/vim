@@ -736,7 +736,7 @@ endif
         endif
     endfunction
 
-    autocmd FileType vim nnoremap <space>vp :call VimEnterExec()<CR>
+    autocmd FileType vim nnoremap <buffer> <space>vp :call VimEnterExec()<CR>
 "}}}
 
 
