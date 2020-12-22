@@ -500,7 +500,7 @@ endif
 " autocmd InsertLeave * :update
 
 "{{{ directly use s to perform surround
-    " nmap s ys  " change this key to easymotion's jumptoanywhere
+    nmap s ys  " change this key to easymotion's jumptoanywhere
 "}}}
 
 
@@ -1134,8 +1134,7 @@ set updatetime=1000
     nnoremap <Space>de :call vimspector#Stop()<CR>
     nnoremap <Space>dq :GitGutterEnable<CR>:call vimspector#Reset()<CR>
     nnoremap <Space>db :call vimspector#ToggleBreakpoint()<CR>
-    nnoremap <Space>dB
-                \:<c-u>call vimspector#ToggleBreakpoint(
+    nnoremap <Space>dB <c-u>call vimspector#ToggleBreakpoint(
                 \ { 'condition': input( 'Enter condition expression: ' ),
                 \   'hitCondition': '0' }
                 \ )<CR>
@@ -1153,8 +1152,7 @@ set updatetime=1000
     nnoremap ge :call vimspector#Stop()<CR>
     nnoremap gq :GitGutterEnable<CR>:call vimspector#Reset()<CR>
     nnoremap gb :call vimspector#ToggleBreakpoint()<CR>
-    nnoremap <silent> gB
-                \:<c-u>call vimspector#ToggleBreakpoint(
+    nnoremap <silent> gB <c-u>call vimspector#ToggleBreakpoint(
                 \ { 'condition': input( 'Enter condition expression: ' ),
                 \   'hitCondition': '0' }
                 \ )<CR>
@@ -1500,7 +1498,7 @@ set updatetime=1000
 
 " easymotion {{{
     map <Leader> <Plug>(easymotion-prefix)
-    nmap s <Plug>(easymotion-jumptoanywhere)
+    " nmap s <Plug>(easymotion-jumptoanywhere)
     nmap \j <Plug>(easymotion-bd-jk)
     nmap \k <Plug>(easymotion-bd-jk)
     nmap \w <Plug>(easymotion-bd-w)
