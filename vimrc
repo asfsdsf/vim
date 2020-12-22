@@ -1134,7 +1134,11 @@ set updatetime=1000
     nnoremap <Space>de :call vimspector#Stop()<CR>
     nnoremap <Space>dq :GitGutterEnable<CR>:call vimspector#Reset()<CR>
     nnoremap <Space>db :call vimspector#ToggleBreakpoint()<CR>
-    nnoremap <Space>dB :call vimspector#ToggleConditionalBreakpoint()<CR>
+    nnoremap <Space>dB
+                \:<c-u>call vimspector#ToggleBreakpoint(
+                \ { 'condition': input( 'Enter condition expression: ' ),
+                \   'hitCondition': '0' }
+                \ )<CR>
     nnoremap <Space>dfb :call vimspector#AddFunctionBreakpoint()<CR>
     nnoremap <Space>ds :call vimspector#StepInto()<CR>
     nnoremap <Space>dn :call vimspector#StepOver()<CR>
@@ -1149,7 +1153,11 @@ set updatetime=1000
     nnoremap ge :call vimspector#Stop()<CR>
     nnoremap gq :GitGutterEnable<CR>:call vimspector#Reset()<CR>
     nnoremap gb :call vimspector#ToggleBreakpoint()<CR>
-    nnoremap gB :call vimspector#ToggleConditionalBreakpoint()<CR>
+    nnoremap <silent> gB
+                \:<c-u>call vimspector#ToggleBreakpoint(
+                \ { 'condition': input( 'Enter condition expression: ' ),
+                \   'hitCondition': '0' }
+                \ )<CR>
     nnoremap gs :call vimspector#StepInto()<CR>
     nnoremap gn :call vimspector#StepOver()<CR>
     nnoremap go :call vimspector#StepOut()<CR>
