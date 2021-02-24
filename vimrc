@@ -500,7 +500,8 @@ endif
 " autocmd InsertLeave * :update
 
 "{{{ directly use s to perform surround
-    nmap s ys  " change this key to easymotion's jumptoanywhere
+  " change this key to easymotion's jumptoanywhere
+    nmap s ys
 "}}}
 
 
@@ -1240,8 +1241,8 @@ set updatetime=1000
     if has('nvim-0.4.0') || has('patch-8.2.0750')
         nnoremap <silent><nowait><expr> <down> coc#float#has_scroll() ? coc#float#scroll(1) : "\<down>"
         nnoremap <silent><nowait><expr> <up> coc#float#has_scroll() ? coc#float#scroll(0) : "\<up>"
-        nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-        nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+        " nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+        " nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
     else
         " For vim to scroll floating window
         function Find_cursor_popup(...)

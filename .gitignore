@@ -1,8 +1,10 @@
+open_file_help.sh
 python_for_vim.py
 vimrc_collection/
 clipboard
 odd_txt_for_vim.txt
 __Scratch__
+Scratch
 *.swp
 test/*
 session/*
