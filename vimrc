@@ -572,6 +572,7 @@ endif
     nnoremap C "9C
     nnoremap x "9x
     nnoremap X "9X
+    vnoremap P "_dP
 "}}}
 
 
@@ -660,9 +661,9 @@ endif
     " start vim server for latex preview
     autocmd FileType tex call StartLatexServer()
     " enable auto save for real-time preview
-    autocmd FileType tex autocmd TextChangedI <buffer> call LatexAutoSave(5)
-    autocmd FileType tex autocmd CursorHoldI,CursorHold <buffer> silent update
-    autocmd FileType tex autocmd TextChanged <buffer> call LatexAutoSave(0)
+    " autocmd FileType tex autocmd TextChangedI <buffer> call LatexAutoSave(5)
+    " autocmd FileType tex autocmd CursorHoldI,CursorHold <buffer> silent update
+    " autocmd FileType tex autocmd TextChanged <buffer> call LatexAutoSave(0)
 
     " keymap for c/c++ file type
     autocmd FileType c,cpp imap <buffer> <a-;> <c-e>;<CR>

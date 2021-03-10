@@ -151,7 +151,8 @@ nnoremap <Space>mb :action Build<CR>
 nnoremap <Space>mo :action OverrideMethods<CR>
 nnoremap <Space>mgu :action GotoSuperMethod<CR>
 nnoremap <Space>mgs :action GoToSymbol<CR>
-nnoremap <Space>gd :action GotoImplementation<CR>
+nnoremap <Space>mgd :action GotoImplementation<CR>
+nnoremap <Space>g :action Generate<CR>
 nnoremap <Space>0 :action ActivateProjectToolWindow<CR>
 nnoremap <Space>bs :action NewScratchBuffer<CR>
 nnoremap ,rf :action ReformatCode<CR>
