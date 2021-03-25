@@ -291,7 +291,7 @@ function! g:OpenFileByPath()
     exec "normal!k\"pdd"
     startinsert!
 endfunction
-nnoremap <Space>ff :call OpenFileByPath()<CR>
+nnoremap <Space>ff :call g:OpenFileByPath()<CR>
 nnoremap <Space>fF <plug>(fzf-complete-path)
 nnoremap <Space>pf :GFiles!<CR>
 nnoremap <Space>pF :Files!<CR>
@@ -1943,6 +1943,9 @@ endif  " end if g:vim_plug_installed
     nnoremap <silent> <A-o> :call CloseMaximize()<CR>:TmuxNavigatePrevious<CR>
     " Maximize considering all vim panes and tmux panes
     function! ToggleMaximizeTmux()
+        if !CheckWarnVimPlugInstalled()
+            return
+        endif
         if g:isToggledVertically || g:isToggledHorizontally
             silent! call ToggleMaximize()
             silent! !tmux resize-pane -Z
@@ -1955,6 +1958,9 @@ endif  " end if g:vim_plug_installed
 
     endfunction
     function!CloseMaximize()
+        if !g:vim_plug_installed
+            return
+        endif
         if g:isToggledVertically || g:isToggledHorizontally
             silent! call ToggleMaximize()
         endif
@@ -2014,8 +2020,6 @@ endif  " end if g:vim_plug_installed
     function! ShowAbbreviations()
         e ./abbrev_defs.vim
     endfunction
-
-    "Replace S-F8 by any other shortcut you wish
 " }}}
 
 
