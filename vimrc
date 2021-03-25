@@ -1870,6 +1870,7 @@ endif
             " set initial code for specific filetype
             if(&filetype=='python')
                 vnoremap <buffer> K     "vy :call VimuxShowPythonDocVisual()<CR>
+                VimuxRunCommand("python")
                 echo "python repl mode is on."
             endif
             if(&filetype=='javascript')
