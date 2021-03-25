@@ -821,7 +821,7 @@ endif
     " Debug mode auto command
 	" au CmdwinEnter [>] do something
 
-    " enter repl for tmux window
+    " enter repl for vim buffer
     function! VimEnterExec()
         if !exists("b:VimEterExecFlag")
             let b:VimEterExecFlag=0
@@ -832,12 +832,14 @@ endif
             vunmap <buffer> <enter>
             nunmap <buffer> <enter>
             let b:VimEterExecFlag=0
+            echo "vim repl mode is off."
         else
             inoremap <buffer> <enter> <c-o>$<c-o>:exec getline(".")<CR><CR>
             vnoremap <buffer> <enter> "vy :@v<CR>
             nnoremap <buffer> <enter> :exec getline(".")<CR>j
 
             let b:VimEterExecFlag=1
+            echo "vim repl mode is on."
         endif
     endfunction
 
@@ -1849,6 +1851,7 @@ endif
                 vunmap <buffer> K
             endif
             let b:VimuxForReplFlag=0
+            echo "REPL mode off."
         else
             inoremap <buffer> <enter> <c-o>$<c-o>:call VimuxSlimeNormal()<CR><enter>
             vnoremap <buffer> <enter> "vy :call VimuxSlimeVisual()<CR>
@@ -1867,10 +1870,11 @@ endif
             " set initial code for specific filetype
             if(&filetype=='python')
                 vnoremap <buffer> K     "vy :call VimuxShowPythonDocVisual()<CR>
-                VimuxRunCommand("python3")
+                echo "python repl mode is on."
             endif
             if(&filetype=='javascript')
                 VimuxRunCommand("node")
+                echo "javascript repl mode is on."
             endif
             if(&filetype=='matlab')
                 if(executable('matlab'))  " run matlab
@@ -1882,6 +1886,7 @@ endif
             if(&filetype=='julia')
                 VimuxRunCommand("julia")
             endif
+            echo "REPL mode is on"
 
             " if(&filetype=='vim') see function VimEnterExec
         endif
