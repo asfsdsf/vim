@@ -19,8 +19,12 @@ set nocompatible              " be improved, required
 set encoding=utf8 
 """" START vim-plug Configuration
 
+let g:vim_plug_installed=0
+
 " set the runtime path to include vim-plug and initialize
-call plug#begin(b:plug_path)
+silent! call plug#begin(b:plug_path)
+if exists('*plug#begin')
+let g:vim_plug_installed=1
 """ All of your Plugins must be added before the following line
 
 " Utility
@@ -114,6 +118,7 @@ Plug 'colepeters/spacemacs-theme.vim' " A theme modelled after nashamri/spacemac
 
 " required
 call plug#end()
+endif
 " Put your non-Plugin stuff after this line
 """""""""""""""""""""""""""""""""""""
 " Initialization
@@ -179,8 +184,24 @@ if exists("$TERMINOLOGY")
     set notermguicolors
 endif
 
+" Function to check that whether vim-plug is installed and warn if not
+function! s:CheckWarnVimPlugInstalled()
+    if g:vim_plug_installed
+        return 1
+    else 
+        echohl WarningMsg
+        echomsg "vim-plug is not installed."
+        echohl None
+        finish
+        return 0
+    endif
+endfunction
+
 " toggle between light and dark theme
 function! ToggleTheme()
+    if !s:CheckWarnVimPlugInstalled()
+        return
+    end
     if (&background=='dark')
         set background=light
         AirlineTheme base16_monokai
@@ -198,7 +219,9 @@ let base16colorspace=256  " Access colors present in 256 colorspace
 let g:gruvbox_contrast_light = 'soft'
 let g:dark_color_scheme='gruvbox'
 let g:light_color_scheme='gruvbox'
-exec 'colorscheme ' . g:dark_color_scheme
+if g:vim_plug_installed
+    exec 'colorscheme ' . g:dark_color_scheme
+endif
 " colorscheme gruvbox
 
 let g:spacegray_underline_search = 1
@@ -221,7 +244,8 @@ let g:spacegray_italicize_comments = 1
         return 0
     endfunction
 
-    if !exists('g:vimrc_has_been_sourced')
+    " call those only once and only when vim-plug is installed(for airline)
+    if !exists('g:vimrc_has_been_sourced') && g:vim_plug_installed
         call airline#add_statusline_func('WindowNumber')
         call airline#add_inactive_statusline_func('WindowNumber')
     endif
@@ -1169,6 +1193,7 @@ set updatetime=1000
 
 
 " YouCompleteMe {{{
+if g:vim_plug_installed
     " To recompile YouCompleteMe:
     " in ~/.vim/plugged/YouCompleteMe for vim
     " in ~/.nvim/plugged/YouCompleteMe for nvim
@@ -1211,6 +1236,7 @@ set updatetime=1000
       " \  'g:ycm_python_sys_path'
       " \]
     let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py'
+endif " end if g:vim_plug_installed
 " }}}
 
 
@@ -1274,6 +1300,7 @@ set updatetime=1000
 
 
 " coc.nvim {{{
+if g:vim_plug_installed
     " To use coc.nvim:
     " sudo apt intall nodejs
     " sudo apt install npm
@@ -1456,6 +1483,7 @@ set updatetime=1000
     autocmd FileType python nnoremap <buffer> <space>ci :CocCommand python.setInterpreter<CR>
     " Run coc command
     nnoremap <space>cc :CocCommand<CR>
+endif  " end if g:vim_plug_installed
 " }}}
 
 
@@ -1685,12 +1713,14 @@ endif
 
 
 " {{{ neomake
+if g:vim_plug_installed
     call neomake#configure#automake('nrwi', 500)
     " disable lint/syntax check
     let g:neomake_python_enabled_makers = []
     let g:neomake_c_enabled_makers = []
     let g:neomake_cpp_enabled_makers = []
     let g:neomake_javascript_enabled_makers = []
+endif  " end if g:vim_plug_installed
 " }}}
 
 
