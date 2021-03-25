@@ -170,8 +170,10 @@ nnoremap ,gs :action GotoSymbol<CR>
 nnoremap ,gd :action GotoImplementation<CR>
 nnoremap zm :action CollapseRegion<CR>
 nnoremap zM :action CollapseAllRegions<CR>
+nnoremap zC :action CollapseAllRegions<CR>
 nnoremap zr :action ExpandRegion<CR>
 nnoremap zR :action ExpandAllRegions<CR>
+nnoremap zO :action ExpandAllRegions<CR>
 nnoremap <c-s> :action SurroundWith<CR>
 vnoremap <c-s> :action SurroundWith<CR>
 nnoremap <c-/> :action CommentByLineComment<CR>
