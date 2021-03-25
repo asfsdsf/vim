@@ -275,6 +275,11 @@ nnoremap <f5> :e<CR>
 " Copy current file path
 " nnoremap <Space>fy :silent exec '!printf ' . expand('%:p') . ' <bar> xclip -selection clipboard'<CR>
 nnoremap <Space>fy :let @+ = expand("%:p")<CR>
+nnoremap <Space>yy :let @+ = expand("%:p")<CR>
+" edit file whose path is copied
+nnoremap <Space>fe :exec "e " . expand(@+)<CR>
+nnoremap <Space>ye :exec "e " . expand(@+)<CR>
+nnoremap <Space>pp :exec "e " . expand(@+)<CR>
 
 function! s:DiffWithSaved()
   let filetype=&ft
@@ -590,14 +595,46 @@ endif
         endif
     endf
 
-    fun! MatlabGoToDefinition()
-        " --- Show ifem definition ----------------------------------------------
+    fun! MatlabHelp()
         let l:word_under_cursor = expand("<cword>")
-        let l:ifem_file_path=system('ag -l "^function .+\W' . expand('<cword>') . '\W" $HOME/Software/ifem/ifem/')
-        if l:ifem_file_path != ''
+        if executable('matlab')
+            call Run_to_tmux_or_directly('help ' . l:word_under_cursor)
+        else
+        " --- Show octave help --------------------------------------------------
+            e /tmp/odd_for_vim_matlab.md
+            1,$d
+            exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
+            exec "normal! ggd/----------------------------\<cr>"
+            write
+        endif
+    endfunction
+    fun! MatlabGoToDefinition()
+        let l:word_under_cursor = expand("<cword>")
+        if bufname('/' . l:word_under_cursor . '.m')!=''
+            exec 'b ' . bufname('/' . l:word_under_cursor . '.m')
+            return
+        endif
+        if executable('matlab')
+        " --- Open definition with matlab ---------------------------------------
+            let l:odd_clipboard=@+
+            call Run_to_tmux_or_directly('open ' . l:word_under_cursor)
+            call Run_to_tmux_or_directly(' yy')
+            sleep 800m
+            call Run_to_tmux_or_directly(' qq')
+
+            if filereadable(@+)
+                exec "e " . expand(@+)
+                " exec "echo " . expand(@+)
+            else
+                echo 'Fail to open matlab definition file.'
+            endif
+            let @+=l:odd_clipboard
+        elseif l:ifem_file_path != ''
+        " --- Show ifem definition ----------------------------------------------
+            let l:ifem_file_path=system('ag -l "^function .+\W' . expand('<cword>') . '\W" $HOME/Software/ifem/ifem/')
             exec "view " . l:ifem_file_path
         else
-        " --- Show octave help---------------------------------------------------
+        " --- Show octave help --------------------------------------------------
             e /tmp/odd_for_vim_matlab.md
             1,$d
             exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
@@ -612,8 +649,11 @@ endif
     " run current python buffer
     autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:!octave %<CR>
     autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("octave " . expand("%:p"))<CR>
-    autocmd FileType matlab nnoremap <buffer> K :call MatlabGoToDefinition()<CR>
+    autocmd FileType matlab nnoremap <buffer> K :call MatlabHelp()<CR>
     autocmd FileType matlab nnoremap <buffer> gd :call MatlabGoToDefinition()<CR>
+    if executable('matlab')
+        autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("run('" . expand("%:p") . "')")<CR>
+    endif
     autocmd FileType python nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("python3 " . expand("%:p"))<CR>
 
     " run current javascript buffer
@@ -644,6 +684,69 @@ endif
         autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:silent! Gcd<CR>:exec "Termdebug " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>hstart<CR>source .gdb_breakpoints<CR>
         " autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:silent! Gcd<CR>:exec "Termdebug -command=~/Software/vim/gdb_init " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>h
     endif
+
+    "{{{ keymap for debugging
+        if executable('matlab')
+            " How many counts :ClearAllBreakpoints is called
+            if !exists("g:matlab_clear_counts")
+                let g:matlab_clear_counts=0
+            endif
+
+            fun! Toggle_breakpoints_for_matlab()
+                if !exists("b:matlab_breakpoints_lists")
+                    let b:matlab_breakpoints_lists=[]
+                endif
+                if !exists("b:matlab_buffer_clear_count")
+                    let b:matlab_buffer_clear_count=g:matlab_clear_counts
+                endif
+                if b:matlab_buffer_clear_count < g:matlab_clear_counts
+                    let b:matlab_buffer_clear_count=g:matlab_clear_counts
+                    let b:matlab_breakpoints_lists=[]
+                endif
+                if index(b:matlab_breakpoints_lists,line(".")) >= 0
+                    call Run_to_tmux_or_directly("dbclear '" . expand("%:p") . "' at " . line("."))
+                    call remove(b:matlab_breakpoints_lists,index(b:matlab_breakpoints_lists,line(".")))
+                    echo 'breakpoint cleared'
+                else
+                    call Run_to_tmux_or_directly("dbstop '" . expand("%:p") . "' at " . line("."))
+                    call add(b:matlab_breakpoints_lists,line("."))
+                    echo 'breakpoint added'
+                endif
+            endfunction
+            fun! Clear_all_breakpoints_for_matlab()
+                    call Run_to_tmux_or_directly("dbclear all")
+                    let g:matlab_clear_counts=g:matlab_clear_counts+1
+            endfunction
+            " matlab debug: :ClearAll  - clear all breakpoints
+            com!ClearAllBreakpoints call Clear_all_breakpoints_for_matlab()
+            " matlab debug: gb  - toggle breakpoint
+            autocmd FileType matlab nnoremap <buffer> gb :call Toggle_breakpoints_for_matlab()<CR>
+            " matlab debug: glb - list breakpoints
+            autocmd FileType matlab nnoremap <buffer> glb :call Run_to_tmux_or_directly('dbstatus')<CR>
+            " matlab debug: gc  - continue
+            autocmd FileType matlab nnoremap <buffer> gc :call Run_to_tmux_or_directly('dbcont')<CR>
+            " matlab debug: gn  - step next
+            autocmd FileType matlab nnoremap <buffer> gn :call Run_to_tmux_or_directly('dbstep')<CR>
+            " matlab debug: gs  - step in
+            autocmd FileType matlab nnoremap <buffer> gs :call Run_to_tmux_or_directly('dbstep in')<CR>
+            " matlab debug: go  - step out
+            autocmd FileType matlab nnoremap <buffer> go :call Run_to_tmux_or_directly('dbstep out')<CR>
+            " matlab debug: gq  - quit debug
+            autocmd FileType matlab nnoremap <buffer> gq :call Run_to_tmux_or_directly('dbquit')<CR>
+            " matlab debug: gls - show current line
+            autocmd FileType matlab nnoremap <buffer> gls :call Run_to_tmux_or_directly('dbstack')<CR>
+            " matlab debug: gku  - up one stack
+            autocmd FileType matlab nnoremap <buffer> gku :call Run_to_tmux_or_directly('dbup')<CR>
+            " matlab debug: gkd  - down one stack
+            autocmd FileType matlab nnoremap <buffer> gkd :call Run_to_tmux_or_directly('dbdown')<CR>
+            " matlab debug: g?  - show help
+            autocmd FileType matlab nnoremap <buffer> g? :!cat ~/Software/vim/vimrc <bar>grep 'matlab debug:'<CR>
+            if $TMUX != ''
+                autocmd BufWritePost *.m call Run_to_tmux_or_directly('clear ' . expand('%:p'))
+            endif
+        endif
+
+    "}}}
 
     " latex mode save abbreviation
     autocmd FileType tex vnoremap <buffer> <m-s> "vy:call VisualSetAbbreviation()<CR>
@@ -835,6 +938,7 @@ endif
     " map * to search selection
     vnoremap * "vy/\V<C-R>=escape(@v,'/\')<CR><CR>
     nnoremap <Space>bd :bn<CR>:bd#<CR>
+    nnoremap <Space>bd :bd<CR>
     nnoremap <Space>bm :messages<CR>
     nnoremap <Space>bn :bn<CR>
     nnoremap ]b :bn<CR>
@@ -1750,7 +1854,9 @@ endif
             vnoremap <buffer> <enter> "vy :call VimuxSlimeVisual()<CR>
             nnoremap <buffer> <enter> :call VimuxSlimeNormal()<CR>j
             " VimuxRunCommand("cd " . expand("%:p:h"))
-            call VimuxCdWorkingDirectory()
+            if(!(&filetype=='matlab' && executable('matlab')))
+                call VimuxCdWorkingDirectory()
+            endif
 
             let b:VimuxForReplFlag=1
 
@@ -1767,7 +1873,11 @@ endif
                 VimuxRunCommand("node")
             endif
             if(&filetype=='matlab')
-                VimuxRunCommand("octave --no-window-system")
+                if(executable('matlab'))  " run matlab
+                    echo "Matlab repl mode is on."
+                else  " run octave
+                    VimuxRunCommand("octave --no-window-system")
+                endif
             endif
             if(&filetype=='julia')
                 VimuxRunCommand("julia")
