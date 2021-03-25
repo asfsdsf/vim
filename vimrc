@@ -1967,10 +1967,14 @@ endif  " end if g:vim_plug_installed
 " {{{ vim-gdb
     if has('nvim')
         nnoremap ,qq :GdbSaveBreakpoints<CR>:sleep 1<CR>:GdbDebugStop<CR>
-        tnoremap <c-b> save breakpoints .gdb_breakpoints<CR>q<CR>
+        if exists(':tnoremap')
+            tnoremap <c-b> save breakpoints .gdb_breakpoints<CR>q<CR>
+        endif
     else
         nnoremap ,qq :call TermDebugSendCommand('save breakpoints .gdb_breakpoints')<CR>:call TermDebugSendCommand('q')<CR>
-        tnoremap <c-b> save breakpoints .gdb_breakpoints<CR>q<CR>
+        if exists(':tnoremap')
+            tnoremap <c-b> save breakpoints .gdb_breakpoints<CR>q<CR>
+        endif
     endif
 " }}}
 
