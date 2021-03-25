@@ -1886,7 +1886,6 @@ endif
             if(&filetype=='julia')
                 VimuxRunCommand("julia")
             endif
-            echo "REPL mode is on"
 
             " if(&filetype=='vim') see function VimEnterExec
         endif
