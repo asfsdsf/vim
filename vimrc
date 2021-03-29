@@ -1943,7 +1943,7 @@ endif  " end if g:vim_plug_installed
     nnoremap <silent> <A-o> :call CloseMaximize()<CR>:TmuxNavigatePrevious<CR>
     " Maximize considering all vim panes and tmux panes
     function! ToggleMaximizeTmux()
-        if !CheckWarnVimPlugInstalled()
+        if !s:CheckWarnVimPlugInstalled()
             return
         endif
         if g:isToggledVertically || g:isToggledHorizontally
