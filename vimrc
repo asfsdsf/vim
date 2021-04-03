@@ -12,6 +12,32 @@
 " 0_Index ***************************************************************
 " 1_Presettings *********************************************************
 " 2_Plugins *************************************************************
+" 3_Global settings *****************************************************
+" 3.1_Display
+" 3.2_Basic settings
+" 4_Theme plugins settings **********************************************
+" 4.1_Vim-Airline settings
+" 4.2_Devicons settings
+" 5_Function tools ******************************************************
+" 6_Basic map in normal/insert/visual mode ******************************
+" 6.1_Text navigation
+" 6.2_tab map
+" 6.3_buffer map
+" 6.4_window map
+" 6.5_Search text
+" 6.6_Maps for files
+" 6.7_Other map
+" 7_Language settings ***************************************************
+" 7.1_YouCompleteMe settings
+" 7.2_Coc.nvim settings
+" 7.3_Tmux settings
+" 7.3.1_Vimux settings
+" 7.3.2_Vim-tmux-navigator settings
+" 7.4_Python settings
+" 7.5_Matlab/octave settings
+" 7.6_Javascript settings
+" 7.7_C/C++ settings
+" 7.8_Latex settings
 " ***********************************************************************
 
 " ***********************************************************************
@@ -146,84 +172,92 @@ Plug 'colepeters/spacemacs-theme.vim' " A theme modelled after nashamri/spacemac
 call plug#end()
 endif
 " Put your non-Plugin stuff after this line
-"""""""""""""""""""""""""""""""""""""
-" Initialization
-"""""""""""""""""""""""""""""""""""""
+
+
+" ***********************************************************************
+" 3_Global settings *****************************************************
+" - start NERDTree when Vim is started without file arguments.
+" 3.1_Display
+" - show (partial) command in the last line of the screen
+" - show linenumbers
+" - enable highlighting of the current lines
+" - highlight current column
+" - have indent guides enabled by default
+" - set indent line size to one
+" - set indent line start level to 2
+" - make sure column line will be preserved when swiching buffer
+" - set 256 colors for vim
+" - set background to dark
+" - Enables 24-bit RGB color in the TUI
+" - color conflict with TERMINOLOGY
+" - function to toggle between light and dark theme
+" - access colors present in 256 colorspace
+" - set color scheme
+" 3.2_Basic settings
+" - set indentation
+" - enable mouse
+" - conflict config for nvim and vim
+" - Function to check that whether vim-plug is installed and warn if not
+" - turn off key timeout
+" - set alt map
+" - smart case for / search
+" - highlight all search matches
+" - highlight the next match while you're still typing out your search pattern
+" - set more visual hints in command-line mode
+" - viminfo settings(saved infomation when restart vim)
+" - indention Options
+" - smart tab and expand tab
+" - enable hidden buffers
+" - make scroll leave a margin for 3 lines
+" - set updatetime to 1 second.This is used for CursorHold event
+" ***********************************************************************
+
+" - start NERDTree when Vim is started without file arguments.
 autocmd StdinReadPre * let s:std_in=1
+" This comflict with vim-startify
 " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
 """""""""""""""""""""""""""""""""""""
-" display
+" 3.1_Display
 """""""""""""""""""""""""""""""""""""
+" - show (partial) command in the last line of the screen
 set showcmd                          "show key strokes
 
-" Show linenumbers
+" - show linenumbers
 set number relativenumber
 set ruler " Always show cursor position
 
-" Enable highlighting of the current lines
+" - enable highlighting of the current lines
 set cursorline
-" highlight current column
+" - highlight current column
 set cursorcolumn
 
-" have indent guides enabled by default
+" - have indent guides enabled by default
 let g:indent_guides_enable_on_vim_startup = 1
-" set indent line size to one
+" - set indent line size to one
 let g:indent_guides_guide_size = 1
-" set indent line start level to 2
+" - set indent line start level to 2
 let g:indent_guides_start_level=2
 
-" make sure column line will be preserved when swiching buffer
+" - make sure column line will be preserved when swiching buffer
 set nostartofline
 
-" Theme and Styling
+" - set 256 colors for vim
 set t_Co=256
+" - set background to dark
 set background=dark
 
-set foldmethod=indent
-set foldnestmax=10
-set nofoldenable
-
-set mouse=a
-
-" conflict config for nvim and vim
-if(!has("nvim"))
-    " Use system clipboard
-    set clipboard^=unnamed,unnamedplus
-    " Prevent Vim from clearing the clipboard on exit
-    autocmd VimLeave * call system("xsel -ib", getreg('+'))
-    " conlict with tmux(color will be gone without this)
-    if exists('+termguicolors')
-        let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-        let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-        set termguicolors
-    endif
-else
-    set clipboard+=unnamedplus
-endif
-
+" - Enables 24-bit RGB color in the TUI
 if (has("termguicolors"))
   set termguicolors
 endif
 
-" color conflict with TERMINOLOGY
+" - color conflict with TERMINOLOGY
 if exists("$TERMINOLOGY")
     set notermguicolors
 endif
 
-" Function to check that whether vim-plug is installed and warn if not
-function! s:CheckWarnVimPlugInstalled()
-    if g:vim_plug_installed
-        return 1
-    else 
-        echohl WarningMsg
-        echomsg "vim-plug is not installed."
-        echohl None
-        finish
-        return 0
-    endif
-endfunction
-
-" toggle between light and dark theme
+" - function to toggle between light and dark theme
 function! ToggleTheme()
     if !s:CheckWarnVimPlugInstalled()
         return
@@ -239,7 +273,10 @@ function! ToggleTheme()
     endif
 endfunction
 
-let base16colorspace=256  " Access colors present in 256 colorspace
+" - access colors present in 256 colorspace
+let base16colorspace=256
+
+" - set color scheme
 " colorscheme spacegray
 " colorscheme spacemacs-theme
 let g:gruvbox_contrast_light = 'soft'
@@ -255,39 +292,188 @@ let g:spacegray_italicize_comments = 1
 
 " let g:gruvbox_contrast_dark = 'hard'
 
-" Vim-Airline {{{
-    let g:airline#extensions#tabline#enabled = 1
-    let g:airline_powerline_fonts = 1
-    let g:airline_theme='hybrid'
-    let g:hybrid_custom_term_colors = 1
-    let g:hybrid_reduced_contrast = 1
+" ***********************************************************************
+" 3.2_Basic settings
+" ***********************************************************************
 
-    " add window number in front of the airline
-    function! WindowNumber(...)
-        let builder = a:1
-        let context = a:2
-        call builder.add_section('airline_b', '%{tabpagewinnr(tabpagenr())}')
-        return 0
-    endfunction
+" - set indentation
+set foldmethod=indent
+set foldnestmax=10
+set nofoldenable
 
-    " call those only once and only when vim-plug is installed(for airline)
-    if !exists('g:vimrc_has_been_sourced') && g:vim_plug_installed
-        call airline#add_statusline_func('WindowNumber')
-        call airline#add_inactive_statusline_func('WindowNumber')
+" - enable mouse
+set mouse=a
+
+" - conflict config for nvim and vim
+if(!has("nvim"))
+    " Use system clipboard
+    set clipboard^=unnamed,unnamedplus
+    " Prevent Vim from clearing the clipboard on exit
+    autocmd VimLeave * call system("xsel -ib", getreg('+'))
+    " conlict with tmux(color will be gone without this)
+    if exists('+termguicolors')
+        let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+        let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+        set termguicolors
     endif
-" }}}
+else
+    set clipboard+=unnamedplus
+endif
+
+" - Function to check that whether vim-plug is installed and warn if not
+function! s:CheckWarnVimPlugInstalled()
+    if g:vim_plug_installed
+        return 1
+    else 
+        echohl WarningMsg
+        echomsg "vim-plug is not installed."
+        echohl None
+        finish
+        return 0
+    endif
+endfunction
+
+" - turn off key timeout
+if has('nvim')
+    set notimeout
+else
+
+" - set alt map
+function! Terminal_MetaMode(mode)
+    set ttimeout
+    if $TMUX != ''
+        set ttimeoutlen=30
+    elseif &ttimeoutlen > 80 || &ttimeoutlen <= 0
+        set ttimeoutlen=80
+    endif
+    if has('nvim') || has('gui_running')
+        return
+    endif
+    function! s:metacode(mode, key)
+        if a:mode == 0
+            exec "set <M-".a:key.">=\e".a:key
+        else
+            exec "set <M-".a:key.">=\e]{0}".a:key."~"
+        endif
+    endfunc
+    for i in range(10)
+        call s:metacode(a:mode, nr2char(char2nr('0') + i))
+    endfor
+    for i in range(26)
+        call s:metacode(a:mode, nr2char(char2nr('a') + i))
+        call s:metacode(a:mode, nr2char(char2nr('A') + i))
+    endfor
+    if a:mode != 0
+        for c in [',', '.', '/', ';', '[', ']', '{', '}']
+            call s:metacode(a:mode, c)
+        endfor
+        for c in ['?', ':', '-', '_']
+            call s:metacode(a:mode, c)
+        endfor
+    else
+        for c in [',', '.', '/', ';', '{', '}']
+            call s:metacode(a:mode, c)
+        endfor
+        for c in ['?', ':', '-', '_']
+            call s:metacode(a:mode, c)
+        endfor
+    endif
+endfunc
+ " Comment following line to disable meta key as alt
+call Terminal_MetaMode(0)
+
+endif
 
 
 
-" Devicons {{{
-    let g:webdevicons_conceal_nerdtree_brackets = 1
-    let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
-" }}}
+" - smart case for / search
+set ignorecase
+set smartcase
 
-"""""""""""""""""""""""""""""""""""""
-" custom functin
-"""""""""""""""""""""""""""""""""""""
+" - highlight all search matches
+:set hlsearch
 
+" - highlight the next match while you're still typing out your search pattern
+:set hlsearch incsearch
+
+" - set more visual hints in command-line mode
+set wildmenu
+
+" - viminfo settings(saved infomation when restart vim)
+" maximum number of lines saved for each register would be 50, the maximum size of saved items is 10 KB and the effect of 'hlsearch' is disabled when loading the viminfo file.
+set viminfo='500,<50,s10,h
+
+" - indention Options
+set autoindent " New lines inherit the indentation of previous lines
+set expandtab " Convert tabs to spaces
+set shiftwidth=4 " When shifting, indent using four spaces
+set tabstop=4 " Indent using four spaces
+
+" - smart tab and expand tab
+set smarttab
+set expandtab
+
+" - enable hidden buffers
+set hidden
+
+" - make scroll leave a margin for 3 lines
+set scrolloff=3
+
+" - set updatetime to 1 second.This is used for CursorHold event
+set updatetime=1000
+" ***********************************************************************
+" 4_Theme plugins settings **********************************************
+" 4.1_Vim-Airline settings
+" - add window number in front of the airline
+" - call those only once and only when vim-plug is installed(for airline)
+" 4.2_Devicons settings
+" ***********************************************************************
+
+" ***********************************************************************
+" 4.1_Vim-Airline settings
+" ***********************************************************************
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+let g:airline_theme='hybrid'
+let g:hybrid_custom_term_colors = 1
+let g:hybrid_reduced_contrast = 1
+
+" - add window number in front of the airline
+function! WindowNumber(...)
+    let builder = a:1
+    let context = a:2
+    call builder.add_section('airline_b', '%{tabpagewinnr(tabpagenr())}')
+    return 0
+endfunction
+
+" - call those only once and only when vim-plug is installed(for airline)
+if !exists('g:vimrc_has_been_sourced') && g:vim_plug_installed
+    call airline#add_statusline_func('WindowNumber')
+    call airline#add_inactive_statusline_func('WindowNumber')
+endif
+
+
+
+" ***********************************************************************
+" 4.2_Devicons settings
+" ***********************************************************************
+let g:webdevicons_conceal_nerdtree_brackets = 1
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+
+
+" ***********************************************************************
+" 5_Function tools ******************************************************
+" - command to open a file to write python code and then output to current file
+" - open and edit find actions file which provide useful keymaps.(Use <Space>aa to
+" - open and edit vim_TODO file
+" - open and edit flake8 config file
+" - map to open url under cursor
+" - command to show difference between buffer with saved file
+" - command to open files under some important directories
+" - command to compare current file with clipboard
+" ***********************************************************************
+
+" - command to open a file to write python code and then output to current file
 function! s:Python_print()
     if expand('%:p')==$HOME."/Software/vim/python_for_vim.py"
         wq
@@ -300,37 +486,34 @@ function! s:Python_print()
 endfunction
 com! PythonPrint call s:Python_print()
 
-" open and edit find actions file which provide useful keymaps.(Use <Space>aa to
+" - open and edit find actions file which provide useful keymaps.(Use <Space>aa to
 " access the keymaps)
 com! OpenFindActionsFile 12sp ~/Software/vim/vim_tip/find_actions
 
-execute "com! OpenVimrcDotFile e " . b:dot_file_path
-
+" - open and edit vim_TODO file
 com! OpenTodoFile 12sp ~/Software/vim/TODO
 
+" - open and edit flake8 config file
 com! OpenFlake8Config 12sp ~/.config/flake8
 
-function! g:OpenFileByPath()
-    12sp $HOME/Software/vim/open_file_help.sh
-    exec "normal! \<c-w>J"
-    r!pwd
-    exec "normal!k\"pdd"
-    startinsert!
+" - map to open url under cursor
+function! OpenUrlUnderCursor()
+    let path="/usr/bin/google-chrome-stable"
+    execute "normal BvEy"
+    let url=matchstr(@0, '[a-z]*:\/\/[^ >,;]*')
+    if url != ""
+        " silent exec "!open -a ".path." '".url."'" | redraw! 
+        silent exec "!/usr/bin/google-chrome-stable '".url."'&" | redraw!
+        echo "opened ".url
+    else
+        echo "No URL under cursor."
+    endif
 endfunction
-nnoremap <Space>ff :call g:OpenFileByPath()<CR>
-nnoremap <Space>fF <plug>(fzf-complete-path)
-nnoremap <Space>pf :GFiles!<CR>
-nnoremap <Space>pF :Files!<CR>
-nnoremap <f5> :e<CR>
-" Copy current file path
-" nnoremap <Space>fy :silent exec '!printf ' . expand('%:p') . ' <bar> xclip -selection clipboard'<CR>
-nnoremap <Space>fy :let @+ = expand("%:p")<CR>
-nnoremap <Space>yy :let @+ = expand("%:p")<CR>
-" edit file whose path is copied
-nnoremap <Space>fe :exec "e " . expand(@+)<CR>
-nnoremap <Space>ye :exec "e " . expand(@+)<CR>
-nnoremap <Space>pp :exec "e " . expand(@+)<CR>
+nmap <c-c><c-o> :call OpenUrlUnderCursor()<CR>
 
+
+
+" - command to show difference between buffer with saved file
 function! s:DiffWithSaved()
   let filetype=&ft
   diffthis
@@ -340,6 +523,7 @@ function! s:DiffWithSaved()
 endfunction
 com! DiffSaved call s:DiffWithSaved()
 
+" - command to open files under some important directories
 function! s:OpenDirectoryFile(dir_path)
     12sp $HOME/Software/vim/open_file_help.sh
     exec "normal! \<c-w>J"
@@ -355,6 +539,7 @@ com!OpenBashComplete call s:OpenDirectoryFile('~/Programming/shell/autocomplete/
 com!OpenZshComplete call s:OpenDirectoryFile('~/Software/zsh/completion')
 com!OpenGraduateStudy call s:OpenDirectoryFile('~/Documents/learn/study')
 
+" - command to compare current file with clipboard
 function! s:Compared_with_clipboard()
     diffthis
     vnew ~/Software/vim/clipboard
@@ -368,6 +553,182 @@ autocmd QuitPre ~/Software/vim/clipboard :diffoff
 " auto update difference
 autocmd TextChanged ~/Software/vim/clipboard :diffupdate
 
+
+" ***********************************************************************
+" 6_Basic map in normal/insert/visual mode ******************************
+" 6.1_Text navigation
+" - map movement in insert mode
+" - map create new line in insert mode
+" - map C-a/C-e to begin/end of the line in insert mode
+" - map C-y to paste
+" - map gm to go to pair
+" - map H/L to move to begin/end of the line
+" - goto tags (symbols) in current file finder mapping
+" - goto tags (symbols) in all files finder mapping
+" - recent changes in all buffers
+" - recent changes in current buffer
+" - recent jumps in current buffer
+" 6.2_tab map
+" - map gt/gT to move to next/prev tab
+" - map to create tab
+" - map to close tab
+" 6.3_buffer map
+" - map to go to next/prev buffer
+" - map to go to last buffer
+" - map to close buffer
+" - map to show message buffer
+" - map to show buffers
+" - map to go to Scratch buffer
+" - map to close buffe and window
+" - map to go to nth buffer
+" 6.4_window map
+" - map to move to down/up/left/right window
+" - map to move window position
+" - map to split window
+" - map to go to previous window
+" - map to equal all windows
+" - map to close current window
+" - map to close current window and buffer
+" - map to close other windows
+" - map to resize window
+" - map to go to nth window
+" - prevent conflict(type mistake) with tmux
+" 6.5_Search text
+" - map C-h to replace
+" - map SPC / to search current folder
+" - map to search lines in all buffers
+" - map C-f search inside current buffer
+" - map * to search selection in visual mode
+" - don't copy when using c and C to change text
+" 6.6_Maps for files
+" - map C-s to save buffer in insert mode
+" - map to go to recent file
+" - open file under the cursor with default system software
+" - open the folder containing current file
+" - open current file with default system software
+" - open the terminal with current file path as working directory
+" - map gf to go to filename under cursor
+" - map to open file by path
+" - map to open file/git file in directory/git project
+" - map to open file in project
+" - map to refresh buffer file
+" - copy current file path
+" - edit file whose path is copied
+" - map SPC fvd to go to dot file(this file)
+" - map SPC fvR to source dot file
+" 6.7_Other map
+" - map to switch theme
+" - map to zoom in/out
+" - map to move line up/down
+" - map to run python and output to current line
+" - function to save layout
+" - function to load layout
+" - map to save layout
+" - map to load layout
+" - map to quit
+" - map to describe key
+" - map to change working directory to current git project/current file
+" - map to toggle wrap
+" - map to find actions
+" - map to open current file by gedit
+" - map to show undo tree
+" - map to open built-in terminal
+" ***********************************************************************
+
+" map! map to insert and command-line mode
+
+" - map movement in insert mode
+noremap! <c-b> <left>
+noremap! <c-j> <down>
+noremap! <c-k> <up>
+noremap! <c-f> <right>
+noremap! <c-h> <left>
+noremap! <c-l> <right>
+noremap! <A-b> <c-left>
+noremap! <A-f> <c-right>
+noremap! <A-h> <c-left>
+noremap! <A-l> <c-right>
+
+" - map create new line in insert mode
+inoremap <A-j> <c-o>o
+inoremap <A-k> <c-o>O
+
+" - map C-y to paste
+noremap! <c-y> <c-r>+
+
+" - map C-a/C-e to begin/end of the line in insert mode
+inoremap <c-a> <c-o>^
+inoremap <c-e> <c-o>$
+cnoremap <c-a> <home>
+cnoremap <c-e> <end>
+
+" - map gm to go to pair
+nnoremap gm %
+vnoremap gm %
+
+" - map H/L to move to begin/end of the line
+nnoremap H ^
+nnoremap L $
+vnoremap H ^
+vnoremap L $
+
+" - goto tags (symbols) in current file finder mapping
+nnoremap ,gt :CtrlPBufTag<CR>
+" - goto tags (symbols) in all files finder mapping
+nnoremap ,gT :CtrlPBufTagAll<CR>
+" - recent changes in all buffers
+nnoremap ,gC :CtrlPChangeAll<CR>
+" - recent changes in current buffer
+nnoremap ,gc :SearchChanges!<CR>
+nnoremap <A-c> :SearchChanges!<CR>
+" - recent jumps in current buffer
+nnoremap ,gj :JumpsResults!<CR>
+
+
+" ***********************************************************************
+" 6.2_tab map
+" ***********************************************************************
+
+" - map gt/gT to move to next/prev tab
+nnoremap <Space>tl gt
+nnoremap <Space>th gT
+" - map to create tab
+nnoremap <Space>tn :tabnew<CR>
+" - map to close tab
+nnoremap <Space>tc :tabclose<CR>
+
+" ***********************************************************************
+" 6.3_buffer map
+" ***********************************************************************
+
+" - map to go to next/prev buffer
+nnoremap <A-n> :bn<CR>
+nnoremap <A-p> :bp<CR>
+nnoremap <Space>bn :bn<CR>
+nnoremap ]b :bn<CR>
+nnoremap <Space>bp :bp<CR>
+nnoremap [b :bp<CR>
+
+" - map to go to last buffer
+nnoremap <Space><Tab> :b#<CR>
+
+" - map to close buffer
+nnoremap <Space>bd :bn<CR>:bd#<CR>
+nnoremap <Space>bd :bd<CR>
+" - map to show message buffer
+nnoremap <Space>bm :messages<CR>
+
+" - map to show buffers
+" nnoremap <Space>bb :CtrlPBuffer<CR>
+nnoremap <Space>bb :FzfBuffers!<CR>
+
+" - map to go to Scratch buffer
+nnoremap <Space>bs :Scratch<CR>
+
+" - map to close buffe and window
+nnoremap <Space>bx :call CloseMaximize()<CR>:bp<cr>:silent! exec "bd #"<CR>:close<CR>
+
+" - map to go to nth buffer
 " Goto (nth_add_1 - 1)  buffer shown in top bar
 function! g:GotoNthBuffer(nth_add_1)
     " let g:previous_buf_name=bufname("#")
@@ -377,10 +738,1061 @@ function! g:GotoNthBuffer(nth_add_1)
     " exec "buffer " . g:previous_buf_name
     " exec "buffer " . g:current_buf_name
 endfunction
+nnoremap <Space>b1 :bfirst<CR>
+nnoremap <Space>b2 :call g:GotoNthBuffer("1")<CR>
+nnoremap <Space>b3 :call g:GotoNthBuffer("2")<CR>
+nnoremap <Space>b4 :call g:GotoNthBuffer("3")<CR>
+nnoremap <Space>b5 :call g:GotoNthBuffer("4")<CR>
+nnoremap <Space>b6 :call g:GotoNthBuffer("5")<CR>
+nnoremap <Space>b7 :call g:GotoNthBuffer("6")<CR>
+nnoremap <Space>b8 :call g:GotoNthBuffer("7")<CR>
+nnoremap <Space>b9 :call g:GotoNthBuffer("8")<CR>
 
-"""""""""""""""""""""""""""""""""""""
-" Basic mappings configurationn
-"""""""""""""""""""""""""""""""""""""
+" ***********************************************************************
+" 6.4_window map
+" ***********************************************************************
+
+" - map to move to down/up/left/right window
+nnoremap <A-J> <C-W>j
+nnoremap <A-K> <C-W>k
+nnoremap <A-L> <C-W>l
+nnoremap <A-H> <C-W>h
+nnoremap <silent> <Space>wh :call CloseMaximize()<CR><C-w>h
+nnoremap <silent> <Space>wj :call CloseMaximize()<CR><C-w>j
+nnoremap <silent> <Space>wk :call CloseMaximize()<CR><C-w>k
+nnoremap <silent> <Space>wl :call CloseMaximize()<CR><C-w>l
+
+" - map to move window position
+nnoremap <Space>wH :call CloseMaximize()<CR><C-w>H
+nnoremap <Space>wJ :call CloseMaximize()<CR><C-w>J
+nnoremap <Space>wK :call CloseMaximize()<CR><C-w>K
+nnoremap <Space>wL :call CloseMaximize()<CR><C-w>L
+
+" - map to split window
+nnoremap <Space>w/ :call CloseMaximize()<CR>:vs<CR>
+nnoremap <Space>w- :call CloseMaximize()<CR>:sp<CR>
+" map <ESC> to exit insert mode in shell buffer
+" tnoremap <ESC>   <C-\><C-n>
+
+" - map to go to previous window
+nnoremap <Space>ww :call CloseMaximize()<CR><C-w>w
+" - map to equal all windows
+nnoremap <Space>w= :call CloseMaximize()<CR><C-w>=
+" - map to close current window
+nnoremap <Space>wd :call CloseMaximize()<CR>:close<CR>
+" - map to close current window and buffer
+nnoremap <Space>wx :call CloseMaximize()<CR>:bp<cr>:silent! exec "bd #"<CR>:close<CR>
+" - map to close other windows
+nnoremap <Space>wo :call CloseMaximize()<CR><C-w><C-o>
+
+" - map to resize window
+nnoremap <c-down>  2<C-w>-
+nnoremap <c-up>    2<C-w>+
+nnoremap <c-left>  2<C-w><
+nnoremap <c-right> 2<C-w>>
+
+" - map to go to nth window
+nnoremap <Space>1  :call CloseMaximize()<CR>1<C-w><C-w>
+nnoremap <Space>2  :call CloseMaximize()<CR>2<C-w><C-w>
+nnoremap <Space>3  :call CloseMaximize()<CR>3<C-w><C-w>
+nnoremap <Space>4  :call CloseMaximize()<CR>4<C-w><C-w>
+nnoremap <Space>5  :call CloseMaximize()<CR>5<C-w><C-w>
+nnoremap <Space>6  :call CloseMaximize()<CR>6<C-w><C-w>
+nnoremap <Space>7  :call CloseMaximize()<CR>7<C-w><C-w>
+nnoremap <Space>8  :call CloseMaximize()<CR>8<C-w><C-w>
+nnoremap <Space>9  :call CloseMaximize()<CR>9<C-w><C-w>
+
+" - prevent conflict(type mistake) with tmux
+nnoremap <c-a> l
+
+" 6.5_Search text
+
+" - map SPC / to search current folder
+nnoremap <Space>/  :Ag!<CR>
+vnoremap <Space>/  "vy:exec "Ag!" . escape(@v,'/\()*+?[]$^<bar>')<CR>
+" - map to search lines in all buffers
+nnoremap <Space>b/ :Lines<CR>
+" - map C-f search inside current buffer
+nnoremap <c-f>  :w<CR>:AgCurrentFile!<CR>
+" search inside current buffer
+nnoremap <c-f>  :BLines<CR>
+
+" - map * to search selection in visual mode
+vnoremap * "vy/\V<C-R>=escape(@v,'/\')<CR><CR>
+
+" - map C-h to replace
+nnoremap <A-H> :%s//gc<left><left><left>
+nnoremap <c-h> :%s//gc<left><left><left>
+xnoremap <c-h> :s//gc<left><left><left>
+
+
+" - don't copy when using c and C to change text
+nnoremap c "9c
+nnoremap C "9C
+nnoremap x "9x
+nnoremap X "9X
+vnoremap P "_dP
+
+
+" ***********************************************************************
+" 6.6_Maps for files
+" ***********************************************************************
+
+" - map C-s to save buffer in insert mode
+inoremap <c-s> <c-o>:update<CR>
+
+" - map to go to recent file
+nnoremap <Space>fr :FzfMrf!<CR>
+
+" - open file under the cursor with default system software
+nnoremap <Space>fO :!cd %:p:h && xdg-open "<cfile>" & <CR>
+" - open the folder containing current file
+nnoremap <Space>fd :!nautilus %:p:h &<CR>
+" - open current file with default system software
+nnoremap <Space>fo :!cd %:p:h && xdg-open %:p & <CR>
+" - open the terminal with current file path as working directory
+nnoremap <Space>ft :silent! !gnome-terminal --working-directory=%:p:h &<CR>
+if exists("$TERMINOLOGY")
+    nnoremap <Space>ft :silent! !terminology -d %:p:h &<CR>
+endif
+
+" - map gf to go to filename under cursor
+nnoremap <c-c><c-o> gf
+
+" - map to open file by path
+function! g:OpenFileByPath()
+    12sp $HOME/Software/vim/open_file_help.sh
+    exec "normal! \<c-w>J"
+    r!pwd
+    exec "normal!k\"pdd"
+    startinsert!
+endfunction
+nnoremap <Space>ff :call g:OpenFileByPath()<CR>
+" - map to open file/git file in directory/git project
+nnoremap <Space>pf :GFiles!<CR>
+" - map to open file in project
+nnoremap <Space>pF :Files!<CR>
+
+" - map to refresh buffer file
+nnoremap <f5> :e<CR>
+
+" - copy current file path
+" nnoremap <Space>fy :silent exec '!printf ' . expand('%:p') . ' <bar> xclip -selection clipboard'<CR>
+nnoremap <Space>fy :let @+ = expand("%:p")<CR>
+nnoremap <Space>yy :let @+ = expand("%:p")<CR>
+" - edit file whose path is copied
+nnoremap <Space>fe :exec "e " . expand(@+)<CR>
+nnoremap <Space>ye :exec "e " . expand(@+)<CR>
+nnoremap <Space>pp :exec "e " . expand(@+)<CR>
+
+" - map SPC fvd to go to dot file(this file)
+execute "com! OpenVimrcDotFile e " . b:dot_file_path
+nnoremap <Space>fvd :OpenVimrcDotFile<CR>
+" - map SPC fvR to source dot file
+execute "nnoremap <Space>fvR :source " . b:dot_file_path . "<CR>"
+
+
+" nnoremap <Space>ff :CtrlP %<CR>
+" nnoremap <Space>ss :CtrlPLine %<CR>  " Use <c-f> instead
+
+" ***********************************************************************
+" 6.7_Other map
+" ***********************************************************************
+
+" map SPC SPC to run command
+nnoremap <Space><Space> :<c-f>
+
+" insert dividing line
+nnoremap <Space>id :r !echo "***********************************************************************"<CR>:TComment<CR>5l
+
+" - map to switch theme
+nnoremap <Space>Tn :call ToggleTheme()<CR>
+
+" - map to zoom in/out
+nnoremap <Space>z+ zR
+nnoremap <Space>z- zM
+
+" - map to move line up/down
+nnoremap ]e        :move +1<CR>
+nnoremap [e        :move -2<CR>
+
+" - map to run python and output to current line
+nnoremap <Space>mcc :w<CR>:!python %<CR>
+
+" - function to save layout
+let g:custom_layout_path="~/Software/vim/session"
+let g:custom_layout_manual_path="~/Software/vim/session/manual-saving"
+function! SaveLayout(toInputName)
+    cd %:h
+    silent! Gcd
+    if a:toInputName
+        call inputsave()
+        let s:input_layout_name=input('Please input layout(session) name: ')
+        call inputrestore()
+        let s:layout_path=g:custom_layout_manual_path . "/" . s:input_layout_name . ".vim"
+    else
+        let s:layout_dir=g:custom_layout_path . system("printf " . getcwd())
+        silent exec "!mkdir -p " . s:layout_dir
+        let s:layout_path=s:layout_dir . "/Session.vim"
+    endif
+    exec "mksession! " . s:layout_path
+endfunction
+
+" - function to load layout
+function! LoadLayout(toInputName)
+    if a:toInputName
+        12sp $HOME/Software/vim/open_file_help.sh
+        exec "normal! \<c-w>J"
+        exec "r!echo " . g:custom_layout_manual_path
+        exec "normal!k\"pdd"
+        startinsert!
+
+        iunmap <buffer> <enter>
+        inoremap <buffer> <enter> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("source ".mycurf)<CR>
+    else
+        let s:layout_dir=g:custom_layout_path . system("printf " . getcwd())
+        let s:layout_path=s:layout_dir . "/Session.vim"
+        exec "source " . s:layout_path
+
+    endif
+endfunction
+" - map to save layout
+nnoremap <Space>ls :call SaveLayout(0)<CR>
+nnoremap <Space>lS :call SaveLayout(1)<CR>
+" - map to load layout
+nnoremap <Space>ll :call LoadLayout(0)<CR>
+nnoremap <Space>lL :call LoadLayout(1)<CR>
+
+" - map to quit
+nnoremap <Space>qq :qa<CR>
+
+" - map to describe key
+nnoremap <Space>hdk :Maps<CR>
+
+" - map to change working directory to current git project/current file
+nnoremap <Space>cd :cd %:h<CR>:silent! Gcd<CR>
+
+" - map to toggle wrap
+function s:Toggle_Wrap()
+    if &wrap
+        windo set wrap!
+    else
+        windo set wrap
+    endif
+endfunction
+" com!ToggleWrap windo set wrap
+com!ToggleWrap call s:Toggle_Wrap()
+nnoremap <Space>tw :ToggleWrap<CR>
+" - map to find actions
+nmap <space>aa :FindActions<CR>
+" - map to open current file by gedit
+nmap <space>ag :!gedit %<CR>
+" - map to show undo tree
+nmap <space>au :UndotreeToggle<CR>
+" - map to open built-in terminal
+if has('nvim')
+    nnoremap <space>as :terminal<CR>
+else
+    nnoremap <space>as :vertical terminal ++curwin<CR>
+endif
+
+" ***********************************************************************
+" 7_Language settings ***************************************************
+" 7.1_YouCompleteMe settings
+" - map go to for YouCompleteMe
+" - map FixIt for YouCompleteMe
+" - map restart YouCompleteMe server
+" - map generate YouCompleteMe config
+" - disable c-y to stop completion to prevent comfliction with paste using <c-y>
+" - jump to for YouCompleteMe
+" - open keyword completion for YouCompleteMe
+"b- lacklist for youcompleteme
+" - disable prompt to ask whether load .ycm_extra_conf.py file
+" - let clangd fully control code completion
+" - use installed clangd, not YCM-bundled clangd which doesn't get updates.
+" - python completion settings
+" 7.2_Coc.nvim settings
+" - coc plugins list
+" - add coc status to statusline below
+" - map <ta>/<s-tab> to go to next/prev snippet
+" - disable auto pair of < for c,cpp files for coc.nvim
+" - coc language server settings for kotlin
+" - let VimspectorPrompt buffer use omni completion
+" - coc user settings 
+" - highlight the symbol and its references when holding the cursor.
+" - scroll popup window with <c-d> and <c-u> in insert mode
+" - map <up> and <down> and <c-u> and <c-d> to scroll in coc.nvim floating windows such as documentation window
+" - map <tab> for trigger completion and navigate to the next complete item
+" - map tab and s-tab for trigger completion with characters ahead and navigate.
+" - map <c-n> to trigger completion.
+" - map <c-p> to show signature help
+" - map to navigate diagnostic
+" - map goTo code navigation.
+" - map K to show documentation in preview window.
+" - map function and class text objects such as select inside function vif
+" - map to generate clangd compile_commands.json according to Cmakelists.txt
+" - map to restart coc server
+" - map to change python interpreter
+" - map to run coc command
+" 7.3_Tmux settings
+" 7.3.1_Vimux settings
+" - function to run to another window if in tmux mode. Else run directly
+" - set VimuxReplDefaultFiletype for repl
+" - map to call some tmux command
+" - function to run visual region in another tmux pane
+" - function to show python doc of register v
+" - function to run current line in another tmux pane
+" - map to run visual region in another tmux pane
+" - toggle using vim for repl in another pane
+" - map to toggle using vim for repl in another pane
+" - function to change another pane's directory for tmux
+" 7.3.2_Vim-tmux-navigator settings
+" 7.4_Python settings
+" - run current python buffer
+" - debug current python buffer
+" 7.5_Matlab/octave settings
+" - function to show matlab help
+" - function to go to matlab definition
+" - map to run matlab/octave file
+" - map to go to matlab help/definition
+" - function to toggle breakpoints for matlab
+" - command to clear all breakpoints for matlab
+" - map to matlab debugging command
+" 7.6_Javascript settings
+" - map to run current javascript buffer
+" 7.7_C/C++ settings
+" - map to run current c/cpp project/file
+" - map to make current c/cpp project/file
+" - map to run c/cpp with mpi
+" - debug current c/cpp project
+" zzzz
+" 7.8_Shell settings
+" 7.9_Latex settings
+" TODO
+" ***********************************************************************
+
+
+" ***********************************************************************
+" 7.1_YouCompleteMe settings
+" ***********************************************************************
+
+" - map go to for YouCompleteMe
+nnoremap <Space>yb :YcmCompleter GoTo<CR>
+nnoremap <Space>yB :YcmCompleter GoToDeclaration<CR>
+nnoremap <Space>yd :YcmCompleter GetDoc<CR>
+
+" - map FixIt for YouCompleteMe
+nnoremap <Space>yf :YcmCompleter FixIt<CR>
+
+" - map restart YouCompleteMe server
+nnoremap <Space>yr :YcmRestartServer<CR>
+
+" - map generate YouCompleteMe config
+" Note here replace of FlagsForFile is due to use of clangd.
+nnoremap <Space>yg :![[ -e CMakeLists.txt ]] && rm .ycm_extra_conf.py<CR>:YcmGenerateConfig<CR>:!sed -i 's/FlagsForFile/Settings/g' .ycm_extra_conf.py<CR>
+" <c-e> :cancel completion
+
+" - jump to for YouCompleteMe
+autocmd FileType c,cpp,python,java,javascript nnoremap <buffer> <c-b> :YcmCompleter GoTo<CR>
+
+
+" - disable c-y to stop completion to prevent comfliction with paste using <c-y>
+let g:ycm_key_list_stop_completion = ['']
+
+if g:vim_plug_installed
+    " To recompile YouCompleteMe:
+    " in ~/.vim/plugged/YouCompleteMe for vim
+    " in ~/.nvim/plugged/YouCompleteMe for nvim
+    " python3 install.py --clang-completer  # for nvim
+    " python3 install.py --clangd-completer  # for vim
+
+    " To generate .ycm_extra_conf.py according to CMakeList.txt, run:
+    " :YcmGenerateConfig
+
+    let g:ycm_always_populate_location_list = 1
+    " - open keyword completion for YouCompleteMe
+    let g:ycm_seed_identifiers_with_syntax=1
+    " let g:ycm_python_binary_path = 'python3'
+    "b- lacklist for youcompleteme
+    let g:ycm_filetype_blacklist = {
+            \ 'tagbar' : 1,
+            \ 'gitcommit' : 1,
+            \ 'unite' : 1,
+            \}
+    let g:ycm_autoclose_preview_window_after_completion = 1
+
+    " - disable prompt to ask whether load .ycm_extra_conf.py file
+    " (automatically load .ycm_extra_conf.py file)
+    let g:ycm_confirm_extra_conf = 0
+
+    " - let clangd fully control code completion
+    let g:ycm_clangd_uses_ycmd_caching = 0
+    " - use installed clangd, not YCM-bundled clangd which doesn't get updates.
+    let g:ycm_clangd_binary_path = exepath("clangd")
+
+
+    let g:ycm_disable_signature_help = 0
+    let g:ycm_auto_trigger = 1
+
+    " - python completion settings
+    " let g:ycm_python_interpreter_path = '/usr/bin/python'
+    " let g:ycm_python_sys_path = []
+    " let g:ycm_extra_conf_vim_data = [
+      " \  'g:ycm_python_interpreter_path',
+      " \  'g:ycm_python_sys_path'
+      " \]
+    let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py'
+endif " end if g:vim_plug_installed
+
+" ***********************************************************************
+" 7.2_Coc.nvim settings
+" ***********************************************************************
+
+if g:vim_plug_installed
+    " To use coc.nvim:
+    " sudo apt intall nodejs
+    " sudo apt install npm
+    " npm install -g yarn
+    "
+    " To open configuration file:
+    " :CocConfig
+    " To install clangd
+    " :CocCommand clangd.install
+    " To use it with python:
+    " pip install jedi pylint neovim
+    "
+    " - coc plugins list
+    " coc-omni is for vimspector's console completion
+    let g:coc_global_extensions = [
+    \ 'coc-ultisnips',
+    \ 'coc-json',
+    \ 'coc-css',
+    \ 'coc-python',
+    \ 'coc-highlight',
+    \ 'coc-pairs',
+    \ 'coc-cmake',
+    \ 'coc-clangd',
+    \ 'coc-omni'
+    \ ]
+    let g:coc_source_omni_filetypes=["VimspectorPrompt"]
+
+    " - add coc status to statusline below
+    if !exists('g:vimrc_has_been_sourced')
+        set statusline^=%{coc#status()}
+    endif
+
+    " - map <ta>/<s-tab> to go to next/prev snippet for coc.nvim
+    let g:coc_snippet_next = '<TAB>'
+    let g:coc_snippet_prev = '<S-TAB>'
+
+    " - disable auto pair of < for c,cpp files for coc.nvim
+    autocmd FileType c,cpp let b:coc_pairs_disabled = ['<']
+    autocmd FileType VimspectorPrompt let b:coc_pairs_disabled = ["(", "[", "{", "<", "'", "\"", "`"]
+
+    " following is replacement for coc-settings.json
+    if !empty($DISPLAY)  " if not on server
+        " - coc language server settings for kotlin
+        call coc#config('languageserver', {
+            \ "kotlin": {
+            \ "command": "kotlin-language-server",
+            \ "filetypes": ["kotlin"]
+            \ }
+            \})
+        " - let VimspectorPrompt buffer use omni completion
+        call coc#config('coc.source.omni.filetypes',["VimspectorPrompt"])
+    endif
+
+    " User configuration object, define this variable when
+    " you can't use coc#config()
+    " - coc user settings 
+    let g:coc_user_config={
+        \ "python.autoComplete.addBrackets": v:true,
+        \ "python.autoComplete.extraPaths": ["~/Programming/Python/Custom_module:"],
+        \ "diagnostic.errorSign": '✗',
+        \ "diagnostic.warningSign": '⚠',
+        \ "diagnostic.infoSign": '⚐',
+        \ "diagnostic.hintSign": '🔔',
+        \ "diagnostic.signOffset": 9999,
+        \ "coc.preferences.enableFloatHighlight": v:false,
+        \}
+
+    if !empty($DISPLAY)  " if not on server
+        " - highlight the symbol and its references when holding the cursor.
+        autocmd CursorHold * silent call CocActionAsync('highlight')
+    endif
+
+    " - scroll popup window with <c-d> and <c-u> in insert mode
+    inoremap <silent><expr> <c-d> pumvisible() ? "\<down>\<down>\<down>\<down>\<down>\<down>\<down>\<down>" : "\<c-d>"
+    inoremap <silent><expr> <c-u> pumvisible() ? "\<up>\<up>\<up>\<up>\<up>\<up>\<up>\<up>" : "\<c-u>"
+
+    " - map <up> and <down> and <c-u> and <c-d> to scroll in coc.nvim floating windows such as documentation window
+    " If nvim >= 0.4.0 or vim >= 8.1.0750
+    if has('nvim-0.4.0') || has('patch-8.2.0750')
+        nnoremap <silent><nowait><expr> <down> coc#float#has_scroll() ? coc#float#scroll(1) : "\<down>"
+        nnoremap <silent><nowait><expr> <up> coc#float#has_scroll() ? coc#float#scroll(0) : "\<up>"
+        " nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+        " nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+    else
+        " For vim to scroll floating window
+        function Find_cursor_popup(...)
+            let radius = get(a:000, 0, 2)
+            let srow = screenrow()
+            let scol = screencol()
+
+            " it's necessary to test entire rect, as some popup might be quite small
+            for r in range(srow - radius, srow + radius)
+                for c in range(scol - radius, scol + radius)
+                    let winid = popup_locate(r, c)
+                    if winid != 0
+                        return winid
+                    endif
+                endfor
+            endfor
+
+            return 0
+        endfunction
+
+        " For vim to scroll floating window
+        function Scroll_cursor_popup(down)
+            let winid = Find_cursor_popup()
+            if winid == 0
+                return 0
+            endif
+
+            let pp = popup_getpos(winid)
+            call popup_setoptions( winid,
+                        \ {'firstline' : pp.firstline + ( a:down ? 8 : -8 ) } )
+
+            return 1
+        endfunction
+
+        " nnoremap <expr> <c-d> Scroll_cursor_popup(1) ? '<esc>' : '<c-d>'
+        " nnoremap <expr> <c-u> Scroll_cursor_popup(0) ? '<esc>' : '<c-u>'
+        nnoremap <expr> <down> Scroll_cursor_popup(1) ? '<esc>' : '<down>'
+        nnoremap <expr> <up> Scroll_cursor_popup(0) ? '<esc>' : '<up>'
+    endif
+
+    " - map <tab> for trigger completion and navigate to the next complete item
+    function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~ '\s'
+    endfunction
+    inoremap <silent><expr> <Tab>
+          \ pumvisible() ? "\<C-n>" :
+          \ <SID>check_back_space() ? "\<Tab>" :
+          \ coc#refresh()
+
+    " - map tab and s-tab for trigger completion with characters ahead and navigate.
+    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+    inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+    " - map <c-n> to trigger completion.
+    inoremap <silent><expr> <c-n> coc#refresh()
+
+    " - map <c-p> to show signature help
+    inoremap <silent> <c-p> <c-o>:call CocActionAsync('showSignatureHelp')<CR>
+
+
+    " use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+    " - map to navigate diagnostic
+    nmap <silent> <Space>ep <Plug>(coc-diagnostic-prev)
+    nmap <silent> <Space>eN <Plug>(coc-diagnostic-prev)
+    nmap <silent> <Space>en <Plug>(coc-diagnostic-next)
+    " - map goTo code navigation.
+    nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gy <Plug>(coc-type-definition)
+    nmap <silent> gi <Plug>(coc-implementation)
+    nmap <silent> gr <Plug>(coc-references)
+    
+    " - map K to show documentation in preview window.
+    function! s:show_documentation()
+      if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+      else
+        call CocAction('doHover')
+      endif
+    endfunction
+    nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+    " - map function and class text objects such as select inside function vif
+    " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+    xmap if <Plug>(coc-funcobj-i)
+    omap if <Plug>(coc-funcobj-i)
+    xmap af <Plug>(coc-funcobj-a)
+    omap af <Plug>(coc-funcobj-a)
+    xmap ic <Plug>(coc-classobj-i)
+    omap ic <Plug>(coc-classobj-i)
+    xmap ac <Plug>(coc-classobj-a)
+    omap ac <Plug>(coc-classobj-a)
+
+    " - map to generate clangd compile_commands.json according to Cmakelists.txt
+    nnoremap <Space>cg :cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("generate_clangd_json")<CR>
+    " - map to restart coc server
+    nnoremap <Space>cr :CocRestart<CR>
+    " apply codeAction to the selected region.
+    " " Example: `<leader>aap` for current paragraph
+    xmap <space>ca  <Plug>(coc-codeaction-selected)
+    nmap <space>ca  <Plug>(coc-codeaction-selected)
+    " - map to change python interpreter
+    autocmd FileType python nnoremap <buffer> <space>ci :CocCommand python.setInterpreter<CR>
+    " - map to run coc command
+    nnoremap <space>cc :CocCommand<CR>
+endif  " end if g:vim_plug_installed
+
+
+" ***********************************************************************
+" 7.3_Tmux settings
+" ***********************************************************************
+
+" ***********************************************************************
+" 7.3.1_Vimux settings
+" ***********************************************************************
+" - function to run to another window if in tmux mode. Else run directly
+fun! Run_to_tmux_or_directly(command_str)
+    if exists('$TMUX')
+        call VimuxRunCommand(a:command_str)
+        call feedkeys("<CR>")
+    else
+        exec "!" . a:command_str
+    endif
+endf
+
+" when origin filetype==""
+" - set VimuxReplDefaultFiletype for repl
+let g:VimuxReplDefaultFiletype='python'
+let g:VimuxOrientation = "h"
+let g:VimuxHeight = "50"
+
+" - map to call some tmux command
+nmap <space>: :call VimuxPromptCommand()<CR><c-f>:exec "set filetype=" . g:previous_buf_filetype<CR>i
+nmap <space>v: :call VimuxPromptCommand()<CR>
+nmap <space>vo :call VimuxOpenRunner()<CR>
+nmap <space>vl :call VimuxRunLastCommand()<CR>
+nmap <space>vc :call VimuxCloseRunner()<CR>
+nmap <space>vr :call VimuxRunCommand("!!\n")<CR>
+
+" - function to run visual region in another tmux pane
+function! VimuxSlimeVisual()
+    " delete empty line (mainly for python)
+    let s:vimux_slime_delete_blank_line=substitute(@v,'\n\n\+','\n','g')
+    if(&filetype=='python')
+        " add empty line to jump out of block (for python, ipython does
+        " not need the following line)
+        let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\(\n\s[^\n]\+\n\)\(\S\)','\1\n\2','g')
+        " don't jump for else: and elif: (for python)
+        let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\n\nelse:','\nelse:','g')
+        let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\n\(\nelif\W\)','\1','g')
+    endif
+
+    call VimuxRunCommand(s:vimux_slime_delete_blank_line)
+endfunction
+
+" - function to show python doc of register v
+function! VimuxShowPythonDocVisual()
+    let s:to_search_object= "print(" . @v . ".__doc__)"
+    call VimuxRunCommand(s:to_search_object)
+endfunction
+
+
+" - function to run current line in another tmux pane
+function! VimuxSlimeNormal()
+    call VimuxRunCommand(getline("."))
+endfunction
+
+" - map to run visual region in another tmux pane
+vmap <space>vs "vy :call VimuxSlimeVisual()<CR>
+nmap <space>vs :call VimuxSlimeNormal()<CR>
+
+" - toggle using vim for repl in another pane
+function! VimuxForRepl()
+    if !exists("b:VimuxForReplFlag")
+        let b:VimuxForReplFlag=0
+    endif
+
+    if b:VimuxForReplFlag
+        iunmap <buffer> <enter>
+        vunmap <buffer> <enter>
+        nunmap <buffer> <enter>
+        if(&filetype=='python')
+            vunmap <buffer> K
+        endif
+        let b:VimuxForReplFlag=0
+        echo "REPL mode off."
+    else
+        inoremap <buffer> <enter> <c-o>$<c-o>:call VimuxSlimeNormal()<CR><enter>
+        vnoremap <buffer> <enter> "vy :call VimuxSlimeVisual()<CR>
+        nnoremap <buffer> <enter> :call VimuxSlimeNormal()<CR>j
+        " VimuxRunCommand("cd " . expand("%:p:h"))
+        if(!(&filetype=='matlab' && executable('matlab')))
+            call VimuxCdWorkingDirectory()
+        endif
+
+        let b:VimuxForReplFlag=1
+
+        if(&filetype=='')
+            exec "set filetype=" . g:VimuxReplDefaultFiletype
+        endif
+
+        " set initial code for specific filetype
+        if(&filetype=='python')
+            vnoremap <buffer> K     "vy :call VimuxShowPythonDocVisual()<CR>
+            VimuxRunCommand("python")
+            echo "python repl mode is on."
+        endif
+        if(&filetype=='javascript')
+            VimuxRunCommand("node")
+            echo "javascript repl mode is on."
+        endif
+        if(&filetype=='matlab')
+            if(executable('matlab'))  " run matlab
+                echo "Matlab repl mode is on."
+            else  " run octave
+                VimuxRunCommand("octave --no-window-system")
+            endif
+        endif
+        if(&filetype=='julia')
+            VimuxRunCommand("julia")
+        endif
+
+        " if(&filetype=='vim') see function VimEnterExec
+    endif
+endfunction
+
+" - map to toggle using vim for repl in another pane
+nmap <space>vp :call VimuxForRepl()<CR>
+
+" - function to change another pane's directory for tmux
+function!VimuxCdWorkingDirectory()
+    call VimuxRunCommand(" cd ".expand('%:p:h'))
+    call VimuxRunCommand(" cd `git rev-parse --show-toplevel 2>/dev/null || echo .`")
+endfunction
+
+" ***********************************************************************
+" 7.3.2_Vim-tmux-navigator settings
+" ***********************************************************************
+let g:tmux_navigator_no_mappings = 1
+
+nnoremap <silent> <A-h> :call CloseMaximize()<CR>:TmuxNavigateLeft<CR>
+nnoremap <silent> <A-j> :call CloseMaximize()<CR>:TmuxNavigateDown<CR>
+nnoremap <silent> <A-k> :call CloseMaximize()<CR>:TmuxNavigateUp<CR>
+nnoremap <silent> <A-l> :call CloseMaximize()<CR>:TmuxNavigateRight<CR>
+nnoremap <silent> <A-o> :call CloseMaximize()<CR>:TmuxNavigatePrevious<CR>
+" function to maximize considering all vim panes and tmux panes
+function! ToggleMaximizeTmux()
+    if !s:CheckWarnVimPlugInstalled()
+        return
+    endif
+    if g:isToggledVertically || g:isToggledHorizontally
+        silent! call ToggleMaximize()
+        silent! !tmux resize-pane -Z
+    else
+        silent! !tmux resize-pane -Z 
+        redraw
+        sleep 100m
+        silent! call ToggleMaximize()
+    endif
+
+endfunction
+
+" function to close maximize
+function!CloseMaximize()
+    if !g:vim_plug_installed
+        return
+    endif
+    if g:isToggledVertically || g:isToggledHorizontally
+        silent! call ToggleMaximize()
+    endif
+
+endfunction
+
+" map to toggle maximize tmux
+nnoremap <silent> <A-z> :call ToggleMaximizeTmux()<CR>
+inoremap <silent> <A-z> <c-o>:call ToggleMaximizeTmux()<CR>
+
+" ***********************************************************************
+" 7.4_Python settings
+" ***********************************************************************
+" - run current python buffer
+autocmd FileType python nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("python3 " . expand("%:p"))<CR>
+" - debug current python buffer
+autocmd FileType python nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartPDB python -m pdb <c-r>%<CR>
+
+" ***********************************************************************
+" 7.5_Matlab/octave settings
+" ***********************************************************************
+
+" filetype specific keymap
+" to see more filetype, run command :
+" echo join(map(split(globpath(&rtp, 'ftplugin/*.vim'), '\n'), 'fnamemodify(v:val, ":t:r")'), "\n")
+
+" - function to show matlab help
+fun! MatlabHelp()
+    let l:word_under_cursor = expand("<cword>")
+    if executable('matlab')
+        call Run_to_tmux_or_directly('help ' . l:word_under_cursor)
+    else
+    " --- Show octave help --------------------------------------------------
+        e /tmp/odd_for_vim_matlab.md
+        1,$d
+        exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
+        exec "normal! ggd/----------------------------\<cr>"
+        write
+    endif
+endfunction
+" - function to go to matlab definition
+fun! MatlabGoToDefinition()
+    let l:word_under_cursor = expand("<cword>")
+    if bufname('/' . l:word_under_cursor . '.m')!=''
+        exec 'b ' . bufname('/' . l:word_under_cursor . '.m')
+        return
+    endif
+    if executable('matlab')
+    " --- Open definition with matlab ---------------------------------------
+        let l:odd_clipboard=@+
+        call Run_to_tmux_or_directly('open ' . l:word_under_cursor)
+        call Run_to_tmux_or_directly(' yy')
+        sleep 800m
+        call Run_to_tmux_or_directly(' qq')
+
+        if filereadable(@+)
+            exec "e " . expand(@+)
+            " exec "echo " . expand(@+)
+        else
+            echo 'Fail to open matlab definition file.'
+        endif
+        let @+=l:odd_clipboard
+    elseif l:ifem_file_path != ''
+    " --- Show ifem definition ----------------------------------------------
+        let l:ifem_file_path=system('ag -l "^function .+\W' . expand('<cword>') . '\W" $HOME/Software/ifem/ifem/')
+        exec "view " . l:ifem_file_path
+    else
+    " --- Show octave help --------------------------------------------------
+        e /tmp/odd_for_vim_matlab.md
+        1,$d
+        exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
+        exec "normal! ggd/----------------------------\<cr>"
+        write
+    endif
+endf
+
+" - map to run matlab/octave file
+autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:!octave %<CR>
+autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("octave " . expand("%:p"))<CR>
+if executable('matlab')
+    autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("run('" . expand("%:p") . "')")<CR>
+endif
+
+" - map to go to matlab help/definition
+autocmd FileType matlab nnoremap <buffer> K :call MatlabHelp()<CR>
+autocmd FileType matlab nnoremap <buffer> gd :call MatlabGoToDefinition()<CR>
+
+if executable('matlab')
+    " How many counts :ClearAllBreakpoints is called
+    if !exists("g:matlab_clear_counts")
+        let g:matlab_clear_counts=0
+    endif
+
+    " - function to toggle breakpoints for matlab
+    fun! Toggle_breakpoints_for_matlab()
+        if !exists("b:matlab_breakpoints_lists")
+            let b:matlab_breakpoints_lists=[]
+        endif
+        if !exists("b:matlab_buffer_clear_count")
+            let b:matlab_buffer_clear_count=g:matlab_clear_counts
+        endif
+        if b:matlab_buffer_clear_count < g:matlab_clear_counts
+            let b:matlab_buffer_clear_count=g:matlab_clear_counts
+            let b:matlab_breakpoints_lists=[]
+        endif
+        if index(b:matlab_breakpoints_lists,line(".")) >= 0
+            call Run_to_tmux_or_directly("dbclear '" . expand("%:p") . "' at " . line("."))
+            call remove(b:matlab_breakpoints_lists,index(b:matlab_breakpoints_lists,line(".")))
+            echo 'breakpoint cleared'
+        else
+            call Run_to_tmux_or_directly("dbstop '" . expand("%:p") . "' at " . line("."))
+            call add(b:matlab_breakpoints_lists,line("."))
+            echo 'breakpoint added'
+        endif
+    endfunction
+    " - command to clear all breakpoints for matlab
+    fun! Clear_all_breakpoints_for_matlab()
+            call Run_to_tmux_or_directly("dbclear all")
+            let g:matlab_clear_counts=g:matlab_clear_counts+1
+    endfunction
+    " matlab debug: :ClearAll  - clear all breakpoints
+    com!ClearAllBreakpoints call Clear_all_breakpoints_for_matlab()
+
+    " - map to matlab debugging command
+    " matlab debug: gb  - toggle breakpoint
+    autocmd FileType matlab nnoremap <buffer> gb :call Toggle_breakpoints_for_matlab()<CR>
+    " matlab debug: glb - list breakpoints
+    autocmd FileType matlab nnoremap <buffer> glb :call Run_to_tmux_or_directly('dbstatus')<CR>
+    " matlab debug: gc  - continue
+    autocmd FileType matlab nnoremap <buffer> gc :call Run_to_tmux_or_directly('dbcont')<CR>
+    " matlab debug: gn  - step next
+    autocmd FileType matlab nnoremap <buffer> gn :call Run_to_tmux_or_directly('dbstep')<CR>
+    " matlab debug: gs  - step in
+    autocmd FileType matlab nnoremap <buffer> gs :call Run_to_tmux_or_directly('dbstep in')<CR>
+    " matlab debug: go  - step out
+    autocmd FileType matlab nnoremap <buffer> go :call Run_to_tmux_or_directly('dbstep out')<CR>
+    " matlab debug: gq  - quit debug
+    autocmd FileType matlab nnoremap <buffer> gq :call Run_to_tmux_or_directly('dbquit')<CR>
+    " matlab debug: gls - show current line
+    autocmd FileType matlab nnoremap <buffer> gls :call Run_to_tmux_or_directly('dbstack')<CR>
+    " matlab debug: gku  - up one stack
+    autocmd FileType matlab nnoremap <buffer> gku :call Run_to_tmux_or_directly('dbup')<CR>
+    " matlab debug: gkd  - down one stack
+    autocmd FileType matlab nnoremap <buffer> gkd :call Run_to_tmux_or_directly('dbdown')<CR>
+    " matlab debug: g?  - show help
+    autocmd FileType matlab nnoremap <buffer> g? :!cat ~/Software/vim/vimrc <bar>grep 'matlab debug:'<CR>
+    if $TMUX != ''
+        autocmd BufWritePost *.m call Run_to_tmux_or_directly('clear ' . expand('%:p'))
+    endif
+endif
+
+" ***********************************************************************
+" 7.6_Javascript settings
+" ***********************************************************************
+" - run current javascript buffer
+autocmd FileType javascript nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("node " . expand("%:p"))<CR>
+
+" ***********************************************************************
+" 7.7_C/C++ settings
+" ***********************************************************************
+
+" - map to run current c/cpp project/file
+autocmd FileType c,cpp nnoremap <buffer> ,cc :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output")<CR>
+autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cc :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:t')." --less-output")<CR>
+" - map to make current c/cpp project/file
+autocmd FileType c,cpp nnoremap <buffer> ,cm :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --make-only")<CR>
+autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cm :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:t')." --make-only")<CR>
+
+" - map to run c/cpp with mpi
+let g:mpi_processors_num=4
+com! -nargs=1 SetMpiProcessors let g:mpi_processors_num=<args>
+autocmd FileType c,cpp nnoremap <buffer> ,cp :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output --make-only && mpirun -n ".g:mpi_processors_num." `make_find_executable`")<CR>
+autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cp :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output --make-only && mpirun -n ".g:mpi_processors_num." `make_find_executable`")<CR>
+
+if has('nvim')
+    " - debug current c/cpp project
+    autocmd FileType c,cpp nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:silent! Gcd<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
+    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:silent! Gcd<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
+else
+    autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:silent! Gcd<CR>:exec "Termdebug " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>hstart<CR>source .gdb_breakpoints<CR>
+    " autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:silent! Gcd<CR>:exec "Termdebug -command=~/Software/vim/gdb_init " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>h
+endif
+
+
+" ***********************************************************************
+" 7.8_Shell settings
+" ***********************************************************************
+
+if has('nvim')
+    " debug current bash buffer
+    autocmd FileType sh nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartBashDB bashdb <c-r>%<CR>
+endif
+" ***********************************************************************
+" 7.9_Latex settings
+" ***********************************************************************
+
+" latex mode save abbreviation
+autocmd FileType tex vnoremap <buffer> <m-s> "vy:call VisualSetAbbreviation()<CR>
+autocmd FileType tex nnoremap <buffer> <m-s> :call ShowAbbreviations()<CR>
+autocmd FileType tex inoremap <buffer> <m-s> <c-o>:call ShowAbbreviations()<CR>
+autocmd BufRead,BufNewFile */abbrev_defs.vim nnoremap <buffer> <m-s> :b#<CR>
+autocmd BufRead,BufNewFile */abbrev_defs.vim inoremap <buffer> <m-s> <c-o>:b#<CR>
+
+" latex mode jump to bibtex
+autocmd FileType tex nnoremap <buffer> <m-r> :e $HOME/Software/latex/bibtex/bib/ref.bib<CR>
+autocmd BufRead,BufNewFile $HOME/Software/latex/bibtex/bib/ref.bib nnoremap <buffer> <m-r> :b#<CR>
+autocmd FileType tex LoadAbbreviations
+" latex mode specified mappings
+autocmd FileType tex call DefLatexMappings()
+" start vim server for latex preview
+autocmd FileType tex call StartLatexServer()
+" enable auto save for real-time preview
+" autocmd FileType tex autocmd TextChangedI <buffer> call LatexAutoSave(5)
+" autocmd FileType tex autocmd CursorHoldI,CursorHold <buffer> silent update
+" autocmd FileType tex autocmd TextChanged <buffer> call LatexAutoSave(0)
+
+" keymap for c/c++ file type
+autocmd FileType c,cpp imap <buffer> <a-;> <c-e>;<CR>
+
+
+" translation auto repl
+autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd TextChangedI <buffer> call TranslateCount(5)
+autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd TextChanged <buffer> call TranslateCount(0)
+autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd CursorHoldI,CursorHold <buffer> call TranslateCount(0)
+
+" keymap for open_file_help file(e.g. Used to OpenTodoFile)
+autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
+autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-c> <esc>:bd!<CR>
+autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-h> <c-w><c-w>
+autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh inoremap <buffer> <CR> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("e ".mycurf)<CR>
+
+" freefem++ file type
+au BufNewFile,BufRead *.edp setf edp
+au BufNewFile,BufRead *.idp setf edp
+au FileType  edp nnoremap ,cc :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
+" load completion.edp for better completion
+au FileType  edp call s:LoadFreefemCompletion()
+
+" fugitive glog: auto jump to the same line
+au! BufLeave  fugitive://*  let g:glog_cursor=line(".")
+" au! BufEnter  fugitive://*  exec g:glog_cursor 
+au! BufEnter  fugitive://*  exec "if exists('g:glog_cursor')\n exec g:glog_cursor\n endif\n"
+
+" command-line window enter insert mode automatically
+" after :/?, type <c-f> to edit
+au CmdwinEnter [:/?]  startinsert
+
+" Set filetype to be same with previous file when searching because
+" autocomplete will search all buffer with same filetype 
+au BufEnter * let g:previous_buf_filetype=&filetype
+au CmdwinEnter [/?]  exec "set filetype=" . g:previous_buf_filetype
+
+function! s:ChangeFileTypeIfReplacing()
+    if stridx(getline('.'),"s/") >= 0
+        exec "set filetype=" . g:previous_buf_filetype
+    endif
+endfunction
+
+
+" Set filetype to be the same with previous file when replacing in
+" command-line mode
+au CmdwinEnter [:] call s:ChangeFileTypeIfReplacing()
+
+" execute the command under the cursor and then have the command-line window open again
+autocmd CmdwinEnter * map <buffer> <F5> <CR>q:
+
+" Debug mode auto command
+" au CmdwinEnter [>] do something
+
+" enter repl for vim buffer
+function! VimEnterExec()
+    if !exists("b:VimEterExecFlag")
+        let b:VimEterExecFlag=0
+    endif
+
+    if b:VimEterExecFlag
+        iunmap <buffer> <enter>
+        vunmap <buffer> <enter>
+        nunmap <buffer> <enter>
+        let b:VimEterExecFlag=0
+        echo "vim repl mode is off."
+    else
+        inoremap <buffer> <enter> <c-o>$<c-o>:exec getline(".")<CR><CR>
+        vnoremap <buffer> <enter> "vy :@v<CR>
+        nnoremap <buffer> <enter> :exec getline(".")<CR>j
+
+        let b:VimEterExecFlag=1
+        echo "vim repl mode is on."
+    endif
+endfunction
+
+autocmd FileType vim nnoremap <buffer> <space>vp :call VimEnterExec()<CR>
+"}}}
+
 
 "{{{ vim-multiple-cursor Mappings 
     " vim-visual-multi Mappings
@@ -519,27 +1931,12 @@ endif
 
 
 
-"{{{ YouCompleteMe Mappings
-    nnoremap <Space>yb :YcmCompleter GoTo<CR>
-    nnoremap <Space>yB :YcmCompleter GoToDeclaration<CR>
-    nnoremap <Space>yd :YcmCompleter GetDoc<CR>
-    nnoremap <Space>yf :YcmCompleter FixIt<CR>
-    nnoremap <Space>yr :YcmRestartServer<CR>
-    " Note here replace of FlagsForFile is due to use of clangd.
-    nnoremap <Space>yg :![[ -e CMakeLists.txt ]] && rm .ycm_extra_conf.py<CR>:YcmGenerateConfig<CR>:!sed -i 's/FlagsForFile/Settings/g' .ycm_extra_conf.py<CR>
-    " <c-e> :cancel completion
-
-    " disable c-y to stop completion to prevent comfliction with paste using <c-y>
-    let g:ycm_key_list_stop_completion = ['']
-"}}}
-
 
 "{{{ Mapping selecting Mappings. Help describe keys
     nmap <leader><tab> <plug>(fzf-maps-n)
     xmap <leader><tab> <plug>(fzf-maps-x)
     omap <leader><tab> <plug>(fzf-maps-o)
 "}}}
-
 
 "{{{ Insert mode completion
     imap <c-x><c-k> <plug>(fzf-complete-word)
@@ -552,643 +1949,9 @@ endif
 "}}}
 
 
-" autocmd InsertLeave * :update
 
-"{{{ directly use s to perform surround
-  " change this key to easymotion's jumptoanywhere
-    nmap s ys
-"}}}
 
 
-"{{{ Moving in insert/command-line mode and normal mode
-
-    " map! map to insert and command-line mode
-    noremap! <A-b> <c-left>
-    inoremap <A-j> <c-o>o
-    inoremap <A-k> <c-o>O
-    noremap! <A-f> <c-right>
-    noremap! <A-h> <c-left>
-    noremap! <A-l> <c-right>
-
-    noremap! <c-b> <left>
-    noremap! <c-j> <down>
-    noremap! <c-k> <up>
-    noremap! <c-f> <right>
-
-    noremap! <c-h> <left>
-    noremap! <c-l> <right>
-
-    noremap! <c-y> <c-r>+
-
-    inoremap <c-a> <c-o>^
-    inoremap <c-e> <c-o>$
-    cnoremap <c-a> <home>
-    cnoremap <c-e> <end>
-
-    nnoremap gm %
-    vnoremap gm %
-
-    nnoremap H ^
-    nnoremap L $
-    vnoremap H ^
-    vnoremap L $
-
-    inoremap <c-s> <c-o>:update<CR>
-"}}}
-
-
-"{{{ Easier moving in tabs and windows
-    " Map from spacemacs
-    nnoremap <Space>tl gt
-    nnoremap <Space>th gT
-    nnoremap <Space>tn :tabnew<CR>
-    nnoremap <Space>tc :tabclose<CR>
-
-    nnoremap <A-n> :bn<CR>
-    nnoremap <A-p> :bp<CR>
-    nnoremap <A-J> <C-W>j
-    nnoremap <A-K> <C-W>k
-    nnoremap <A-L> <C-W>l
-    nnoremap <A-H> <C-W>h
-    " prevent conflict(type mistake) with tmux
-    nnoremap <c-a> l
-"}}}
-
-
-"{{{ map for replacement
-    nnoremap <A-H> :%s//gc<left><left><left>
-    nnoremap <c-h> :%s//gc<left><left><left>
-    xnoremap <c-h> :s//gc<left><left><left>
-"}}}
-
-
-"{{{ don't copy when using c and C to change text
-    nnoremap c "9c
-    nnoremap C "9C
-    nnoremap x "9x
-    nnoremap X "9X
-    vnoremap P "_dP
-"}}}
-
-
-"{{{ filetype specific keymap
-    " to see more filetype, run command :
-    " echo join(map(split(globpath(&rtp, 'ftplugin/*.vim'), '\n'), 'fnamemodify(v:val, ":t:r")'), "\n")
-
-    " Run to another window if in tmux mode. Else run directly
-    fun! Run_to_tmux_or_directly(command_str)
-        if exists('$TMUX')
-            call VimuxRunCommand(a:command_str)
-            call feedkeys("<CR>")
-        else
-            exec "!" . a:command_str
-        endif
-    endf
-
-    fun! MatlabHelp()
-        let l:word_under_cursor = expand("<cword>")
-        if executable('matlab')
-            call Run_to_tmux_or_directly('help ' . l:word_under_cursor)
-        else
-        " --- Show octave help --------------------------------------------------
-            e /tmp/odd_for_vim_matlab.md
-            1,$d
-            exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
-            exec "normal! ggd/----------------------------\<cr>"
-            write
-        endif
-    endfunction
-    fun! MatlabGoToDefinition()
-        let l:word_under_cursor = expand("<cword>")
-        if bufname('/' . l:word_under_cursor . '.m')!=''
-            exec 'b ' . bufname('/' . l:word_under_cursor . '.m')
-            return
-        endif
-        if executable('matlab')
-        " --- Open definition with matlab ---------------------------------------
-            let l:odd_clipboard=@+
-            call Run_to_tmux_or_directly('open ' . l:word_under_cursor)
-            call Run_to_tmux_or_directly(' yy')
-            sleep 800m
-            call Run_to_tmux_or_directly(' qq')
-
-            if filereadable(@+)
-                exec "e " . expand(@+)
-                " exec "echo " . expand(@+)
-            else
-                echo 'Fail to open matlab definition file.'
-            endif
-            let @+=l:odd_clipboard
-        elseif l:ifem_file_path != ''
-        " --- Show ifem definition ----------------------------------------------
-            let l:ifem_file_path=system('ag -l "^function .+\W' . expand('<cword>') . '\W" $HOME/Software/ifem/ifem/')
-            exec "view " . l:ifem_file_path
-        else
-        " --- Show octave help --------------------------------------------------
-            e /tmp/odd_for_vim_matlab.md
-            1,$d
-            exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
-            exec "normal! ggd/----------------------------\<cr>"
-            write
-        endif
-    endf
-
-    " jump to
-    autocmd FileType c,cpp,python,java,javascript nnoremap <buffer> <c-b> :YcmCompleter GoTo<CR>
-
-    " run current python buffer
-    autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:!octave %<CR>
-    autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("octave " . expand("%:p"))<CR>
-    autocmd FileType matlab nnoremap <buffer> K :call MatlabHelp()<CR>
-    autocmd FileType matlab nnoremap <buffer> gd :call MatlabGoToDefinition()<CR>
-    if executable('matlab')
-        autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("run('" . expand("%:p") . "')")<CR>
-    endif
-    autocmd FileType python nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("python3 " . expand("%:p"))<CR>
-
-    " run current javascript buffer
-    autocmd FileType javascript nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("node " . expand("%:p"))<CR>
-
-    " run current c/cpp project
-    autocmd FileType c,cpp nnoremap <buffer> ,cc :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output")<CR>
-    autocmd FileType c,cpp nnoremap <buffer> ,cm :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --make-only")<CR>
-    " run c/cpp with mpi
-    let g:mpi_processors_num=4
-    com! -nargs=1 SetMpiProcessors let g:mpi_processors_num=<args>
-    autocmd FileType c,cpp nnoremap <buffer> ,cp :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output --make-only && mpirun -n ".g:mpi_processors_num." `make_find_executable`")<CR>
-
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cc :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:t')." --less-output")<CR>
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cm :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:t')." --make-only")<CR>
-    " run c/cpp with mpi
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cp :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output --make-only && mpirun -n ".g:mpi_processors_num." `make_find_executable`")<CR>
-    if has('nvim')
-        " debug current python buffer
-        autocmd FileType python nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartPDB python -m pdb <c-r>%<CR>
-        " debug current bash buffer
-        autocmd FileType sh nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartBashDB bashdb <c-r>%<CR>
-        " debug current c/cpp project
-        autocmd FileType c,cpp nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:silent! Gcd<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
-        " debug current c/cpp project
-        autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:silent! Gcd<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
-    else
-        autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:silent! Gcd<CR>:exec "Termdebug " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>hstart<CR>source .gdb_breakpoints<CR>
-        " autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:silent! Gcd<CR>:exec "Termdebug -command=~/Software/vim/gdb_init " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>h
-    endif
-
-    "{{{ keymap for debugging
-        if executable('matlab')
-            " How many counts :ClearAllBreakpoints is called
-            if !exists("g:matlab_clear_counts")
-                let g:matlab_clear_counts=0
-            endif
-
-            fun! Toggle_breakpoints_for_matlab()
-                if !exists("b:matlab_breakpoints_lists")
-                    let b:matlab_breakpoints_lists=[]
-                endif
-                if !exists("b:matlab_buffer_clear_count")
-                    let b:matlab_buffer_clear_count=g:matlab_clear_counts
-                endif
-                if b:matlab_buffer_clear_count < g:matlab_clear_counts
-                    let b:matlab_buffer_clear_count=g:matlab_clear_counts
-                    let b:matlab_breakpoints_lists=[]
-                endif
-                if index(b:matlab_breakpoints_lists,line(".")) >= 0
-                    call Run_to_tmux_or_directly("dbclear '" . expand("%:p") . "' at " . line("."))
-                    call remove(b:matlab_breakpoints_lists,index(b:matlab_breakpoints_lists,line(".")))
-                    echo 'breakpoint cleared'
-                else
-                    call Run_to_tmux_or_directly("dbstop '" . expand("%:p") . "' at " . line("."))
-                    call add(b:matlab_breakpoints_lists,line("."))
-                    echo 'breakpoint added'
-                endif
-            endfunction
-            fun! Clear_all_breakpoints_for_matlab()
-                    call Run_to_tmux_or_directly("dbclear all")
-                    let g:matlab_clear_counts=g:matlab_clear_counts+1
-            endfunction
-            " matlab debug: :ClearAll  - clear all breakpoints
-            com!ClearAllBreakpoints call Clear_all_breakpoints_for_matlab()
-            " matlab debug: gb  - toggle breakpoint
-            autocmd FileType matlab nnoremap <buffer> gb :call Toggle_breakpoints_for_matlab()<CR>
-            " matlab debug: glb - list breakpoints
-            autocmd FileType matlab nnoremap <buffer> glb :call Run_to_tmux_or_directly('dbstatus')<CR>
-            " matlab debug: gc  - continue
-            autocmd FileType matlab nnoremap <buffer> gc :call Run_to_tmux_or_directly('dbcont')<CR>
-            " matlab debug: gn  - step next
-            autocmd FileType matlab nnoremap <buffer> gn :call Run_to_tmux_or_directly('dbstep')<CR>
-            " matlab debug: gs  - step in
-            autocmd FileType matlab nnoremap <buffer> gs :call Run_to_tmux_or_directly('dbstep in')<CR>
-            " matlab debug: go  - step out
-            autocmd FileType matlab nnoremap <buffer> go :call Run_to_tmux_or_directly('dbstep out')<CR>
-            " matlab debug: gq  - quit debug
-            autocmd FileType matlab nnoremap <buffer> gq :call Run_to_tmux_or_directly('dbquit')<CR>
-            " matlab debug: gls - show current line
-            autocmd FileType matlab nnoremap <buffer> gls :call Run_to_tmux_or_directly('dbstack')<CR>
-            " matlab debug: gku  - up one stack
-            autocmd FileType matlab nnoremap <buffer> gku :call Run_to_tmux_or_directly('dbup')<CR>
-            " matlab debug: gkd  - down one stack
-            autocmd FileType matlab nnoremap <buffer> gkd :call Run_to_tmux_or_directly('dbdown')<CR>
-            " matlab debug: g?  - show help
-            autocmd FileType matlab nnoremap <buffer> g? :!cat ~/Software/vim/vimrc <bar>grep 'matlab debug:'<CR>
-            if $TMUX != ''
-                autocmd BufWritePost *.m call Run_to_tmux_or_directly('clear ' . expand('%:p'))
-            endif
-        endif
-
-    "}}}
-
-    " latex mode save abbreviation
-    autocmd FileType tex vnoremap <buffer> <m-s> "vy:call VisualSetAbbreviation()<CR>
-    autocmd FileType tex nnoremap <buffer> <m-s> :call ShowAbbreviations()<CR>
-    autocmd FileType tex inoremap <buffer> <m-s> <c-o>:call ShowAbbreviations()<CR>
-    autocmd BufRead,BufNewFile */abbrev_defs.vim nnoremap <buffer> <m-s> :b#<CR>
-    autocmd BufRead,BufNewFile */abbrev_defs.vim inoremap <buffer> <m-s> <c-o>:b#<CR>
-
-    " latex mode jump to bibtex
-    autocmd FileType tex nnoremap <buffer> <m-r> :e $HOME/Software/latex/bibtex/bib/ref.bib<CR>
-    autocmd BufRead,BufNewFile $HOME/Software/latex/bibtex/bib/ref.bib nnoremap <buffer> <m-r> :b#<CR>
-    autocmd FileType tex LoadAbbreviations
-    " latex mode specified mappings
-    autocmd FileType tex call DefLatexMappings()
-    " start vim server for latex preview
-    autocmd FileType tex call StartLatexServer()
-    " enable auto save for real-time preview
-    " autocmd FileType tex autocmd TextChangedI <buffer> call LatexAutoSave(5)
-    " autocmd FileType tex autocmd CursorHoldI,CursorHold <buffer> silent update
-    " autocmd FileType tex autocmd TextChanged <buffer> call LatexAutoSave(0)
-
-    " keymap for c/c++ file type
-    autocmd FileType c,cpp imap <buffer> <a-;> <c-e>;<CR>
-
-
-    " translation auto repl
-    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd TextChangedI <buffer> call TranslateCount(5)
-    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd TextChanged <buffer> call TranslateCount(0)
-    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd CursorHoldI,CursorHold <buffer> call TranslateCount(0)
-
-    " keymap for open_file_help file(e.g. Used to OpenTodoFile)
-    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
-    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-c> <esc>:bd!<CR>
-    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-h> <c-w><c-w>
-    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh inoremap <buffer> <CR> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("e ".mycurf)<CR>
-
-    " freefem++ file type
-    au BufNewFile,BufRead *.edp setf edp
-    au BufNewFile,BufRead *.idp setf edp
-    au FileType  edp nnoremap ,cc :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
-    " load completion.edp for better completion
-    au FileType  edp call s:LoadFreefemCompletion()
-
-    " fugitive glog: auto jump to the same line
-    au! BufLeave  fugitive://*  let g:glog_cursor=line(".")
-    " au! BufEnter  fugitive://*  exec g:glog_cursor 
-    au! BufEnter  fugitive://*  exec "if exists('g:glog_cursor')\n exec g:glog_cursor\n endif\n"
-
-    " command-line window enter insert mode automatically
-    " after :/?, type <c-f> to edit
-	au CmdwinEnter [:/?]  startinsert
-
-    " Set filetype to be same with previous file when searching because
-    " autocomplete will search all buffer with same filetype 
-    au BufEnter * let g:previous_buf_filetype=&filetype
-    au CmdwinEnter [/?]  exec "set filetype=" . g:previous_buf_filetype
-
-    function! s:ChangeFileTypeIfReplacing()
-        if stridx(getline('.'),"s/") >= 0
-            exec "set filetype=" . g:previous_buf_filetype
-        endif
-    endfunction
-
-
-    " Set filetype to be the same with previous file when replacing in
-    " command-line mode
-    au CmdwinEnter [:] call s:ChangeFileTypeIfReplacing()
-
-    " execute the command under the cursor and then have the command-line window open again
-	autocmd CmdwinEnter * map <buffer> <F5> <CR>q:
-
-    " Debug mode auto command
-	" au CmdwinEnter [>] do something
-
-    " enter repl for vim buffer
-    function! VimEnterExec()
-        if !exists("b:VimEterExecFlag")
-            let b:VimEterExecFlag=0
-        endif
-
-        if b:VimEterExecFlag
-            iunmap <buffer> <enter>
-            vunmap <buffer> <enter>
-            nunmap <buffer> <enter>
-            let b:VimEterExecFlag=0
-            echo "vim repl mode is off."
-        else
-            inoremap <buffer> <enter> <c-o>$<c-o>:exec getline(".")<CR><CR>
-            vnoremap <buffer> <enter> "vy :@v<CR>
-            nnoremap <buffer> <enter> :exec getline(".")<CR>j
-
-            let b:VimEterExecFlag=1
-            echo "vim repl mode is on."
-        endif
-    endfunction
-
-    autocmd FileType vim nnoremap <buffer> <space>vp :call VimEnterExec()<CR>
-"}}}
-
-
-"""""""""""""""""""""""""""""""""""""
-" Map from spacemacs
-"""""""""""""""""""""""""""""""""""""
-    " nunmap <Space>
-    nnoremap <Space><Space> :<c-f>
-    nnoremap <silent> <Space>wh :call CloseMaximize()<CR><C-w>h
-    nnoremap <silent> <Space>wj :call CloseMaximize()<CR><C-w>j
-    nnoremap <silent> <Space>wk :call CloseMaximize()<CR><C-w>k
-    nnoremap <silent> <Space>wl :call CloseMaximize()<CR><C-w>l
-    nnoremap <Space>wH :call CloseMaximize()<CR><C-w>H
-    nnoremap <Space>wJ :call CloseMaximize()<CR><C-w>J
-    nnoremap <Space>wK :call CloseMaximize()<CR><C-w>K
-    nnoremap <Space>wL :call CloseMaximize()<CR><C-w>L
-    nnoremap <Space>w/ :call CloseMaximize()<CR>:vs<CR>
-    " map <ESC> to exit insert mode in shell buffer
-    " tnoremap <ESC>   <C-\><C-n>
-    nnoremap <Space>w- :call CloseMaximize()<CR>:sp<CR>
-    nnoremap <Space>ww :call CloseMaximize()<CR><C-w>w
-    nnoremap <Space>w= :call CloseMaximize()<CR><C-w>=
-    nnoremap <Space>wd :call CloseMaximize()<CR>:close<CR>
-    nnoremap <Space>wx :call CloseMaximize()<CR>:bp<cr>:silent! exec "bd #"<CR>:close<CR>
-    nnoremap <Space>wo :call CloseMaximize()<CR><C-w><C-o>
-    nnoremap <c-down>  2<C-w>-
-    nnoremap <c-up>    2<C-w>+
-    nnoremap <c-left>  2<C-w><
-    nnoremap <c-right> 2<C-w>>
-    nnoremap <Space>1  :call CloseMaximize()<CR>1<C-w><C-w>
-    nnoremap <Space>2  :call CloseMaximize()<CR>2<C-w><C-w>
-    nnoremap <Space>3  :call CloseMaximize()<CR>3<C-w><C-w>
-    nnoremap <Space>4  :call CloseMaximize()<CR>4<C-w><C-w>
-    nnoremap <Space>5  :call CloseMaximize()<CR>5<C-w><C-w>
-    nnoremap <Space>6  :call CloseMaximize()<CR>6<C-w><C-w>
-    nnoremap <Space>7  :call CloseMaximize()<CR>7<C-w><C-w>
-    nnoremap <Space>8  :call CloseMaximize()<CR>8<C-w><C-w>
-    nnoremap <Space>9  :call CloseMaximize()<CR>9<C-w><C-w>
-    " insert dividing line
-    nnoremap <Space>id :r !echo "***********************************************************************"<CR>:TComment<CR>5l
-
-    " switch theme
-    nnoremap <Space>Tn :call ToggleTheme()<CR>
-
-    " folding
-    nnoremap <Space>z+ zR
-    nnoremap <Space>z- zM
-
-    nnoremap <Space>fr :FzfMrf!<CR>
-    " goto
-    " tags (symbols) in current file finder mapping
-    nnoremap ,gt :CtrlPBufTag<CR>
-    " tags (symbols) in all files finder mapping
-    nnoremap ,gT :CtrlPBufTagAll<CR>
-    " recent changes in all buffers
-    nnoremap ,gC :CtrlPChangeAll<CR>
-    " recent changes in current buffer
-    nnoremap ,gc :SearchChanges!<CR>
-    nnoremap <A-c> :SearchChanges!<CR>
-    " recent jumps in current buffer
-    nnoremap ,gj :JumpsResults!<CR>
-
-    nnoremap <c-c><c-o> gf
-    " nnoremap <Space>fo :!nautilus "<cfile>"& <CR>
-    " open file under the cursor with default system software
-    nnoremap <Space>fO :!cd %:p:h && xdg-open "<cfile>" & <CR>
-    " open the folder containing current file
-    nnoremap <Space>fd :!nautilus %:p:h &<CR>
-    " open current file with default system software
-    nnoremap <Space>fo :!cd %:p:h && xdg-open %:p & <CR>
-    " open the terminal with current file path as working directory
-    nnoremap <Space>ft :silent! !gnome-terminal --working-directory=%:p:h &<CR>
-    if exists("$TERMINOLOGY")
-        nnoremap <Space>ft :silent! !terminology -d %:p:h &<CR>
-    endif
-    " nnoremap <Space>ff :CtrlP %<CR>
-    " nnoremap <Space>ss :CtrlPLine %<CR>  " Use <c-f> instead
-    nnoremap <Space><Tab> :b#<CR>
-    nnoremap ]e        :move +1<CR>
-    nnoremap [e        :move -2<CR>
-    nnoremap <Space>fvd :OpenVimrcDotFile<CR>
-    execute "nnoremap <Space>fvR :source " . b:dot_file_path . "<CR>"
-    nnoremap <Space>mcc :w<CR>:!python %<CR>
-    nnoremap <Space>/  :Ag!<CR>
-    vnoremap <Space>/  "vy:exec "Ag!" . escape(@v,'/\()*+?[]$^<bar>')<CR>
-    " Search lines in all buffers
-    nnoremap <Space>b/ :Lines<CR>
-    " search inside current buffer
-    nnoremap <c-f>  :w<CR>:AgCurrentFile!<CR>
-    " search inside current buffer
-    nnoremap <c-f>  :BLines<CR>
-
-
-    " map * to search selection
-    vnoremap * "vy/\V<C-R>=escape(@v,'/\')<CR><CR>
-    nnoremap <Space>bd :bn<CR>:bd#<CR>
-    nnoremap <Space>bd :bd<CR>
-    nnoremap <Space>bm :messages<CR>
-    nnoremap <Space>bn :bn<CR>
-    nnoremap ]b :bn<CR>
-    nnoremap <Space>bp :bp<CR>
-    nnoremap [b :bp<CR>
-    " nnoremap <Space>bb :CtrlPBuffer<CR>
-    nnoremap <Space>bb :FzfBuffers!<CR>
-    nnoremap <Space>bs :Scratch<CR>
-    nnoremap <Space>bx :call CloseMaximize()<CR>:bp<cr>:silent! exec "bd #"<CR>:close<CR>
-    nnoremap <Space>b1 :bfirst<CR>
-    nnoremap <Space>b2 :call g:GotoNthBuffer("1")<CR>
-    nnoremap <Space>b3 :call g:GotoNthBuffer("2")<CR>
-    nnoremap <Space>b4 :call g:GotoNthBuffer("3")<CR>
-    nnoremap <Space>b5 :call g:GotoNthBuffer("4")<CR>
-    nnoremap <Space>b6 :call g:GotoNthBuffer("5")<CR>
-    nnoremap <Space>b7 :call g:GotoNthBuffer("6")<CR>
-    nnoremap <Space>b8 :call g:GotoNthBuffer("7")<CR>
-    nnoremap <Space>b9 :call g:GotoNthBuffer("8")<CR>
-
-    " see also: Easier moving in tabs and windows
-    nnoremap <Space>tl gt
-    nnoremap <Space>th gT
-    nnoremap <Space>tn :tabnew<CR>
-    nnoremap <Space>tc :tabclose<CR>
-
-    " save layout
-    nnoremap <Space>ls :call SaveLayout(0)<CR>
-    nnoremap <Space>lS :call SaveLayout(1)<CR>
-    nnoremap <Space>ll :call LoadLayout(0)<CR>
-    nnoremap <Space>lL :call LoadLayout(1)<CR>
-
-    nnoremap <Space>qq :qa<CR>
-    nnoremap <Space>hdk :Maps<CR>
-    nnoremap <Space>cd :cd %:h<CR>:silent! Gcd<CR>
-    nnoremap <Space>tw :ToggleWrap<CR>
-    nmap <space>aa :FindActions<CR>
-    nmap <space>ag :!gedit %<CR>
-    nmap <space>au :UndotreeToggle<CR>
-    if has('nvim')
-        nnoremap <space>as :terminal<CR>
-    else
-        nnoremap <space>as :vertical terminal ++curwin<CR>
-    endif
-    " tnoremap <C-w> <C-\><C-n>
-    " tnoremap <C-w>h <C-\><C-n><C-w>h
-    " tnoremap <C-w>j <C-\><C-n><C-w>j
-    " tnoremap <C-w>k <C-\><C-n><C-w>k
-    " tnoremap <C-w>l <C-\><C-n><C-w>l
-
-" *** functions for spacemacs maps *************
-function! OpenUrlUnderCursor()
-    let path="/usr/bin/google-chrome-stable"
-    execute "normal BvEy"
-    let url=matchstr(@0, '[a-z]*:\/\/[^ >,;]*')
-    if url != ""
-        " silent exec "!open -a ".path." '".url."'" | redraw! 
-        silent exec "!/usr/bin/google-chrome-stable '".url."'&" | redraw!
-        echo "opened ".url
-    else
-        echo "No URL under cursor."
-    endif
-endfunction
-
-let g:custom_layout_path="~/Software/vim/session"
-let g:custom_layout_manual_path="~/Software/vim/session/manual-saving"
-function! SaveLayout(toInputName)
-    cd %:h
-    silent! Gcd
-    if a:toInputName
-        call inputsave()
-        let s:input_layout_name=input('Please input layout(session) name: ')
-        call inputrestore()
-        let s:layout_path=g:custom_layout_manual_path . "/" . s:input_layout_name . ".vim"
-    else
-        let s:layout_dir=g:custom_layout_path . system("printf " . getcwd())
-        silent exec "!mkdir -p " . s:layout_dir
-        let s:layout_path=s:layout_dir . "/Session.vim"
-    endif
-    exec "mksession! " . s:layout_path
-endfunction
-
-function! LoadLayout(toInputName)
-    if a:toInputName
-        12sp $HOME/Software/vim/open_file_help.sh
-        exec "normal! \<c-w>J"
-        exec "r!echo " . g:custom_layout_manual_path
-        exec "normal!k\"pdd"
-        startinsert!
-
-        iunmap <buffer> <enter>
-        inoremap <buffer> <enter> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("source ".mycurf)<CR>
-    else
-        let s:layout_dir=g:custom_layout_path . system("printf " . getcwd())
-        let s:layout_path=s:layout_dir . "/Session.vim"
-        exec "source " . s:layout_path
-
-    endif
-endfunction
-
-function s:Toggle_Wrap()
-    if &wrap
-        windo set wrap!
-    else
-        windo set wrap
-    endif
-
-endfunction
-" com!ToggleWrap windo set wrap
-com!ToggleWrap call s:Toggle_Wrap()
-
-"""""""""""""""""""""""""""""""""""""
-" Configuration Section
-"""""""""""""""""""""""""""""""""""""
-
-" turn off key timeout
-if has('nvim')
-    set notimeout
-else
-" set alt map
-function! Terminal_MetaMode(mode)
-    set ttimeout
-    if $TMUX != ''
-        set ttimeoutlen=30
-    elseif &ttimeoutlen > 80 || &ttimeoutlen <= 0
-        set ttimeoutlen=80
-    endif
-    if has('nvim') || has('gui_running')
-        return
-    endif
-    function! s:metacode(mode, key)
-        if a:mode == 0
-            exec "set <M-".a:key.">=\e".a:key
-        else
-            exec "set <M-".a:key.">=\e]{0}".a:key."~"
-        endif
-    endfunc
-    for i in range(10)
-        call s:metacode(a:mode, nr2char(char2nr('0') + i))
-    endfor
-    for i in range(26)
-        call s:metacode(a:mode, nr2char(char2nr('a') + i))
-        call s:metacode(a:mode, nr2char(char2nr('A') + i))
-    endfor
-    if a:mode != 0
-        for c in [',', '.', '/', ';', '[', ']', '{', '}']
-            call s:metacode(a:mode, c)
-        endfor
-        for c in ['?', ':', '-', '_']
-            call s:metacode(a:mode, c)
-        endfor
-    else
-        for c in [',', '.', '/', ';', '{', '}']
-            call s:metacode(a:mode, c)
-        endfor
-        for c in ['?', ':', '-', '_']
-            call s:metacode(a:mode, c)
-        endfor
-    endif
-endfunc
- " Comment following line to disable meta key as alt
-call Terminal_MetaMode(0)
-
-endif
-
-
-
-" smart case for / search
-set ignorecase
-set smartcase
-
-" highlight all search matches
-:set hlsearch
-
-" highlight the next match while you're still typing out your search pattern
-:set hlsearch incsearch
-
-" set more visual hints in command-line mode
-set wildmenu
-
-" maximum number of lines saved for each register would be 50, the maximum size of saved items is 10 KB and the effect of 'hlsearch' is disabled when loading the viminfo file.
-set viminfo='500,<50,s10,h
-
-" Indention Options
-set autoindent " New lines inherit the indentation of previous lines
-set expandtab " Convert tabs to spaces
-set shiftwidth=4 " When shifting, indent using four spaces
-set tabstop=4 " Indent using four spaces
-set smarttab
-set expandtab
-
-" Enable hidden buffers
-set hidden
-
-" make scroll leave a margin for 3 lines
-set scrolloff=3
-
-" set updatetime to 1 second.This is used for CursorHold event
-set updatetime=1000
 
 " {{{ vimdebug
     " let g:termdebug_wide = 163
@@ -1218,52 +1981,6 @@ set updatetime=1000
 
 
 
-" YouCompleteMe {{{
-if g:vim_plug_installed
-    " To recompile YouCompleteMe:
-    " in ~/.vim/plugged/YouCompleteMe for vim
-    " in ~/.nvim/plugged/YouCompleteMe for nvim
-    " python3 install.py --clang-completer  # for nvim
-    " python3 install.py --clangd-completer  # for vim
-
-    " To generate .ycm_extra_conf.py according to CMakeList.txt, run:
-    " :YcmGenerateConfig
-
-    let g:ycm_always_populate_location_list = 1
-    " open keyword completion
-    let g:ycm_seed_identifiers_with_syntax=1
-    " let g:ycm_python_binary_path = 'python3'
-    "blacklist for youcompleteme
-    let g:ycm_filetype_blacklist = {
-            \ 'tagbar' : 1,
-            \ 'gitcommit' : 1,
-            \ 'unite' : 1,
-            \}
-    let g:ycm_autoclose_preview_window_after_completion = 1
-
-    " disable prompt to ask whether load .ycm_extra_conf.py file
-    " (automatically load .ycm_extra_conf.py file)
-    let g:ycm_confirm_extra_conf = 0
-
-    " Let clangd fully control code completion
-    let g:ycm_clangd_uses_ycmd_caching = 0
-    " Use installed clangd, not YCM-bundled clangd which doesn't get updates.
-    let g:ycm_clangd_binary_path = exepath("clangd")
-
-
-    let g:ycm_disable_signature_help = 0
-    let g:ycm_auto_trigger = 1
-
-    " python completion settings
-    " let g:ycm_python_interpreter_path = '/usr/bin/python'
-    " let g:ycm_python_sys_path = []
-    " let g:ycm_extra_conf_vim_data = [
-      " \  'g:ycm_python_interpreter_path',
-      " \  'g:ycm_python_sys_path'
-      " \]
-    let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py'
-endif " end if g:vim_plug_installed
-" }}}
 
 
 
@@ -1325,192 +2042,6 @@ endif " end if g:vim_plug_installed
 
 
 
-" coc.nvim {{{
-if g:vim_plug_installed
-    " To use coc.nvim:
-    " sudo apt intall nodejs
-    " sudo apt install npm
-    " npm install -g yarn
-    "
-    " To open configuration file:
-    " :CocConfig
-    " To install clangd
-    " :CocCommand clangd.install
-    " To use it with python:
-    " pip install jedi pylint neovim
-    "
-    " coc-omni is for vimspector's console completion
-    let g:coc_global_extensions = [
-    \ 'coc-ultisnips',
-    \ 'coc-json',
-    \ 'coc-css',
-    \ 'coc-python',
-    \ 'coc-highlight',
-    \ 'coc-pairs',
-    \ 'coc-cmake',
-    \ 'coc-clangd',
-    \ 'coc-omni'
-    \ ]
-    let g:coc_source_omni_filetypes=["VimspectorPrompt"]
-
-    if !exists('g:vimrc_has_been_sourced')
-        set statusline^=%{coc#status()}
-    endif
-
-    let g:coc_snippet_next = '<TAB>'
-    let g:coc_snippet_prev = '<S-TAB>'
-
-    autocmd FileType c,cpp let b:coc_pairs_disabled = ['<']
-    autocmd FileType VimspectorPrompt let b:coc_pairs_disabled = ["(", "[", "{", "<", "'", "\"", "`"]
-
-    " Following is replacement for coc-settings.json
-    if !empty($DISPLAY)  " if not on server
-        call coc#config('languageserver', {
-            \ "kotlin": {
-            \ "command": "kotlin-language-server",
-            \ "filetypes": ["kotlin"]
-            \ }
-            \})
-        call coc#config('coc.source.omni.filetypes',["VimspectorPrompt"])
-    endif
-    " User configuration object, define this variable when
-    " you can't use coc#config()
-    let g:coc_user_config={
-        \ "python.autoComplete.addBrackets": v:true,
-        \ "python.autoComplete.extraPaths": ["~/Programming/Python/Custom_module:"],
-        \ "diagnostic.errorSign": '✗',
-        \ "diagnostic.warningSign": '⚠',
-        \ "diagnostic.infoSign": '⚐',
-        \ "diagnostic.hintSign": '🔔',
-        \ "diagnostic.signOffset": 9999,
-        \ "coc.preferences.enableFloatHighlight": v:false,
-        \}
-
-    if !empty($DISPLAY)  " if not on server
-        " Highlight the symbol and its references when holding the cursor.
-        autocmd CursorHold * silent call CocActionAsync('highlight')
-    endif
-
-    " scroll popup window with <c-d> and <c-u> in insert mode
-    inoremap <silent><expr> <c-d> pumvisible() ? "\<down>\<down>\<down>\<down>\<down>\<down>\<down>\<down>" : "\<c-d>"
-    inoremap <silent><expr> <c-u> pumvisible() ? "\<up>\<up>\<up>\<up>\<up>\<up>\<up>\<up>" : "\<c-u>"
-
-    " map <up> and <down> and <c-u> and <c-d> to scroll in coc.nvim floating windows such as
-    " documentation window
-    " If nvim >= 0.4.0 or vim >= 8.1.0750
-    if has('nvim-0.4.0') || has('patch-8.2.0750')
-        nnoremap <silent><nowait><expr> <down> coc#float#has_scroll() ? coc#float#scroll(1) : "\<down>"
-        nnoremap <silent><nowait><expr> <up> coc#float#has_scroll() ? coc#float#scroll(0) : "\<up>"
-        " nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-        " nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-    else
-        " For vim to scroll floating window
-        function Find_cursor_popup(...)
-            let radius = get(a:000, 0, 2)
-            let srow = screenrow()
-            let scol = screencol()
-
-            " it's necessary to test entire rect, as some popup might be quite small
-            for r in range(srow - radius, srow + radius)
-                for c in range(scol - radius, scol + radius)
-                    let winid = popup_locate(r, c)
-                    if winid != 0
-                        return winid
-                    endif
-                endfor
-            endfor
-
-            return 0
-        endfunction
-
-        " For vim to scroll floating window
-        function Scroll_cursor_popup(down)
-            let winid = Find_cursor_popup()
-            if winid == 0
-                return 0
-            endif
-
-            let pp = popup_getpos(winid)
-            call popup_setoptions( winid,
-                        \ {'firstline' : pp.firstline + ( a:down ? 8 : -8 ) } )
-
-            return 1
-        endfunction
-
-        " nnoremap <expr> <c-d> Scroll_cursor_popup(1) ? '<esc>' : '<c-d>'
-        " nnoremap <expr> <c-u> Scroll_cursor_popup(0) ? '<esc>' : '<c-u>'
-        nnoremap <expr> <down> Scroll_cursor_popup(1) ? '<esc>' : '<down>'
-        nnoremap <expr> <up> Scroll_cursor_popup(0) ? '<esc>' : '<up>'
-    endif
-
-    " use <tab> for trigger completion and navigate to the next complete item
-    function! s:check_back_space() abort
-      let col = col('.') - 1
-      return !col || getline('.')[col - 1]  =~ '\s'
-    endfunction
-    
-    function! s:show_documentation()
-      if (index(['vim','help'], &filetype) >= 0)
-        execute 'h '.expand('<cword>')
-      else
-        call CocAction('doHover')
-      endif
-    endfunction
-
-    " Use tab and s-tab for trigger completion with characters ahead and navigate.
-    inoremap <silent><expr> <Tab>
-          \ pumvisible() ? "\<C-n>" :
-          \ <SID>check_back_space() ? "\<Tab>" :
-          \ coc#refresh()
-
-    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-
-    inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-    " Use <c-n> to trigger completion.
-    inoremap <silent><expr> <c-n> coc#refresh()
-
-    " Use <c-p> to show signature help
-    inoremap <silent> <c-p> <c-o>:call CocActionAsync('showSignatureHelp')<CR>
-
-
-    " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-    nmap <silent> <Space>ep <Plug>(coc-diagnostic-prev)
-    nmap <silent> <Space>eN <Plug>(coc-diagnostic-prev)
-    nmap <silent> <Space>en <Plug>(coc-diagnostic-next)
-    " GoTo code navigation.
-    nmap <silent> gd <Plug>(coc-definition)
-    nmap <silent> gy <Plug>(coc-type-definition)
-    nmap <silent> gi <Plug>(coc-implementation)
-    nmap <silent> gr <Plug>(coc-references)
-    " Use K to show documentation in preview window.
-    nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-    " Map function and class text objects such as select inside function vif
-    " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-    xmap if <Plug>(coc-funcobj-i)
-    omap if <Plug>(coc-funcobj-i)
-    xmap af <Plug>(coc-funcobj-a)
-    omap af <Plug>(coc-funcobj-a)
-    xmap ic <Plug>(coc-classobj-i)
-    omap ic <Plug>(coc-classobj-i)
-    xmap ac <Plug>(coc-classobj-a)
-    omap ac <Plug>(coc-classobj-a)
-
-    " Generate clangd compile_commands.json according to Cmakelists.txt
-    nnoremap <Space>cg :cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("generate_clangd_json")<CR>
-    nnoremap <Space>cr :CocRestart<CR>
-    " Applying codeAction to the selected region.
-    " " Example: `<leader>aap` for current paragraph
-    xmap <space>ca  <Plug>(coc-codeaction-selected)
-    nmap <space>ca  <Plug>(coc-codeaction-selected)
-    " Change python interpreter
-    autocmd FileType python nnoremap <buffer> <space>ci :CocCommand python.setInterpreter<CR>
-    " Run coc command
-    nnoremap <space>cc :CocCommand<CR>
-endif  " end if g:vim_plug_installed
-" }}}
 
 
 
@@ -1852,149 +2383,9 @@ endif  " end if g:vim_plug_installed
 
 
 
-" {{{ vimux
-    " when origin filetype==""
-    let g:VimuxReplDefaultFiletype='python'
-    let g:VimuxOrientation = "h"
-    let g:VimuxHeight = "50"
-
-    nmap <space>: :call VimuxPromptCommand()<CR><c-f>:exec "set filetype=" . g:previous_buf_filetype<CR>i
-    nmap <space>v: :call VimuxPromptCommand()<CR>
-    nmap <space>vo :call VimuxOpenRunner()<CR>
-    nmap <space>vl :call VimuxRunLastCommand()<CR>
-    nmap <space>vc :call VimuxCloseRunner()<CR>
-    nmap <space>vr :call VimuxRunCommand("!!\n")<CR>
-
-    function! VimuxSlimeVisual()
-        " delete empty line (mainly for python)
-        let s:vimux_slime_delete_blank_line=substitute(@v,'\n\n\+','\n','g')
-        if(&filetype=='python')
-            " add empty line to jump out of block (for python, ipython does
-            " not need the following line)
-            let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\(\n\s[^\n]\+\n\)\(\S\)','\1\n\2','g')
-            " don't jump for else: and elif: (for python)
-            let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\n\nelse:','\nelse:','g')
-            let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\n\(\nelif\W\)','\1','g')
-        endif
-
-        call VimuxRunCommand(s:vimux_slime_delete_blank_line)
-    endfunction
-
-    function! VimuxShowPythonDocVisual()
-        let s:to_search_object= "print(" . @v . ".__doc__)"
-        call VimuxRunCommand(s:to_search_object)
-    endfunction
-
-    vmap <space>vs "vy :call VimuxSlimeVisual()<CR>
-
-    function! VimuxSlimeNormal()
-        call VimuxRunCommand(getline("."))
-    endfunction
-
-    nmap <space>vs :call VimuxSlimeNormal()<CR>
-
-    " toggle using vim for repl in another pane
-    function! VimuxForRepl()
-        if !exists("b:VimuxForReplFlag")
-            let b:VimuxForReplFlag=0
-        endif
-
-        if b:VimuxForReplFlag
-            iunmap <buffer> <enter>
-            vunmap <buffer> <enter>
-            nunmap <buffer> <enter>
-            if(&filetype=='python')
-                vunmap <buffer> K
-            endif
-            let b:VimuxForReplFlag=0
-            echo "REPL mode off."
-        else
-            inoremap <buffer> <enter> <c-o>$<c-o>:call VimuxSlimeNormal()<CR><enter>
-            vnoremap <buffer> <enter> "vy :call VimuxSlimeVisual()<CR>
-            nnoremap <buffer> <enter> :call VimuxSlimeNormal()<CR>j
-            " VimuxRunCommand("cd " . expand("%:p:h"))
-            if(!(&filetype=='matlab' && executable('matlab')))
-                call VimuxCdWorkingDirectory()
-            endif
-
-            let b:VimuxForReplFlag=1
-
-            if(&filetype=='')
-                exec "set filetype=" . g:VimuxReplDefaultFiletype
-            endif
-
-            " set initial code for specific filetype
-            if(&filetype=='python')
-                vnoremap <buffer> K     "vy :call VimuxShowPythonDocVisual()<CR>
-                VimuxRunCommand("python")
-                echo "python repl mode is on."
-            endif
-            if(&filetype=='javascript')
-                VimuxRunCommand("node")
-                echo "javascript repl mode is on."
-            endif
-            if(&filetype=='matlab')
-                if(executable('matlab'))  " run matlab
-                    echo "Matlab repl mode is on."
-                else  " run octave
-                    VimuxRunCommand("octave --no-window-system")
-                endif
-            endif
-            if(&filetype=='julia')
-                VimuxRunCommand("julia")
-            endif
-
-            " if(&filetype=='vim') see function VimEnterExec
-        endif
-    endfunction
-
-    nmap <space>vp :call VimuxForRepl()<CR>
-
-    function!VimuxCdWorkingDirectory()
-        call VimuxRunCommand(" cd ".expand('%:p:h'))
-        call VimuxRunCommand(" cd `git rev-parse --show-toplevel 2>/dev/null || echo .`")
-    endfunction
-
-" }}}
 
 
 
-" {{{ vim-tmux-navigator
-    let g:tmux_navigator_no_mappings = 1
-
-    nnoremap <silent> <A-h> :call CloseMaximize()<CR>:TmuxNavigateLeft<CR>
-    nnoremap <silent> <A-j> :call CloseMaximize()<CR>:TmuxNavigateDown<CR>
-    nnoremap <silent> <A-k> :call CloseMaximize()<CR>:TmuxNavigateUp<CR>
-    nnoremap <silent> <A-l> :call CloseMaximize()<CR>:TmuxNavigateRight<CR>
-    nnoremap <silent> <A-o> :call CloseMaximize()<CR>:TmuxNavigatePrevious<CR>
-    " Maximize considering all vim panes and tmux panes
-    function! ToggleMaximizeTmux()
-        if !s:CheckWarnVimPlugInstalled()
-            return
-        endif
-        if g:isToggledVertically || g:isToggledHorizontally
-            silent! call ToggleMaximize()
-            silent! !tmux resize-pane -Z
-        else
-            silent! !tmux resize-pane -Z 
-            redraw
-            sleep 100m
-            silent! call ToggleMaximize()
-        endif
-
-    endfunction
-    function!CloseMaximize()
-        if !g:vim_plug_installed
-            return
-        endif
-        if g:isToggledVertically || g:isToggledHorizontally
-            silent! call ToggleMaximize()
-        endif
-
-    endfunction
-    nnoremap <silent> <A-z> :call ToggleMaximizeTmux()<CR>
-    inoremap <silent> <A-z> <c-o>:call ToggleMaximizeTmux()<CR>
-" }}}
 
 " {{{ vim-gdb
     if has('nvim')
@@ -2053,7 +2444,6 @@ endif  " end if g:vim_plug_installed
 " {{{ terryma/vim-expand-region
     nmap <a-w> <Plug>(expand_region_expand)
     xmap <a-w> <Plug>(expand_region_expand)
-    nmap <c-c><c-o> :call OpenUrlUnderCursor()<CR>
 
     " Default value of g:expand_region_text_objects={'ie':0,'ip':0,'iw':0,'iB':1,'il':0,'iW':0,'i''':0,'ib':1,'i]':1,'i"':0}
     " 1 means recursive.
