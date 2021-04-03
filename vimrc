@@ -7,6 +7,19 @@
 "     call airline#add_statusline_func('WindowNumber')
 " endif 
 
+
+" ***********************************************************************
+" 0_Index ***************************************************************
+" 1_Presettings *********************************************************
+" 2_Plugins *************************************************************
+" ***********************************************************************
+
+" ***********************************************************************
+" 1_Presettings ********************************************************
+" - Set dot_file_path for neovim and vim
+" ***********************************************************************
+
+" - Set dot_file_path for neovim and vim
 if has('nvim')
     let b:plug_path='~/.nvim/plugged'
     let b:dot_file_path='~/Software/vim/vimrc'
@@ -17,7 +30,6 @@ endif
 
 set nocompatible              " be improved, required
 set encoding=utf8 
-"""" START vim-plug Configuration
 
 let g:vim_plug_installed=0
 
@@ -27,23 +39,43 @@ if exists('*plug#begin')
 let g:vim_plug_installed=1
 """ All of your Plugins must be added before the following line
 
-" Utility
+" ***********************************************************************
+" 2_Plugins *************************************************************
+" - utility plugins
+" - Search plugins
+" - completion plugins
+" - languages plugins
+" - git support plugins
+" - generic programming support
+" - theme / interface plugins
+" ***********************************************************************
+" - utility plugins
 Plug '~/Software/vim/plugins/mysnippets/'
 Plug 'asfsdsf/toggle_maximize.vim'  " toggle maximize window
 Plug 'scrooloose/nerdtree'  " file tree
 Plug 'majutsushi/tagbar'  " file names at top bar
 " Plug 'vimwiki/vimwiki'  " Personal Wiki for Vim http://vimwiki.github.io/
-" Plug 'ervandew/supertab'  " perform all your vim insert mode completions with Tab
+Plug 'mtth/scratch.vim'  " Unobtrusive scratch window
+Plug 'ianva/vim-youdao-translater' " translation plugin for vim  http://ianva.github.com
+
+" - Search plugins
+Plug 'mbbill/undotree'  " show undo history
 Plug 'junegunn/fzf.vim'  " fuzzy find
 Plug 'junegunn/fzf'  " fuzzy find together with plugin above
-Plug 'easymotion/vim-easymotion'  " Vim motions on speed! http://www.vim.org/scripts/script.php…
-Plug 'mbbill/undotree'  " show undo history
+Plug 'Shougo/unite.vim'  " Fuzzy search command
+Plug 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
+
+" - completion plugins
 " To recompile YouCompleteMe, run:
 " python3 install.py --clang-completer --ts-completer --java-completer
 " python3 install.py --clangd-completer --ts-completer --java-completer
 " Note that clangd is still in heavy development.(Require Vim 8.1.1875 or later)
 " in ~/.vim/plugged/YouCompleteMe for vim
 " in ~/.nvim/plugged/YouCompleteMe for nvim
+" generate .ycm_extra_conf.py file according to CMakeList.txt for YouCompleteMe
+if !empty($DISPLAY)  " if not on server
+    Plug 'rdnetto/YCM-Generator',{ 'branch': 'develop'} 
+endif
 if !empty($DISPLAY)  " if not on server
     " Plug 'Valloric/YouCompleteMe'  " auto complete engine
     " sudo apt install nodejs yarnpkg
@@ -51,24 +83,14 @@ if !empty($DISPLAY)  " if not on server
     Plug 'lilydjwg/fcitx.vim'  " (auto switch chinese input method) keep and restore fcitx state when leaving/re-entering insert mode 
 endif
 
-
-Plug 'Shougo/unite.vim'  " Fuzzy search command
+" - languages plugins
 Plug 'JuliaEditorSupport/julia-vim'  " Vim support for Julia. http://julialang.org/
-" generate .ycm_extra_conf.py file according to CMakeList.txt for YouCompleteMe
-if !empty($DISPLAY)  " if not on server
-    Plug 'rdnetto/YCM-Generator',{ 'branch': 'develop'} 
-endif
 Plug 'lervag/vimtex'  " A modern vim plugin for editing LaTeX files.
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " Interactive command execution in Vim.
 Plug 'Shougo/deol.nvim'  " shell interface for NeoVim and Vim8.
 " Plug 'Shougo/vimshell.vim'  " shell interface for NeoVim and Vim8.
 Plug 'benmills/vimux'  " vim plugin to interact with tmux
 Plug 'christoomey/vim-tmux-navigator'  " Seamless navigation between tmux panes and vim splits
-Plug 'ctrlpvim/ctrlp.vim'  " Fuzzy file, buffer, mru, tag, etc finder.
-" Plug 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
-Plug 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
-Plug 'terryma/vim-expand-region'  " Expand region like emacs
-Plug 'mtth/scratch.vim'  " Unobtrusive scratch window
 " Plug 'w0rp/ale'  " Syntax checking for python
 Plug 'puremourning/vimspector'  " A multi-language debugging plugin for Vim
 if has('nvim')
@@ -78,17 +100,21 @@ else
 endif
 Plug 'Chiel92/vim-autoformat'  " Provide easy code formatting in Vim by integrating existing code formatters.
 Plug 'neomake/neomake'  " Asynchronous linting and make framework for Neovim/Vim (auto async make)
-Plug 'wellle/targets.vim' " Vim plugin that provides additional text objects
 Plug 'sbdchd/neoformat' " A (Neo)vim plugin for formatting code.
+Plug 'mattn/emmet-vim'  " for html
+
+" - git support plugins
 Plug 'tpope/vim-fugitive' " A git wrapper for vim
 Plug 'airblade/vim-gitgutter'  " A Vim plugin which shows a git diff in the sign column and stages/previews/undoes hunks and partial hunks.
 Plug 'Xuyuanp/nerdtree-git-plugin'  " A plugin of NERDTree showing git status
-Plug 'ianva/vim-youdao-translater' " translation plugin for vim  http://ianva.github.com
 
-" Language support
-Plug 'mattn/emmet-vim'  " for html
-
-" Generic Programming Support
+" - generic programming support
+Plug 'terryma/vim-expand-region'  " Expand region like emacs
+Plug 'wellle/targets.vim' " Vim plugin that provides additional text objects
+" Plug 'ervandew/supertab'  " perform all your vim insert mode completions with Tab
+Plug 'easymotion/vim-easymotion'  " Vim motions on speed! http://www.vim.org/scripts/script.php…
+Plug 'mg979/vim-visual-multi',  " Sublime Text style multiple selections for Vim
+" Plug 'terryma/vim-multiple-cursors'  " Sublime Text style multiple selections for Vim
 " Plug 'jiangmiao/auto-pairs' " enable an auto-close chars feature
 " Plug 'Raimondi/delimitMate'  " enable an auto-close chars feature
 Plug 'tomtom/tcomment_vim'  " extensible & universal comment vim-plugin that also handles embedded filetypes
@@ -96,7 +122,7 @@ Plug 'tpope/vim-surround'  " surround.vim: quoting/parenthesizing made simple
 Plug 'SirVer/ultisnips'  " Track the engine.
 Plug 'honza/vim-snippets'  " Snippets are separated from the engine. Add this if you want them:
 
-" Theme / Interface
+" - Theme / Interface plugins
 " Plug 'nathanaelkane/vim-indent-guides'  " visually displaying indent levels in Vim.
 Plug 'vim-airline/vim-airline'  " beautiful bar at bottom
 Plug 'vim-airline/vim-airline-themes'  " beautiful bar at bottom
