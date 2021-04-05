@@ -37,12 +37,16 @@
 " 7.5_Matlab/octave settings
 " 7.6_Javascript settings
 " 7.7_C/C++ settings
-" 7.8_Latex settings
+" 7.8_Shell settings
+" 7.9_Latex settings
+" 7.9.1_Basic settings
+" 7.9.2_Vimtex settings
 " ***********************************************************************
 
 " ***********************************************************************
 " 1_Presettings ********************************************************
 " - Set dot_file_path for neovim and vim
+" - set encoding to utf8
 " ***********************************************************************
 
 " - Set dot_file_path for neovim and vim
@@ -55,6 +59,8 @@ else
 endif
 
 set nocompatible              " be improved, required
+
+" - set encoding to utf8
 set encoding=utf8 
 
 let g:vim_plug_installed=0
@@ -1047,6 +1053,11 @@ endif
 " - map to toggle using vim for repl in another pane
 " - function to change another pane's directory for tmux
 " 7.3.2_Vim-tmux-navigator settings
+" - Disable default vim-tmux-navigator mappings
+" - map to navigate for both tmux and vim
+" - function to maximize considering all vim panes and tmux panes
+" - function to close maximize
+" - map to toggle maximize tmux
 " 7.4_Python settings
 " - run current python buffer
 " - debug current python buffer
@@ -1065,9 +1076,23 @@ endif
 " - map to make current c/cpp project/file
 " - map to run c/cpp with mpi
 " - debug current c/cpp project
-" zzzz
+" - map M-; to end sentence for c/c++ file type
 " 7.8_Shell settings
+" - map to debug current bash buffer
 " 7.9_Latex settings
+" 7.9.1_Basic settings
+" - map to create/goto abbreviation
+" - latex mode jump to bibtex
+" - auto load abbreviation at latex startup
+" 7.9.2_Vimtex settings
+" - set latex pdf viewer
+" - enable latex folding
+" - vimtex quickfix mode
+" - disable default vimtex mappings
+" - some latex mode specified mappings
+" - start vim server for latex preview at startup
+" - enable auto save for real-time preview
+" zzzz
 " TODO
 " ***********************************************************************
 
@@ -1470,14 +1495,18 @@ endfunction
 " ***********************************************************************
 " 7.3.2_Vim-tmux-navigator settings
 " ***********************************************************************
+
+" - Disable default vim-tmux-navigator mappings
 let g:tmux_navigator_no_mappings = 1
 
+" - map to navigate for both tmux and vim
 nnoremap <silent> <A-h> :call CloseMaximize()<CR>:TmuxNavigateLeft<CR>
 nnoremap <silent> <A-j> :call CloseMaximize()<CR>:TmuxNavigateDown<CR>
 nnoremap <silent> <A-k> :call CloseMaximize()<CR>:TmuxNavigateUp<CR>
 nnoremap <silent> <A-l> :call CloseMaximize()<CR>:TmuxNavigateRight<CR>
 nnoremap <silent> <A-o> :call CloseMaximize()<CR>:TmuxNavigatePrevious<CR>
-" function to maximize considering all vim panes and tmux panes
+
+" - function to maximize considering all vim panes and tmux panes
 function! ToggleMaximizeTmux()
     if !s:CheckWarnVimPlugInstalled()
         return
@@ -1494,7 +1523,7 @@ function! ToggleMaximizeTmux()
 
 endfunction
 
-" function to close maximize
+" - function to close maximize
 function!CloseMaximize()
     if !g:vim_plug_installed
         return
@@ -1505,7 +1534,7 @@ function!CloseMaximize()
 
 endfunction
 
-" map to toggle maximize tmux
+" - map to toggle maximize tmux
 nnoremap <silent> <A-z> :call ToggleMaximizeTmux()<CR>
 inoremap <silent> <A-z> <c-o>:call ToggleMaximizeTmux()<CR>
 
@@ -1652,11 +1681,13 @@ endif
 
 " ***********************************************************************
 " 7.6_Javascript settings
+" - map to run current javascript buffer
 " ***********************************************************************
-" - run current javascript buffer
+" - map to run current javascript buffer
 autocmd FileType javascript nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("node " . expand("%:p"))<CR>
 
 " ***********************************************************************
+" - map to run current c/cpp project/file
 " 7.7_C/C++ settings
 " ***********************************************************************
 
@@ -1683,40 +1714,115 @@ else
 endif
 
 
+" - map M-; to end sentence for c/c++ file type
+autocmd FileType c,cpp imap <buffer> <a-;> <c-e>;<CR>
+
 " ***********************************************************************
 " 7.8_Shell settings
 " ***********************************************************************
 
 if has('nvim')
-    " debug current bash buffer
+    " - map to debug current bash buffer
     autocmd FileType sh nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartBashDB bashdb <c-r>%<CR>
 endif
+
 " ***********************************************************************
 " 7.9_Latex settings
 " ***********************************************************************
 
-" latex mode save abbreviation
+" ***********************************************************************
+" 7.9.1_Basic settings
+" ***********************************************************************
+" - map to create/goto abbreviation
 autocmd FileType tex vnoremap <buffer> <m-s> "vy:call VisualSetAbbreviation()<CR>
 autocmd FileType tex nnoremap <buffer> <m-s> :call ShowAbbreviations()<CR>
 autocmd FileType tex inoremap <buffer> <m-s> <c-o>:call ShowAbbreviations()<CR>
 autocmd BufRead,BufNewFile */abbrev_defs.vim nnoremap <buffer> <m-s> :b#<CR>
 autocmd BufRead,BufNewFile */abbrev_defs.vim inoremap <buffer> <m-s> <c-o>:b#<CR>
 
-" latex mode jump to bibtex
+" - latex mode jump to bibtex
 autocmd FileType tex nnoremap <buffer> <m-r> :e $HOME/Software/latex/bibtex/bib/ref.bib<CR>
 autocmd BufRead,BufNewFile $HOME/Software/latex/bibtex/bib/ref.bib nnoremap <buffer> <m-r> :b#<CR>
+
+" - auto load abbreviation at latex startup
 autocmd FileType tex LoadAbbreviations
-" latex mode specified mappings
+
+" ***********************************************************************
+" 7.9.2_Vimtex settings
+" ***********************************************************************
+
+let g:tex_flavor='latex'  " for compatibility with vim version >= 8.2
+" - set latex pdf viewer
+let g:vimtex_view_general_viewer = 'zathura'
+let g:vimtex_view_method='zathura'
+" - enable latex folding
+" let g:vimtex_fold_enabled=1
+" - vimtex quickfix mode
+let g:vimtex_quickfix_open_on_warning=0
+let g:vimtex_quickfix_mode=0
+
+" - disable default vimtex mappings
+let g:vimtex_mappings_enabled = 0
+
+let g:vimtex_compiler_latexmk_engines = {
+    \ '_'                : '-pdf',
+    \ 'pdflatex'         : '-pdf',
+    \ 'dvipdfex'         : '-pdfdvi',
+    \ 'lualatex'         : '-lualatex',
+    \ 'xelatex'          : '-xelatex',
+    \ 'context (pdftex)' : '-pdf -pdflatex=texexec',
+    \ 'context (luatex)' : '-pdf -pdflatex=context',
+    \ 'context (xetex)'  : '-pdf -pdflatex=''texexec --xtx''',
+    \}
+
+" - neovim compatibility for vimtex
+" pip3 install --user pynvim neovim-remote
+" if `python3 -c 'import pynvim` returns without error and `nvr` starts
+" neovim from the command line, everything should be good to go
+if has('nvim')
+endif
+
+" - some latex mode specified mappings
+function! DefLatexMappings()
+    nmap <buffer> ,i <plug>(vimtex-info)
+    nmap <buffer> ,b <plug>(vimtex-compile)
+    nmap <buffer> ,c <plug>(vimtex-clean)
+    nmap <buffer> ,v <plug>(vimtex-view)
+    inoremap <buffer> <m-v> <c-o>:VimtexView<CR>
+    nmap <buffer> ,r <plug>(vimtex-reverse-search)
+    nmap <buffer> ,e <plug>(vimtex-errors)
+    inoremap <buffer> <c-d> _{}<left>
+    inoremap <buffer> <c-u> ^{}<left>
+    inoremap <buffer> <c-o> $$<left>
+    inoremap <buffer> <c-b> \textbf{}<left>
+    nnoremap <buffer> ? :echo "Keymap: (1) ,b : compile  (2) ,v : view\n        (3) ,e : show errors  (4) ,c : clean\n        (5) M-s : create/goto abbreviation  (6) M-r : show bib file"<CR>
+    nnoremap <buffer> z? ?
+endfunction
 autocmd FileType tex call DefLatexMappings()
-" start vim server for latex preview
+
+" - start vim server for latex preview at startup
+" - run :echo serverlist() to ensure a server was successfully started
+function!StartLatexServer()
+    if empty(v:servername) && exists('*remote_startserver')
+      call remote_startserver('VIM')
+    endif
+endfunction
 autocmd FileType tex call StartLatexServer()
-" enable auto save for real-time preview
+
+" - enable auto save for real-time preview
 " autocmd FileType tex autocmd TextChangedI <buffer> call LatexAutoSave(5)
 " autocmd FileType tex autocmd CursorHoldI,CursorHold <buffer> silent update
 " autocmd FileType tex autocmd TextChanged <buffer> call LatexAutoSave(0)
+let g:latex_auto_save_count=0
+function!LatexAutoSave(save_count)
+    if g:latex_auto_save_count >= a:save_count
+        let g:latex_auto_save_count=0
+        silent write
+    else
+        let g:latex_auto_save_count=g:latex_auto_save_count + 1
+    endif
+endfunction
 
-" keymap for c/c++ file type
-autocmd FileType c,cpp imap <buffer> <a-;> <c-e>;<CR>
 
 
 " translation auto repl
@@ -2383,10 +2489,6 @@ endif  " end if g:vim_plug_installed
 
 
 
-
-
-
-
 " {{{ vim-gdb
     if has('nvim')
         nnoremap ,qq :GdbSaveBreakpoints<CR>:sleep 1<CR>:GdbDebugStop<CR>
@@ -2411,16 +2513,31 @@ endif  " end if g:vim_plug_installed
         cd %:h
         " iabbrev will set abbreviation for insert mode
         let l:abb_name = input('Please input abbreviation: ')
-        exec "iabbrev " . l:abb_name . " " . @v
-        silent call SaveAbbr(l:abb_name)
+
+        let l:abb_go_back=""
+        " if @v contains @@ substring
+        if stridx(@v,"@@")>=0
+            let l:abb_go_back="<esc>z?@@<CR>xxi"
+        endif
+
+        " let l:visual_region_text=substitute(@v,'|','<bar>','g')
+        " let l:visual_region_text=substitute(l:visual_region_text,'\n','<CR>','g')
+        " let l:abb_formula = "iabbrev " . l:abb_name . " " . l:visual_region_text . l:abb_go_back
+
+        let l:visual_region_text=substitute(@v,'\n *',"'" . '."\\n".' . "'",'g')
+        let l:set_abb_str="let g:myabbr" . l:abb_name . "='" . l:visual_region_text . "'\n"
+        exec l:set_abb_str
+        let l:abb_formula="iabbrev " . l:abb_name . " <c-r>=" . "g:myabbr" . l:abb_name . "<CR>" .l:abb_go_back
+        exec l:abb_formula
+        silent call SaveAbbr(l:set_abb_str . l:abb_formula)
     endfunction
     vnoremap <Space>va "vy:call VisualSetAbbreviation()<CR>
 
-    function! SaveAbbr(abb_name)
+    function! SaveAbbr(abb_formula)
         redir >> ./abbrev_defs.vim
         "foo.txt is the file in which you wish to add your abbreviations. For me, it
         "is ~/.vim/ftplugin/tex.vim
-        echo "iabbrev " . a:abb_name . " " . @v
+        echo a:abb_formula
         redir END
     endfunction
 
@@ -2437,6 +2554,8 @@ endif  " end if g:vim_plug_installed
     function! ShowAbbreviations()
         e ./abbrev_defs.vim
     endfunction
+
+    autocmd BufRead,BufNewFile abbrev_defs.vim nnoremap <buffer> <C-c><C-c> :abclear<CR>:source %<CR>
 " }}}
 
 
@@ -2452,56 +2571,6 @@ endif  " end if g:vim_plug_installed
 " }}}
 
 
-
-" {{{ vimtex
-    let g:tex_flavor='latex'  " for compatibility with vim version >= 8.2
-    let g:vimtex_view_general_viewer = 'zathura'
-    let g:vimtex_view_method='zathura'
-    let g:vimtex_compiler_callback_hooks = ['ZathuraHook']
-    let g:vimtex_fold_enabled=1
-    let g:vimtex_quickfix_open_on_warning=0
-    let g:vimtex_quickfix_mode=0
-
-    " Note: The Zathura and MuPDF viewers, if used, add a hook to this list in
-    "       order to store the viewer X window ID in order to prevent multiple
-    "       viewer windows.
-    function! ZathuraHook(status)
-      echom a:status
-    endfunction
-
-    let g:vimtex_mappings_enabled = 0
-    let g:vimtex_latexmk_options='-pdf -pdflatex="xelatex -synctex=1 \%S \%O" -verbose -file-line-error -interaction=nonstopmode'
-    " let g:vimtex_compiler_progname=v:progname
-    function! DefLatexMappings()
-        nmap <buffer> ,i <plug>(vimtex-info)
-        nmap <buffer> ,b <plug>(vimtex-compile)
-        nmap <buffer> ,c <plug>(vimtex-clean)
-        nmap <buffer> ,v <plug>(vimtex-view)
-        inoremap <buffer> <m-v> <c-o>:VimtexView<CR>
-        nmap <buffer> ,r <plug>(vimtex-reverse-search)
-        nmap <buffer> ,e <plug>(vimtex-errors)
-        inoremap <buffer> <c-j> _{}<left>
-        inoremap <buffer> <c-k> ^{}<left>
-        inoremap <buffer> <c-o> $$<left>
-        inoremap <buffer> <c-b> \textbf{}<left>
-    endfunction
-    function!StartLatexServer()
-        if empty(v:servername) && exists('*remote_startserver')
-          call remote_startserver('VIM')
-        endif
-    endfunction
-
-    let g:latex_auto_save_count=0
-    function!LatexAutoSave(save_count)
-        if g:latex_auto_save_count >= a:save_count
-            let g:latex_auto_save_count=0
-            silent write
-        else
-            let g:latex_auto_save_count=g:latex_auto_save_count + 1
-        endif
-    endfunction
-
-" }}}
 
 
 
