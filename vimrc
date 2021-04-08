@@ -852,7 +852,7 @@ nnoremap <c-f>  :w<CR>:AgCurrentFile!<CR>
 nnoremap <c-f>  :BLines<CR>
 
 " - map * to search selection in visual mode
-vnoremap * "vy/\V<C-R>=escape(@v,'/\')<CR><CR>
+vnoremap * "vy/\V<C-R>=substitute(escape(@v,'/\'),'\n','\\n','g')<CR><CR>
 
 " - map C-h to replace
 nnoremap <A-H> :%s//gc<left><left><left>
