@@ -27,20 +27,41 @@
 " 6.5_Search text
 " 6.6_Maps for files
 " 6.7_Other map
-" 7_Language settings ***************************************************
+" 7_Language tools ******************************************************
 " 7.1_YouCompleteMe settings
 " 7.2_Coc.nvim settings
 " 7.3_Tmux settings
 " 7.3.1_Vimux settings
 " 7.3.2_Vim-tmux-navigator settings
-" 7.4_Python settings
-" 7.5_Matlab/octave settings
-" 7.6_Javascript settings
-" 7.7_C/C++ settings
-" 7.8_Shell settings
-" 7.9_Latex settings
-" 7.9.1_Basic settings
-" 7.9.2_Vimtex settings
+" 7.4_Vimspector
+" 7.5_Vim-gdb
+" 7.6_Format
+" 8_Language settings ***************************************************
+" 8.1_Html/css
+" 8.2_Julia
+" 8.3_Freefem++
+" 8.4_Python settings
+" 8.5_Matlab/octave settings
+" 8.6_Javascript settings
+" 8.7_C/C++ settings
+" 8.8_Shell settings
+" 8.9_Latex settings
+" 8.9.1_Basic settings
+" 8.9.2_Vimtex settings
+" 9_Utilities ***********************************************************
+" 9.1_Translation
+" 9.2_Vim-multiple-cursor
+" 9.3_Tagbar & NERDTree
+" 9.4_Git
+" 9.5_Fuzzy search
+" 9.6_Easymotion
+" 9.7_TCommentO
+" 9.8_Scratch
+" 9.9_snippets
+" 9.10_Vim-expand-region
+" 9.11_Ranger
+" 9.12_Abbreviation
+" 9.13_Undotree
 " ***********************************************************************
 
 " ***********************************************************************
@@ -469,6 +490,7 @@ let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 
 " ***********************************************************************
 " 5_Function tools ******************************************************
+" - keymap for open_file_help file(e.g. Used to OpenTodoFile)
 " - command to open a file to write python code and then output to current file
 " - open and edit find actions file which provide useful keymaps.(Use <Space>aa to
 " - open and edit vim_TODO file
@@ -478,6 +500,12 @@ let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 " - command to open files under some important directories
 " - command to compare current file with clipboard
 " ***********************************************************************
+
+" - keymap for open_file_help file(e.g. Used to OpenTodoFile)
+autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
+autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-c> <esc>:bd!<CR>
+autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-h> <c-w><c-w>
+autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh inoremap <buffer> <CR> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("e ".mycurf)<CR>
 
 " - command to open a file to write python code and then output to current file
 function! s:Python_print()
@@ -1003,7 +1031,7 @@ else
 endif
 
 " ***********************************************************************
-" 7_Language settings ***************************************************
+" 7_Language tools ******************************************************
 " 7.1_YouCompleteMe settings
 " - map go to for YouCompleteMe
 " - map FixIt for YouCompleteMe
@@ -1058,44 +1086,16 @@ endif
 " - function to maximize considering all vim panes and tmux panes
 " - function to close maximize
 " - map to toggle maximize tmux
-" 7.4_Python settings
-" - run current python buffer
-" - debug current python buffer
-" 7.5_Matlab/octave settings
-" - function to show matlab help
-" - function to go to matlab definition
-" - map to run matlab/octave file
-" - map to go to matlab help/definition
-" - function to toggle breakpoints for matlab
-" - command to clear all breakpoints for matlab
-" - map to matlab debugging command
-" 7.6_Javascript settings
-" - map to run current javascript buffer
-" 7.7_C/C++ settings
-" - map to run current c/cpp project/file
-" - map to make current c/cpp project/file
-" - map to run c/cpp with mpi
-" - debug current c/cpp project
-" - map M-; to end sentence for c/c++ file type
-" 7.8_Shell settings
-" - map to debug current bash buffer
-" 7.9_Latex settings
-" 7.9.1_Basic settings
-" - map to create/goto abbreviation
-" - latex mode jump to bibtex
-" - auto load abbreviation at latex startup
-" 7.9.2_Vimtex settings
-" - set latex pdf viewer
-" - enable latex folding
-" - vimtex quickfix mode
-" - disable default vimtex mappings
-" - some latex mode specified mappings
-" - start vim server for latex preview at startup
-" - enable auto save for real-time preview
+" 7.4_Vimspector
+" - run following to install
+" - vimspector gadgets (debugger program)
+" - map <tab> for auto completion in Vimspector console (<c-x><c-o> is omni commpletion)
+" - map for debug mode of vimspector
+" - map to copy .vimspector.json file to current directory for further config in project directory.
+" 7.5_Vim-gdb
+" 7.6_Format
 " zzzz
-" TODO
 " ***********************************************************************
-
 
 " ***********************************************************************
 " 7.1_YouCompleteMe settings
@@ -1539,7 +1539,202 @@ nnoremap <silent> <A-z> :call ToggleMaximizeTmux()<CR>
 inoremap <silent> <A-z> <c-o>:call ToggleMaximizeTmux()<CR>
 
 " ***********************************************************************
-" 7.4_Python settings
+" 7.4_Vimspector
+" ***********************************************************************
+
+" - run following to install
+" :VimspectorInstall
+" Use CodeLLDB instead of vscode-cpptools in macOS
+" Use <Space>dg to generate .vimspector.json file for further config in
+" project directory.
+"
+" variables replacement for .vimspector.json:
+" https://puremourning.github.io/vimspector/configuration.html#predefined-variables
+
+" - vimspector gadgets (debugger program)
+let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
+
+" - map <tab> for auto completion in Vimspector console (<c-x><c-o> is omni commpletion)
+autocmd FileType VimspectorPrompt inoremap <buffer> <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ "\<c-x>\<c-o>"
+
+" - map for debug mode of vimspector
+nnoremap <Space>dd :GitGutterDisable<CR>:call vimspector#Continue()<CR>
+nnoremap <Space>dc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
+nnoremap ,cd :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
+nnoremap <Space>dp :call vimspector#Pause()<CR>
+nnoremap <Space>dr :call vimspector#Restart()<CR>
+nnoremap <Space>de :call vimspector#Stop()<CR>
+nnoremap <Space>dq :GitGutterEnable<CR>:call vimspector#Reset()<CR>
+nnoremap <Space>db :call vimspector#ToggleBreakpoint()<CR>
+nnoremap <Space>dB <c-u>call vimspector#ToggleBreakpoint(
+            \ { 'condition': input( 'Enter condition expression: ' ),
+            \   'hitCondition': '0' }
+            \ )<CR>
+nnoremap <Space>dfb :call vimspector#AddFunctionBreakpoint()<CR>
+nnoremap <Space>ds :call vimspector#StepInto()<CR>
+nnoremap <Space>dn :call vimspector#StepOver()<CR>
+nnoremap <Space>do :call vimspector#StepOut()<CR>
+nnoremap <Space>dt :call vimspector#RunToCursor()<CR>
+nnoremap <Space>d: :VimspectorEval 
+nnoremap gc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
+nnoremap gp :call vimspector#Pause()<CR>
+nnoremap ge :call vimspector#Stop()<CR>
+nnoremap gq :GitGutterEnable<CR>:call vimspector#Reset()<CR>
+nnoremap gb :call vimspector#ToggleBreakpoint()<CR>
+nnoremap <silent> gB <c-u>call vimspector#ToggleBreakpoint(
+            \ { 'condition': input( 'Enter condition expression: ' ),
+            \   'hitCondition': '0' }
+            \ )<CR>
+nnoremap gs :call vimspector#StepInto()<CR>
+nnoremap gn :call vimspector#StepOver()<CR>
+nnoremap go :call vimspector#StepOut()<CR>
+nnoremap gt :call vimspector#RunToCursor()<CR>
+nnoremap g: :VimspectorEval 
+
+" - map to copy .vimspector.json file to current directory for further config in project directory.
+nnoremap <Space>dg :cd %:h<CR>:silent! Gcd<CR>:!cp ~/Software/vim/vimspector/.vimspector.json .<CR>:e .vimspector.json<CR>
+
+" ***********************************************************************
+" 7.5_Vim-gdb
+" ***********************************************************************
+
+if has('nvim')
+    nnoremap ,qq :GdbSaveBreakpoints<CR>:sleep 1<CR>:GdbDebugStop<CR>
+    if exists(':tnoremap')
+        tnoremap <c-b> save breakpoints .gdb_breakpoints<CR>q<CR>
+    endif
+else
+    nnoremap ,qq :call TermDebugSendCommand('save breakpoints .gdb_breakpoints')<CR>:call TermDebugSendCommand('q')<CR>
+    if exists(':tnoremap')
+        tnoremap <c-b> save breakpoints .gdb_breakpoints<CR>q<CR>
+    endif
+endif
+
+" ***********************************************************************
+" 7.6_Format
+" ***********************************************************************
+
+" ***********************************************************************
+" 7.6.1_Vim-autoformat
+" ***********************************************************************
+
+" Need clang-format which can be installed by sudo apt install clang-format
+
+let g:autoformat_autoindent = 0
+let g:autoformat_retab = 0
+let g:autoformat_remove_trailing_spaces = 0
+
+let g:formatdef_clangformat ="'clang-format -lines='.a:firstline.':'.a:lastline.' --assume-filename=\"'.expand('%:p').'\" -style=\"{ AlignTrailingComments: true, '.(&textwidth ? 'ColumnLimit: '.&textwidth.', ' : '').(&expandtab ? 'UseTab: Never, IndentWidth: '.shiftwidth() : 'UseTab: Always').'}\"'"
+" map ,f to format file
+nnoremap ,f :Autoformat<CR>
+xnoremap ,f :Autoformat<CR>
+
+
+" ***********************************************************************
+" 7.6.2_Neoformat
+" ***********************************************************************
+
+" nnoremap ,f :Neoformat<CR>
+" xnoremap ,f :Neoformat<CR>
+
+" following command contains bug: after command, ,cc will be mapped to cpp
+" run command
+
+
+
+" ***********************************************************************
+" 8_Language settings ***************************************************
+" 8.1_Html/css
+" - Enable just for html/css
+" 8.2_Julia
+" - set julia doc path
+" 8.3_Freefem++
+" - freefem++ file type
+" - run freefem++
+" - load completion.edp for better completion
+" 8.4_Python settings
+" - run current python buffer
+" - debug current python buffer
+" 8.5_Matlab/octave settings
+" - function to show matlab help
+" - function to go to matlab definition
+" - map to run matlab/octave file
+" - map to go to matlab help/definition
+" - function to toggle breakpoints for matlab
+" - command to clear all breakpoints for matlab
+" - map to matlab debugging command
+" 8.6_Javascript settings
+" - map to run current javascript buffer
+" 8.7_C/C++ settings
+" - map to run current c/cpp project/file
+" - map to make current c/cpp project/file
+" - map to run c/cpp with mpi
+" - debug current c/cpp project
+" - map M-; to end sentence for c/c++ file type
+" 8.8_Shell settings
+" - map to debug current bash buffer
+" 8.9_Latex settings
+" 8.9.1_Basic settings
+" - map to create/goto abbreviation
+" - latex mode jump to bibtex
+" - auto load abbreviation at latex startup
+" 8.9.2_Vimtex settings
+" - set latex pdf viewer
+" - enable latex folding
+" - vimtex quickfix mode
+" - disable default vimtex mappings
+" - some latex mode specified mappings
+" - start vim server for latex preview at startup
+" - enable auto save for real-time preview
+" ***********************************************************************
+
+" ***********************************************************************
+" 8.1_Html/css
+" ***********************************************************************
+
+" emmet-vim {{{ 
+    " - Enable just for html/css
+    let g:user_emmet_install_global = 0
+    autocmd FileType html,css EmmetInstall
+" }}}
+
+
+" ***********************************************************************
+" 8.2_Julia
+" ***********************************************************************
+
+" - set julia doc path
+let g:julia#doc#juliapath=$HOME.'/Software/julia/julia-1.3.1/bin/julia'
+
+" ***********************************************************************
+" 8.3_Freefem++
+" ***********************************************************************
+
+" - freefem++ file type
+au BufNewFile,BufRead *.edp setf edp
+au BufNewFile,BufRead *.idp setf edp
+
+" - run freefem++
+au FileType  edp nnoremap ,cc :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
+
+" - load completion.edp for better completion
+au FileType  edp call s:LoadFreefemCompletion()
+let g:freefemCompletionNotLoaded=1
+function!s:LoadFreefemCompletion()
+    if g:freefemCompletionNotLoaded
+        let g:freefemCompletionNotLoaded=0
+        view $HOME/Software/freefem++/freefem_include/completion.edp
+        set filetype=edp
+        echo "Completion.edp is loaded for completion of custom header functions"
+        b#
+    endif
+endfunction
+
+" ***********************************************************************
+" 8.4_Python settings
 " ***********************************************************************
 " - run current python buffer
 autocmd FileType python nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("python3 " . expand("%:p"))<CR>
@@ -1547,7 +1742,7 @@ autocmd FileType python nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directl
 autocmd FileType python nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartPDB python -m pdb <c-r>%<CR>
 
 " ***********************************************************************
-" 7.5_Matlab/octave settings
+" 8.5_Matlab/octave settings
 " ***********************************************************************
 
 " filetype specific keymap
@@ -1680,7 +1875,7 @@ if executable('matlab')
 endif
 
 " ***********************************************************************
-" 7.6_Javascript settings
+" 8.6_Javascript settings
 " - map to run current javascript buffer
 " ***********************************************************************
 " - map to run current javascript buffer
@@ -1688,7 +1883,7 @@ autocmd FileType javascript nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_dir
 
 " ***********************************************************************
 " - map to run current c/cpp project/file
-" 7.7_C/C++ settings
+" 8.7_C/C++ settings
 " ***********************************************************************
 
 " - map to run current c/cpp project/file
@@ -1718,7 +1913,7 @@ endif
 autocmd FileType c,cpp imap <buffer> <a-;> <c-e>;<CR>
 
 " ***********************************************************************
-" 7.8_Shell settings
+" 8.8_Shell settings
 " ***********************************************************************
 
 if has('nvim')
@@ -1727,11 +1922,11 @@ if has('nvim')
 endif
 
 " ***********************************************************************
-" 7.9_Latex settings
+" 8.9_Latex settings
 " ***********************************************************************
 
 " ***********************************************************************
-" 7.9.1_Basic settings
+" 8.9.1_Basic settings
 " ***********************************************************************
 " - map to create/goto abbreviation
 autocmd FileType tex vnoremap <buffer> <m-s> "vy:call VisualSetAbbreviation()<CR>
@@ -1748,7 +1943,7 @@ autocmd BufRead,BufNewFile $HOME/Software/latex/bibtex/bib/ref.bib nnoremap <buf
 autocmd FileType tex LoadAbbreviations
 
 " ***********************************************************************
-" 7.9.2_Vimtex settings
+" 8.9.2_Vimtex settings
 " ***********************************************************************
 
 let g:tex_flavor='latex'  " for compatibility with vim version >= 8.2
@@ -1824,29 +2019,552 @@ function!LatexAutoSave(save_count)
 endfunction
 
 
+" ***********************************************************************
+" 9_Utilities ***********************************************************
+" 9.1_Translation
+" - translation auto repl
+" - s: function to translate repl file
+" - function to add count to translate for repl
+" - function to translate region
+" - map SPC hc to translate
+" 9.2_Vim-multiple-cursor
+" - enable mouse for vim-multiple-cursor
+" - clear default mappings of vim-multiple-cursor
+" - map of mouse for vim-multiple-cursor
+" - map g/ to start regex search for vim-multiple-cursor
+" - map M-j/M-k to add cursor down/up for vim-multiple-cursor
+" - map 1 to add increasing numbers for vim-multiple-cursor
+" - map M-a to select all occurence in normal mode for vim-multiple-cursor
+" - Select all that match visual selection (it is a visual map)
+" - map z< to align char for vim-multiple-cursor
+" 9.3_Tagbar & NERDTree
+" - map SPC 0 to toggle nerdtree
+" - map SPC fp to find current file in nerdtree
+" - map SPC <enter>/M-m to toggle tagbar
+" - order tags by order in the file instead of by name. Press s to toggle.
+" 9.4_Git
+" - map SPC gs to show git status
+" - map SPC gd to show git difference
+" - map SPC gc to commit for git
+" - map SPC gfm/SPC gfr to move/remove for git
+" - map SPC gl to show git history
+" - map to show next/previous history in git history mode
+" - some other mappings for git
+" - move to the same line when swithing in git history mode
+" 9.5_Fuzzy search
+" - this is the default extra key bindings
+" - layout for fzf
+" - in Neovim, you can set up fzf window using a Vim command
+" - customize fzf colors to match your color scheme
+" - enable per-command history for fzf
+" - command to search help (FindActions) with fzf
+" - command to preview and open project file with fzf
+" - function to show changes of current files with fzf
+" - command to show changes of current files with fzf
+" - function to show jumps location with fzf
+" - command to show jumps location with fzf
+" - command to show most recent file with fzf
+" - s: function to get buffers name list
+" - function to show buffers with fzf
+" - command to show buffers with fzf
+" 9.6_Easymotion
+" - set prefix for easymotion
+" - mappings for easymotion
+" 9.7_TCommentO
+" 9.8_Scratch
+" 9.9_snippets
+" - snippets of vim-snippets are in folders under:
+" - custom snippets are in folders under:
+" - map to trigger configuration
+" - map to jump forward/backward in snips
+" - split your window when :UltiSnipsEdit 
+" - snip style for python
+" - snip meta data
+" 9.10_Vim-expand-region
+" 9.11_Ranger
+" 9.12_Abbreviation
+" - function to set visual region to new abbreviation
+" - map SPC va to set visual region to new abbreviation
+" - function to save abbreviation (to file ./abbrev_defs.vim)
+" - function to load abbreviation (from file ./abbrev_defs.vim)
+" - function to show abbreviation (go to file ./abbrev_defs.vim)
+" - map C-c C-c to reload abbreviation when in ./abbrev_defs.vim
+" 9.13_Undotree
+" ***********************************************************************
 
-" translation auto repl
+" ***********************************************************************
+" 9.1_Translation
+" ***********************************************************************
+
+
+" - translation auto repl
 autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd TextChangedI <buffer> call TranslateCount(5)
 autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd TextChanged <buffer> call TranslateCount(0)
 autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd CursorHoldI,CursorHold <buffer> call TranslateCount(0)
 
-" keymap for open_file_help file(e.g. Used to OpenTodoFile)
-autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
-autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-c> <esc>:bd!<CR>
-autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-h> <c-w><c-w>
-autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh inoremap <buffer> <CR> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("e ".mycurf)<CR>
+" - s: function to translate repl file
+function! s:TranslateRepl()
+    if &modified
+        silent write
+        silent! exec '!translate "$(< $HOME/Software/baiduTranslate/software/toBeTranslate.txt)" > /tmp/oddtranslate && cat /tmp/oddtranslate > $HOME/Software/baiduTranslate/software/translated.txt'
+    endif
+endfunction
 
-" freefem++ file type
-au BufNewFile,BufRead *.edp setf edp
-au BufNewFile,BufRead *.idp setf edp
-au FileType  edp nnoremap ,cc :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
-" load completion.edp for better completion
-au FileType  edp call s:LoadFreefemCompletion()
+" - function to add count to translate for repl
+let g:translate_count=0
+" call s:TranslateRepl() if this method is called translateCount times
+" This method is called with the help of autocmd
+" translation output will be redirect to
+" $HOME/Software/baiduTranslate/software/translated.txt
+" Use watch -t -n 0.3 cat translated.txt to watch
+function! TranslateCount(translateCount)
+    if g:translate_count >= a:translateCount
+        let g:translate_count=0
+        call s:TranslateRepl()
+    else
+        let g:translate_count=g:translate_count + 1
+    endif
+endfunction
 
-" fugitive glog: auto jump to the same line
+" - function to translate region
+function! Translate()
+    " let g:abcd=substitute(@v,"\'","\\'","g")
+    let s:translate_string=substitute(@v,"\'","","g")
+    let s:translate_string=substitute(s:translate_string,"\n",'    ',"g")
+    exec "!translate '" . s:translate_string . "'"
+    " exec "!translate '" . @v . "'"
+endfunction
+
+" - map SPC hc to translate
+" vnoremap <silent> <c-h>c :<C-u>Ydv<CR>
+nnoremap <silent> <Space>hc :<C-u>Ydc<CR>
+vnoremap <silent> <Space>hc "vy :call Translate()<CR>
+noremap <Space>htc :<C-u>Yde<CR>
+
+" ***********************************************************************
+" 9.2_Vim-multiple-cursor
+" ***********************************************************************
+
+" let g:VM_no_meta_mappings=0
+" - enable mouse for vim-multiple-cursor
+let g:VM_mouse_mappings = 1
+" - clear default mappings of vim-multiple-cursor
+let g:VM_maps = {}
+" - map of mouse for vim-multiple-cursor
+let g:VM_maps["Mouse Cursor"]               = '<C-LeftMouse>'
+let g:VM_maps["Mouse Word"]                 = '<C-RightMouse>'
+let g:VM_maps["Mouse Column"]               = '<M-C-RightMouse>'
+
+" - map g/ to start regex search for vim-multiple-cursor
+let g:VM_maps["Start Regex Search"]         = 'g/'
+" It is normal mode map
+let g:VM_maps["Visual Regex"]               = 'g/'
+
+" - map M-j/M-k to add cursor down/up for vim-multiple-cursor
+let g:VM_maps["Add Cursor Down"]            = '<A-J>'
+let g:VM_maps["Add Cursor Up"]              = '<A-K>'
+
+" - map 1 to add increasing numbers for vim-multiple-cursor
+let g:VM_maps["Numbers"]                    = '1'
+
+" - map M-a to select all occurence in normal mode for vim-multiple-cursor
+let g:VM_maps["Select All"]                 = '<A-A>'
+
+" - Select all that match visual selection (it is a visual map)
+let g:VM_maps["Visual All"]                 = '<A-A>'
+
+" - map z< to align char for vim-multiple-cursor
+let g:VM_maps["Align Char"]                 = 'z<'
+
+" map C-n to find next occurence for vim-multiple-cursor
+" let g:VM_maps["Find Under"]                 = '<c-n>'
+" let g:VM_maps["Find Subword Under"]         = '<c-n>'
+" q skip current selection
+
+" ***********************************************************************
+" 9.3_Tagbar & NERDTree
+" ***********************************************************************
+
+" - map SPC 0 to toggle nerdtree
+nnoremap <Space>0 :call CloseMaximize()<CR>:NERDTreeToggle<CR>
+
+" - map SPC fp to find current file in nerdtree
+nnoremap <Space>fp :call CloseMaximize()<CR>:NERDTreeFind<CR>
+
+" - map SPC <enter>/M-m to toggle tagbar
+nnoremap <Space><CR> :TagbarToggle<CR>
+nnoremap <A-m> :TagbarToggle<CR>
+
+" - order tags by order in the file instead of by name. Press s to toggle.
+let g:tagbar_sort = 0
+
+
+
+" ***********************************************************************
+" 9.4_Git
+" ***********************************************************************
+
+" - map SPC gs to show git status
+nnoremap <Space>gs :Gstatus<CR>
+" in Gstatus window:
+" -	        add/reset file (works in visual mode too)
+" <Enter>	open current file in the window below
+" p	        run `git add –patch` for current file
+" cc        invoke :Gcommit (Then ZZ to save and commit)
+" c?        Show help
+
+" - map SPC gd to show git difference
+nnoremap <Space>gd :Gvdiffsplit<CR>
+" - map SPC gc to commit for git
+nnoremap <Space>gc :Gcommit<CR>
+
+" - map SPC gfm/SPC gfr to move/remove for git
+nnoremap <Space>gfm :Gmove<CR>
+nnoremap <Space>gfr :Gremove<CR>
+
+" - map SPC gl to show git history
+nnoremap <Space>gl :let g:glog_cursor=line(".")<CR>:0Glog<CR>
+" - map to show next/previous history in git history mode
+nnoremap <Space>gn :cnext<CR>
+nnoremap [q :cnext<CR>
+nnoremap <Space>gp :cprev<CR>
+nnoremap ]q :cprev<CR>
+nnoremap <Space>gN :cprev<CR>
+
+" - some other mappings for git
+" revert current file
+nnoremap <Space>gr :Gread<CR>
+" stage current file
+nnoremap <Space>ga :Gwrite<CR>
+" show commit time
+nnoremap <Space>gb :Gblame<CR>
+
+" - move to the same line when swithing in git history mode
 au! BufLeave  fugitive://*  let g:glog_cursor=line(".")
 " au! BufEnter  fugitive://*  exec g:glog_cursor 
 au! BufEnter  fugitive://*  exec "if exists('g:glog_cursor')\n exec g:glog_cursor\n endif\n"
+
+" ***********************************************************************
+" 9.5_Fuzzy search
+" ***********************************************************************
+
+" - this is the default extra key bindings
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit',
+  \ 'ctrl-f': 'read @/',
+  \}
+
+" - layout for fzf
+" - down / up / left / right
+let g:fzf_layout = { 'up': '~40%' }
+
+" - in Neovim, you can set up fzf window using a Vim command
+let g:fzf_layout = { 'window': 'enew' }
+let g:fzf_layout = { 'window': '-tabnew' }
+let g:fzf_layout = { 'window': 'belowright 10split enew' }
+
+" - customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+" - enable per-command history for fzf
+" CTRL-N and CTRL-P will be automatically bound to next-history and
+" previous-history instead of down and up. If you don't like the change,
+" explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+
+" - command to search help (FindActions) with fzf
+command! -bang -nargs=* FindActions
+  \ call fzf#vim#grep(
+  \   'cat $HOME/Software/vim/vim_tip/find_actions '.shellescape(<q-args>), 1)
+
+" - command to preview and open project file with fzf
+command! -bang -nargs=? -complete=dir Files
+\ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse']}), <bang>0)
+
+command! -bang -nargs=* Ag
+\ call fzf#vim#ag(<q-args>,
+\ <bang>0 ? fzf#vim#with_preview('up:60%')
+\ : fzf#vim#with_preview('right:50%:hidden', '?'),
+\ <bang>0)
+
+command! -nargs=* -bang AgCurrentFile 
+\ call fzf#vim#grep(
+\ 'cat_to_fzf_ag_format ' . expand('%') ,
+\ 0,
+\ fzf#vim#with_preview({'options': '--layout=reverse'},'up:60%'),
+\ <bang>0)
+
+
+" - function to show changes of current files with fzf
+function! Changes_results(query,fullscreen)
+    redir! > ~/Software/vim/odd_txt_for_vim.txt
+    silent changes
+    redir end
+    exec "silent !~/Software/vim/format_help/format_for_changes " . expand("%")
+
+    call fzf#vim#grep(
+    \ 'cat ~/Software/vim/odd_txt_for_vim.txt ' , 0,fzf#vim#with_preview({'options': '--layout=reverse'},'up:60%'), a:fullscreen)
+endfunction
+" - command to show changes of current files with fzf
+command! -nargs=* -bang SearchChanges call Changes_results(<q-args>, <bang>0)
+
+" - function to show jumps location with fzf
+function! Jumps_results(query,fullscreen)
+    redir! > ~/Software/vim/odd_txt_for_vim.txt
+    silent jumps
+    redir end
+    exec "silent !~/Software/vim/format_help/format_for_jumps " . expand("%")
+
+    call fzf#vim#grep(
+    \ 'cat ~/Software/vim/odd_txt_for_vim.txt ' , 0,fzf#vim#with_preview({'options': '--layout=reverse'},'up:60%'), a:fullscreen)
+endfunction
+" - command to show jumps location with fzf
+command! -nargs=* -bang JumpsResults call Jumps_results(<q-args>, <bang>0)
+
+" - command to show most recent file with fzf
+command! -bang -nargs=* FzfMrf call fzf#vim#history(fzf#vim#with_preview({'options': '--layout=reverse'},<bang>0?'up:65%':'right:50%'),<bang>0)
+
+" - s: function to get buffers name list
+function! s:buffer_list()
+  let l:list = filter(range(1, bufnr('$')),
+  \ "bufexists(v:val) && buflisted(v:val) && filereadable(expand('#' . v:val . ':p'))"
+  \ )
+  let l:buflist = map(l:list, 'bufname(v:val)')
+  let l:bufname_i=l:buflist[0]
+  let l:current_buf_name=bufname("%")
+  let l:previous_buf_name=bufname("#")
+  bufdo let b:current_line=line('.')
+  let l:bufnames_string = l:buflist[0] . ':' . getbufvar(l:bufname_i,"current_line") . ':'
+  for l:bufname_i in l:buflist[1:]
+      let l:bufnames_string = l:bufnames_string . '\n' . l:bufname_i . ':' . getbufvar(l:bufname_i,"current_line")  . ':'
+  endfor
+  bufdo unlet b:current_line
+  exec "buffer " . l:previous_buf_name
+  exec "buffer " . l:current_buf_name
+
+  " return map(l:list, 'bufname(v:val)')
+  return l:bufnames_string
+endfunction
+
+" - function to show buffers with fzf
+function! Fzf_buffers(query,fullscreen)
+  call fzf#vim#grep(
+  \ "echo '" . s:buffer_list() . "'" , 0,fzf#vim#with_preview({'options': '--layout=reverse'},'up:65%'), a:fullscreen)
+endfunction
+" - command to show buffers with fzf
+command! -nargs=* -bang FzfBuffers call Fzf_buffers(<q-args>, <bang>0)
+
+
+" ***********************************************************************
+" 9.6_Easymotion
+" ***********************************************************************
+
+" - set prefix for easymotion
+map <Leader> <Plug>(easymotion-prefix)
+
+" - mappings for easymotion
+" nmap s <Plug>(easymotion-jumptoanywhere)
+nmap \j <Plug>(easymotion-bd-jk)
+nmap \k <Plug>(easymotion-bd-jk)
+nmap \w <Plug>(easymotion-bd-w)
+nmap \n <Plug>(easymotion-bd-n)
+nmap \f <Plug>(easymotion-overwin-f)
+
+" ***********************************************************************
+" 9.7_TCommentO
+" ***********************************************************************
+
+let g:tcomment_opleader1="<space>;"
+nnoremap <space>;;  :TComment<CR>
+
+" ***********************************************************************
+" 9.8_Scratch
+" ***********************************************************************
+
+" this tool creates scratch file to edit for free
+let g:scratch_persistence_file = "$HOME/Software/vim/Scratch"
+let g:scratch_no_mappings = 1
+let g:scratch_height = 15
+let g:scratch_autohide = 0
+
+" ***********************************************************************
+" 9.9_snippets
+" ***********************************************************************
+
+" - snippets of vim-snippets are in folders under:
+" ~/.vim/plugged/vim-snippets/UltiSnips
+" ~/.vim/plugged/vim-snippets/snippets
+"
+" - custom snippets are in folders under:
+" ~/Software/vim/plugins/mysnippets/UltiSnips/
+" Use :OpenMySnippets to edit custom snippet with current file type.
+" Note that ultisnips use `command` to call bash command.
+" And use `!p snip.rv = command` to call python command
+
+" - map to trigger configuration
+" Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<c-v>"
+
+" - map to jump forward/backward in snips
+let g:UltiSnipsJumpForwardTrigger="<c-f>"
+let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+
+" - split your window when :UltiSnipsEdit 
+let g:UltiSnipsEditSplit="vertical"
+
+" - snip style for python
+"doxygen" sphinx" google" numpy" jedi" 
+let g:ultisnips_python_style="numpy"
+
+" - snip meta data
+let g:snips_author='zky'
+let g:snips_email='739521505@qq.com'
+let g:snips_github='https://github.com/asfsdsf'
+
+" ***********************************************************************
+" 9.10_Vim-expand-region
+" ***********************************************************************
+
+nmap <a-w> <Plug>(expand_region_expand)
+xmap <a-w> <Plug>(expand_region_expand)
+
+" Default value of g:expand_region_text_objects={'ie':0,'ip':0,'iw':0,'iB':1,'il':0,'iW':0,'i''':0,'ib':1,'i]':1,'i"':0}
+" 1 means recursive.
+" See more with :help expand_region
+let g:expand_region_text_objects={'ip':0,'iw':0,'iB':1,'aB':1,'ab':1,'iW':0,'a''':0,'ib':1,'a]':1,'a"':0}
+
+" ***********************************************************************
+" 9.11_Ranger
+" ***********************************************************************
+
+" Interactive with ranger - a file manager installed by sudo apt install ranger
+
+" Start ranger using ":RangerChooser" or the keybinding "<Space>r".  Once you
+" select one or more files, press enter and ranger will quit again and vim 
+" will open the selected files.
+
+function! RangeChooser()
+    let temp = tempname()
+    " The option "--choosefiles" was added in ranger 1.5.1. Use the next line
+    " with ranger 1.4.2 through 1.5.0 instead.
+    "exec 'silent !ranger --choosefile=' . shellescape(temp)
+    if has("gui_running")
+        exec 'silent !xterm -e ranger --choosefiles=' . shellescape(temp)
+    else
+        exec 'silent !ranger --choosefiles=' . shellescape(temp)
+    endif
+    if !filereadable(temp)
+        redraw!
+        " Nothing to read.
+        return
+    endif
+    let names = readfile(temp)
+    if empty(names)
+        redraw!
+        " Nothing to open.
+        return
+    endif
+    " Edit the first item.
+    exec 'edit ' . fnameescape(names[0])
+    " Add any remaning items to the arg list/buffer list.
+    for name in names[1:]
+        exec 'argadd ' . fnameescape(name)
+    endfor
+    redraw!
+endfunction
+command! -bar RangerChooser call RangeChooser()
+nnoremap <Space>r :<C-U>RangerChooser<CR>
+
+" ***********************************************************************
+" 9.12_Abbreviation
+" ***********************************************************************
+
+" This is a functionality of vim rather than a plugin
+
+" - function to set visual region to new abbreviation
+function!VisualSetAbbreviation ()
+    cd %:h
+    " iabbrev will set abbreviation for insert mode
+    let l:abb_name = input('Please input abbreviation: ')
+
+    let l:abb_go_back=""
+    " if @v contains @@ substring
+    if stridx(@v,"@@")>=0
+        let l:abb_go_back="<esc>z?@@<CR>xxi"
+    endif
+
+    " let l:visual_region_text=substitute(@v,'|','<bar>','g')
+    " let l:visual_region_text=substitute(l:visual_region_text,'\n','<CR>','g')
+    " let l:abb_formula = "iabbrev " . l:abb_name . " " . l:visual_region_text . l:abb_go_back
+
+    let l:visual_region_text=substitute(@v,'\n *',"'" . '."\\n".' . "'",'g')
+    let l:set_abb_str="let g:myabbr" . l:abb_name . "='" . l:visual_region_text . "'\n"
+    exec l:set_abb_str
+    let l:abb_formula="iabbrev " . l:abb_name . " <c-r>=" . "g:myabbr" . l:abb_name . "<CR>" .l:abb_go_back
+    exec l:abb_formula
+    silent call SaveAbbr(l:set_abb_str . l:abb_formula)
+endfunction
+" - map SPC va to set visual region to new abbreviation
+vnoremap <Space>va "vy:call VisualSetAbbreviation()<CR>
+
+" - function to save abbreviation (to file ./abbrev_defs.vim)
+function! SaveAbbr(abb_formula)
+    redir >> ./abbrev_defs.vim
+    "foo.txt is the file in which you wish to add your abbreviations. For me, it
+    "is ~/.vim/ftplugin/tex.vim
+    echo a:abb_formula
+    redir END
+endfunction
+
+" - function to load abbreviation (from file ./abbrev_defs.vim)
+function! LoadAbbr()
+    cd %:h
+    if filereadable("./abbrev_defs.vim")
+        source ./abbrev_defs.vim
+    else
+        echo "there is no abbrev_defs.vim file in current directory"
+    endif
+endfunction
+com! LoadAbbreviations call LoadAbbr()
+
+" - function to show abbreviation (go to file ./abbrev_defs.vim)
+function! ShowAbbreviations()
+    e ./abbrev_defs.vim
+endfunction
+
+" - map C-c C-c to reload abbreviation when in ./abbrev_defs.vim
+autocmd BufRead,BufNewFile abbrev_defs.vim nnoremap <buffer> <C-c><C-c> :abclear<CR>:source %<CR>
+
+" ***********************************************************************
+" 9.13_Undotree
+" ***********************************************************************
+
+if has("persistent_undo")
+    set undodir=~/.undodir/
+    set undofile
+endif
+
+
+" ***********************************************************************
+" TODO
+" ***********************************************************************
+
+
+
 
 " command-line window enter insert mode automatically
 " after :/?, type <c-f> to edit
@@ -1897,88 +2615,6 @@ function! VimEnterExec()
 endfunction
 
 autocmd FileType vim nnoremap <buffer> <space>vp :call VimEnterExec()<CR>
-"}}}
-
-
-"{{{ vim-multiple-cursor Mappings 
-    " vim-visual-multi Mappings
-    " let g:VM_no_meta_mappings=0
-    let g:VM_mouse_mappings = 1
-    let g:VM_maps = {}
-    let g:VM_maps["Mouse Cursor"]               = '<C-LeftMouse>'
-    let g:VM_maps["Mouse Word"]                 = '<C-RightMouse>'
-    let g:VM_maps["Mouse Column"]               = '<M-C-RightMouse>'
-    let g:VM_maps["Start Regex Search"]         = 'g/'
-    let g:VM_maps["Add Cursor Down"]            = '<A-J>'
-    let g:VM_maps["Add Cursor Up"]              = '<A-K>'
-
-    " It is visual-multi mode map
-    let g:VM_maps["Numbers"]                    = '1'
-
-    " It is normal mode map
-    let g:VM_maps["Visual Regex"]               = 'g/'
-
-    " It is normal mode map
-    let g:VM_maps["Select All"]                 = '<A-A>'
-
-    " Select all that match visual selection (it is a visual map)
-    let g:VM_maps["Visual All"]                 = '<A-A>'
-
-    let g:VM_maps["Align Char"]                 = 'z<'
-
-    " It is normal map and visual map
-    " let g:VM_maps["Find Under"]                 = '<c-n>'
-    " let g:VM_maps["Find Subword Under"]         = '<c-n>'
-    " q skip current selection
-    if has('nvim')
-
-    else
-
-    endif
-"}}}
-
-
-"{{{ tagbar & NERDTree
-    nnoremap <Space>0 :call CloseMaximize()<CR>:NERDTreeToggle<CR>
-    nnoremap <Space>fp :call CloseMaximize()<CR>:NERDTreeFind<CR>
-    nnoremap <Space><CR> :TagbarToggle<CR>
-    nnoremap <A-m> :TagbarToggle<CR>
-    " order tags by order in the file instead of by name. Press s to toggle.
-    let g:tagbar_sort = 0
-"}}}
-
-
-"{{{ fugitive Mappings
-    " [c        show next hunk(next change with HEAD in file)
-    " ]c        show previous hunk(next change with HEAD in file)
-
-    " git status
-    nnoremap <Space>gs :Gstatus<CR>
-    " in Gstatus window:
-    " -	        add/reset file (works in visual mode too)
-    " <Enter>	open current file in the window below
-    " p	        run `git add –patch` for current file
-    " cc        invoke :Gcommit (Then ZZ to save and commit)
-    " c?        Show help
-    nnoremap <Space>gd :Gvdiffsplit<CR>
-    nnoremap <Space>gc :Gcommit<CR>
-    nnoremap <Space>gfm :Gmove<CR>
-    nnoremap <Space>gfr :Gremove<CR>
-    " revert current file
-    nnoremap <Space>gr :Gread<CR>
-    " stage current file
-    nnoremap <Space>ga :Gwrite<CR>
-    " show commit time
-    nnoremap <Space>gb :Gblame<CR>
-
-    nnoremap <Space>gl :let g:glog_cursor=line(".")<CR>:0Glog<CR>
-    " keymap for Glog mode
-    nnoremap <Space>gn :cnext<CR>
-    nnoremap [q :cnext<CR>
-    nnoremap <Space>gp :cprev<CR>
-    nnoremap ]q :cprev<CR>
-
-    nnoremap <Space>gN :cprev<CR>
 "}}}
 
 
@@ -2056,101 +2692,6 @@ endif
 
 
 
-
-
-
-" {{{ vimdebug
-    " let g:termdebug_wide = 163
-" }}}
-
-
-
-" Elixir {{{
-    let g:tagbar_type_elixir = {
-        \ 'ctagstype' : 'elixir',
-        \ 'kinds' : [
-            \ 'f:functions',
-            \ 'functions:functions',
-            \ 'c:callbacks',
-            \ 'd:delegates',
-            \ 'e:exceptions',
-            \ 'i:implementations',
-            \ 'a:macros',
-            \ 'o:operators',
-            \ 'm:modules',
-            \ 'p:protocols',
-            \ 'r:records',
-            \ 't:tests'
-        \ ]
-        \ }
-" }}}
-
-
-
-
-
-
-" vimspector {{{
-    " Run following to install
-    " :VimspectorInstall
-    " Use CodeLLDB instead of vscode-cpptools in macOS
-    " Use <Space>dg to generate .vimspector.json file for further config in
-    " project directory.
-    "
-    " variables replacement for .vimspector.json:
-    " https://puremourning.github.io/vimspector/configuration.html#predefined-variables
-
-    let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
-
-    " map <tab> for auto completion in Vimspector console (<c-x><c-o> is omni
-    " commpletion
-    autocmd FileType VimspectorPrompt inoremap <buffer> <silent><expr> <Tab>
-          \ pumvisible() ? "\<C-n>" :
-          \ <SID>check_back_space() ? "\<Tab>" :
-          \ "\<c-x>\<c-o>"
-
-    nnoremap <Space>dd :GitGutterDisable<CR>:call vimspector#Continue()<CR>
-    nnoremap <Space>dc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
-    nnoremap ,cd :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
-    nnoremap <Space>dp :call vimspector#Pause()<CR>
-    nnoremap <Space>dr :call vimspector#Restart()<CR>
-    nnoremap <Space>de :call vimspector#Stop()<CR>
-    nnoremap <Space>dq :GitGutterEnable<CR>:call vimspector#Reset()<CR>
-    nnoremap <Space>db :call vimspector#ToggleBreakpoint()<CR>
-    nnoremap <Space>dB <c-u>call vimspector#ToggleBreakpoint(
-                \ { 'condition': input( 'Enter condition expression: ' ),
-                \   'hitCondition': '0' }
-                \ )<CR>
-    nnoremap <Space>dfb :call vimspector#AddFunctionBreakpoint()<CR>
-    nnoremap <Space>ds :call vimspector#StepInto()<CR>
-    nnoremap <Space>dn :call vimspector#StepOver()<CR>
-    nnoremap <Space>do :call vimspector#StepOut()<CR>
-    nnoremap <Space>dt :call vimspector#RunToCursor()<CR>
-    nnoremap <Space>d: :VimspectorEval 
-    " Copy .vimspector.json file to current directory for further config in project directory.
-    nnoremap <Space>dg :cd %:h<CR>:silent! Gcd<CR>:!cp ~/Software/vim/vimspector/.vimspector.json .<CR>:e .vimspector.json<CR>
-
-    nnoremap gc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
-    nnoremap gp :call vimspector#Pause()<CR>
-    nnoremap ge :call vimspector#Stop()<CR>
-    nnoremap gq :GitGutterEnable<CR>:call vimspector#Reset()<CR>
-    nnoremap gb :call vimspector#ToggleBreakpoint()<CR>
-    nnoremap <silent> gB <c-u>call vimspector#ToggleBreakpoint(
-                \ { 'condition': input( 'Enter condition expression: ' ),
-                \   'hitCondition': '0' }
-                \ )<CR>
-    nnoremap gs :call vimspector#StepInto()<CR>
-    nnoremap gn :call vimspector#StepOver()<CR>
-    nnoremap go :call vimspector#StepOut()<CR>
-    nnoremap gt :call vimspector#RunToCursor()<CR>
-    nnoremap g: :VimspectorEval 
-" }}}
-
-
-
-
-
-
 " unite.vim {{{
     " nnoremap <Space><Space>  :Unite -start-insert -buffer-name=command  command<CR>
     function! s:UniteSettings()
@@ -2163,172 +2704,6 @@ endif
     " inoremap <buffer><silent> <c-g> <Plug>(unite_exit)
 " }}}
 
-
-
-" julia-vim {{{
-    let g:julia#doc#juliapath=$HOME.'/Software/julia/julia-1.3.1/bin/julia'
-" }}}
-
-
-
-" emmet-vim {{{ 
-    " Enable just for html/css
-    let g:user_emmet_install_global = 0
-    autocmd FileType html,css EmmetInstall
-" }}}
-
-
-
-" Fzf {{{ 
-    " This is the default extra key bindings
-    let g:fzf_action = {
-      \ 'ctrl-t': 'tab split',
-      \ 'ctrl-x': 'split',
-      \ 'ctrl-v': 'vsplit',
-      \ 'ctrl-f': 'read @/',
-      \}
-
-    " Default fzf layout
-    " - down / up / left / right
-    let g:fzf_layout = { 'up': '~40%' }
-
-    " In Neovim, you can set up fzf window using a Vim command
-    let g:fzf_layout = { 'window': 'enew' }
-    let g:fzf_layout = { 'window': '-tabnew' }
-    let g:fzf_layout = { 'window': 'belowright 10split enew' }
-
-    " Customize fzf colors to match your color scheme
-    let g:fzf_colors =
-    \ { 'fg':      ['fg', 'Normal'],
-      \ 'bg':      ['bg', 'Normal'],
-      \ 'hl':      ['fg', 'Comment'],
-      \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-      \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-      \ 'hl+':     ['fg', 'Statement'],
-      \ 'info':    ['fg', 'PreProc'],
-      \ 'prompt':  ['fg', 'Conditional'],
-      \ 'pointer': ['fg', 'Exception'],
-      \ 'marker':  ['fg', 'Keyword'],
-      \ 'spinner': ['fg', 'Label'],
-      \ 'header':  ['fg', 'Comment'] }
-
-    " Enable per-command history.
-    " CTRL-N and CTRL-P will be automatically bound to next-history and
-    " previous-history instead of down and up. If you don't like the change,
-    " explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
-    let g:fzf_history_dir = '~/.local/share/fzf-history'
-
-    " help search command 
-    command! -bang -nargs=* FindActions
-      \ call fzf#vim#grep(
-      \   'cat $HOME/Software/vim/vim_tip/find_actions '.shellescape(<q-args>), 1)
-
-    " preview and open project file with fzf
-    command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse']}), <bang>0)
-
-    command! -bang -nargs=* Ag
-    \ call fzf#vim#ag(<q-args>,
-    \ <bang>0 ? fzf#vim#with_preview('up:60%')
-    \ : fzf#vim#with_preview('right:50%:hidden', '?'),
-    \ <bang>0)
-
-    command! -nargs=* -bang AgCurrentFile 
-    \ call fzf#vim#grep(
-    \ 'cat_to_fzf_ag_format ' . expand('%') ,
-    \ 0,
-    \ fzf#vim#with_preview({'options': '--layout=reverse'},'up:60%'),
-    \ <bang>0)
-
-
-    function! Changes_results(query,fullscreen)
-        redir! > ~/Software/vim/odd_txt_for_vim.txt
-        silent changes
-        redir end
-        exec "silent !~/Software/vim/format_help/format_for_changes " . expand("%")
-
-        call fzf#vim#grep(
-        \ 'cat ~/Software/vim/odd_txt_for_vim.txt ' , 0,fzf#vim#with_preview({'options': '--layout=reverse'},'up:60%'), a:fullscreen)
-    endfunction
-    command! -nargs=* -bang SearchChanges call Changes_results(<q-args>, <bang>0)
-
-    function! Jumps_results(query,fullscreen)
-        redir! > ~/Software/vim/odd_txt_for_vim.txt
-        silent jumps
-        redir end
-        exec "silent !~/Software/vim/format_help/format_for_jumps " . expand("%")
-
-        call fzf#vim#grep(
-        \ 'cat ~/Software/vim/odd_txt_for_vim.txt ' , 0,fzf#vim#with_preview({'options': '--layout=reverse'},'up:60%'), a:fullscreen)
-    endfunction
-    command! -nargs=* -bang JumpsResults call Jumps_results(<q-args>, <bang>0)
-
-    command! -bang -nargs=* FzfMrf call fzf#vim#history(fzf#vim#with_preview({'options': '--layout=reverse'},<bang>0?'up:65%':'right:50%'),<bang>0)
-
-    function! s:buffer_list()
-      let l:list = filter(range(1, bufnr('$')),
-      \ "bufexists(v:val) && buflisted(v:val) && filereadable(expand('#' . v:val . ':p'))"
-      \ )
-      let l:buflist = map(l:list, 'bufname(v:val)')
-      let l:bufname_i=l:buflist[0]
-      let l:current_buf_name=bufname("%")
-      let l:previous_buf_name=bufname("#")
-      bufdo let b:current_line=line('.')
-      let l:bufnames_string = l:buflist[0] . ':' . getbufvar(l:bufname_i,"current_line") . ':'
-      for l:bufname_i in l:buflist[1:]
-          let l:bufnames_string = l:bufnames_string . '\n' . l:bufname_i . ':' . getbufvar(l:bufname_i,"current_line")  . ':'
-      endfor
-      bufdo unlet b:current_line
-      exec "buffer " . l:previous_buf_name
-      exec "buffer " . l:current_buf_name
-
-      " return map(l:list, 'bufname(v:val)')
-      return l:bufnames_string
-    endfunction
-
-    function! Fzf_buffers(query,fullscreen)
-      call fzf#vim#grep(
-      \ "echo '" . s:buffer_list() . "'" , 0,fzf#vim#with_preview({'options': '--layout=reverse'},'up:65%'), a:fullscreen)
-    endfunction
-    command! -nargs=* -bang FzfBuffers call Fzf_buffers(<q-args>, <bang>0)
-" }}}
-
-
-
-" easymotion {{{
-    map <Leader> <Plug>(easymotion-prefix)
-    " nmap s <Plug>(easymotion-jumptoanywhere)
-    nmap \j <Plug>(easymotion-bd-jk)
-    nmap \k <Plug>(easymotion-bd-jk)
-    nmap \w <Plug>(easymotion-bd-w)
-    nmap \n <Plug>(easymotion-bd-n)
-    nmap \f <Plug>(easymotion-overwin-f)
-" }}}
-
-
-
-" undotree {{{
-if has("persistent_undo")
-    set undodir=~/.undodir/
-    set undofile
-endif
-" }}}
-
-
-
-" TCommentO
-    let g:tcomment_opleader1="<space>;"
-    nnoremap <space>;;  :TComment<CR>
-" }}}
-
-
-
-" Scratch {{{
-    let g:scratch_persistence_file = "$HOME/Software/vim/Scratch"
-    let g:scratch_no_mappings = 1
-    let g:scratch_height = 15
-    let g:scratch_autohide = 0
-" }}}
 
 
 
@@ -2388,245 +2763,8 @@ endif  " end if g:vim_plug_installed
 
 
 
-" {{{ vim-youdao-translater, baidu-translate from command line
-    function! Translate()
-        " let g:abcd=substitute(@v,"\'","\\'","g")
-        let s:translate_string=substitute(@v,"\'","","g")
-        let s:translate_string=substitute(s:translate_string,"\n",'    ',"g")
-        exec "!translate '" . s:translate_string . "'"
-        " exec "!translate '" . @v . "'"
-    endfunction
-
-    " vnoremap <silent> <c-h>c :<C-u>Ydv<CR>
-    nnoremap <silent> <Space>hc :<C-u>Ydc<CR>
-    vnoremap <silent> <Space>hc "vy :call Translate()<CR>
-    noremap <Space>htc :<C-u>Yde<CR>
-
-    function! s:TranslateRepl()
-        if &modified
-            silent write
-            silent! exec '!translate "$(< $HOME/Software/baiduTranslate/software/toBeTranslate.txt)" > /tmp/oddtranslate && cat /tmp/oddtranslate > $HOME/Software/baiduTranslate/software/translated.txt'
-        endif
-    endfunction
-    let g:translate_count=0
-    " call s:TranslateRepl() if this method is called translateCount times
-    " This method is called with the help of autocmd
-    " translation output will be redirect to
-    " $HOME/Software/baiduTranslate/software/translated.txt
-    " Use watch -t -n 0.3 cat translated.txt to watch
-    function! TranslateCount(translateCount)
-        if g:translate_count >= a:translateCount
-            let g:translate_count=0
-            call s:TranslateRepl()
-        else
-            let g:translate_count=g:translate_count + 1
-        endif
-    endfunction
-" }}}
 
 
-" {{{ flake8
-    " let g:flake8_show_in_gutter=1  " show signs in the gutter
-    " let g:flake8_show_in_file=1  " show marks in the file
-" }}}
-
-
-
-" {{{ snippets
-    " snippets of vim-snippets are in folders under:
-    " ~/.vim/plugged/vim-snippets/UltiSnips
-    " ~/.vim/plugged/vim-snippets/snippets
-    "
-    " custom snippets are in folders under:
-    " ~/Software/vim/plugins/mysnippets/UltiSnips/
-    " Use :OpenMySnippets to edit custom snippet with current file type.
-    " Note that ultisnips use `command` to call bash command.
-    " And use `!p snip.rv = command` to call python command
-
-    " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-    let g:UltiSnipsExpandTrigger="<c-v>"
-    " let g:UltiSnipsJumpForwardTrigger="<m-n>"
-    " let g:UltiSnipsJumpBackwardTrigger="<m-p>"  " disable this due to conflict with latex c-b bold font
-    let g:UltiSnipsJumpForwardTrigger="<c-f>"
-    let g:UltiSnipsJumpBackwardTrigger="<c-b>"
-
-    " If you want :UltiSnipsEdit to split your window.
-    let g:UltiSnipsEditSplit="vertical"
-
-	"doxygen" sphinx" google" numpy" jedi" 
-    let g:ultisnips_python_style="numpy"
-
-    let g:snips_author='zky'
-    let g:snips_email='739521505@qq.com'
-    let g:snips_github='https://github.com/asfsdsf'
-
-" }}}
-
-
-
-" {{{ vim-autoformat
-    " Need clang-format which can be installed by sudo apt install clang-format
-
-    let g:autoformat_autoindent = 0
-    let g:autoformat_retab = 0
-    let g:autoformat_remove_trailing_spaces = 0
-    
-    let g:formatdef_clangformat ="'clang-format -lines='.a:firstline.':'.a:lastline.' --assume-filename=\"'.expand('%:p').'\" -style=\"{ AlignTrailingComments: true, '.(&textwidth ? 'ColumnLimit: '.&textwidth.', ' : '').(&expandtab ? 'UseTab: Never, IndentWidth: '.shiftwidth() : 'UseTab: Always').'}\"'"
-    nnoremap ,f :Autoformat<CR>
-    xnoremap ,f :Autoformat<CR>
-" }}}
-
-
-
-" {{{ neoformat
-    " nnoremap ,f :Neoformat<CR>
-    " xnoremap ,f :Neoformat<CR>
-
-    " following command contains bug: after command, ,cc will be mapped to cpp
-    " run command
-
-" }}}
-
-
-
-" {{{ vim-gdb
-    if has('nvim')
-        nnoremap ,qq :GdbSaveBreakpoints<CR>:sleep 1<CR>:GdbDebugStop<CR>
-        if exists(':tnoremap')
-            tnoremap <c-b> save breakpoints .gdb_breakpoints<CR>q<CR>
-        endif
-    else
-        nnoremap ,qq :call TermDebugSendCommand('save breakpoints .gdb_breakpoints')<CR>:call TermDebugSendCommand('q')<CR>
-        if exists(':tnoremap')
-            tnoremap <c-b> save breakpoints .gdb_breakpoints<CR>q<CR>
-        endif
-    endif
-" }}}
-
-
-
-" {{{ abbreviation (This is a functionality of vim rather than a plugin
-    function!PrintIt(to_print)
-        return a:to_print
-    endfunction
-    function!VisualSetAbbreviation ()
-        cd %:h
-        " iabbrev will set abbreviation for insert mode
-        let l:abb_name = input('Please input abbreviation: ')
-
-        let l:abb_go_back=""
-        " if @v contains @@ substring
-        if stridx(@v,"@@")>=0
-            let l:abb_go_back="<esc>z?@@<CR>xxi"
-        endif
-
-        " let l:visual_region_text=substitute(@v,'|','<bar>','g')
-        " let l:visual_region_text=substitute(l:visual_region_text,'\n','<CR>','g')
-        " let l:abb_formula = "iabbrev " . l:abb_name . " " . l:visual_region_text . l:abb_go_back
-
-        let l:visual_region_text=substitute(@v,'\n *',"'" . '."\\n".' . "'",'g')
-        let l:set_abb_str="let g:myabbr" . l:abb_name . "='" . l:visual_region_text . "'\n"
-        exec l:set_abb_str
-        let l:abb_formula="iabbrev " . l:abb_name . " <c-r>=" . "g:myabbr" . l:abb_name . "<CR>" .l:abb_go_back
-        exec l:abb_formula
-        silent call SaveAbbr(l:set_abb_str . l:abb_formula)
-    endfunction
-    vnoremap <Space>va "vy:call VisualSetAbbreviation()<CR>
-
-    function! SaveAbbr(abb_formula)
-        redir >> ./abbrev_defs.vim
-        "foo.txt is the file in which you wish to add your abbreviations. For me, it
-        "is ~/.vim/ftplugin/tex.vim
-        echo a:abb_formula
-        redir END
-    endfunction
-
-    function! LoadAbbr()
-        cd %:h
-        if filereadable("./abbrev_defs.vim")
-            source ./abbrev_defs.vim
-        else
-            echo "there is no abbrev_defs.vim file in current directory"
-        endif
-    endfunction
-    com! LoadAbbreviations call LoadAbbr()
-
-    function! ShowAbbreviations()
-        e ./abbrev_defs.vim
-    endfunction
-
-    autocmd BufRead,BufNewFile abbrev_defs.vim nnoremap <buffer> <C-c><C-c> :abclear<CR>:source %<CR>
-" }}}
-
-
-
-" {{{ terryma/vim-expand-region
-    nmap <a-w> <Plug>(expand_region_expand)
-    xmap <a-w> <Plug>(expand_region_expand)
-
-    " Default value of g:expand_region_text_objects={'ie':0,'ip':0,'iw':0,'iB':1,'il':0,'iW':0,'i''':0,'ib':1,'i]':1,'i"':0}
-    " 1 means recursive.
-    " See more with :help expand_region
-    let g:expand_region_text_objects={'ip':0,'iw':0,'iB':1,'aB':1,'ab':1,'iW':0,'a''':0,'ib':1,'a]':1,'a"':0}
-" }}}
-
-
-
-
-
-" {{{ freefem++
-    let g:freefemCompletionNotLoaded=1
-    function!s:LoadFreefemCompletion()
-        if g:freefemCompletionNotLoaded
-            let g:freefemCompletionNotLoaded=0
-            view $HOME/Software/freefem++/freefem_include/completion.edp
-            set filetype=edp
-            echo "Completion.edp is loaded for completion of custom header functions"
-            b#
-        endif
-    endfunction
-" }}}
-
-
-" {{{ ranger (Interactive with ranger - a file manager installed by sudo apt
-" install ranger)
-
-    " Start ranger using ":RangerChooser" or the keybinding "<Space>r".  Once you
-    " select one or more files, press enter and ranger will quit again and vim 
-    " will open the selected files.
-
-    function! RangeChooser()
-        let temp = tempname()
-        " The option "--choosefiles" was added in ranger 1.5.1. Use the next line
-        " with ranger 1.4.2 through 1.5.0 instead.
-        "exec 'silent !ranger --choosefile=' . shellescape(temp)
-        if has("gui_running")
-            exec 'silent !xterm -e ranger --choosefiles=' . shellescape(temp)
-        else
-            exec 'silent !ranger --choosefiles=' . shellescape(temp)
-        endif
-        if !filereadable(temp)
-            redraw!
-            " Nothing to read.
-            return
-        endif
-        let names = readfile(temp)
-        if empty(names)
-            redraw!
-            " Nothing to open.
-            return
-        endif
-        " Edit the first item.
-        exec 'edit ' . fnameescape(names[0])
-        " Add any remaning items to the arg list/buffer list.
-        for name in names[1:]
-            exec 'argadd ' . fnameescape(name)
-        endfor
-        redraw!
-    endfunction
-    command! -bar RangerChooser call RangeChooser()
-    nnoremap <Space>r :<C-U>RangerChooser<CR>
-" }}}
 
 
 
