@@ -19,7 +19,7 @@
 " 4.1_Vim-Airline settings
 " 4.2_Devicons settings
 " 5_Function tools ******************************************************
-" 6_Basic map in normal/insert/visual mode ******************************
+" 6_Basic map in normal/insert/visual/command mode ******************************
 " 6.1_Text navigation
 " 6.2_tab map
 " 6.3_buffer map
@@ -27,6 +27,8 @@
 " 6.5_Search text
 " 6.6_Maps for files
 " 6.7_Other map
+" 6.8_Command mode keymap
+" 6.9_Unite.vim
 " 7_Language tools ******************************************************
 " 7.1_YouCompleteMe settings
 " 7.2_Coc.nvim settings
@@ -36,6 +38,10 @@
 " 7.4_Vimspector
 " 7.5_Vim-gdb
 " 7.6_Format
+" 7.6.1_Vim-autoformat
+" 7.6.2_Neoformat
+" 7.7_Ale
+" 7.8_Cscope
 " 8_Language settings ***************************************************
 " 8.1_Html/css
 " 8.2_Julia
@@ -54,6 +60,8 @@
 " 9.3_Tagbar & NERDTree
 " 9.4_Git
 " 9.5_Fuzzy search
+" 9.5.1_Fzf
+" 9.5.1_Ctrlp
 " 9.6_Easymotion
 " 9.7_TCommentO
 " 9.8_Scratch
@@ -62,6 +70,7 @@
 " 9.11_Ranger
 " 9.12_Abbreviation
 " 9.13_Undotree
+" 9.14_Neomake
 " ***********************************************************************
 
 " ***********************************************************************
@@ -589,7 +598,7 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
 
 
 " ***********************************************************************
-" 6_Basic map in normal/insert/visual mode ******************************
+" 6_Basic map in normal/insert/visual/command mode ******************************
 " 6.1_Text navigation
 " - map movement in insert mode
 " - map create new line in insert mode
@@ -667,6 +676,13 @@ autocmd TextChanged ~/Software/vim/clipboard :diffupdate
 " - map to open current file by gedit
 " - map to show undo tree
 " - map to open built-in terminal
+" - map ,er to execute vim line/selected region in normal/visual mode
+" 6.8_Command mode keymap
+" - command-line window enter insert mode automatically
+" - set filetype to be the same with previous file when searching 
+" - set filetype to be the same with previous file when replacing in command-line mode
+" - execute the command under the cursor and then have the command-line window open again
+" 6.9_Unite.vim
 " ***********************************************************************
 
 " map! map to insert and command-line mode
@@ -1030,6 +1046,53 @@ else
     nnoremap <space>as :vertical terminal ++curwin<CR>
 endif
 
+" - map ,er to execute vim line/selected region in normal/visual mode
+autocmd FileType vim vnoremap <buffer> ,er "vy :@v<CR>
+autocmd FileType vim nnoremap <buffer> ,er :exec getline(".")<CR>
+
+" ***********************************************************************
+" 6.8_Command mode keymap
+" ***********************************************************************
+
+" - command-line window enter insert mode automatically
+" after :/?, type <c-f> to edit
+au CmdwinEnter [:/?]  startinsert
+
+" - set filetype to be the same with previous file when searching 
+"   because autocomplete will search all buffer with same filetype 
+au BufEnter * let g:previous_buf_filetype=&filetype
+au CmdwinEnter [/?]  exec "set filetype=" . g:previous_buf_filetype
+
+function! s:ChangeFileTypeIfReplacing()
+    if stridx(getline('.'),"s/") >= 0
+        exec "set filetype=" . g:previous_buf_filetype
+    endif
+endfunction
+
+
+" - set filetype to be the same with previous file when replacing in command-line mode
+au CmdwinEnter [:] call s:ChangeFileTypeIfReplacing()
+
+" - execute the command under the cursor and then have the command-line window open again
+autocmd CmdwinEnter * map <buffer> <F5> <CR>q:
+
+" Debug mode auto command
+" au CmdwinEnter [>] do something
+
+" ***********************************************************************
+" 6.9_Unite.vim
+" ***********************************************************************
+
+    " nnoremap <Space><Space>  :Unite -start-insert -buffer-name=command  command<CR>
+    function! s:UniteSettings()
+        au InsertLeave <buffer> :UniteClose
+        imap <buffer> <TAB>   <Plug>(unite_select_next_line)
+        imap <buffer> <s-TAB>   <Plug>(unite_select_previous_line)
+    endfunction
+
+    au FileType unite call s:UniteSettings()
+    " inoremap <buffer><silent> <c-g> <Plug>(unite_exit)
+
 " ***********************************************************************
 " 7_Language tools ******************************************************
 " 7.1_YouCompleteMe settings
@@ -1094,7 +1157,15 @@ endif
 " - map to copy .vimspector.json file to current directory for further config in project directory.
 " 7.5_Vim-gdb
 " 7.6_Format
-" zzzz
+" 7.6.1_Vim-autoformat
+" 7.6.2_Neoformat
+" 7.7_Ale
+" 7.8_Cscope
+" - use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
+" - check cscope for definition of a symbol before checking ctags: 
+" - add any cscope database in current directory
+" - show msg when any other cscope db added
+" - mappings for cscope
 " ***********************************************************************
 
 " ***********************************************************************
@@ -1482,9 +1553,32 @@ function! VimuxForRepl()
         " if(&filetype=='vim') see function VimEnterExec
     endif
 endfunction
+" enter repl for vim buffer
+function! VimEnterExec()
+    if !exists("b:VimEterExecFlag")
+        let b:VimEterExecFlag=0
+    endif
+
+    if b:VimEterExecFlag
+        iunmap <buffer> <enter>
+        vunmap <buffer> <enter>
+        nunmap <buffer> <enter>
+        let b:VimEterExecFlag=0
+        echo "vim repl mode is off."
+    else
+        inoremap <buffer> <enter> <c-o>$<c-o>:exec getline(".")<CR><CR>
+        vnoremap <buffer> <enter> "vy :@v<CR>
+        nnoremap <buffer> <enter> :exec getline(".")<CR>j
+
+        let b:VimEterExecFlag=1
+        echo "vim repl mode is on."
+    endif
+endfunction
+
 
 " - map to toggle using vim for repl in another pane
 nmap <space>vp :call VimuxForRepl()<CR>
+autocmd FileType vim nnoremap <buffer> <space>vp :call VimEnterExec()<CR>
 
 " - function to change another pane's directory for tmux
 function!VimuxCdWorkingDirectory()
@@ -1643,6 +1737,92 @@ xnoremap ,f :Autoformat<CR>
 " following command contains bug: after command, ,cc will be mapped to cpp
 " run command
 
+" ***********************************************************************
+" 7.7_Ale
+" ***********************************************************************
+
+" let g:ale_sign_error = '✗'
+" let g:ale_sign_warning = '⚠'
+" " suppress the display of errors when you move the cursor onto their line (prevent cursor from disappearing)
+" let g:ale_echo_cursor = 0
+
+
+" Following 3 commands are replaced by coc.nvim
+" nmap <silent> <Space>ep <Plug>(ale_previous_wrap)
+" nmap <silent> <Space>eN <Plug>(ale_previous_wrap)
+" nmap <silent> <Space>en <Plug>(ale_next_wrap)
+
+" Available Linters: 'flake8', 'mypy', 'prospector', 'pycodestyle', 'pyflakes', 'pylint', 'pyls', 'pyre', 'vulture'
+let g:ale_linters = {
+\   'python': ['flake8','pylint'],
+\   'c':[],
+\   'cpp':[],
+\}
+
+let g:ale_fixer= {
+\   'python': ['autopep8'],
+\   'c':[],
+\   'cpp':[],
+\}
+
+" to suppress errors by flake8 globally,use OpenFlake8Config
+" add at the end of the error line `# noqa EXXX` XXX is num to suppress an
+" error there
+
+" ***********************************************************************
+" 7.8_Cscope
+" ***********************************************************************
+
+" call cscope_build in project root dir first
+if has("cscope")
+
+    " - use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
+    set cscopetag
+
+    " - check cscope for definition of a symbol before checking ctags: 
+    " set to 1 if you want the reverse search order.
+    set csto=0
+
+    " - add any cscope database in current directory
+    if filereadable("cscope.out")
+        cs add cscope.out  
+    " else add the database pointed to by environment variable 
+    elseif $CSCOPE_DB != ""
+        cs add $CSCOPE_DB
+    endif
+
+    " - show msg when any other cscope db added
+    set cscopeverbose  
+
+    "   's'   symbol: find all references to the token under cursor
+    "   'g'   global: find global definition(s) of the token under cursor
+    "   'c'   calls:  find all calls to the function name under cursor
+    "   't'   text:   find all instances of the text under cursor
+    "   'e'   egrep:  egrep search for the word under cursor
+    "   'f'   file:   open the filename under cursor
+    "   'i'   includes: find files that include the filename under cursor
+    "   'd'   called: find functions that function under cursor calls
+
+    " - mappings for cscope
+    nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>	
+    " nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+    nmap <C-\>i :cs find i <C-R>=expand("%:p:t")<CR>$<CR>
+    nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>	
+
+    nmap <Space>ss :cs find s <C-R>=expand("<cword>")<CR><CR>	
+    nmap <Space>sg :cs find g <C-R>=expand("<cword>")<CR><CR>	
+    nmap <Space>sc :cs find c <C-R>=expand("<cword>")<CR><CR>	
+    nmap <Space>st :cs find t <C-R>=expand("<cword>")<CR><CR>	
+    nmap <Space>se :cs find e <C-R>=expand("<cword>")<CR><CR>	
+    nmap <Space>sf :cs find f <C-R>=expand("<cfile>")<CR><CR>	
+    nmap <Space>si :cs find i <C-R>=expand("%:p:t")<CR>$<CR>
+    nmap <Space>sd :cs find d <C-R>=expand("<cword>")<CR><CR>	
+endif
 
 
 " ***********************************************************************
@@ -2052,7 +2232,8 @@ endfunction
 " - some other mappings for git
 " - move to the same line when swithing in git history mode
 " 9.5_Fuzzy search
-" - this is the default extra key bindings
+" 9.5.1_Fzf
+" - this is the default extra key bindings for fzf
 " - layout for fzf
 " - in Neovim, you can set up fzf window using a Vim command
 " - customize fzf colors to match your color scheme
@@ -2067,6 +2248,13 @@ endfunction
 " - s: function to get buffers name list
 " - function to show buffers with fzf
 " - command to show buffers with fzf
+" - map SPC hk to search keymap definition
+" - map for insert mode completion with fzf
+" 9.5.1_Ctrlp
+" - ctrlp extensions
+" - map C-p to ctrlp
+" - set current working directory for ctrlp
+" - let ctrlp search hidden files
 " 9.6_Easymotion
 " - set prefix for easymotion
 " - mappings for easymotion
@@ -2248,7 +2436,11 @@ au! BufEnter  fugitive://*  exec "if exists('g:glog_cursor')\n exec g:glog_curso
 " 9.5_Fuzzy search
 " ***********************************************************************
 
-" - this is the default extra key bindings
+" ***********************************************************************
+" 9.5.1_Fzf
+" ***********************************************************************
+
+" - this is the default extra key bindings for fzf
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-x': 'split',
@@ -2368,6 +2560,35 @@ endfunction
 " - command to show buffers with fzf
 command! -nargs=* -bang FzfBuffers call Fzf_buffers(<q-args>, <bang>0)
 
+" - map SPC hk to search keymap definition
+nmap <space>hk <plug>(fzf-maps-n)
+xmap <space>hk <plug>(fzf-maps-x)
+omap <space>hk <plug>(fzf-maps-o)
+imap <a-m>hk <plug>(fzf-maps-i)
+
+" - map for insert mode completion with fzf
+imap <c-x>w <plug>(fzf-complete-word)
+imap <c-x>f <plug>(fzf-complete-path)
+imap <c-x>j <plug>(fzf-complete-file-ag)
+imap <c-x>l <plug>(fzf-complete-line)
+
+" ***********************************************************************
+" 9.5.1_Ctrlp
+" ***********************************************************************
+
+" - ctrlp extensions
+let g:ctrlp_extensions = [ 'line' ]
+
+" nnoremap <c-f> :CtrlPLine %<CR>
+" - map C-p to ctrlp
+nmap <c-p> :CtrlP .<CR>
+" let g:ctrlp_map = '<c-p>'
+
+" - set current working directory for ctrlp
+let g:ctrlp_working_path_mode=2
+
+" - let ctrlp search hidden files
+let g:ctrlp_show_hidden = 1
 
 " ***********************************************************************
 " 9.6_Easymotion
@@ -2560,197 +2781,9 @@ endif
 
 
 " ***********************************************************************
-" TODO
+" 9.14_Neomake
 " ***********************************************************************
 
-
-
-
-" command-line window enter insert mode automatically
-" after :/?, type <c-f> to edit
-au CmdwinEnter [:/?]  startinsert
-
-" Set filetype to be same with previous file when searching because
-" autocomplete will search all buffer with same filetype 
-au BufEnter * let g:previous_buf_filetype=&filetype
-au CmdwinEnter [/?]  exec "set filetype=" . g:previous_buf_filetype
-
-function! s:ChangeFileTypeIfReplacing()
-    if stridx(getline('.'),"s/") >= 0
-        exec "set filetype=" . g:previous_buf_filetype
-    endif
-endfunction
-
-
-" Set filetype to be the same with previous file when replacing in
-" command-line mode
-au CmdwinEnter [:] call s:ChangeFileTypeIfReplacing()
-
-" execute the command under the cursor and then have the command-line window open again
-autocmd CmdwinEnter * map <buffer> <F5> <CR>q:
-
-" Debug mode auto command
-" au CmdwinEnter [>] do something
-
-" enter repl for vim buffer
-function! VimEnterExec()
-    if !exists("b:VimEterExecFlag")
-        let b:VimEterExecFlag=0
-    endif
-
-    if b:VimEterExecFlag
-        iunmap <buffer> <enter>
-        vunmap <buffer> <enter>
-        nunmap <buffer> <enter>
-        let b:VimEterExecFlag=0
-        echo "vim repl mode is off."
-    else
-        inoremap <buffer> <enter> <c-o>$<c-o>:exec getline(".")<CR><CR>
-        vnoremap <buffer> <enter> "vy :@v<CR>
-        nnoremap <buffer> <enter> :exec getline(".")<CR>j
-
-        let b:VimEterExecFlag=1
-        echo "vim repl mode is on."
-    endif
-endfunction
-
-autocmd FileType vim nnoremap <buffer> <space>vp :call VimEnterExec()<CR>
-"}}}
-
-
-
-"{{{ cscope settings
-" call cscope_build in project root dir first
-if has("cscope")
-
-    " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
-    set cscopetag
-
-    " check cscope for definition of a symbol before checking ctags: set to 1
-    " if you want the reverse search order.
-    set csto=0
-
-    " add any cscope database in current directory
-    if filereadable("cscope.out")
-        cs add cscope.out  
-    " else add the database pointed to by environment variable 
-    elseif $CSCOPE_DB != ""
-        cs add $CSCOPE_DB
-    endif
-
-    " show msg when any other cscope db added
-    set cscopeverbose  
-
-    "   's'   symbol: find all references to the token under cursor
-    "   'g'   global: find global definition(s) of the token under cursor
-    "   'c'   calls:  find all calls to the function name under cursor
-    "   't'   text:   find all instances of the text under cursor
-    "   'e'   egrep:  egrep search for the word under cursor
-    "   'f'   file:   open the filename under cursor
-    "   'i'   includes: find files that include the filename under cursor
-    "   'd'   called: find functions that function under cursor calls
-
-    nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>	
-    " nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-    nmap <C-\>i :cs find i <C-R>=expand("%:p:t")<CR>$<CR>
-    nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>	
-
-    nmap <Space>ss :cs find s <C-R>=expand("<cword>")<CR><CR>	
-    nmap <Space>sg :cs find g <C-R>=expand("<cword>")<CR><CR>	
-    nmap <Space>sc :cs find c <C-R>=expand("<cword>")<CR><CR>	
-    nmap <Space>st :cs find t <C-R>=expand("<cword>")<CR><CR>	
-    nmap <Space>se :cs find e <C-R>=expand("<cword>")<CR><CR>	
-    nmap <Space>sf :cs find f <C-R>=expand("<cfile>")<CR><CR>	
-    nmap <Space>si :cs find i <C-R>=expand("%:p:t")<CR>$<CR>
-    nmap <Space>sd :cs find d <C-R>=expand("<cword>")<CR><CR>	
-endif
-"}}}
-
-
-
-
-"{{{ Mapping selecting Mappings. Help describe keys
-    nmap <leader><tab> <plug>(fzf-maps-n)
-    xmap <leader><tab> <plug>(fzf-maps-x)
-    omap <leader><tab> <plug>(fzf-maps-o)
-"}}}
-
-"{{{ Insert mode completion
-    imap <c-x><c-k> <plug>(fzf-complete-word)
-    imap <c-x><c-f> <plug>(fzf-complete-path)
-    imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-    imap <c-x><c-l> <plug>(fzf-complete-line)
-
-    " Advanced customization using autoload functions
-    inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '14%'})
-"}}}
-
-
-
-" unite.vim {{{
-    " nnoremap <Space><Space>  :Unite -start-insert -buffer-name=command  command<CR>
-    function! s:UniteSettings()
-        au InsertLeave <buffer> :UniteClose
-        imap <buffer> <TAB>   <Plug>(unite_select_next_line)
-        imap <buffer> <s-TAB>   <Plug>(unite_select_previous_line)
-    endfunction
-
-    au FileType unite call s:UniteSettings()
-    " inoremap <buffer><silent> <c-g> <Plug>(unite_exit)
-" }}}
-
-
-
-
-" CtrlP {{{
-    let g:ctrlp_extensions = [ 'line' ]
-    " nnoremap <c-f> :CtrlPLine %<CR>
-    nmap <c-p> :CtrlP .<CR>
-    " let g:ctrlp_map = '<c-p>'
-    let g:ctrlp_working_path_mode=2
-    let g:ctrlp_show_hidden = 1
-" }}}
-
-
-
-" {{{ ale
-    " let g:ale_sign_error = '✗'
-    " let g:ale_sign_warning = '⚠'
-    " " suppress the display of errors when you move the cursor onto their line (prevent cursor from disappearing)
-    " let g:ale_echo_cursor = 0
-
-
-    " Following 3 commands are replaced by coc.nvim
-    " nmap <silent> <Space>ep <Plug>(ale_previous_wrap)
-    " nmap <silent> <Space>eN <Plug>(ale_previous_wrap)
-    " nmap <silent> <Space>en <Plug>(ale_next_wrap)
-
-    " Available Linters: 'flake8', 'mypy', 'prospector', 'pycodestyle', 'pyflakes', 'pylint', 'pyls', 'pyre', 'vulture'
-    let g:ale_linters = {
-    \   'python': ['flake8','pylint'],
-    \   'c':[],
-    \   'cpp':[],
-    \}
-
-    let g:ale_fixer= {
-    \   'python': ['autopep8'],
-    \   'c':[],
-    \   'cpp':[],
-    \}
-
-    " to suppress errors by flake8 globally,use OpenFlake8Config
-    " add at the end of the error line `# noqa EXXX` XXX is num to suppress an
-    " error there
-" }}}
-
-
-
-" {{{ neomake
 if g:vim_plug_installed
     call neomake#configure#automake('nrwi', 500)
     " disable lint/syntax check
@@ -2759,12 +2792,6 @@ if g:vim_plug_installed
     let g:neomake_cpp_enabled_makers = []
     let g:neomake_javascript_enabled_makers = []
 endif  " end if g:vim_plug_installed
-" }}}
-
-
-
-
-
 
 
 
