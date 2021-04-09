@@ -2655,7 +2655,8 @@ endif
 " ***********************************************************************
 
     nmap <a-w> <Plug>(expand_region_expand)
-    xmap <a-w> <Plug>(expand_region_expand)
+    xmap v <Plug>(expand_region_expand)
+    xmap V <Plug>(expand_region_shrink)
 
     " Default value of g:expand_region_text_objects={'ie':0,'ip':0,'iw':0,'iB':1,'il':0,'iW':0,'i''':0,'ib':1,'i]':1,'i"':0}
     " 1 means recursive.
@@ -2779,6 +2780,9 @@ endif
 " ***********************************************************************
 
 if g:vim_plug_installed
+
+    " automatically make the makefile
+    " when writing or reading a buffer, and on changes in insert and normal mode (after 500ms; no delay when writing)
     call neomake#configure#automake('nrwi', 500)
     " disable lint/syntax check
     let g:neomake_python_enabled_makers = []
