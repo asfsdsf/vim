@@ -2202,6 +2202,7 @@ endif
     " - translation auto repl
     " - s: function to translate repl file
     " - function to add count to translate for repl
+    " - map SPC hr to start repl translation
     " - function to translate region
     " - map SPC hc to translate
 " 9.2_Vim-multiple-cursor
@@ -2282,9 +2283,12 @@ endif
 " ***********************************************************************
 
     " - translation auto repl
-    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd TextChangedI <buffer> call TranslateCount(5)
+    " autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd TextChangedI <buffer> call TranslateCount(5)
     autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd TextChanged <buffer> call TranslateCount(0)
     autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd CursorHoldI,CursorHold <buffer> call TranslateCount(0)
+    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt map <buffer> <c-s> :call TranslateCount(0)<CR>
+    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt inoremap <buffer> <c-s> <c-o>:call TranslateCount(0)<CR>
+    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/translated.txt set autoread
 
     " - s: function to translate repl file
     function! s:TranslateRepl()
@@ -2309,6 +2313,9 @@ endif
             let g:translate_count=g:translate_count + 1
         endif
     endfunction
+
+    " - map SPC hr to start repl translation
+    nnoremap <space>hr :e $HOME/Software/baiduTranslate/software/toBeTranslate.txt<CR><c-w><c-o>:vs<CR><C-w>l:e $HOME/Software/baiduTranslate/software/translated.txt<CR><c-w>h
 
     " - function to translate region
     function! Translate()
