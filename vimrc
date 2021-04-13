@@ -641,7 +641,7 @@ endif
     " - map * to search selection in visual mode
     " - don't copy when using c and C to change text
 " 6.6_Maps for files
-    " - map C-s to save buffer in insert mode
+    " - map C-s to save buffer in insert mode(use C-s in vim will freeze)
     " - map to go to recent file
     " - open file under the cursor with default system software
     " - open the folder containing current file
@@ -885,8 +885,13 @@ endif
 " 6.6_Maps for files
 " ***********************************************************************
 
-    " - map C-s to save buffer in insert mode
+    " - map C-s to save buffer in insert mode(use C-s in vim will freeze)
     inoremap <c-s> <c-o>:update<CR>
+
+    " - map SPC f s to save buffer with sudo privilige in vim(not neovim)
+    if !has('nvim')
+        nnoremap <space>fs :w !sudo tee %<CR>
+    endif
 
     " - map to go to recent file
     nnoremap <Space>fr :FzfMrf!<CR>
@@ -947,7 +952,11 @@ endif
 " ***********************************************************************
 
     " - map SPC SPC to run command
-    nnoremap <Space><Space> :<c-f>
+    if g:vim_plug_installed
+        nnoremap <Space><Space> :Commands<CR>
+    else
+        nnoremap <Space><Space> :<c-f>
+    endif
 
     " - insert dividing line
     nnoremap <Space>id :r !echo "***********************************************************************"<CR>:TComment<CR>5l
@@ -1015,6 +1024,9 @@ endif
 
     " - map to describe key
     nnoremap <Space>hdk :Maps<CR>
+
+    " - map to show snippets
+    nnoremap <Space>hds :Snippets<CR>
 
     " - map to change working directory to current git project/current file
     nnoremap <Space>cd :cd %:h<CR>:silent! Gcd<CR>
