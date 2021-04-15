@@ -217,8 +217,10 @@ nnoremap <Space>ta :action ExternalTools_External Tools<cr>
 " Debug keymap
 """""""""""""""""""""""""""""""""""""
 nnoremap gb :action ToggleLineBreakpoint<cr>
+nnoremap gc :action Resume<cr>
 nnoremap ge :action EvaluateExpression<cr>
 vnoremap gE :action QuickEvaluateExpression<cr>
+nnoremap gE :action QuickEvaluateExpression<cr>
 nnoremap gs :action StepInto<cr>
 nnoremap gS :action ForceStepInto<cr>
 nnoremap gn :action StepOver<cr>

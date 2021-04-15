@@ -2211,6 +2211,7 @@ endif
 " ***********************************************************************
 " 9_Utilities ***********************************************************
 " 9.1_Translation
+    " - set translation repl base directory
     " - translation auto repl
     " - s: function to translate repl file
     " - function to add count to translate for repl
@@ -2294,19 +2295,23 @@ endif
 " 9.1_Translation
 " ***********************************************************************
 
+    " - set translation repl base directory
+    let g:translation_dir=system('translate -d')
+    let g:toBeTranslate_file=g:translation_dir . '/toBeTranslate.txt'
+
     " - translation auto repl
-    " autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd TextChangedI <buffer> call TranslateCount(5)
-    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd TextChanged <buffer> call TranslateCount(0)
-    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt autocmd CursorHoldI,CursorHold <buffer> call TranslateCount(0)
-    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt map <buffer> <c-s> :call TranslateCount(0)<CR>
-    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/toBeTranslate.txt inoremap <buffer> <c-s> <c-o>:call TranslateCount(0)<CR>
-    autocmd BufRead,BufNewFile $HOME/Software/baiduTranslate/software/translated.txt set autoread
+    " execute 'autocmd BufRead,BufNewFile ' . g:toBeTranslate_file . ' autocmd TextChangedI <buffer> call TranslateCount(5)'
+    execute 'autocmd BufRead,BufNewFile ' . g:toBeTranslate_file . ' autocmd TextChanged <buffer> call TranslateCount(0)'
+    execute 'autocmd BufRead,BufNewFile ' . g:toBeTranslate_file . ' autocmd CursorHoldI,CursorHold <buffer> call TranslateCount(0)'
+    execute 'autocmd BufRead,BufNewFile ' . g:toBeTranslate_file . ' map <buffer> <c-s> :call TranslateCount(0)<CR>'
+    execute 'autocmd BufRead,BufNewFile ' . g:toBeTranslate_file . ' inoremap <buffer> <c-s> <c-o>:call TranslateCount(0)<CR>'
+    execute 'autocmd BufRead,BufNewFile ' . g:translation_dir . '/translated.txt' . ' set autoread'
 
     " - s: function to translate repl file
     function! s:TranslateRepl()
         if &modified
             silent write
-            silent! exec '!translate "$(< $HOME/Software/baiduTranslate/software/toBeTranslate.txt)" > /tmp/oddtranslate && cat /tmp/oddtranslate > $HOME/Software/baiduTranslate/software/translated.txt'
+            silent! exec '!translate "$(< ' . g:toBeTranslate_file . ')" > /tmp/oddtranslate && cat /tmp/oddtranslate > ' . g:translation_dir . '/translated.txt'
         endif
     endfunction
 
@@ -2315,8 +2320,8 @@ endif
     " call s:TranslateRepl() if this method is called translateCount times
     " This method is called with the help of autocmd
     " translation output will be redirect to
-    " $HOME/Software/baiduTranslate/software/translated.txt
-    " Use watch -t -n 0.3 cat translated.txt to watch
+    " g:translation_dir/translated.txt
+    " Use watch -t -n 0.3 cat translated.txt to watch for test
     function! TranslateCount(translateCount)
         if g:translate_count >= a:translateCount
             let g:translate_count=0
@@ -2327,7 +2332,7 @@ endif
     endfunction
 
     " - map SPC hr to start repl translation
-    nnoremap <space>hr :e $HOME/Software/baiduTranslate/software/toBeTranslate.txt<CR><c-w><c-o>:vs<CR><C-w>l:e $HOME/Software/baiduTranslate/software/translated.txt<CR><c-w>h
+    nnoremap <space>hr :exec 'e ' . g:toBeTranslate_file<CR><c-w><c-o>:vs<CR><C-w>l:exec 'e ' . g:translation_dir . '/translated.txt'<CR><c-w>h
 
     " - function to translate region
     function! Translate()
