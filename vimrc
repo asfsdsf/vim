@@ -709,16 +709,16 @@ endif
     " - map SPC ty to toggle paste mode
     nnoremap <space>tp :call g:TogglePaste()<cr>
     if !exists('g:in_paste_mode')
-        let g:in_paste_mode=v:false
+        let g:in_paste_mode=0
     endif
     function! g:TogglePaste()
         if g:in_paste_mode
             set nopaste
-            let g:in_paste_mode=v:false
+            let g:in_paste_mode=0
             echo "In nopaste mode now"
         else
             set paste
-            let g:in_paste_mode=v:true
+            let g:in_paste_mode=1
             echo "In paste mode now"
         endif
     endfunction
