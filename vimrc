@@ -601,6 +601,7 @@ endif
     " - map create new line in insert mode
     " - map C-a/C-e to begin/end of the line in insert mode
     " - map C-y to paste
+    " - map SPC ty to toggle paste mode
     " - map gm to go to pair
     " - map H/L to move to begin/end of the line
     " - goto tags (symbols) in current file finder mapping
@@ -704,6 +705,23 @@ endif
 
     " - map C-y to paste
     noremap! <c-y> <c-r>+
+
+    " - map SPC ty to toggle paste mode
+    nnoremap <space>tp :call g:TogglePaste()<cr>
+    if !exists('g:in_paste_mode')
+        let g:in_paste_mode=v:false
+    endif
+    function! g:TogglePaste()
+        if g:in_paste_mode
+            set nopaste
+            let g:in_paste_mode=v:false
+            echo "In nopaste mode now"
+        else
+            set paste
+            let g:in_paste_mode=v:true
+            echo "In paste mode now"
+        endif
+    endfunction
 
     " - map C-a/C-e to begin/end of the line in insert mode
     inoremap <c-a> <c-o>^
