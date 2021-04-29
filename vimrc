@@ -1290,7 +1290,7 @@ if g:vim_plug_installed
     \ 'coc-ultisnips',
     \ 'coc-json',
     \ 'coc-css',
-    \ 'coc-python',
+    \ 'coc-jedi',
     \ 'coc-highlight',
     \ 'coc-pairs',
     \ 'coc-cmake',
