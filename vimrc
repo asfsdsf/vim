@@ -1329,8 +1329,6 @@ if g:vim_plug_installed
     " you can't use coc#config()
     " - coc user settings 
     let g:coc_user_config={
-        \ "python.autoComplete.addBrackets": v:true,
-        \ "python.autoComplete.extraPaths": ["~/Programming/Python/Custom_module:"],
         \ "diagnostic.errorSign": '✗',
         \ "diagnostic.warningSign": '⚠',
         \ "diagnostic.infoSign": '⚐',
