@@ -475,6 +475,23 @@ endif
     let g:hybrid_custom_term_colors = 1
     let g:hybrid_reduced_contrast = 1
 
+
+    " - add sign M to show whether the window is maximized
+    function! MaxmizedSign(...)
+        let builder = a:1
+        let context = a:2
+        call builder.add_section('airline_b', '%{MaxmizedSignText()}')
+        return 0
+    endfunction
+    function!MaxmizedSignText()
+        if g:isToggledVertically || g:isToggledHorizontally
+            return 'M'
+        else
+            return ''
+        endif
+
+    endfunction
+
     " - add window number in front of the airline
     function! WindowNumber(...)
         let builder = a:1
@@ -487,6 +504,7 @@ endif
     if !exists('g:vimrc_has_been_sourced') && g:vim_plug_installed
         call airline#add_statusline_func('WindowNumber')
         call airline#add_inactive_statusline_func('WindowNumber')
+        call airline#add_statusline_func('MaxmizedSign')
     endif
 
 " ***********************************************************************
