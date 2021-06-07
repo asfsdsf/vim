@@ -1167,7 +1167,8 @@ endif
     " - map <tab> for trigger completion and navigate to the next complete item
     " - map tab and s-tab for trigger completion with characters ahead and navigate.
     " - map <c-n> to trigger completion.
-    " - map <c-p> to show signature help
+    " - map <c-p> to toggle show signature help
+    " - map <c-j> to jump to the floating window in normal mode
     " - map to navigate diagnostic
     " - map goTo code navigation.
     " - map K to show documentation in preview window.
@@ -1176,6 +1177,8 @@ endif
     " - map to restart coc server
     " - map to change python interpreter
     " - map to run coc command
+    " - map to show structure with the help of coc
+    " - map to show coc lists
 " 7.3_Tmux settings
 " 7.3.1_Vimux settings
     " - function to run to another window if in tmux mode. Else run directly
@@ -1428,9 +1431,43 @@ if g:vim_plug_installed
     " - map <c-n> to trigger completion.
     inoremap <silent><expr> <c-n> coc#refresh()
 
-    " - map <c-p> to show signature help
-    inoremap <silent> <c-p> <c-o>:call CocActionAsync('showSignatureHelp')<CR>
+    function! Toggle_show_signature()
+        if !exists('g:is_coc_show_signature')
+            let g:is_coc_show_signature=1
+        endif
+        if g:is_coc_show_signature && coc#float#has_float()
+            let g:is_coc_show_signature=0
+            exec "normal!\<left>\<right>"
+            " call coc#float#close_all()
+        else
+            call CocActionAsync('showSignatureHelp') 
+            let g:is_coc_show_signature=1
+        endif
+    endfunction
 
+    " - map <c-p> to toggle show signature help
+    inoremap <silent> <c-p> <c-o>:call Toggle_show_signature()<CR>
+
+    " Modified from coc#float#jump()
+    function! Jump_to_float() abort
+        if !has('nvim')
+            return
+        endif
+        let g:winids =[]
+        for i in range(1, winnr('$'))
+            let id = win_getid(i)
+            let config = nvim_win_get_config(id)
+            if !empty(config) && !empty(config['relative']) && config['relative']=='win'
+                call add(g:winids, id)
+            endif
+        endfor
+        if !empty(g:winids)
+            call win_gotoid(g:winids[0])
+        endif
+    endfunction
+
+    " - map <c-j> to jump to the floating window in normal mode
+    nnoremap <c-j> :call Jump_to_float()<CR>
 
     " use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
     " - map to navigate diagnostic
@@ -1478,6 +1515,10 @@ if g:vim_plug_installed
     nnoremap <space>cc :CocCommand<CR>
 endif  " end if g:vim_plug_installed
 
+    " - map to show structure with the help of coc
+    nnoremap <Space>cs :CocList outline<CR>
+    " - map to show coc lists
+    nnoremap <Space>cl :CocList lists<CR>
 
 " ***********************************************************************
 " 7.3_Tmux settings
@@ -1722,7 +1763,7 @@ endif  " end if g:vim_plug_installed
     nnoremap ge :call vimspector#Stop()<CR>
     nnoremap gq :GitGutterEnable<CR>:call vimspector#Reset()<CR>
     nnoremap gb :call vimspector#ToggleBreakpoint()<CR>
-    nnoremap <silent> gB <c-u>call vimspector#ToggleBreakpoint(
+    nnoremap <silent> gB :<c-u>call vimspector#ToggleBreakpoint(
                 \ { 'condition': input( 'Enter condition expression: ' ),
                 \   'hitCondition': '0' }
                 \ )<CR>
@@ -1881,6 +1922,7 @@ endif  " end if g:vim_plug_installed
 " 8.4_Python settings
     " - run current python buffer
     " - debug current python buffer
+    " - set .ufl as python type file(fenics ufl file)
 " 8.5_Matlab/octave settings
     " - function to show matlab help
     " - function to go to matlab definition
@@ -1963,6 +2005,9 @@ endif  " end if g:vim_plug_installed
     autocmd FileType python nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("python3 " . expand("%:p"))<CR>
     " - debug current python buffer
     autocmd FileType python nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartPDB python -m pdb <c-r>%<CR>
+    " - set .ufl as python type file(fenics ufl file)
+    au BufNewFile,BufRead *.ufl setf python
+
 
 " ***********************************************************************
 " 8.5_Matlab/octave settings
