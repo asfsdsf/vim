@@ -253,9 +253,9 @@ endif
     " This comflict with vim-startify
     " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
-"""""""""""""""""""""""""""""""""""""
+" ***********************************************************************
 " 3.1_Display
-"""""""""""""""""""""""""""""""""""""
+" ***********************************************************************
     " - show (partial) command in the last line of the screen
     set showcmd                          "show key strokes
 
@@ -796,10 +796,21 @@ endif
 
     " - map to go to last buffer
     nnoremap <Space><Tab> :b#<CR>
-
+    function!CloseBuffer()
+        let buf_num = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+        if buf_num <= 1
+            if exists(":Startify")
+                Startify
+            else
+                enew
+            endif
+        else
+            bp
+            bd#
+        endif
+    endfunction
     " - map to close buffer
-    nnoremap <Space>bd :bn<CR>:bd#<CR>
-    nnoremap <Space>bd :bd<CR>
+    nnoremap <Space>bd :call CloseBuffer()<CR>
     " - map to show message buffer
     nnoremap <Space>bm :messages<CR>
 
