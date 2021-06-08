@@ -11,7 +11,8 @@
         "stopOnEntry": true,
         "console": "externalTerminal",
         "debugOptions": [],
-        "program": "${file}"
+        "program": "${file}",
+        "justMyCode": false
       },
       "breakpoints": {
         "exception": {
@@ -45,21 +46,23 @@
       }
     }
     // Examples:
-    //"vscode-cpptools":{
-      //"adapter": "vscode-cpptools",
-      //"variables": {
-        //"Executable": {
-            //"shell" : ["gcc","-g","Multigrid1D_Sparse.c", "-lm"]
-        //}
-      //},
-      //"configuration": {
-        //"request": "launch",
-        //"program": "a.out",
-        //"args":["3"],
-        //"stopAtEntry": true,
-        //"MIMode": "gdb"
-      //}
-    //}
+    /*
+    ,"vscode-cpptools":{
+      "adapter": "vscode-cpptools",
+      "variables": {
+        "Executable": {
+            "shell" : ["gcc","-g","Multigrid1D_Sparse.c", "-lm"]
+        }
+      },
+      "configuration": {
+        "request": "launch",
+        "program": "a.out",
+        "args":["3"],
+        "stopAtEntry": true,
+        "MIMode": "gdb"
+      }
+    }
+    */
   }
 }
 

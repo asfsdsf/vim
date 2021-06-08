@@ -1212,6 +1212,12 @@ endif
 " 7.4_Vimspector
     " - run following to install
     " - vimspector gadgets (debugger program)
+    " - setup breakpoints ui for vimspector
+    " - function to judge whether vimspector is connected
+    " - function to update breakpoints silently
+    " - function to go to current line for vimspector debugging mode
+    " - function to go up frame for vimspector debugging mode
+    " - function to go down frame for vimspector debugging mode
     " - map <tab> for auto completion in Vimspector console (<c-x><c-o> is omni commpletion)
     " - map for debug mode of vimspector
     " - map to copy .vimspector.json file to current directory for further config in project directory.
@@ -1747,6 +1753,78 @@ endif  " end if g:vim_plug_installed
     " - vimspector gadgets (debugger program)
     let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
 
+    " functions from https://github.com/puremourning/vimspector/issues/10
+    " - setup breakpoints ui for vimspector
+    augroup VimspectorCustomMappings
+        autocmd!
+        autocmd User VimspectorUICreated call VimspectorSetupUi()
+    augroup end
+    function! VimspectorSetupUi()
+        call win_gotoid(g:vimspector_session_windows.output)
+        set ft=asm
+        vert rightb copen
+        exec ":vert resize " . winwidth(g:vimspector_session_windows.output)/3
+        nnoremenu <silent> WinBar.ListBreakpoints :call vimspector#ListBreakpoints()<CR>
+        call vimspector#ListBreakpoints()
+        call win_gotoid(g:vimspector_session_windows.code)
+    endfunction
+
+    " - function to judge whether vimspector is connected
+    function!VimspectorConnected()
+        let connected=py3eval("(not '_vimspector_session' in vars()) or _vimspector_session._connection==None")
+        return connected=="False"
+    endfunction
+
+    " - function to update breakpoints silently
+    function!UpdateVimspectorBreakpoints()
+        if VimspectorConnected()
+            let id=win_getid()
+            call vimspector#ListBreakpoints()
+            call win_gotoid(id)
+        endif
+    endfunction
+
+    " - function to go to current line for vimspector debugging mode
+    function!VimspectorCurrentLine()
+        if VimspectorConnected()
+            py3 thread, frame = _vimspector_session._stackTraceView._line_to_frame[2];_vimspector_session._stackTraceView._SetCurrentThread(thread);_vimspector_session._stackTraceView._JumpToFrame(frame)
+        else
+            py3 from vimspector import utils;utils.UserMessage( 'Vimspector not connected, start a debug session first', persist=False, error=True )
+        endif
+    endfunction
+
+    " - function to go up frame for vimspector debugging mode
+    function!VimspectorFrameUp()
+        if VimspectorConnected()
+python3 << endpy
+vimspectorss=_vimspector_session._stackTraceView
+curframe=vimspectorss._current_frame
+frameindex=[fr[1] for fr in vimspectorss._line_to_frame.values()].index(curframe)
+thread, frame = list(vimspectorss._line_to_frame.values())[max(0,frameindex-1)]
+vimspectorss._SetCurrentThread(thread)
+_vimspector_session._stackTraceView._JumpToFrame(frame)
+endpy
+        else
+            py3 from vimspector import utils;utils.UserMessage( 'Vimspector not connected, start a debug session first', persist=False, error=True )
+        endif
+    endfunction
+
+    " - function to go down frame for vimspector debugging mode
+    function!VimspectorFrameDown()
+        if VimspectorConnected()
+python3 << endpy
+vimspectorss=_vimspector_session._stackTraceView
+curframe=vimspectorss._current_frame
+frameindex=[fr[1] for fr in vimspectorss._line_to_frame.values()].index(curframe)
+thread, frame = list(vimspectorss._line_to_frame.values())[min(len(vimspectorss._line_to_frame)-1,frameindex+1)]
+vimspectorss._SetCurrentThread(thread)
+_vimspector_session._stackTraceView._JumpToFrame(frame)
+endpy
+        else
+            py3 from vimspector import utils;utils.UserMessage( 'Vimspector not connected, start a debug session first', persist=False, error=True )
+        endif
+    endfunction
+
     " - map <tab> for auto completion in Vimspector console (<c-x><c-o> is omni commpletion)
     autocmd FileType VimspectorPrompt inoremap <buffer> <silent><expr> <Tab>
           \ pumvisible() ? "\<C-n>" :
@@ -1762,11 +1840,15 @@ endif  " end if g:vim_plug_installed
     nnoremap <Space>de :call vimspector#Stop()<CR>
     nnoremap <Space>dq :GitGutterEnable<CR>:call vimspector#Reset()<CR>
     nnoremap <Space>db :call vimspector#ToggleBreakpoint()<CR>
-    nnoremap <Space>dB <c-u>call vimspector#ToggleBreakpoint(
+    nnoremap <Space>dB :<c-u>call vimspector#ToggleBreakpoint(
                 \ { 'condition': input( 'Enter condition expression: ' ),
                 \   'hitCondition': '0' }
                 \ )<CR>
+    nnoremap <Space>dl :call UpdateVimspectorBreakpoints()<CR>
     nnoremap <Space>dfb :call vimspector#AddFunctionBreakpoint()<CR>
+    nnoremap <Space>d] :call VimspectorFrameUp()<CR>
+    nnoremap <Space>d[ :call VimspectorFrameDown()<CR>
+    nnoremap <Space>d<Space> :call VimspectorCurrentLine()<CR>
     nnoremap <Space>ds :call vimspector#StepInto()<CR>
     nnoremap <Space>dn :call vimspector#StepOver()<CR>
     nnoremap <Space>do :call vimspector#StepOut()<CR>
@@ -1781,6 +1863,10 @@ endif  " end if g:vim_plug_installed
                 \ { 'condition': input( 'Enter condition expression: ' ),
                 \   'hitCondition': '0' }
                 \ )<CR>
+    nnoremap gl :call UpdateVimspectorBreakpoints()<CR>
+    nnoremap g] :call VimspectorFrameUp()<CR>
+    nnoremap g[ :call VimspectorFrameDown()<CR>
+    nnoremap g<Space> :call VimspectorCurrentLine()<CR>
     nnoremap gs :call vimspector#StepInto()<CR>
     nnoremap gn :call vimspector#StepOver()<CR>
     nnoremap go :call vimspector#StepOut()<CR>
