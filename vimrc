@@ -1450,6 +1450,9 @@ if g:vim_plug_installed
     " - map <c-n> to trigger completion.
     inoremap <silent><expr> <c-n> coc#refresh()
 
+    " - map <c-l> to close completion floating window
+    inoremap <silent><nowait><expr> <c-l> pumvisible() ? "\<left>\<right>" : "\<right>"
+
     function! Toggle_show_signature()
         if !exists('g:is_coc_show_signature')
             let g:is_coc_show_signature=1

@@ -15,12 +15,19 @@ s
 \w          Easamotion: go to word
 \n          Easamotion: go to matches
 <c-f>       Search by lines using CtrlP(Find Strings everywhere)
-<c-d>       Ctrlp: toggle between the string mode and full regexp mode.
-<c-t>       Ctrlp: open the selected file in a new 'tab'.
-<c-v>       Ctrlp: open the selected file in a 'vertical' split.
-<c-r>       Ctrlp: toggle regexp search 
-<c-d>       Ctrlp: toggle search by file name
-<c-s>       Ctrlp: open the selected file in a 'horizontal' split.
+<c-t>       Ctrlp: (ctrlp command) open the selected file in a new 'tab'.
+<c-v>       Ctrlp: (ctrlp command) open the selected file in a 'vertical' split.
+<c-s>       Ctrlp: (ctrlp command) open the selected file in a 'horizontal' split.
+<c-r>       Ctrlp: (ctrlp command) toggle regexp search 
+<c-d>       Ctrlp: (ctrlp command) toggle search by file name
+<c-n>       Ctrlp: (ctrlp command) next search
+<c-p>       Ctrlp: (ctrlp command) previous search
+<c-f>       Ctrlp: (ctrlp command) next search mode
+<c-b>       Ctrlp: (ctrlp command) previous search mode
+<c-z>       Ctrlp: (ctrlp command) mark file
+<c-o>       Ctrlp: (ctrlp command) open marked files
+<c-\>       Ctrlp: (ctrlp command) paste word/file under cursor
+<tab>       Ctrlp: (ctrlp command) auto complete directory
 <Space>/    Search by lines using Ag in current working directory(Find Strings everywhere)
 <c-w><c-_>  Expand current split vertically
 <c-w><c-|>  Expand current split horizontally
@@ -38,6 +45,7 @@ s
 <c-t>       Open in new tab(CtrlP or fzf)
 <a-a>       Fzf: select all. (Then <enter> to open quickfix window with all selections to easily open them)
 <a-d>       Fzf: deselect all.
+'           Fzf: a term following the ' sign will match exactly
 <c-m>       Open ctags
 <a-s-j>     Multiple cursor: (normal,visual-multi) Add multiple cursor below(down)
 <a-s-k>     Multiple cursor: (normal,visual-multi) Add multiple cursor above(up)
@@ -85,7 +93,8 @@ X           NerdTree: close all child nodes of current node recursively   (Direc
 e           NerdTree: explore selected dir   (Directory node mappings) 
 m           NerdTree: open nerdtree menu to do some operation(Create dir,delete dir,open in system software...)
 <Space>en   Go to next error
-<Space>en   Go to previous error
+<Space>eN   Go to previous error
+<Space>ep   Go to previous error
 <c-/><c-/>  Comment the line
 <c-y>       YouCompleteMe(YCM): comfirm selection
 <c-e>       YouCompleteMe(YCM): cancel completion and redisplay origin word
@@ -224,19 +233,18 @@ SPC hc      Translate between Chinese and English
 q/          Open search history in command-line window. And edit to search with auto-completion
 q:          Open command history in command-line window. And edit to execute with auto-completion
 c-f         In command/Ex mode, enter command-line window to edit with auto-completion
-c-n         In insert mode, search for all buffers to autocomplete
 SPC :       Vimux: promt to run command
 SPC vp      Vimux: run repl in current buffer
 SPC vr      Vimux: rerun previous command
 SPC vo      Vimux: open pane in tmux if there is only one pane
 SPC vc      Vimux: close pane that is opened by SPC vo command
+A-u         Vimux: Previous vim pane or tmux pane
+A-z         Vumux: Toggle maximize panes (for vim or in tmux)
 SetMpiProcessors    Set the numer of mpi processors for mpirun when execute c/cpp using ,cp command
 SPC ls      Save layout(session) with dir base name as layout(session) name
 SPC lS      Save layout(session) with user input as layout(session) name
 SPC lr      Load layout(session) with dir base name as layout(session) name
 SPC lR      Load layout(session) with prompt window for help to choose
-A-u         Previous vim pane or tmux pane
-A-z         Toggle maximize panes in tmux
 zM          Folding: fold all
 zR          Folding: unfold all
 SPC z-      Folding: fold all
@@ -270,8 +278,45 @@ SPC cg      Coc.nvim: (c/c++) generate compile_commands.json for clangd completi
 SPC cr      Coc.nvim: restart coc server
 SPC ci      Coc.nvim: (python) set python interpreter
 SPC cc      Coc.nvim: run coc command
-c-n         Coc.nvim: (insert mode) force to trigger completion
-c-p         Coc.nvim: (insert mode) show signature help (show parameters)
 SPC ca      Coc.nvim: (visual mode) choose and do coc action on selected region
+SPC cs      Coc.nvim: show code structure
+SPC cl      Coc.nvim: show coc lists
+c-n         Coc.nvim: (insert mode) force to trigger completion
+c-p         Coc.nvim: (insert mode) toggle show signature help (show parameters)
+c-j         Coc.nvim: jump to the floating window in normal mode
+SPC dd      Vimspector: begin debugging or continue
+SPC dc      Vimspector: begin debugging or continue
+gc          Vimspector: begin debugging or continue
+SPC dp      Vimspector: pause
+gp          Vimspector: pause
+SPC dr      Vimspector: restart
+SPC de      Vimspector: stop/end
+ge          Vimspector: stop/end
+SPC dq      Vimspector: quit/reset/exit
+gq          Vimspector: quit/reset/exit
+SPC db      Vimspector: toggle breakpoint
+gb          Vimspector: toggle breakpoint
+SPC dB      Vimspector: add conditional breakpoint
+gB          Vimspector: add conditional breakpoint
+SPC dl      Vimspector: update breakpoints list
+gl          Vimspector: update breakpoints list
+SPC dfb     Vimspector: add function breakpoint
+gfb         Vimspector: add function breakpoint
+SPC d]      Vimspector: frame up
+g]          Vimspector: frame up
+SPC d[      Vimspector: frame down
+g[          Vimspector: frame down
+SPC d SPC   Vimspector: go to current line
+g SPC       Vimspector: go to current line
+SPC ds      Vimspector: step into
+gs          Vimspector: step into
+SPC dn      Vimspector: step next
+gn          Vimspector: step next
+SPC do      Vimspector: step out
+go          Vimspector: step out
+SPC dt      Vimspector: run to the cursor
+gt          Vimspector: run to the cursor
+SPC d:      Vimspector: evaluate command
+g:          Vimspector: evaluate command
 c-s         Freeze terminal (make you stuck) in vim
 c-q         Unfreeze terminal (if you stuck with c-s in vim)
