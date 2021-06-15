@@ -1216,6 +1216,7 @@ endif
     " - function to judge whether vimspector is connected
     " - function to update breakpoints silently
     " - function to go to current line for vimspector debugging mode
+    " - function to run to the cursor for vimspector debugging
     " - function to go up frame for vimspector debugging mode
     " - function to go down frame for vimspector debugging mode
     " - map <tab> for auto completion in Vimspector console (<c-x><c-o> is omni commpletion)
@@ -1335,6 +1336,8 @@ if g:vim_plug_installed
     \ 'coc-pairs',
     \ 'coc-cmake',
     \ 'coc-clangd',
+    \ 'coc-java',
+    \ 'coc-kotlin',
     \ 'coc-omni'
     \ ]
     let g:coc_source_omni_filetypes=["VimspectorPrompt"]
@@ -1796,6 +1799,15 @@ endif  " end if g:vim_plug_installed
         endif
     endfunction
 
+    " - function to run to the cursor for vimspector debugging
+    function!VimspectorRunToCursor()
+        if VimspectorConnected()
+            call vimspector#RunToCursor()
+        else
+            py3 from vimspector import utils;utils.UserMessage( 'Vimspector not connected, start a debug session first', persist=False, error=True )
+        endif
+    endfunction
+
     " - function to go up frame for vimspector debugging mode
     function!VimspectorFrameUp()
         if VimspectorConnected()
@@ -1873,7 +1885,7 @@ endpy
     nnoremap gs :call vimspector#StepInto()<CR>
     nnoremap gn :call vimspector#StepOver()<CR>
     nnoremap go :call vimspector#StepOut()<CR>
-    nnoremap gt :call vimspector#RunToCursor()<CR>
+    nnoremap gt :call VimspectorRunToCursor()<CR>
     nnoremap g: :VimspectorEval 
 
     " - map to copy .vimspector.json file to current directory for further config in project directory.
