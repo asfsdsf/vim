@@ -168,7 +168,7 @@ nnoremap ,o :action OverrideMethods<CR>
 nnoremap gu :action GotoSuperMethod<CR>
 nnoremap ,gs :action GotoSymbol<CR>
 nnoremap gi :action GotoImplementation<CR>
-nnoremap gt :action GotoTypeDeclaration<CR>
+nnoremap gT :action GotoTypeDeclaration<CR>
 nnoremap gr :action FindUsages<CR>
 nnoremap gR :action FindUsagesInFile<CR>
 nnoremap zm :action CollapseRegion<CR>

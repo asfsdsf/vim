@@ -1337,7 +1337,6 @@ if g:vim_plug_installed
     \ 'coc-cmake',
     \ 'coc-clangd',
     \ 'coc-java',
-    \ 'coc-kotlin',
     \ 'coc-omni'
     \ ]
     let g:coc_source_omni_filetypes=["VimspectorPrompt"]
