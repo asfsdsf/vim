@@ -1196,6 +1196,7 @@ endif
     " - function to run to another window if in tmux mode. Else run directly
     " - set VimuxReplDefaultFiletype for repl
     " - map to call some tmux command
+    " - map for repl directly
     " - function to run visual region in another tmux pane
     " - function to show python doc of register v
     " - function to run current line in another tmux pane
@@ -1576,6 +1577,14 @@ endif  " end if g:vim_plug_installed
     nmap <space>vl :call VimuxRunLastCommand()<CR>
     nmap <space>vc :call VimuxCloseRunner()<CR>
     nmap <space>vr :call VimuxRunCommand("!!\n")<CR>
+
+    " - map for repl directly
+    inoremap <a-enter> <c-o>$<c-o>:call VimuxSlimeNormal()<CR><enter>
+    vnoremap <a-enter> "vy :call VimuxSlimeVisual()<CR>
+    nnoremap <a-enter> :call VimuxSlimeNormal()<CR>j
+    inoremap <a-v> <c-o>$<c-o>:call VimuxSlimeNormal()<CR><enter>
+    vnoremap <a-v> "vy :call VimuxSlimeVisual()<CR>
+    nnoremap <a-v> :call VimuxSlimeNormal()<CR>j
 
     " - function to run visual region in another tmux pane
     function! VimuxSlimeVisual()
