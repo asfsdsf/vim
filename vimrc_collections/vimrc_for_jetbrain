@@ -90,6 +90,8 @@ inoremap <c-f> <right>
 inoremap <c-a> <c-o>^
 inoremap <c-e> <c-o>$
 
+inoremap <c-v> <c-o>:action $Paste<cr>
+
 " Easier moving in tabs and windows
 nnoremap <A-l> gt
 nnoremap <A-h> gT
@@ -113,6 +115,11 @@ nnoremap <Space>wn :action EditSourceInNewWindow<CR>
 nnoremap <Space>bd :q<CR>
 nnoremap <Space>wd :action CloseAllEditors<CR>
 nnoremap <Space>wx :q<CR>
+
+nnoremap gx$ :action CloseAllToTheRight<CR>
+nnoremap gx0 :action CloseAllToTheLeft<CR>
+nnoremap gxx :action CloseAllToTheLeft<CR>:action CloseAllToTheRight<CR>
+
 """""""""""""""""""""""""""""""""""""
 " IdeaVim Specific Configuration
 """""""""""""""""""""""""""""""""""""
