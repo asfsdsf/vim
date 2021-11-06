@@ -71,6 +71,7 @@
 " 9.12_Abbreviation
 " 9.13_Undotree
 " 9.14_Neomake
+" 9.15_fcitx.vim
 " ***********************************************************************
 
 " ***********************************************************************
@@ -3024,6 +3025,14 @@ endif  " end if g:vim_plug_installed
 
 
 
+" ***********************************************************************
+" 9.15_fcitx.vim
+" ***********************************************************************
+
+let g:silent_unsupported=1
+
+
+" ***********************************************************************
 " Variable used to judge whether it is the first time to source vimrc
 " " For example, when you need to
 " call airline#add_statusline_func('WindowNumber')
@@ -3032,4 +3041,3 @@ endif  " end if g:vim_plug_installed
 "     call airline#add_statusline_func('WindowNumber')
 " endif 
 let g:vimrc_has_been_sourced = 1
-
