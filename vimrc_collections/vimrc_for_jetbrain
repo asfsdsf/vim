@@ -212,6 +212,7 @@ nnoremap ? :!/home/ban/Programming/shell/command/ideavim_help<CR>
 nnoremap ? :!run_custom_command ideavim_help<CR>
 nnoremap <Space>z :action ToggleZenMode<CR>
 nnoremap <Space>qq :action Exit<CR>
+nnoremap <Space>tn :action EditorGutterToggleGlobalLineNumbers<CR>
 
 """""""""""""""""""""""""""""""""""""
 " External tools
@@ -236,6 +237,7 @@ nnoremap gS :action ForceStepInto<cr>
 nnoremap gn :action StepOver<cr>
 nnoremap go :action StepOut<cr>
 nnoremap gt :action RunToCursor<cr>
+nnoremap gT :action ShowExecutionPoint<cr>
 nnoremap gv :action ViewBreakpoints<cr>
 nnoremap gp :action Pause<cr>
 

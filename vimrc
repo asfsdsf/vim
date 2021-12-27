@@ -18,6 +18,7 @@
 " 4_Theme plugins settings **********************************************
 " 4.1_Vim-Airline settings
 " 4.2_Devicons settings
+" 4.3_rainbow_parentheses
 " 5_Function tools ******************************************************
 " 6_Basic map in normal/insert/visual/command mode ******************************
 " 6.1_Text navigation
@@ -42,6 +43,7 @@
 " 7.6.2_Neoformat
 " 7.7_Ale
 " 7.8_Cscope
+" 7.9_Vista
 " 8_Language settings ***************************************************
 " 8.1_Html/css
 " 8.2_Julia
@@ -145,13 +147,13 @@ if exists('*plug#begin')
         " sudo apt install nodejs yarnpkg
         Plug 'neoclide/coc.nvim', {'branch': 'release'}  " Intellisense engine for Vim8 & Neovim, full language server protocol support as VSCode
         Plug 'lilydjwg/fcitx.vim'  " (auto switch chinese input method) keep and restore fcitx state when leaving/re-entering insert mode 
+        Plug 'liuchengxu/vista.vim'  " View and search LSP symbols, tags in Vim/NeoVim.
     endif
 
     " - languages plugins
     Plug 'JuliaEditorSupport/julia-vim'  " Vim support for Julia. http://julialang.org/
     Plug 'lervag/vimtex'  " A modern vim plugin for editing LaTeX files.
     Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " Interactive command execution in Vim.
-    Plug 'Shougo/deol.nvim'  " shell interface for NeoVim and Vim8.
     " Plug 'Shougo/vimshell.vim'  " shell interface for NeoVim and Vim8.
     Plug 'benmills/vimux'  " vim plugin to interact with tmux
     Plug 'christoomey/vim-tmux-navigator'  " Seamless navigation between tmux panes and vim splits
@@ -188,6 +190,7 @@ if exists('*plug#begin')
 
     " - Theme / Interface plugins
     " Plug 'nathanaelkane/vim-indent-guides'  " visually displaying indent levels in Vim.
+    Plug 'kien/rainbow_parentheses.vim'
     Plug 'vim-airline/vim-airline'  " beautiful bar at bottom
     Plug 'vim-airline/vim-airline-themes'  " beautiful bar at bottom
     Plug 'ryanoasis/vim-devicons'  " iconize symbols
@@ -465,6 +468,7 @@ endif
     " - add window number in front of the airline
     " - call those only once and only when vim-plug is installed(for airline)
 " 4.2_Devicons settings
+" 4.3_rainbow_parentheses
 " ***********************************************************************
 
 
@@ -514,6 +518,16 @@ endif
 " ***********************************************************************
     let g:webdevicons_conceal_nerdtree_brackets = 1
     let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+
+" ***********************************************************************
+" 4.3_rainbow_parentheses
+" ***********************************************************************
+
+    au VimEnter * RainbowParenthesesToggle
+    au Syntax * RainbowParenthesesLoadRound
+    au Syntax * RainbowParenthesesLoadSquare
+    au Syntax * RainbowParenthesesLoadBraces
+
 
 " ***********************************************************************
 " 5_Function tools ******************************************************
@@ -1235,6 +1249,10 @@ endif
     " - add any cscope database in current directory
     " - show msg when any other cscope db added
     " - mappings for cscope
+" 7.9_Vista
+    " - add nearby function to status line
+    " - run to activate obtaining nearby functions for status line automatically
+    " - fzf layout for vista
 " ***********************************************************************
 
 
@@ -1326,6 +1344,8 @@ if g:vim_plug_installed
     " :CocCommand clangd.install
     " To use it with python:
     " pip install jedi pylint neovim
+    " # maybe `apt install python3-venv` is needed
+    " pip install jedi-language-server
     "
     " - coc plugins list
     " coc-omni is for vimspector's console completion
@@ -2033,6 +2053,30 @@ endpy
         nmap <Space>sd :cs find d <C-R>=expand("<cword>")<CR><CR>	
     endif
 
+
+" ***********************************************************************
+" 7.9_Vista
+" ***********************************************************************
+
+    " - add nearby function to status line
+    function! NearestMethodOrFunction() abort
+      return get(b:, 'vista_nearest_method_or_function', '')
+    endfunction
+    set statusline+=%{NearestMethodOrFunction()}
+
+    " - run to activate obtaining nearby functions for status line automatically
+    " By default vista.vim never run if you don't call it explicitly.
+    "
+    " If you want to show the nearest function in your statusline automatically,
+    " you can add the following line to your vimrc
+    autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+
+    " - fzf layout for vista
+    let g:vista_fzf_preview = ['right:50%']
+    let g:vista#renderer#icons = {
+        \   "function": "\uf794",
+        \   "variable": "\uf71b",
+        \ }
 
 " ***********************************************************************
 " 8_Language settings ***************************************************
