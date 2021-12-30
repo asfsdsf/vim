@@ -2066,14 +2066,17 @@ endpy
     function! NearestMethodOrFunction() abort
       return get(b:, 'vista_nearest_method_or_function', '')
     endfunction
-    set statusline+=%{NearestMethodOrFunction()}
 
-    " - run to activate obtaining nearby functions for status line automatically
-    " By default vista.vim never run if you don't call it explicitly.
-    "
-    " If you want to show the nearest function in your statusline automatically,
-    " you can add the following line to your vimrc
-    autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+    if !empty($DISPLAY)  " if not on server
+        set statusline+=%{NearestMethodOrFunction()}
+
+        " - run to activate obtaining nearby functions for status line automatically
+        " By default vista.vim never run if you don't call it explicitly.
+        "
+        " If you want to show the nearest function in your statusline automatically,
+        " you can add the following line to your vimrc
+        autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+    endif
 
     " - fzf layout for vista
     let g:vista_fzf_preview = ['right:50%']
