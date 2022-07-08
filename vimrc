@@ -1347,7 +1347,7 @@ if g:vim_plug_installed
     " To install clangd
     " :CocCommand clangd.install
     " To use it with python:
-    " pip install jedi pylint neovim
+    " pip install jedi pylint neovim dbus-python
     " # maybe `apt install python3-venv` is needed
     " pip install jedi-language-server
     "
@@ -1625,6 +1625,10 @@ endif  " end if g:vim_plug_installed
         endif
 
         call VimuxRunCommand(s:vimux_slime_delete_blank_line)
+        " add enter for python multiline command
+        if (count(s:vimux_slime_delete_blank_line,"\n") > 0 && (&filetype=='python'))
+            call VimuxRunCommand("")
+        endif
     endfunction
 
     " - function to show python doc of register v
@@ -2204,7 +2208,7 @@ endpy
             e /tmp/odd_for_vim_matlab.md
             1,$d
             exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
-            exec "normal! ggd/----------------------------\<cr>"
+            exec 'normal! gg'
             write
         endif
     endfunction
@@ -2230,7 +2234,7 @@ endpy
                 echo 'Fail to open matlab definition file.'
             endif
             let @+=l:odd_clipboard
-        elseif l:ifem_file_path != ''
+        elseif !empty(glob('$HOME/Software/ifem/ifem/'))
         " --- Show ifem definition ----------------------------------------------
             let l:ifem_file_path=system('ag -l "^function .+\W' . expand('<cword>') . '\W" $HOME/Software/ifem/ifem/')
             exec "view " . l:ifem_file_path
@@ -2239,7 +2243,7 @@ endpy
             e /tmp/odd_for_vim_matlab.md
             1,$d
             exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
-            exec "normal! ggd/----------------------------\<cr>"
+            exec 'normal! gg'
             write
         endif
     endf
