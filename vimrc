@@ -1111,6 +1111,8 @@ endif
     nnoremap <Space>tw :ToggleWrap<CR>
     " - map to find actions
     nmap <space>aa :FindActions<CR>
+    nmap <space>aA :FindActionsFor<space>
+    nmap <space>AA :FindActionsFor<space>
     " - map to open current file by gedit
     nmap <space>ag :!gedit %<CR>
     " - map to show undo tree
@@ -1233,6 +1235,7 @@ endif
     " - run following to install
     " - vimspector gadgets (debugger program)
     " - setup breakpoints ui for vimspector
+    " - function to show vimspector help message
     " - function to judge whether vimspector is connected
     " - function to update breakpoints silently
     " - function to go to current line for vimspector debugging mode
@@ -1812,6 +1815,11 @@ endif  " end if g:vim_plug_installed
         call win_gotoid(g:vimspector_session_windows.code)
     endfunction
 
+    " - shapgvba gb fubj ivzfcrpgbe uryc zrffntr
+    function!VimspectorHelp()
+        echo "For a fresh project, run <space>dg to generate debug configuration file.\nKey <space>dk can show keymap for debugging.\n"
+    endfunction
+
     " - function to judge whether vimspector is connected
     function!VimspectorConnected()
         let connected=py3eval("(not '_vimspector_session' in vars()) or _vimspector_session._connection==None")
@@ -1884,6 +1892,8 @@ endpy
           \ "\<c-x>\<c-o>"
 
     " - map for debug mode of vimspector
+    nnoremap <Space>d? :call VimspectorHelp()<CR>
+    nnoremap <Space>dk :FindActionsFor vimspector<CR>
     nnoremap <Space>dd :GitGutterDisable<CR>:call vimspector#Continue()<CR>
     nnoremap <Space>dc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
     nnoremap ,cd :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
@@ -1906,6 +1916,7 @@ endpy
     nnoremap <Space>do :call vimspector#StepOut()<CR>
     nnoremap <Space>dt :call vimspector#RunToCursor()<CR>
     nnoremap <Space>d: :VimspectorEval 
+    nnoremap g? :call VimspectorHelp()<CR>
     nnoremap gc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
     nnoremap gp :call vimspector#Pause()<CR>
     nnoremap ge :call vimspector#Stop()<CR>
@@ -2511,6 +2522,7 @@ endif
     " - customize fzf colors to match your color scheme
     " - enable per-command history for fzf
     " - command to search help (FindActions) with fzf
+    " - command to show search help (FindActions) for keyword
     " - command to preview and open project file with fzf
     " - function to show changes of current files with fzf
     " - command to show changes of current files with fzf
@@ -2763,6 +2775,11 @@ endif
     command! -bang -nargs=* FindActions
       \ call fzf#vim#grep(
       \   'cat $HOME/Software/vim/vim_tip/find_actions '.shellescape(<q-args>), 1)
+
+    " - command to show search help (FindActions) for keyword
+    command! -bang -nargs=* FindActionsFor
+      \ call fzf#vim#grep(
+      \   'cat $HOME/Software/vim/vim_tip/find_actions | grep -i ' . <q-args>, 1)
 
     " - command to preview and open project file with fzf
     command! -bang -nargs=? -complete=dir Files

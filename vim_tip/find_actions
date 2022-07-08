@@ -284,6 +284,9 @@ SPC cl      Coc.nvim: show coc lists
 c-n         Coc.nvim: (insert mode) force to trigger completion
 c-p         Coc.nvim: (insert mode) toggle show signature help (show parameters)
 c-j         Coc.nvim: jump to the floating window in normal mode
+SPC dk      Vimspector: show vimspector keymap
+SPC d?      Vimspector: show vimspector help
+g?          Vimspector: show vimspector help
 SPC dd      Vimspector: begin debugging or continue
 SPC dc      Vimspector: begin debugging or continue
 gc          Vimspector: begin debugging or continue
