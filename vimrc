@@ -20,6 +20,8 @@
 " 4.2_Devicons settings
 " 4.3_rainbow_parentheses
 " 5_Function tools ******************************************************
+" 5.1_editor tools
+" 5.2_vimscript notes
 " 6_Basic map in normal/insert/visual/command mode ******************************
 " 6.1_Text navigation
 " 6.2_tab map
@@ -535,6 +537,7 @@ endif
 
 " ***********************************************************************
 " 5_Function tools ******************************************************
+" 5.1_editor tools
     " - keymap for open_file_help file(e.g. Used to OpenTodoFile)
     " - command to open a file to write python code and then output to current file
     " - open and edit find actions file which provide useful keymaps.(Use <Space>aa to
@@ -544,6 +547,12 @@ endif
     " - command to show difference between buffer with saved file
     " - command to open files under some important directories
     " - command to compare current file with clipboard
+" 5.2_vimscript notes
+    " - function to show vimscript tips
+" ***********************************************************************
+
+" ***********************************************************************
+" 5.1_editor tools
 " ***********************************************************************
 
     " - keymap for open_file_help file(e.g. Used to OpenTodoFile)
@@ -633,6 +642,24 @@ endif
     autocmd TextChanged ~/Software/vim/clipboard :diffupdate
 
 " ***********************************************************************
+" 5.2_vimscript notes
+" ***********************************************************************
+
+    " - function to show vimscript tips
+    function! g:Vimscript_tips()
+        echo "Use let: to show all variables.\n
+                    \and add following to show specific variables: (e.g. :let g:)\n
+                    \    g:  global variables  \n
+                    \    b:  local buffer variables  \n
+                    \    w:  local window variables  \n
+                    \    t:  local tab page variables  \n
+                    \    s:  script-local variables  \n
+                    \    l:  local function variables  \n
+                    \    v:  Vim variables."
+        echo "To search vim builtin functions, Run :help eval"
+    endfunction
+
+" ***********************************************************************
 " 6_Basic map in normal/insert/visual/command mode ******************************
 " 6.1_Text navigation
     " - map movement in insert mode
@@ -671,6 +698,7 @@ endif
     " - map to close other windows
     " - map to resize window
     " - map to go to nth window
+    " - map to toggle hide nth window
     " - prevent conflict(type mistake) with tmux
 " 6.5_Search text
     " - map C-h to replace
@@ -721,6 +749,10 @@ endif
     " - set filetype to be the same with previous file when replacing in command-line mode
     " - execute the command under the cursor and then have the command-line window open again
 " 6.9_Unite.vim
+" ***********************************************************************
+
+" ***********************************************************************
+" 6.1_Text navigation
 " ***********************************************************************
 
     " map! map to insert and command-line mode
@@ -907,15 +939,6 @@ endif
     nnoremap <c-right> 2<C-w>>
 
     " - map to go to nth window
-    nnoremap <a-1>  :call CloseMaximize()<CR>1<C-w><C-w>
-    nnoremap <a-2>  :call CloseMaximize()<CR>2<C-w><C-w>
-    nnoremap <a-3>  :call CloseMaximize()<CR>3<C-w><C-w>
-    nnoremap <a-4>  :call CloseMaximize()<CR>4<C-w><C-w>
-    nnoremap <a-5>  :call CloseMaximize()<CR>5<C-w><C-w>
-    nnoremap <a-6>  :call CloseMaximize()<CR>6<C-w><C-w>
-    nnoremap <a-7>  :call CloseMaximize()<CR>7<C-w><C-w>
-    nnoremap <a-8>  :call CloseMaximize()<CR>8<C-w><C-w>
-    nnoremap <a-9>  :call CloseMaximize()<CR>9<C-w><C-w>
     nnoremap <Space>1  :call CloseMaximize()<CR>1<C-w><C-w>
     nnoremap <Space>2  :call CloseMaximize()<CR>2<C-w><C-w>
     nnoremap <Space>3  :call CloseMaximize()<CR>3<C-w><C-w>
@@ -925,6 +948,37 @@ endif
     nnoremap <Space>7  :call CloseMaximize()<CR>7<C-w><C-w>
     nnoremap <Space>8  :call CloseMaximize()<CR>8<C-w><C-w>
     nnoremap <Space>9  :call CloseMaximize()<CR>9<C-w><C-w>
+
+    " - map to toggle hide nth window
+    nnoremap <a-1>  :call VimspectorToggleHide(1,1)<CR>
+    nnoremap <a-2>  :call VimspectorToggleHide(2,1)<CR>
+    nnoremap <a-3>  :call VimspectorToggleHide(3,1)<CR>
+    nnoremap <a-4>  :call VimspectorToggleHide(4,1)<CR>
+    nnoremap <a-5>  :call VimspectorToggleHide(5,1)<CR>
+    nnoremap <a-6>  :call VimspectorToggleHide(6,1)<CR>
+    nnoremap <a-7>  :call VimspectorToggleHide(7,1)<CR>
+    nnoremap <a-8>  :call VimspectorToggleHide(8,1)<CR>
+    nnoremap <a-9>  :call VimspectorToggleHide(9,1)<CR>
+
+    nnoremap <space><a-1>  :call VimspectorToggleHide(1,2)<CR>
+    nnoremap <space><a-2>  :call VimspectorToggleHide(2,2)<CR>
+    nnoremap <space><a-3>  :call VimspectorToggleHide(3,2)<CR>
+    nnoremap <space><a-4>  :call VimspectorToggleHide(4,2)<CR>
+    nnoremap <space><a-5>  :call VimspectorToggleHide(5,2)<CR>
+    nnoremap <space><a-6>  :call VimspectorToggleHide(6,2)<CR>
+    nnoremap <space><a-7>  :call VimspectorToggleHide(7,2)<CR>
+    nnoremap <space><a-8>  :call VimspectorToggleHide(8,2)<CR>
+    nnoremap <space><a-9>  :call VimspectorToggleHide(9,2)<CR>
+
+    nnoremap <c-1>  :call VimspectorToggleHide(1,2)<CR>
+    nnoremap <c-2>  :call VimspectorToggleHide(2,2)<CR>
+    nnoremap <c-3>  :call VimspectorToggleHide(3,2)<CR>
+    nnoremap <c-4>  :call VimspectorToggleHide(4,2)<CR>
+    nnoremap <c-5>  :call VimspectorToggleHide(5,2)<CR>
+    nnoremap <c-6>  :call VimspectorToggleHide(6,2)<CR>
+    nnoremap <c-7>  :call VimspectorToggleHide(7,2)<CR>
+    nnoremap <c-8>  :call VimspectorToggleHide(8,2)<CR>
+    nnoremap <c-9>  :call VimspectorToggleHide(9,2)<CR>
 
     " - prevent conflict(type mistake) with tmux
     nnoremap <c-a> l
@@ -1251,6 +1305,9 @@ endif
     " - function to run to the cursor for vimspector debugging
     " - function to go up frame for vimspector debugging mode
     " - function to go down frame for vimspector debugging mode
+    " - function to enter vimspector debug mode
+    " - function to exit vimspector debug mode
+    " - function to toggle hide window in vimspector debug mode
     " - map <tab> for auto completion in Vimspector console (<c-x><c-o> is omni commpletion)
     " - map for debug mode of vimspector
     " - map to copy .vimspector.json file to current directory for further config in project directory.
@@ -1809,6 +1866,8 @@ endif  " end if g:vim_plug_installed
     " - vimspector gadgets (debugger program)
     let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
 
+    let g:vimspector_sidebar_width = 25
+
     " functions from https://github.com/puremourning/vimspector/issues/10
     " - setup breakpoints ui for vimspector
     augroup VimspectorCustomMappings
@@ -1830,7 +1889,7 @@ endif  " end if g:vim_plug_installed
 
     " - function to show vimspector help message
     function!VimspectorHelp()
-        echo "To install vimspector, run :VimspectorInstall.\nFor a fresh project, run <space>dg to generate debug configuration file.\nKey <space>dk can show keymap for debugging.\n"
+        echo "To install vimspector, run :VimspectorInstall.\nFor a fresh project, run <space>dg to generate debug configuration file.\nKey <space>dk can show keymap for debugging.\nTo show breakpoints, press gl or <space>dl."
     endfunction
 
     " - function to judge whether vimspector is connected
@@ -1901,6 +1960,7 @@ endpy
         endif
     endfunction
 
+    " - function to enter vimspector debug mode
     function! VimspectorEnter()
         GitGutterDisable
         let g:vimspector_code_buffer_type=&filetype
@@ -1911,6 +1971,7 @@ endpy
         call vimspector#Continue()
     endfunction
 
+    " - function to exit vimspector debug mode
     function! VimspectorExit()
         autocmd! VimspectorBufferMappings
         GitGutterEnable
@@ -1919,6 +1980,43 @@ endpy
         " reopen code buffer to unmap buffer map
         bdelete
         edit #
+    endfunction
+
+    " - function to toggle hide window in vimspector debug mode
+    function! VimspectorToggleHide(win_nr,direction)
+        if winnr('$') == 1
+            echo 'There is only one window. Can not hide it.'
+            return
+        endif
+        call CloseMaximize()
+        let l:buf_num = winbufnr(a:win_nr)
+        if getbufvar(l:buf_num, 'hide_win') == ''
+            call setbufvar(l:buf_num, 'hide_win', 0)
+        endif
+        if getbufvar(l:buf_num, 'hide_win')
+            if getbufvar(l:buf_num, 'hide_win_height') > 0
+                exec a:win_nr . 'resize ' . getbufvar(l:buf_num, 'hide_win_height')
+            endif
+            if getbufvar(l:buf_num, 'hide_win_width') > 0
+                exec 'vertical ' . a:win_nr . 'resize ' . getbufvar(l:buf_num, 'hide_win_width')
+            endif
+            echo 'window ' . a:win_nr . ' unhided'
+        else
+            " vertical direction
+            if a:direction == 1
+                call setbufvar(l:buf_num, 'hide_win_height', -1)
+                call setbufvar(l:buf_num, 'hide_win_width', winwidth(a:win_nr))
+                exec 'vertical ' . a:win_nr . 'resize 1'
+            endif
+            " horizontal direction
+            if a:direction == 2
+                call setbufvar(l:buf_num, 'hide_win_height', winheight(a:win_nr))
+                call setbufvar(l:buf_num, 'hide_win_width', -1)
+                exec a:win_nr . 'resize 1'
+            endif
+            echo 'window ' . a:win_nr . ' hided'
+        endif
+        call setbufvar(l:buf_num, 'hide_win', 1-getbufvar(l:buf_num, 'hide_win'))
     endfunction
 
     " - map <tab> for auto completion in Vimspector console (<c-x><c-o> is omni commpletion)
@@ -1947,6 +2045,7 @@ endpy
     nnoremap <Space>d] :call VimspectorFrameUp()<CR>
     nnoremap <Space>d[ :call VimspectorFrameDown()<CR>
     nnoremap <Space>d<Space> :call VimspectorCurrentLine()<CR>
+    nnoremap <Space>dT :call VimspectorCurrentLine()<CR>
     nnoremap <Space>ds :call vimspector#StepInto()<CR>
     nnoremap <Space>dn :call vimspector#StepOver()<CR>
     nnoremap <Space>do :call vimspector#StepOut()<CR>
@@ -1972,6 +2071,7 @@ endpy
         nnoremap <buffer> g] :call VimspectorFrameUp()<CR>
         nnoremap <buffer> g[ :call VimspectorFrameDown()<CR>
         nnoremap <buffer> g<Space> :call VimspectorCurrentLine()<CR>
+        nnoremap gT :call VimspectorCurrentLine()<CR>
         nnoremap <buffer> gs :call vimspector#StepInto()<CR>
         nnoremap <buffer> gn :call vimspector#StepOver()<CR>
         nnoremap <buffer> go :call vimspector#StepOut()<CR>
