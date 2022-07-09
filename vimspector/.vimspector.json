@@ -17,7 +17,8 @@
       "breakpoints": {
         "exception": {
           "caught": "Y",
-          "uncaught": "Y"
+          "uncaught": "Y",
+          "raised": "N"
         }
       }
     },

@@ -907,6 +907,15 @@ endif
     nnoremap <c-right> 2<C-w>>
 
     " - map to go to nth window
+    nnoremap <a-1>  :call CloseMaximize()<CR>1<C-w><C-w>
+    nnoremap <a-2>  :call CloseMaximize()<CR>2<C-w><C-w>
+    nnoremap <a-3>  :call CloseMaximize()<CR>3<C-w><C-w>
+    nnoremap <a-4>  :call CloseMaximize()<CR>4<C-w><C-w>
+    nnoremap <a-5>  :call CloseMaximize()<CR>5<C-w><C-w>
+    nnoremap <a-6>  :call CloseMaximize()<CR>6<C-w><C-w>
+    nnoremap <a-7>  :call CloseMaximize()<CR>7<C-w><C-w>
+    nnoremap <a-8>  :call CloseMaximize()<CR>8<C-w><C-w>
+    nnoremap <a-9>  :call CloseMaximize()<CR>9<C-w><C-w>
     nnoremap <Space>1  :call CloseMaximize()<CR>1<C-w><C-w>
     nnoremap <Space>2  :call CloseMaximize()<CR>2<C-w><C-w>
     nnoremap <Space>3  :call CloseMaximize()<CR>3<C-w><C-w>
@@ -1245,6 +1254,7 @@ endif
     " - map <tab> for auto completion in Vimspector console (<c-x><c-o> is omni commpletion)
     " - map for debug mode of vimspector
     " - map to copy .vimspector.json file to current directory for further config in project directory.
+    " - function to map vimspector buffer keymap
 " 7.5_Vim-gdb
 " 7.6_Format
 " 7.6.1_Vim-autoformat
@@ -1806,23 +1816,29 @@ endif  " end if g:vim_plug_installed
         autocmd User VimspectorUICreated call VimspectorSetupUi()
     augroup end
     function! VimspectorSetupUi()
+        GitGutterDisable
         call win_gotoid(g:vimspector_session_windows.output)
         set ft=asm
         vert rightb copen
         exec ":vert resize " . winwidth(g:vimspector_session_windows.output)/3
         nnoremenu <silent> WinBar.ListBreakpoints :call vimspector#ListBreakpoints()<CR>
         call vimspector#ListBreakpoints()
+
         call win_gotoid(g:vimspector_session_windows.code)
+        call MapVimspector()
     endfunction
 
-    " - shapgvba gb fubj ivzfcrpgbe uryc zrffntr
+    " - function to show vimspector help message
     function!VimspectorHelp()
-        echo "For a fresh project, run <space>dg to generate debug configuration file.\nKey <space>dk can show keymap for debugging.\n"
+        echo "To install vimspector, run :VimspectorInstall.\nFor a fresh project, run <space>dg to generate debug configuration file.\nKey <space>dk can show keymap for debugging.\n"
     endfunction
 
     " - function to judge whether vimspector is connected
     function!VimspectorConnected()
         let connected=py3eval("(not '_vimspector_session' in vars()) or _vimspector_session._connection==None")
+        if !connected
+            echo "Vimspector is not connected!"
+        endif
         return connected=="False"
     endfunction
 
@@ -1885,6 +1901,26 @@ endpy
         endif
     endfunction
 
+    function! VimspectorEnter()
+        GitGutterDisable
+        let g:vimspector_code_buffer_type=&filetype
+        augroup VimspectorBufferMappings 
+            autocmd!
+            exec 'autocmd FileType ' . g:vimspector_code_buffer_type . ' call MapVimspector()'
+        augroup end
+        call vimspector#Continue()
+    endfunction
+
+    function! VimspectorExit()
+        autocmd! VimspectorBufferMappings
+        GitGutterEnable
+        call vimspector#Reset()
+        sleep 1
+        " reopen code buffer to unmap buffer map
+        bdelete
+        edit #
+    endfunction
+
     " - map <tab> for auto completion in Vimspector console (<c-x><c-o> is omni commpletion)
     autocmd FileType VimspectorPrompt inoremap <buffer> <silent><expr> <Tab>
           \ pumvisible() ? "\<C-n>" :
@@ -1894,13 +1930,13 @@ endpy
     " - map for debug mode of vimspector
     nnoremap <Space>d? :call VimspectorHelp()<CR>
     nnoremap <Space>dk :FindActionsFor vimspector<CR>
-    nnoremap <Space>dd :GitGutterDisable<CR>:call vimspector#Continue()<CR>
+    nnoremap <Space>dd :call VimspectorEnter()<CR>
     nnoremap <Space>dc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
-    nnoremap ,cd :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
+    nnoremap ,cd :call VimspectorEnter()<CR>
     nnoremap <Space>dp :call vimspector#Pause()<CR>
     nnoremap <Space>dr :call vimspector#Restart()<CR>
     nnoremap <Space>de :call vimspector#Stop()<CR>
-    nnoremap <Space>dq :GitGutterEnable<CR>:call vimspector#Reset()<CR>
+    nnoremap <Space>dq :call VimspectorExit()<CR>
     nnoremap <Space>db :call vimspector#ToggleBreakpoint()<CR>
     nnoremap <Space>dB :<c-u>call vimspector#ToggleBreakpoint(
                 \ { 'condition': input( 'Enter condition expression: ' ),
@@ -1916,28 +1952,32 @@ endpy
     nnoremap <Space>do :call vimspector#StepOut()<CR>
     nnoremap <Space>dt :call vimspector#RunToCursor()<CR>
     nnoremap <Space>d: :VimspectorEval 
-    nnoremap g? :call VimspectorHelp()<CR>
-    nnoremap gc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
-    nnoremap gp :call vimspector#Pause()<CR>
-    nnoremap ge :call vimspector#Stop()<CR>
-    nnoremap gq :GitGutterEnable<CR>:call vimspector#Reset()<CR>
-    nnoremap gb :call vimspector#ToggleBreakpoint()<CR>
-    nnoremap <silent> gB :<c-u>call vimspector#ToggleBreakpoint(
-                \ { 'condition': input( 'Enter condition expression: ' ),
-                \   'hitCondition': '0' }
-                \ )<CR>
-    nnoremap gl :call UpdateVimspectorBreakpoints()<CR>
-    nnoremap g] :call VimspectorFrameUp()<CR>
-    nnoremap g[ :call VimspectorFrameDown()<CR>
-    nnoremap g<Space> :call VimspectorCurrentLine()<CR>
-    nnoremap gs :call vimspector#StepInto()<CR>
-    nnoremap gn :call vimspector#StepOver()<CR>
-    nnoremap go :call vimspector#StepOut()<CR>
-    nnoremap gt :call VimspectorRunToCursor()<CR>
-    nnoremap g: :VimspectorEval 
 
     " - map to copy .vimspector.json file to current directory for further config in project directory.
     nnoremap <Space>dg :cd %:h<CR>:silent! Gcd<CR>:!cp ~/Software/vim/vimspector/.vimspector.json .<CR>:e .vimspector.json<CR>
+
+    " - function to map vimspector buffer keymap
+    function! MapVimspector()
+        nnoremap <buffer> g? :call VimspectorHelp()<CR>
+        nnoremap <buffer> gc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
+        nnoremap <buffer> gp :call vimspector#Pause()<CR>
+        nnoremap <buffer> ge :call vimspector#Stop()<CR>
+        nnoremap <buffer> gq :call VimspectorExit()<CR>
+        nnoremap <buffer> gb :call vimspector#ToggleBreakpoint()<CR>
+        nnoremap <buffer> <silent> gB :<c-u>call vimspector#ToggleBreakpoint(
+                    \ { 'condition': input( 'Enter condition expression: ' ),
+                    \   'hitCondition': '0' }
+                    \ )<CR>
+        nnoremap <buffer> gl :call UpdateVimspectorBreakpoints()<CR>
+        nnoremap <buffer> g] :call VimspectorFrameUp()<CR>
+        nnoremap <buffer> g[ :call VimspectorFrameDown()<CR>
+        nnoremap <buffer> g<Space> :call VimspectorCurrentLine()<CR>
+        nnoremap <buffer> gs :call vimspector#StepInto()<CR>
+        nnoremap <buffer> gn :call vimspector#StepOver()<CR>
+        nnoremap <buffer> go :call vimspector#StepOut()<CR>
+        nnoremap <buffer> gt :call VimspectorRunToCursor()<CR>
+        nnoremap <buffer> g: :VimspectorEval 
+    endfunction
 
 " ***********************************************************************
 " 7.5_Vim-gdb
