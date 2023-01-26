@@ -9,6 +9,17 @@ priority -48
 ###########################################################################
 #                            SNIPPETS DEFINITION                          #
 ###########################################################################
+snippet function "generate function" b
+#===  FUNCTION  ================================================================
+#         NAME:  $1
+#  DESCRIPTION:  ${2}
+#===============================================================================
+function ${1:func_name} ()
+{
+	$0
+}    # ----------  end of function $1  ----------
+endsnippet
+
 snippet getopts "parse positional parameters" b
 __ScriptVersion="${1:version}"
 __BaseName=$(basename "\$0")
