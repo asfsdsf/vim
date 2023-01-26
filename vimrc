@@ -58,6 +58,7 @@
 " 8.9_Latex settings
 " 8.9.1_Basic settings
 " 8.9.2_Vimtex settings
+" 8.10_Go settings
 " 9_Utilities ***********************************************************
 " 9.1_Translation
 " 9.2_Vim-multiple-cursor
@@ -201,6 +202,7 @@ if exists('*plug#begin')
 
     Plug 'sjl/badwolf'  " A color scheme for Vim, pieced together by Steve Losh.
     Plug 'tomasr/molokai' " Molokai Color Scheme for Vim
+    Plug 'NLKNguyen/papercolor-theme'
     Plug 'dracula/vim', { 'as': 'dracula' } " Dracula Theme, dark theme
     Plug 'junegunn/limelight.vim'  " adjustable color scheme
     Plug 'romainl/Apprentice' " dark, low-contrast colorscheme for Vim based on the awesome Sorcerer by Jeet Sukumaran.
@@ -323,7 +325,7 @@ endif
     " colorscheme spacemacs-theme
     let g:gruvbox_contrast_light = 'soft'
     let g:dark_color_scheme='gruvbox'
-    let g:light_color_scheme='gruvbox'
+    let g:light_color_scheme='PaperColor'
     if g:vim_plug_installed
         exec 'colorscheme ' . g:dark_color_scheme
     endif
@@ -817,6 +819,7 @@ endif
     nnoremap ,gC :CtrlPChangeAll<CR>
     " - recent changes in current buffer
     nnoremap ,gc :SearchChanges!<CR>
+    nnoremap ,g; :SearchChanges!<CR>
     nnoremap <A-c> :SearchChanges!<CR>
     " - recent jumps in current buffer
     nnoremap ,gj :JumpsResults!<CR>
@@ -1252,7 +1255,7 @@ endif
 " 7.2_Coc.nvim settings
     " - coc plugins list
     " - add coc status to statusline below
-    " - map <ta>/<s-tab> to go to next/prev snippet
+    " - map <tab>/<s-tab> to go to next/prev snippet for coc.nvim
     " - disable auto pair of < for c,cpp files for coc.nvim
     " - coc language server settings for kotlin
     " - let VimspectorPrompt buffer use omni completion
@@ -1431,8 +1434,8 @@ if g:vim_plug_installed
     \ 'coc-highlight',
     \ 'coc-pairs',
     \ 'coc-cmake',
-    \ 'coc-clangd',
     \ 'coc-java',
+    \ 'coc-go',
     \ 'coc-omni'
     \ ]
     let g:coc_source_omni_filetypes=["VimspectorPrompt"]
@@ -1442,7 +1445,7 @@ if g:vim_plug_installed
         set statusline^=%{coc#status()}
     endif
 
-    " - map <ta>/<s-tab> to go to next/prev snippet for coc.nvim
+    " - map <tab>/<s-tab> to go to next/prev snippet for coc.nvim
     let g:coc_snippet_next = '<TAB>'
     let g:coc_snippet_prev = '<S-TAB>'
 
@@ -1536,14 +1539,33 @@ if g:vim_plug_installed
       let col = col('.') - 1
       return !col || getline('.')[col - 1]  =~ '\s'
     endfunction
-    inoremap <silent><expr> <Tab>
-          \ pumvisible() ? "\<C-n>" :
-          \ <SID>check_back_space() ? "\<Tab>" :
-          \ coc#refresh()
+    " inoremap <silent><expr> <Tab>
+    "       \ pumvisible() ? "\<C-n>" :
+    "       \ <SID>check_back_space() ? "\<Tab>" :
+    "       \ coc#refresh()
 
     " - map tab and s-tab for trigger completion with characters ahead and navigate.
-    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-    inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+    " inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+    " inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+
+
+    function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~ '\s'
+    endfunction
+
+    " Insert <tab> when previous text is space, refresh completion if not.
+    inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1):
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+    inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+    inoremap <expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<CR>"
+
+
+
 
     " - map <c-n> to trigger completion.
     inoremap <silent><expr> <c-n> coc#refresh()
@@ -2285,6 +2307,8 @@ endpy
     " - some latex mode specified mappings
     " - start vim server for latex preview at startup
     " - enable auto save for real-time preview
+" 8.10_Go settings
+    " - map to run current go project/file
 " ***********************************************************************
 
 
@@ -2621,6 +2645,12 @@ endif
     endfunction
 
 " ***********************************************************************
+" 8.10_Go settings
+" ***********************************************************************
+    " - map to run current go project/file
+    autocmd FileType go nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("go run " . expand("%:p"))<CR>
+
+" ***********************************************************************
 " 9_Utilities ***********************************************************
 " 9.1_Translation
     " - set translation repl base directory
@@ -2843,7 +2873,7 @@ endif
     nnoremap <Space>gfr :Gremove<CR>
 
     " - map SPC gl to show git history
-    nnoremap <Space>gl :let g:glog_cursor=line(".")<CR>:0Glog<CR>
+    nnoremap <Space>gl :let g:glog_cursor=line(".")<CR>:0Gclog<CR>
     " - map to show next/previous history in git history mode
     nnoremap <Space>gn :cnext<CR>
     nnoremap [q :cnext<CR>
@@ -3214,7 +3244,17 @@ endif
 " ***********************************************************************
 
 if has("persistent_undo")
-    set undodir=~/.undodir/
+    " - set undo dir
+    if has('nvim')
+        let b:undodir_path=$HOME."/.nvim/undodir"
+    else
+        let b:undodir_path=$HOME."/.vim/undodir"
+    endif
+    " Let's save undo info!
+    if !isdirectory(b:undodir_path)
+        call mkdir(b:undodir_path, "", 0700)
+    endif
+    exec 'set undodir=' . b:undodir_path
     set undofile
 endif
 
