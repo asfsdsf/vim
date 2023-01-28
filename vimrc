@@ -238,6 +238,7 @@ endif
     " - color conflict with TERMINOLOGY
     " - function to toggle between light and dark theme
     " - function to toggle line number display
+    " - function to toggle all auxiliary display
     " - access colors present in 256 colorspace
     " - set color scheme
 " 3.2_Basic settings
@@ -311,7 +312,7 @@ endif
         end
         if (&background=='dark')
             set background=light
-            AirlineTheme base16_monokai
+            AirlineTheme papercolor
             exec 'colorscheme ' . g:light_color_scheme
         else
             set background=dark
@@ -326,6 +327,46 @@ endif
         set relativenumber!
     endfunction
 
+    " - function to toggle all auxiliary display
+    " Always set to hidden since every time this dot file resourced, the
+    " display is reset
+    let s:hidden_all = 0
+    function! ToggleAllAuxiliaryDisplay()
+        if s:hidden_all == 0
+            if g:vim_plug_installed
+                GitGutterDisable
+                if exists('#airline')
+                    AirlineToggle
+                endif
+                silent! AirlineRefresh
+            endif
+            windo set nonumber
+            windo set norelativenumber
+            set signcolumn=no
+            set noshowmode
+            set noshowcmd
+            set noruler
+            set laststatus=0
+            let s:hidden_all=1
+        else
+            if g:vim_plug_installed
+                GitGutterEnable
+                if !exists('#airline')
+                    AirlineToggle
+                endif
+                silent! AirlineRefresh
+            endif
+            set number
+            windo set relativenumber
+            windo set signcolumn=yes
+            set showmode
+            set ruler
+            set laststatus=2
+            set showcmd
+            let s:hidden_all=0
+        endif
+    endfunction
+
     " - access colors present in 256 colorspace
     let base16colorspace=256
 
@@ -336,7 +377,11 @@ endif
     let g:dark_color_scheme='gruvbox'
     let g:light_color_scheme='PaperColor'
     if g:vim_plug_installed
-        exec 'colorscheme ' . g:dark_color_scheme
+        if (&background=='dark')
+            exec 'colorscheme ' . g:dark_color_scheme
+        else
+            exec 'colorscheme ' . g:light_color_scheme
+        endif
     endif
     " colorscheme gruvbox
 
@@ -490,7 +535,11 @@ endif
 " ***********************************************************************
     let g:airline#extensions#tabline#enabled = 1
     let g:airline_powerline_fonts = 1
-    let g:airline_theme='hybrid'
+    if (&background=='dark')
+        let g:airline_theme='hybrid'
+    else
+        let g:airline_theme='papercolor'
+    endif
     let g:hybrid_custom_term_colors = 1
     let g:hybrid_reduced_contrast = 1
 
@@ -740,6 +789,7 @@ endif
     " - map to switch theme
     " - map to toggle line number display
     " - map to toggle line number display for all windows
+    " - map to hide all auxiliary display
     " - map to zoom in/out
     " - map to move line up/down
     " - map to run python and output to current line
@@ -1113,6 +1163,9 @@ endif
 
     " - map to toggle line number display for all windows
     nnoremap <Space>TL :windo call ToggleLineNumber()<CR>
+
+    " - map to hide all auxiliary display
+    nnoremap <Space>tt :call ToggleAllAuxiliaryDisplay()<CR>
 
     " - map to toggle git gutter
     nnoremap <Space>Tg :GitGutterToggle<CR>
@@ -1904,8 +1957,8 @@ endif  " end if g:vim_plug_installed
     " - map to toggle maximize tmux
     " nnoremap <silent> <A-z> :call ToggleMaximizeTmux()<CR>
     " inoremap <silent> <A-z> <c-o>:call ToggleMaximizeTmux()<CR>
-    nnoremap <silent> <A-z> :call ToggleZenMode()<CR>
-    inoremap <silent> <A-z> <c-o>:call ToggleZenMode()<CR>
+    nnoremap <silent> <A-z> :call ToggleZenMode(1)<CR>
+    inoremap <silent> <A-z> <c-o>:call ToggleZenMode(1)<CR>
 
 " ***********************************************************************
 " 7.4_Vimspector
@@ -3325,23 +3378,23 @@ let g:silent_unsupported=1
     let g:goyo_width='100%'
     let g:goyo_height='100%'
 
-    nnoremap <space>zz :call ToggleZenMode()<cr>
-    nnoremap <space>wM :call ToggleZenMode()<cr>
+    nnoremap <space>zz :call ToggleZenMode(1)<cr>
+    nnoremap <space>wM :call ToggleZenMode(0)<cr>
 
     if !exists('g:is_zen_mode')
         let g:is_zen_mode=0
     endif
-    function! ToggleZenMode()
+    function! ToggleZenMode(withTmux)
         if g:is_zen_mode  " Leave zen mode
             Goyo
-            if executable('tmux') && strlen($TMUX)
+            if executable('tmux') && strlen($TMUX) && a:withTmux==1
                 " silent! !tmux resize-pane -Z
                 silent! !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
                 silent! !tmux set status on
             endif
             let g:is_zen_mode=0
         else  " Enter zen mode
-            if executable('tmux') && strlen($TMUX)
+            if executable('tmux') && strlen($TMUX) && a:withTmux==1
                 silent! !tmux set status off
                 " silent! !tmux resize-pane -Z 
                 silent! !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
