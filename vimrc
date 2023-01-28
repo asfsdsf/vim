@@ -3348,7 +3348,7 @@ let g:silent_unsupported=1
             endif
             redraw
             sleep 500m
-            silent! Goyo '120-100%x100%-100%'
+            exec 'Goyo 120-100%x100%-100%'
             let g:is_zen_mode=1
         endif
     endfunction
