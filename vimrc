@@ -77,6 +77,7 @@
 " 9.13_Undotree
 " 9.14_Neomake
 " 9.15_fcitx.vim
+" 9.16_zen-mode.nvim
 " ***********************************************************************
 
 " ***********************************************************************
@@ -121,6 +122,7 @@ if exists('*plug#begin')
     " - utility plugins
     Plug '~/Software/vim/plugins/mysnippets/'
     Plug 'asfsdsf/toggle_maximize.vim'  " toggle maximize window
+    Plug 'junegunn/goyo.vim'  " toggle zen mode
     Plug 'scrooloose/nerdtree'  " file tree
     Plug 'majutsushi/tagbar'  " file names at top bar
     " Plug 'vimwiki/vimwiki'  " Personal Wiki for Vim http://vimwiki.github.io/
@@ -147,11 +149,11 @@ if exists('*plug#begin')
     endif
     if !empty($DISPLAY)  " if not on server
         " Plug 'Valloric/YouCompleteMe'  " auto complete engine
-        " sudo apt install nodejs yarnpkg
-        Plug 'neoclide/coc.nvim', {'branch': 'release'}  " Intellisense engine for Vim8 & Neovim, full language server protocol support as VSCode
         Plug 'lilydjwg/fcitx.vim'  " (auto switch chinese input method) keep and restore fcitx state when leaving/re-entering insert mode 
         Plug 'liuchengxu/vista.vim'  " View and search LSP symbols, tags in Vim/NeoVim.
     endif
+    " sudo apt install nodejs yarnpkg
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}  " Intellisense engine for Vim8 & Neovim, full language server protocol support as VSCode
 
     " - languages plugins
     Plug 'JuliaEditorSupport/julia-vim'  " Vim support for Julia. http://julialang.org/
@@ -235,6 +237,7 @@ endif
     " - Enables 24-bit RGB color in the TUI
     " - color conflict with TERMINOLOGY
     " - function to toggle between light and dark theme
+    " - function to toggle line number display
     " - access colors present in 256 colorspace
     " - set color scheme
 " 3.2_Basic settings
@@ -315,6 +318,12 @@ endif
             AirlineTheme hybrid
             exec 'colorscheme ' . g:dark_color_scheme
         endif
+    endfunction
+
+    " - function to toggle line number display
+    function! ToggleLineNumber()
+        set number!
+        set relativenumber!
     endfunction
 
     " - access colors present in 256 colorspace
@@ -729,6 +738,8 @@ endif
     " - map SPC SPC to run command
     " - insert dividing line
     " - map to switch theme
+    " - map to toggle line number display
+    " - map to toggle line number display for all windows
     " - map to zoom in/out
     " - map to move line up/down
     " - map to run python and output to current line
@@ -1097,6 +1108,15 @@ endif
     " - map to switch theme
     nnoremap <Space>Tn :call ToggleTheme()<CR>
 
+    " - map to toggle line number display
+    nnoremap <Space>Tl :call ToggleLineNumber()<CR>
+
+    " - map to toggle line number display for all windows
+    nnoremap <Space>TL :windo call ToggleLineNumber()<CR>
+
+    " - map to toggle git gutter
+    nnoremap <Space>Tg :GitGutterToggle<CR>
+
     " - map to zoom in/out
     nnoremap <Space>z+ zR
     nnoremap <Space>z- zM
@@ -1153,7 +1173,7 @@ endif
     nnoremap <Space>lL :call LoadLayout(1)<CR>
 
     " - map to quit
-    nnoremap <Space>qq :qa<CR>
+    nnoremap <Space>qq :call CloseMaximize()<CR>:qa<CR>
 
     " - map to describe key
     nnoremap <Space>hdk :Maps<CR>
@@ -1846,9 +1866,13 @@ endif  " end if g:vim_plug_installed
             return
         endif
         if g:isToggledVertically || g:isToggledHorizontally
+            silent !tmux set status on
             silent! call ToggleMaximize()
             silent! !tmux resize-pane -Z
+            AirlineToggle
         else
+            AirlineToggle
+            silent !tmux set status off
             silent! !tmux resize-pane -Z 
             redraw
             sleep 100m
@@ -1865,12 +1889,23 @@ endif  " end if g:vim_plug_installed
         if g:isToggledVertically || g:isToggledHorizontally
             silent! call ToggleMaximize()
         endif
+        if g:is_zen_mode
+            Goyo
+            if executable('tmux') && strlen($TMUX)
+                " silent! !tmux resize-pane -Z
+                silent! !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+                silent! !tmux set status on
+            endif
+            let g:is_zen_mode=0
+        endif
 
     endfunction
 
     " - map to toggle maximize tmux
-    nnoremap <silent> <A-z> :call ToggleMaximizeTmux()<CR>
-    inoremap <silent> <A-z> <c-o>:call ToggleMaximizeTmux()<CR>
+    " nnoremap <silent> <A-z> :call ToggleMaximizeTmux()<CR>
+    " inoremap <silent> <A-z> <c-o>:call ToggleMaximizeTmux()<CR>
+    nnoremap <silent> <A-z> :call ToggleZenMode()<CR>
+    inoremap <silent> <A-z> <c-o>:call ToggleZenMode()<CR>
 
 " ***********************************************************************
 " 7.4_Vimspector
@@ -3283,6 +3318,40 @@ endif  " end if g:vim_plug_installed
 
 let g:silent_unsupported=1
 
+" ***********************************************************************
+" 9.16_zen-mode.nvim
+" ***********************************************************************
+
+    let g:goyo_width='100%'
+    let g:goyo_height='100%'
+
+    nnoremap <space>zz :call ToggleZenMode()<cr>
+    nnoremap <space>wM :call ToggleZenMode()<cr>
+
+    if !exists('g:is_zen_mode')
+        let g:is_zen_mode=0
+    endif
+    function! ToggleZenMode()
+        if g:is_zen_mode  " Leave zen mode
+            Goyo
+            if executable('tmux') && strlen($TMUX)
+                " silent! !tmux resize-pane -Z
+                silent! !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+                silent! !tmux set status on
+            endif
+            let g:is_zen_mode=0
+        else  " Enter zen mode
+            if executable('tmux') && strlen($TMUX)
+                silent! !tmux set status off
+                " silent! !tmux resize-pane -Z 
+                silent! !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+            endif
+            redraw
+            sleep 500m
+            silent! Goyo '120-100%x100%-100%'
+            let g:is_zen_mode=1
+        endif
+    endfunction
 
 " ***********************************************************************
 " Variable used to judge whether it is the first time to source vimrc
