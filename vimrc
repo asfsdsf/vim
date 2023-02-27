@@ -1088,7 +1088,7 @@ endif
     endif
 
     " - map to go to recent file
-    nnoremap <Space>fr :FzfMrf!<CR>
+    nnoremap <Space>fr :call CloseMaximize()<CR>:FzfMrf!<CR>
 
     " - open file under the cursor with default system software
     nnoremap <Space>fO :!cd %:p:h && xdg-open "<cfile>" & <CR>
@@ -1113,11 +1113,11 @@ endif
         exec "normal!k\"pdd"
         startinsert!
     endfunction
-    nnoremap <Space>ff :call g:OpenFileByPath()<CR>
+    nnoremap <Space>ff :call CloseMaximize()<CR>:call g:OpenFileByPath()<CR>
     " - map to open file/git file in directory/git project
-    nnoremap <Space>pf :GFiles!<CR>
+    nnoremap <Space>pf :call CloseMaximize()<CR>:GFiles!<CR>
     " - map to open file in project
-    nnoremap <Space>pF :Files!<CR>
+    nnoremap <Space>pF :call CloseMaximize()<CR>:Files!<CR>
 
     " - map to refresh buffer file
     nnoremap <f5> :e<CR>
@@ -1945,8 +1945,7 @@ endif  " end if g:vim_plug_installed
         if g:is_zen_mode
             Goyo
             if executable('tmux') && strlen($TMUX)
-                " silent! !tmux resize-pane -Z
-                silent! !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+                " silent! !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
                 silent! !tmux set status on
             endif
             let g:is_zen_mode=0
@@ -3387,6 +3386,7 @@ let g:silent_unsupported=1
     function! ToggleZenMode(withTmux)
         if g:is_zen_mode  " Leave zen mode
             Goyo
+            set signcolumn=no
             if executable('tmux') && strlen($TMUX) && a:withTmux==1
                 " silent! !tmux resize-pane -Z
                 silent! !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
@@ -3394,6 +3394,7 @@ let g:silent_unsupported=1
             endif
             let g:is_zen_mode=0
         else  " Enter zen mode
+            set signcolumn=no
             if executable('tmux') && strlen($TMUX) && a:withTmux==1
                 silent! !tmux set status off
                 " silent! !tmux resize-pane -Z 
