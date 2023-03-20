@@ -227,9 +227,9 @@ if exists('*plug#begin')
     call plug#end()
 
     if has('nvim')
-        lua require("noice").setup()
+        lua require("notify").setup({stages = "slide",level = "info",timeout = 2000,max_width = 80,{background_colour="#000000"}})
+        lua require("noice").setup({ routes = { { view = "notify", filter = { event = "msg_showmode" }, }, }, })
         
-        lua require("notify").setup({stages = "slide",level = "warn",timeout = 2000,max_width = 80,{background_colour="#000000"}})
     endif
 endif
 " Put your non-Plugin stuff after this line
@@ -638,10 +638,10 @@ endif
 " ***********************************************************************
 
     " - keymap for open_file_help file(e.g. Used to OpenTodoFile)
-    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> :bd!<CR>
-    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-c> <esc>:bd!<CR>
+    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh map <buffer> <esc> <cmd>:bd!<CR>
+    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-c> <esc><cmd>:bd!<CR>
     autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh imap <buffer> <c-h> <c-w><c-w>
-    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh inoremap <buffer> <CR> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("e ".mycurf)<CR>
+    autocmd BufRead,BufNewFile  $HOME/Software/vim/open_file_help.sh inoremap <buffer> <CR> <c-o><cmd>:stopinsert<CR><cmd>:let mycurf=expand("<cfile>")<CR><cmd>:bd!<CR><cmd>:execute("e ".mycurf)<CR>
 
     " - command to open a file to write python code and then output to current file
     function! s:Python_print()
@@ -679,7 +679,7 @@ endif
             echo "No URL under cursor."
         endif
     endfunction
-    nmap <c-c><c-o> :call OpenUrlUnderCursor()<CR>
+    nmap <c-c><c-o> <cmd>:call OpenUrlUnderCursor()<CR>
 
 
 
@@ -862,7 +862,7 @@ endif
     noremap! <c-y> <c-r>+
 
     " - map SPC ty to toggle paste mode
-    nnoremap <space>tp :call g:TogglePaste()<cr>
+    nnoremap <space>tp <cmd>:call g:TogglePaste()<cr>
     if !exists('g:in_paste_mode')
         let g:in_paste_mode=0
     endif
@@ -895,17 +895,17 @@ endif
     vnoremap L $
 
     " - goto tags (symbols) in current file finder mapping
-    nnoremap ,gt :CtrlPBufTag<CR>
+    nnoremap ,gt <cmd>:CtrlPBufTag<CR>
     " - goto tags (symbols) in all files finder mapping
-    nnoremap ,gT :CtrlPBufTagAll<CR>
+    nnoremap ,gT <cmd>:CtrlPBufTagAll<CR>
     " - recent changes in all buffers
-    nnoremap ,gC :CtrlPChangeAll<CR>
+    nnoremap ,gC <cmd>:CtrlPChangeAll<CR>
     " - recent changes in current buffer
-    nnoremap ,gc :SearchChanges!<CR>
-    nnoremap ,g; :SearchChanges!<CR>
-    nnoremap <A-c> :SearchChanges!<CR>
+    nnoremap ,gc <cmd>:SearchChanges!<CR>
+    nnoremap ,g; <cmd>:SearchChanges!<CR>
+    nnoremap <A-c> <cmd>:SearchChanges!<CR>
     " - recent jumps in current buffer
-    nnoremap ,gj :JumpsResults!<CR>
+    nnoremap ,gj <cmd>:JumpsResults!<CR>
 
 " ***********************************************************************
 " 6.2_tab map
@@ -915,24 +915,24 @@ endif
     nnoremap <Space>tl gt
     nnoremap <Space>th gT
     " - map to create tab
-    nnoremap <Space>tn :tabnew<CR>
+    nnoremap <Space>tn <cmd>:tabnew<CR>
     " - map to close tab
-    nnoremap <Space>tc :tabclose<CR>
+    nnoremap <Space>tc <cmd>:tabclose<CR>
 
 " ***********************************************************************
 " 6.3_buffer map
 " ***********************************************************************
 
     " - map to go to next/prev buffer
-    nnoremap <A-n> :bn<CR>
-    nnoremap <A-p> :bp<CR>
-    nnoremap <Space>bn :bn<CR>
-    nnoremap ]b :bn<CR>
-    nnoremap <Space>bp :bp<CR>
-    nnoremap [b :bp<CR>
+    nnoremap <A-n> <cmd>:bn<CR>
+    nnoremap <A-p> <cmd>:bp<CR>
+    nnoremap <Space>bn <cmd>:bn<CR>
+    nnoremap ]b <cmd>:bn<CR>
+    nnoremap <Space>bp <cmd>:bp<CR>
+    nnoremap [b <cmd>:bp<CR>
 
     " - map to go to last buffer
-    nnoremap <Space><Tab> :b#<CR>
+    nnoremap <Space><Tab> <cmd>:b#<CR>
     function!CloseBuffer()
         let buf_num = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
         if buf_num <= 1
@@ -947,19 +947,19 @@ endif
         endif
     endfunction
     " - map to close buffer
-    nnoremap <Space>bd :call CloseBuffer()<CR>
+    nnoremap <Space>bd <cmd>:call CloseBuffer()<CR>
     " - map to show message buffer
-    nnoremap <Space>bm :messages<CR>
+    nnoremap <Space>bm <cmd>:messages<CR>
 
     " - map to show buffers
-    " nnoremap <Space>bb :CtrlPBuffer<CR>
-    nnoremap <Space>bb :FzfBuffers!<CR>
+    " nnoremap <Space>bb <cmd>:CtrlPBuffer<CR>
+    nnoremap <Space>bb <cmd>:FzfBuffers!<CR>
 
     " - map to go to Scratch buffer
-    nnoremap <Space>bs :Scratch<CR>
+    nnoremap <Space>bs <cmd>:Scratch<CR>
 
     " - map to close buffe and window
-    nnoremap <Space>bx :call CloseMaximize()<CR>:bp<cr>:silent! exec "bd #"<CR>:close<CR>
+    nnoremap <Space>bx <cmd>:call CloseMaximize()<CR><cmd>:bp<cr><cmd>:silent! exec "bd #"<CR><cmd>:close<CR>
 
     " - map to go to nth buffer
     " Goto (nth_add_1 - 1)  buffer shown in top bar
@@ -971,15 +971,15 @@ endif
         " exec "buffer " . g:previous_buf_name
         " exec "buffer " . g:current_buf_name
     endfunction
-    nnoremap <Space>b1 :bfirst<CR>
-    nnoremap <Space>b2 :call g:GotoNthBuffer("1")<CR>
-    nnoremap <Space>b3 :call g:GotoNthBuffer("2")<CR>
-    nnoremap <Space>b4 :call g:GotoNthBuffer("3")<CR>
-    nnoremap <Space>b5 :call g:GotoNthBuffer("4")<CR>
-    nnoremap <Space>b6 :call g:GotoNthBuffer("5")<CR>
-    nnoremap <Space>b7 :call g:GotoNthBuffer("6")<CR>
-    nnoremap <Space>b8 :call g:GotoNthBuffer("7")<CR>
-    nnoremap <Space>b9 :call g:GotoNthBuffer("8")<CR>
+    nnoremap <Space>b1 <cmd>:bfirst<CR>
+    nnoremap <Space>b2 <cmd>:call g:GotoNthBuffer("1")<CR>
+    nnoremap <Space>b3 <cmd>:call g:GotoNthBuffer("2")<CR>
+    nnoremap <Space>b4 <cmd>:call g:GotoNthBuffer("3")<CR>
+    nnoremap <Space>b5 <cmd>:call g:GotoNthBuffer("4")<CR>
+    nnoremap <Space>b6 <cmd>:call g:GotoNthBuffer("5")<CR>
+    nnoremap <Space>b7 <cmd>:call g:GotoNthBuffer("6")<CR>
+    nnoremap <Space>b8 <cmd>:call g:GotoNthBuffer("7")<CR>
+    nnoremap <Space>b9 <cmd>:call g:GotoNthBuffer("8")<CR>
 
 " ***********************************************************************
 " 6.4_window map
@@ -990,33 +990,33 @@ endif
     nnoremap <A-K> <C-W>k
     nnoremap <A-L> <C-W>l
     nnoremap <A-H> <C-W>h
-    nnoremap <silent> <Space>wh :call CloseMaximize()<CR><C-w>h
-    nnoremap <silent> <Space>wj :call CloseMaximize()<CR><C-w>j
-    nnoremap <silent> <Space>wk :call CloseMaximize()<CR><C-w>k
+    nnoremap <silent> <Space>wh <cmd>:call CloseMaximize()<CR><C-w>h
+    nnoremap <silent> <Space>wj <cmd>:call CloseMaximize()<CR><C-w>j
+    nnoremap <silent> <Space>wk <cmd>:call CloseMaximize()<CR><C-w>k
     nnoremap <silent> <Space>wl <cmd>:call CloseMaximize()<CR><C-w>l
 
     " - map to move window position
-    nnoremap <Space>wH :call CloseMaximize()<CR><C-w>H
-    nnoremap <Space>wJ :call CloseMaximize()<CR><C-w>J
-    nnoremap <Space>wK :call CloseMaximize()<CR><C-w>K
-    nnoremap <Space>wL :call CloseMaximize()<CR><C-w>L
+    nnoremap <Space>wH <cmd>:call CloseMaximize()<CR><C-w>H
+    nnoremap <Space>wJ <cmd>:call CloseMaximize()<CR><C-w>J
+    nnoremap <Space>wK <cmd>:call CloseMaximize()<CR><C-w>K
+    nnoremap <Space>wL <cmd>:call CloseMaximize()<CR><C-w>L
 
     " - map to split window
-    nnoremap <Space>w/ :call CloseMaximize()<CR>:vs<CR>
-    nnoremap <Space>w- :call CloseMaximize()<CR>:sp<CR>
+    nnoremap <Space>w/ <cmd>:call CloseMaximize()<CR><cmd>:vs<CR>
+    nnoremap <Space>w- <cmd>:call CloseMaximize()<CR><cmd>:sp<CR>
     " map <ESC> to exit insert mode in shell buffer
     " tnoremap <ESC>   <C-\><C-n>
 
     " - map to go to previous window
-    nnoremap <Space>ww :call CloseMaximize()<CR><C-w>w
+    nnoremap <Space>ww <cmd>:call CloseMaximize()<CR><C-w>w
     " - map to equal all windows
-    nnoremap <Space>w= :call CloseMaximize()<CR><C-w>=
+    nnoremap <Space>w= <cmd>:call CloseMaximize()<CR><C-w>=
     " - map to close current window
-    nnoremap <Space>wd :call CloseMaximize()<CR>:close<CR>
+    nnoremap <Space>wd <cmd>:call CloseMaximize()<CR><cmd>:close<CR>
     " - map to close current window and buffer
-    nnoremap <Space>wx :call CloseMaximize()<CR>:bp<cr>:silent! exec "bd #"<CR>:close<CR>
+    nnoremap <Space>wx <cmd>:call CloseMaximize()<CR><cmd>:bp<cr><cmd>:silent! exec "bd #"<CR><cmd>:close<CR>
     " - map to close other windows
-    nnoremap <Space>wo :call CloseMaximize()<CR><C-w><C-o>
+    nnoremap <Space>wo <cmd>:call CloseMaximize()<CR><C-w><C-o>
 
     " - map to resize window
     nnoremap <c-down>  2<C-w>-
@@ -1025,46 +1025,46 @@ endif
     nnoremap <c-right> 2<C-w>>
 
     " - map to go to nth window
-    nnoremap <Space>1  :call CloseMaximize()<CR>1<C-w><C-w>
-    nnoremap <Space>2  :call CloseMaximize()<CR>2<C-w><C-w>
-    nnoremap <Space>3  :call CloseMaximize()<CR>3<C-w><C-w>
-    nnoremap <Space>4  :call CloseMaximize()<CR>4<C-w><C-w>
-    nnoremap <Space>5  :call CloseMaximize()<CR>5<C-w><C-w>
-    nnoremap <Space>6  :call CloseMaximize()<CR>6<C-w><C-w>
-    nnoremap <Space>7  :call CloseMaximize()<CR>7<C-w><C-w>
-    nnoremap <Space>8  :call CloseMaximize()<CR>8<C-w><C-w>
-    nnoremap <Space>9  :call CloseMaximize()<CR>9<C-w><C-w>
+    nnoremap <Space>1  <cmd>:call CloseMaximize()<CR>1<C-w><C-w>
+    nnoremap <Space>2  <cmd>:call CloseMaximize()<CR>2<C-w><C-w>
+    nnoremap <Space>3  <cmd>:call CloseMaximize()<CR>3<C-w><C-w>
+    nnoremap <Space>4  <cmd>:call CloseMaximize()<CR>4<C-w><C-w>
+    nnoremap <Space>5  <cmd>:call CloseMaximize()<CR>5<C-w><C-w>
+    nnoremap <Space>6  <cmd>:call CloseMaximize()<CR>6<C-w><C-w>
+    nnoremap <Space>7  <cmd>:call CloseMaximize()<CR>7<C-w><C-w>
+    nnoremap <Space>8  <cmd>:call CloseMaximize()<CR>8<C-w><C-w>
+    nnoremap <Space>9  <cmd>:call CloseMaximize()<CR>9<C-w><C-w>
 
     " - map to toggle hide nth window
-    nnoremap <a-1>  :call VimspectorToggleHide(1,1)<CR>
-    nnoremap <a-2>  :call VimspectorToggleHide(2,1)<CR>
-    nnoremap <a-3>  :call VimspectorToggleHide(3,1)<CR>
-    nnoremap <a-4>  :call VimspectorToggleHide(4,1)<CR>
-    nnoremap <a-5>  :call VimspectorToggleHide(5,1)<CR>
-    nnoremap <a-6>  :call VimspectorToggleHide(6,1)<CR>
-    nnoremap <a-7>  :call VimspectorToggleHide(7,1)<CR>
-    nnoremap <a-8>  :call VimspectorToggleHide(8,1)<CR>
-    nnoremap <a-9>  :call VimspectorToggleHide(9,1)<CR>
+    nnoremap <a-1>  <cmd>:call VimspectorToggleHide(1,1)<CR>
+    nnoremap <a-2>  <cmd>:call VimspectorToggleHide(2,1)<CR>
+    nnoremap <a-3>  <cmd>:call VimspectorToggleHide(3,1)<CR>
+    nnoremap <a-4>  <cmd>:call VimspectorToggleHide(4,1)<CR>
+    nnoremap <a-5>  <cmd>:call VimspectorToggleHide(5,1)<CR>
+    nnoremap <a-6>  <cmd>:call VimspectorToggleHide(6,1)<CR>
+    nnoremap <a-7>  <cmd>:call VimspectorToggleHide(7,1)<CR>
+    nnoremap <a-8>  <cmd>:call VimspectorToggleHide(8,1)<CR>
+    nnoremap <a-9>  <cmd>:call VimspectorToggleHide(9,1)<CR>
 
-    nnoremap <space><a-1>  :call VimspectorToggleHide(1,2)<CR>
-    nnoremap <space><a-2>  :call VimspectorToggleHide(2,2)<CR>
-    nnoremap <space><a-3>  :call VimspectorToggleHide(3,2)<CR>
-    nnoremap <space><a-4>  :call VimspectorToggleHide(4,2)<CR>
-    nnoremap <space><a-5>  :call VimspectorToggleHide(5,2)<CR>
-    nnoremap <space><a-6>  :call VimspectorToggleHide(6,2)<CR>
-    nnoremap <space><a-7>  :call VimspectorToggleHide(7,2)<CR>
-    nnoremap <space><a-8>  :call VimspectorToggleHide(8,2)<CR>
-    nnoremap <space><a-9>  :call VimspectorToggleHide(9,2)<CR>
+    nnoremap <space><a-1>  <cmd>:call VimspectorToggleHide(1,2)<CR>
+    nnoremap <space><a-2>  <cmd>:call VimspectorToggleHide(2,2)<CR>
+    nnoremap <space><a-3>  <cmd>:call VimspectorToggleHide(3,2)<CR>
+    nnoremap <space><a-4>  <cmd>:call VimspectorToggleHide(4,2)<CR>
+    nnoremap <space><a-5>  <cmd>:call VimspectorToggleHide(5,2)<CR>
+    nnoremap <space><a-6>  <cmd>:call VimspectorToggleHide(6,2)<CR>
+    nnoremap <space><a-7>  <cmd>:call VimspectorToggleHide(7,2)<CR>
+    nnoremap <space><a-8>  <cmd>:call VimspectorToggleHide(8,2)<CR>
+    nnoremap <space><a-9>  <cmd>:call VimspectorToggleHide(9,2)<CR>
 
-    nnoremap <c-1>  :call VimspectorToggleHide(1,2)<CR>
-    nnoremap <c-2>  :call VimspectorToggleHide(2,2)<CR>
-    nnoremap <c-3>  :call VimspectorToggleHide(3,2)<CR>
-    nnoremap <c-4>  :call VimspectorToggleHide(4,2)<CR>
-    nnoremap <c-5>  :call VimspectorToggleHide(5,2)<CR>
-    nnoremap <c-6>  :call VimspectorToggleHide(6,2)<CR>
-    nnoremap <c-7>  :call VimspectorToggleHide(7,2)<CR>
-    nnoremap <c-8>  :call VimspectorToggleHide(8,2)<CR>
-    nnoremap <c-9>  :call VimspectorToggleHide(9,2)<CR>
+    nnoremap <c-1>  <cmd>:call VimspectorToggleHide(1,2)<CR>
+    nnoremap <c-2>  <cmd>:call VimspectorToggleHide(2,2)<CR>
+    nnoremap <c-3>  <cmd>:call VimspectorToggleHide(3,2)<CR>
+    nnoremap <c-4>  <cmd>:call VimspectorToggleHide(4,2)<CR>
+    nnoremap <c-5>  <cmd>:call VimspectorToggleHide(5,2)<CR>
+    nnoremap <c-6>  <cmd>:call VimspectorToggleHide(6,2)<CR>
+    nnoremap <c-7>  <cmd>:call VimspectorToggleHide(7,2)<CR>
+    nnoremap <c-8>  <cmd>:call VimspectorToggleHide(8,2)<CR>
+    nnoremap <c-9>  <cmd>:call VimspectorToggleHide(9,2)<CR>
 
     " - prevent conflict(type mistake) with tmux
     nnoremap <c-a> l
@@ -1072,14 +1072,14 @@ endif
     " 6.5_Search text
 
     " - map SPC / to search current folder
-    nnoremap <Space>/  :Ag!<CR>
-    vnoremap <Space>/  "vy:exec "Ag!" . escape(@v,'/\()*+?[]$^<bar>')<CR>
+    nnoremap <Space>/  <cmd>:Ag!<CR>
+    vnoremap <Space>/  "vy<cmd>:exec "Ag!" . escape(@v,'/\()*+?[]$^<bar>')<CR>
     " - map to search lines in all buffers
-    nnoremap <Space>b/ :Lines<CR>
+    nnoremap <Space>b/ <cmd>:Lines<CR>
     " - map C-f search inside current buffer
-    nnoremap <c-f>  :w<CR>:AgCurrentFile!<CR>
+    nnoremap <c-f>  <cmd>:w<CR><cmd>:AgCurrentFile!<CR>
     " search inside current buffer
-    nnoremap <c-f>  :BLines<CR>
+    nnoremap <c-f>  <cmd>:BLines<CR>
 
     " - map * to search selection in visual mode
     vnoremap * "vy/\V<C-R>=substitute(escape(@v,'/\'),'\n','\\n','g')<CR><CR>
@@ -1102,26 +1102,26 @@ endif
 " ***********************************************************************
 
     " - map C-s to save buffer in insert mode(use C-s in vim will freeze)
-    inoremap <c-s> <c-o>:update<CR>
+    inoremap <c-s> <c-o><cmd>:update<CR>
 
     " - map SPC f s to save buffer with sudo privilige in vim(not neovim)
     if !has('nvim')
-        nnoremap <space>fs :w !sudo tee %<CR>
+        nnoremap <space>fs <cmd>:w !sudo tee %<CR>
     endif
 
     " - map to go to recent file
-    nnoremap <Space>fr :call CloseMaximize()<CR>:FzfMrf!<CR>
+    nnoremap <Space>fr <cmd>:call CloseMaximize()<CR><cmd>:FzfMrf!<CR>
 
     " - open file under the cursor with default system software
-    nnoremap <Space>fO :!cd %:p:h && xdg-open "<cfile>" & <CR>
+    nnoremap <Space>fO <cmd>:!cd %:p:h && xdg-open "<cfile>" & <CR>
     " - open the folder containing current file
-    nnoremap <Space>fd :!nautilus %:p:h &<CR>
+    nnoremap <Space>fd <cmd>:!nautilus %:p:h &<CR>
     " - open current file with default system software
-    nnoremap <Space>fo :!cd %:p:h && xdg-open %:p & <CR>
+    nnoremap <Space>fo <cmd>:!cd %:p:h && xdg-open %:p & <CR>
     " - open the terminal with current file path as working directory
-    nnoremap <Space>ft :silent! !gnome-terminal --working-directory=%:p:h &<CR>
+    nnoremap <Space>ft <cmd>:silent! !gnome-terminal --working-directory=%:p:h &<CR>
     if exists("$TERMINOLOGY")
-        nnoremap <Space>ft :silent! !terminology -d %:p:h &<CR>
+        nnoremap <Space>ft <cmd>:silent! !terminology -d %:p:h &<CR>
     endif
 
     " - map gf to go to filename under cursor
@@ -1135,33 +1135,33 @@ endif
         exec "normal!k\"pdd"
         startinsert!
     endfunction
-    nnoremap <Space>ff :call CloseMaximize()<CR>:call g:OpenFileByPath()<CR>
+    nnoremap <Space>ff <cmd>:call CloseMaximize()<CR><cmd>:call g:OpenFileByPath()<CR>
     " - map to open file/git file in directory/git project
-    nnoremap <Space>pf :call CloseMaximize()<CR>:GFiles!<CR>
+    nnoremap <Space>pf <cmd>:call CloseMaximize()<CR><cmd>:GFiles!<CR>
     " - map to open file in project
-    nnoremap <Space>pF :call CloseMaximize()<CR>:Files!<CR>
+    nnoremap <Space>pF <cmd>:call CloseMaximize()<CR><cmd>:Files!<CR>
 
     " - map to refresh buffer file
-    nnoremap <f5> :e<CR>
+    nnoremap <f5> <cmd>:e<CR>
 
     " - copy current file path
-    " nnoremap <Space>fy :silent exec '!printf ' . expand('%:p') . ' <bar> xclip -selection clipboard'<CR>
-    nnoremap <Space>fy :let @+ = expand("%:p")<CR>
-    nnoremap <Space>yy :let @+ = expand("%:p")<CR>
+    " nnoremap <Space>fy <cmd>:silent exec '!printf ' . expand('%:p') . ' <bar> xclip -selection clipboard'<CR>
+    nnoremap <Space>fy <cmd>:let @+ = expand("%:p")<CR>
+    nnoremap <Space>yy <cmd>:let @+ = expand("%:p")<CR>
     " - edit file whose path is copied
-    nnoremap <Space>fe :exec "e " . expand(@+)<CR>
-    nnoremap <Space>ye :exec "e " . expand(@+)<CR>
-    nnoremap <Space>pp :exec "e " . expand(@+)<CR>
+    nnoremap <Space>fe <cmd>:exec "e " . expand(@+)<CR>
+    nnoremap <Space>ye <cmd>:exec "e " . expand(@+)<CR>
+    nnoremap <Space>pp <cmd>:exec "e " . expand(@+)<CR>
 
     " - map SPC fvd to go to dot file(this file)
     execute "com! OpenVimrcDotFile e " . b:dot_file_path
     nnoremap <Space>fvd <cmd>:OpenVimrcDotFile<CR>
     " - map SPC fvR to source dot file
-    execute "nnoremap <Space>fvR :source " . b:dot_file_path . "<CR>"
+    execute "nnoremap <Space>fvR <cmd>:source " . b:dot_file_path . "<CR>"
 
 
-    " nnoremap <Space>ff :CtrlP %<CR>
-    " nnoremap <Space>ss :CtrlPLine %<CR>  " Use <c-f> instead
+    " nnoremap <Space>ff <cmd>:CtrlP %<CR>
+    " nnoremap <Space>ss <cmd>:CtrlPLine %<CR>  " Use <c-f> instead
 
 " ***********************************************************************
 " 6.7_Other map
@@ -1169,39 +1169,39 @@ endif
 
     " - map SPC SPC to run command
     if g:vim_plug_installed
-        nnoremap <Space><Space> :Commands<CR>
+        nnoremap <Space><Space> <cmd>:Commands<CR>
     else
         nnoremap <Space><Space> :<c-f>
     endif
 
     " - insert dividing line
-    nnoremap <Space>id :r !echo "***********************************************************************"<CR>:TComment<CR>5l
+    nnoremap <Space>id <cmd>:r !echo "***********************************************************************"<CR><cmd>:TComment<CR>5l
 
     " - map to switch theme
-    nnoremap <Space>Tn :call ToggleTheme()<CR>
+    nnoremap <Space>Tn <cmd>:call ToggleTheme()<CR>
 
     " - map to toggle line number display
-    nnoremap <Space>Tl :call ToggleLineNumber()<CR>
+    nnoremap <Space>Tl <cmd>:call ToggleLineNumber()<CR>
 
     " - map to toggle line number display for all windows
-    nnoremap <Space>TL :windo call ToggleLineNumber()<CR>
+    nnoremap <Space>TL <cmd>:windo call ToggleLineNumber()<CR>
 
     " - map to hide all auxiliary display
-    nnoremap <Space>tt :call ToggleAllAuxiliaryDisplay()<CR>
+    nnoremap <Space>tt <cmd>:call ToggleAllAuxiliaryDisplay()<CR>
 
     " - map to toggle git gutter
-    nnoremap <Space>Tg :GitGutterToggle<CR>
+    nnoremap <Space>Tg <cmd>:GitGutterToggle<CR>
 
     " - map to zoom in/out
     nnoremap <Space>z+ zR
     nnoremap <Space>z- zM
 
     " - map to move line up/down
-    nnoremap ]e        :move +1<CR>
-    nnoremap [e        :move -2<CR>
+    nnoremap ]e        <cmd>:move +1<CR>
+    nnoremap [e        <cmd>:move -2<CR>
 
     " - map to run python and output to current line
-    nnoremap <Space>mcc :w<CR>:!python %<CR>
+    nnoremap <Space>mcc <cmd>:w<CR><cmd>:!python %<CR>
 
     " - function to save layout
     let g:custom_layout_path="~/Software/vim/session"
@@ -1232,7 +1232,7 @@ endif
             startinsert!
 
             iunmap <buffer> <enter>
-            inoremap <buffer> <enter> <c-o>:stopinsert<CR>:let mycurf=expand("<cfile>")<CR>:bd!<CR>:execute("source ".mycurf)<CR>
+            inoremap <buffer> <enter> <c-o><cmd>:stopinsert<CR><cmd>:let mycurf=expand("<cfile>")<CR><cmd>:bd!<CR><cmd>:execute("source ".mycurf)<CR>
         else
             let s:layout_dir=g:custom_layout_path . system("printf " . getcwd())
             let s:layout_path=s:layout_dir . "/Session.vim"
@@ -1241,23 +1241,23 @@ endif
         endif
     endfunction
     " - map to save layout
-    nnoremap <Space>ls :call SaveLayout(0)<CR>
-    nnoremap <Space>lS :call SaveLayout(1)<CR>
+    nnoremap <Space>ls <cmd>:call SaveLayout(0)<CR>
+    nnoremap <Space>lS <cmd>:call SaveLayout(1)<CR>
     " - map to load layout
-    nnoremap <Space>ll :call LoadLayout(0)<CR>
-    nnoremap <Space>lL :call LoadLayout(1)<CR>
+    nnoremap <Space>ll <cmd>:call LoadLayout(0)<CR>
+    nnoremap <Space>lL <cmd>:call LoadLayout(1)<CR>
 
     " - map to quit
-    nnoremap <Space>qq :call CloseMaximize()<CR>:qa<CR>
+    nnoremap <Space>qq <cmd>:call CloseMaximize()<CR><cmd>:qa<CR>
 
     " - map to describe key
-    nnoremap <Space>hdk :Maps<CR>
+    nnoremap <Space>hdk <cmd>:Maps<CR>
 
     " - map to show snippets
-    nnoremap <Space>hds :Snippets<CR>
+    nnoremap <Space>hds <cmd>:Snippets<CR>
 
     " - map to change working directory to current git project/current file
-    nnoremap <Space>cd :cd %:h<CR>:silent! Gcd<CR>
+    nnoremap <Space>cd <cmd>:cd %:h<CR><cmd>:silent! Gcd<CR>
 
     " - map to toggle wrap
     function s:Toggle_Wrap()
@@ -1269,25 +1269,25 @@ endif
     endfunction
     " com!ToggleWrap windo set wrap
     com!ToggleWrap call s:Toggle_Wrap()
-    nnoremap <Space>tw :ToggleWrap<CR>
+    nnoremap <Space>tw <cmd>:ToggleWrap<CR>
     " - map to find actions
-    nmap <space>aa :FindActions<CR>
+    nmap <space>aa <cmd>:FindActions<CR>
     nmap <space>aA :FindActionsFor<space>
     nmap <space>AA :FindActionsFor<space>
     " - map to open current file by gedit
-    nmap <space>ag :!gedit %<CR>
+    nmap <space>ag <cmd>:!gedit %<CR>
     " - map to show undo tree
-    nmap <space>au :UndotreeToggle<CR>
+    nmap <space>au <cmd>:UndotreeToggle<CR>
     " - map to open built-in terminal
     if has('nvim')
-        nnoremap <space>as :terminal<CR>
+        nnoremap <space>as <cmd>:terminal<CR>
     else
-        nnoremap <space>as :vertical terminal ++curwin<CR>
+        nnoremap <space>as <cmd>:vertical terminal ++curwin<CR>
     endif
 
     " - map ,er to execute vim line/selected region in normal/visual mode
-    autocmd FileType vim vnoremap <buffer> ,er "vy :@v<CR>
-    autocmd FileType vim nnoremap <buffer> ,er :exec getline(".")<CR>
+    autocmd FileType vim vnoremap <buffer> ,er "vy <cmd>:@v<CR>
+    autocmd FileType vim nnoremap <buffer> ,er <cmd>:exec getline(".")<CR>
 
 " ***********************************************************************
 " 6.8_Command mode keymap
@@ -1322,7 +1322,7 @@ endif
 " 6.9_Unite.vim
 " ***********************************************************************
 
-    " nnoremap <Space><Space>  :Unite -start-insert -buffer-name=command  command<CR>
+    " nnoremap <Space><Space>  <cmd>:Unite -start-insert -buffer-name=command  command<CR>
     function! s:UniteSettings()
         au InsertLeave <buffer> :UniteClose
         imap <buffer> <TAB>   <Plug>(unite_select_next_line)
@@ -1433,23 +1433,23 @@ endif
 " ***********************************************************************
 
     " - map go to for YouCompleteMe
-    nnoremap <Space>yb :YcmCompleter GoTo<CR>
-    nnoremap <Space>yB :YcmCompleter GoToDeclaration<CR>
-    nnoremap <Space>yd :YcmCompleter GetDoc<CR>
+    nnoremap <Space>yb <cmd>:YcmCompleter GoTo<CR>
+    nnoremap <Space>yB <cmd>:YcmCompleter GoToDeclaration<CR>
+    nnoremap <Space>yd <cmd>:YcmCompleter GetDoc<CR>
 
     " - map FixIt for YouCompleteMe
-    nnoremap <Space>yf :YcmCompleter FixIt<CR>
+    nnoremap <Space>yf <cmd>:YcmCompleter FixIt<CR>
 
     " - map restart YouCompleteMe server
-    nnoremap <Space>yr :YcmRestartServer<CR>
+    nnoremap <Space>yr <cmd>:YcmRestartServer<CR>
 
     " - map generate YouCompleteMe config
     " Note here replace of FlagsForFile is due to use of clangd.
-    nnoremap <Space>yg :![[ -e CMakeLists.txt ]] && rm .ycm_extra_conf.py<CR>:YcmGenerateConfig<CR>:!sed -i 's/FlagsForFile/Settings/g' .ycm_extra_conf.py<CR>
+    nnoremap <Space>yg <cmd>:![[ -e CMakeLists.txt ]] && rm .ycm_extra_conf.py<CR><cmd>:YcmGenerateConfig<CR><cmd>:!sed -i 's/FlagsForFile/Settings/g' .ycm_extra_conf.py<CR>
     " <c-e> :cancel completion
 
     " - jump to for YouCompleteMe
-    autocmd FileType c,cpp,python,java,javascript nnoremap <buffer> <c-b> :YcmCompleter GoTo<CR>
+    autocmd FileType c,cpp,python,java,javascript nnoremap <buffer> <c-b> <cmd>:YcmCompleter GoTo<CR>
 
 
     " - disable c-y to stop completion to prevent comfliction with paste using <c-y>
@@ -1683,7 +1683,7 @@ if g:vim_plug_installed
     endfunction
 
     " - map <c-p> to toggle show signature help
-    inoremap <silent> <c-p> <c-o>:call Toggle_show_signature()<CR>
+    inoremap <silent> <c-p> <c-o><cmd>:call Toggle_show_signature()<CR>
 
     " Modified from coc#float#jump()
     function! Jump_to_float() abort
@@ -1704,7 +1704,7 @@ if g:vim_plug_installed
     endfunction
 
     " - map <c-j> to jump to the floating window in normal mode
-    nnoremap <c-j> :call Jump_to_float()<CR>
+    nnoremap <c-j> <cmd>:call Jump_to_float()<CR>
 
     " use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
     " - map to navigate diagnostic
@@ -1725,7 +1725,7 @@ if g:vim_plug_installed
         call CocAction('doHover')
       endif
     endfunction
-    nnoremap <silent> K :call <SID>show_documentation()<CR>
+    nnoremap <silent> K <cmd>:call <SID>show_documentation()<CR>
 
     " - map function and class text objects such as select inside function vif
     " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
@@ -1739,23 +1739,23 @@ if g:vim_plug_installed
     omap ac <Plug>(coc-classobj-a)
 
     " - map to generate clangd compile_commands.json according to Cmakelists.txt
-    nnoremap <Space>cg :cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("generate_clangd_json")<CR>
+    nnoremap <Space>cg <cmd>:cd %:h<CR><cmd>:silent! Gcd<CR><cmd>:call VimuxCdWorkingDirectory()<CR><cmd>:call Run_to_tmux_or_directly("generate_clangd_json")<CR>
     " - map to restart coc server
-    nnoremap <Space>cr :CocRestart<CR>
+    nnoremap <Space>cr <cmd>:CocRestart<CR>
     " apply codeAction to the selected region.
     " " Example: `<leader>aap` for current paragraph
     xmap <space>ca  <Plug>(coc-codeaction-selected)
     nmap <space>ca  <Plug>(coc-codeaction-selected)
     " - map to change python interpreter
-    autocmd FileType python nnoremap <buffer> <space>ci :CocCommand python.setInterpreter<CR>
+    autocmd FileType python nnoremap <buffer> <space>ci <cmd>:CocCommand python.setInterpreter<CR>
     " - map to run coc command
-    nnoremap <space>cc :CocCommand<CR>
+    nnoremap <space>cc <cmd>:CocCommand<CR>
 endif  " end if g:vim_plug_installed
 
     " - map to show structure with the help of coc
-    nnoremap <Space>cs :CocList outline<CR>
+    nnoremap <Space>cs <cmd>:CocList outline<CR>
     " - map to show coc lists
-    nnoremap <Space>cl :CocList lists<CR>
+    nnoremap <Space>cl <cmd>:CocList lists<CR>
 
 " ***********************************************************************
 " 7.3_Tmux settings
@@ -1783,20 +1783,20 @@ endif  " end if g:vim_plug_installed
     let g:VimuxHeight = "50"
 
     " - map to call some tmux command
-    nmap <space>: :call VimuxPromptCommand()<CR><c-f>:exec "set filetype=" . g:previous_buf_filetype<CR>i
-    nmap <space>v: :call VimuxPromptCommand()<CR>
-    nmap <space>vo :call VimuxOpenRunner()<CR>
-    nmap <space>vl :call VimuxRunLastCommand()<CR>
-    nmap <space>vc :call VimuxCloseRunner()<CR>
-    nmap <space>vr :call VimuxRunCommand("!!\n")<CR>
+    nmap <space>: <cmd>:call VimuxPromptCommand()<CR><c-f>:exec "set filetype=" . g:previous_buf_filetype<CR>i
+    nmap <space>v: <cmd>:call VimuxPromptCommand()<CR>
+    nmap <space>vo <cmd>:call VimuxOpenRunner()<CR>
+    nmap <space>vl <cmd>:call VimuxRunLastCommand()<CR>
+    nmap <space>vc <cmd>:call VimuxCloseRunner()<CR>
+    nmap <space>vr <cmd>:call VimuxRunCommand("!!\n")<CR>
 
     " - map for repl directly
-    inoremap <a-enter> <c-o>$<c-o>:call VimuxSlimeNormal()<CR><enter>
-    vnoremap <a-enter> "vy :call VimuxSlimeVisual()<CR>
-    nnoremap <a-enter> :call VimuxSlimeNormal()<CR>j
-    inoremap <a-v> <c-o>$<c-o>:call VimuxSlimeNormal()<CR><enter>
-    vnoremap <a-v> "vy :call VimuxSlimeVisual()<CR>
-    nnoremap <a-v> :call VimuxSlimeNormal()<CR>j
+    inoremap <a-enter> <c-o>$<c-o><cmd>:call VimuxSlimeNormal()<CR><enter>
+    vnoremap <a-enter> "vy <cmd>:call VimuxSlimeVisual()<CR>
+    nnoremap <a-enter> <cmd>:call VimuxSlimeNormal()<CR>j
+    inoremap <a-v> <c-o>$<c-o><cmd>:call VimuxSlimeNormal()<CR><enter>
+    vnoremap <a-v> "vy <cmd>:call VimuxSlimeVisual()<CR>
+    nnoremap <a-v> <cmd>:call VimuxSlimeNormal()<CR>j
 
     " - function to run visual region in another tmux pane
     function! VimuxSlimeVisual()
@@ -1831,8 +1831,8 @@ endif  " end if g:vim_plug_installed
     endfunction
 
     " - map to run visual region in another tmux pane
-    vmap <space>vs "vy :call VimuxSlimeVisual()<CR>
-    nmap <space>vs :call VimuxSlimeNormal()<CR>
+    vmap <space>vs "vy <cmd>:call VimuxSlimeVisual()<CR>
+    nmap <space>vs <cmd>:call VimuxSlimeNormal()<CR>
 
     " - toggle using vim for repl in another pane
     function! VimuxForRepl()
@@ -1850,9 +1850,9 @@ endif  " end if g:vim_plug_installed
             let b:VimuxForReplFlag=0
             echo "REPL mode off."
         else
-            inoremap <buffer> <enter> <c-o>$<c-o>:call VimuxSlimeNormal()<CR><enter>
-            vnoremap <buffer> <enter> "vy :call VimuxSlimeVisual()<CR>
-            nnoremap <buffer> <enter> :call VimuxSlimeNormal()<CR>j
+            inoremap <buffer> <enter> <c-o>$<c-o><cmd>:call VimuxSlimeNormal()<CR><enter>
+            vnoremap <buffer> <enter> "vy <cmd>:call VimuxSlimeVisual()<CR>
+            nnoremap <buffer> <enter> <cmd>:call VimuxSlimeNormal()<CR>j
             " VimuxRunCommand("cd " . expand("%:p:h"))
             if(!(&filetype=='matlab' && executable('matlab')))
                 call VimuxCdWorkingDirectory()
@@ -1866,7 +1866,7 @@ endif  " end if g:vim_plug_installed
 
             " set initial code for specific filetype
             if(&filetype=='python')
-                vnoremap <buffer> K     "vy :call VimuxShowPythonDocVisual()<CR>
+                vnoremap <buffer> K     "vy <cmd>:call VimuxShowPythonDocVisual()<CR>
                 VimuxRunCommand("python")
                 echo "python repl mode is on."
             endif
@@ -1901,9 +1901,9 @@ endif  " end if g:vim_plug_installed
             let b:VimEterExecFlag=0
             echo "vim repl mode is off."
         else
-            inoremap <buffer> <enter> <c-o>$<c-o>:exec getline(".")<CR><CR>
-            vnoremap <buffer> <enter> "vy :@v<CR>
-            nnoremap <buffer> <enter> :exec getline(".")<CR>j
+            inoremap <buffer> <enter> <c-o>$<c-o><cmd>:exec getline(".")<CR><CR>
+            vnoremap <buffer> <enter> "vy <cmd>:@v<CR>
+            nnoremap <buffer> <enter> <cmd>:exec getline(".")<CR>j
 
             let b:VimEterExecFlag=1
             echo "vim repl mode is on."
@@ -1912,8 +1912,8 @@ endif  " end if g:vim_plug_installed
 
 
     " - map to toggle using vim for repl in another pane
-    nmap <space>vp :call VimuxForRepl()<CR>
-    autocmd FileType vim nnoremap <buffer> <space>vp :call VimEnterExec()<CR>
+    nmap <space>vp <cmd>:call VimuxForRepl()<CR>
+    autocmd FileType vim nnoremap <buffer> <space>vp <cmd>:call VimEnterExec()<CR>
 
     " - function to change another pane's directory for tmux
     function!VimuxCdWorkingDirectory()
@@ -1929,11 +1929,11 @@ endif  " end if g:vim_plug_installed
     let g:tmux_navigator_no_mappings = 1
 
     " - map to navigate for both tmux and vim
-    nnoremap <silent> <A-h> :call CloseMaximize()<CR>:TmuxNavigateLeft<CR>
-    nnoremap <silent> <A-j> :call CloseMaximize()<CR>:TmuxNavigateDown<CR>
-    nnoremap <silent> <A-k> :call CloseMaximize()<CR>:TmuxNavigateUp<CR>
-    nnoremap <silent> <A-l> :call CloseMaximize()<CR>:TmuxNavigateRight<CR>
-    nnoremap <silent> <A-o> :call CloseMaximize()<CR>:TmuxNavigatePrevious<CR>
+    nnoremap <silent> <A-h> <cmd>:call CloseMaximize()<CR><cmd>:TmuxNavigateLeft<CR>
+    nnoremap <silent> <A-j> <cmd>:call CloseMaximize()<CR><cmd>:TmuxNavigateDown<CR>
+    nnoremap <silent> <A-k> <cmd>:call CloseMaximize()<CR><cmd>:TmuxNavigateUp<CR>
+    nnoremap <silent> <A-l> <cmd>:call CloseMaximize()<CR><cmd>:TmuxNavigateRight<CR>
+    nnoremap <silent> <A-o> <cmd>:call CloseMaximize()<CR><cmd>:TmuxNavigatePrevious<CR>
 
     " - function to maximize considering all vim panes and tmux panes
     function! ToggleMaximizeTmux()
@@ -1976,10 +1976,10 @@ endif  " end if g:vim_plug_installed
     endfunction
 
     " - map to toggle maximize tmux
-    " nnoremap <silent> <A-z> :call ToggleMaximizeTmux()<CR>
-    " inoremap <silent> <A-z> <c-o>:call ToggleMaximizeTmux()<CR>
-    nnoremap <silent> <A-z> :call ToggleZenMode(1)<CR>
-    inoremap <silent> <A-z> <c-o>:call ToggleZenMode(1)<CR>
+    " nnoremap <silent> <A-z> <cmd>:call ToggleMaximizeTmux()<CR>
+    " inoremap <silent> <A-z> <c-o><cmd>:call ToggleMaximizeTmux()<CR>
+    nnoremap <silent> <A-z> <cmd>:call ToggleZenMode(1)<CR>
+    inoremap <silent> <A-z> <c-o><cmd>:call ToggleZenMode(1)<CR>
 
 " ***********************************************************************
 " 7.4_Vimspector
@@ -2011,7 +2011,7 @@ endif  " end if g:vim_plug_installed
         set ft=asm
         vert rightb copen
         exec ":vert resize " . winwidth(g:vimspector_session_windows.output)/3
-        nnoremenu <silent> WinBar.ListBreakpoints :call vimspector#ListBreakpoints()<CR>
+        nnoremenu <silent> WinBar.ListBreakpoints <cmd>:call vimspector#ListBreakpoints()<CR>
         call vimspector#ListBreakpoints()
 
         call win_gotoid(g:vimspector_session_windows.code)
@@ -2157,56 +2157,56 @@ endpy
           \ "\<c-x>\<c-o>"
 
     " - map for debug mode of vimspector
-    nnoremap <Space>d? :call VimspectorHelp()<CR>
-    nnoremap <Space>dk :FindActionsFor vimspector<CR>
-    nnoremap <Space>dd :call VimspectorEnter()<CR>
-    nnoremap <Space>dc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
-    nnoremap ,cd :call VimspectorEnter()<CR>
-    nnoremap <Space>dp :call vimspector#Pause()<CR>
-    nnoremap <Space>dr :call vimspector#Restart()<CR>
-    nnoremap <Space>de :call vimspector#Stop()<CR>
-    nnoremap <Space>dq :call VimspectorExit()<CR>
-    nnoremap <Space>db :call vimspector#ToggleBreakpoint()<CR>
-    nnoremap <Space>dB :<c-u>call vimspector#ToggleBreakpoint(
+    nnoremap <Space>d? <cmd>:call VimspectorHelp()<CR>
+    nnoremap <Space>dk <cmd>:FindActionsFor vimspector<CR>
+    nnoremap <Space>dd <cmd>:call VimspectorEnter()<CR>
+    nnoremap <Space>dc <cmd>:GitGutterDisable<CR><cmd>:call vimspector#Continue()<CR> 
+    nnoremap ,cd <cmd>:call VimspectorEnter()<CR>
+    nnoremap <Space>dp <cmd>:call vimspector#Pause()<CR>
+    nnoremap <Space>dr <cmd>:call vimspector#Restart()<CR>
+    nnoremap <Space>de <cmd>:call vimspector#Stop()<CR>
+    nnoremap <Space>dq <cmd>:call VimspectorExit()<CR>
+    nnoremap <Space>db <cmd>:call vimspector#ToggleBreakpoint()<CR>
+    nnoremap <Space>dB <cmd>:<c-u>call vimspector#ToggleBreakpoint(
                 \ { 'condition': input( 'Enter condition expression: ' ),
                 \   'hitCondition': '0' }
                 \ )<CR>
-    nnoremap <Space>dl :call UpdateVimspectorBreakpoints()<CR>
-    nnoremap <Space>dfb :call vimspector#AddFunctionBreakpoint()<CR>
-    nnoremap <Space>d] :call VimspectorFrameUp()<CR>
-    nnoremap <Space>d[ :call VimspectorFrameDown()<CR>
-    nnoremap <Space>d<Space> :call VimspectorCurrentLine()<CR>
-    nnoremap <Space>dT :call VimspectorCurrentLine()<CR>
-    nnoremap <Space>ds :call vimspector#StepInto()<CR>
-    nnoremap <Space>dn :call vimspector#StepOver()<CR>
-    nnoremap <Space>do :call vimspector#StepOut()<CR>
-    nnoremap <Space>dt :call vimspector#RunToCursor()<CR>
+    nnoremap <Space>dl <cmd>:call UpdateVimspectorBreakpoints()<CR>
+    nnoremap <Space>dfb <cmd>:call vimspector#AddFunctionBreakpoint()<CR>
+    nnoremap <Space>d] <cmd>:call VimspectorFrameUp()<CR>
+    nnoremap <Space>d[ <cmd>:call VimspectorFrameDown()<CR>
+    nnoremap <Space>d<Space> <cmd>:call VimspectorCurrentLine()<CR>
+    nnoremap <Space>dT <cmd>:call VimspectorCurrentLine()<CR>
+    nnoremap <Space>ds <cmd>:call vimspector#StepInto()<CR>
+    nnoremap <Space>dn <cmd>:call vimspector#StepOver()<CR>
+    nnoremap <Space>do <cmd>:call vimspector#StepOut()<CR>
+    nnoremap <Space>dt <cmd>:call vimspector#RunToCursor()<CR>
     nnoremap <Space>d: :VimspectorEval 
 
     " - map to copy .vimspector.json file to current directory for further config in project directory.
-    nnoremap <Space>dg :cd %:h<CR>:silent! Gcd<CR>:!cp ~/Software/vim/vimspector/.vimspector.json .<CR>:e .vimspector.json<CR>
+    nnoremap <Space>dg <cmd>:cd %:h<CR><cmd>:silent! Gcd<CR><cmd>:!cp ~/Software/vim/vimspector/.vimspector.json .<CR><cmd>:e .vimspector.json<CR>
 
     " - function to map vimspector buffer keymap
     function! MapVimspector()
-        nnoremap <buffer> g? :call VimspectorHelp()<CR>
-        nnoremap <buffer> gc :GitGutterDisable<CR>:call vimspector#Continue()<CR> 
-        nnoremap <buffer> gp :call vimspector#Pause()<CR>
-        nnoremap <buffer> ge :call vimspector#Stop()<CR>
-        nnoremap <buffer> gq :call VimspectorExit()<CR>
-        nnoremap <buffer> gb :call vimspector#ToggleBreakpoint()<CR>
-        nnoremap <buffer> <silent> gB :<c-u>call vimspector#ToggleBreakpoint(
+        nnoremap <buffer> g? <cmd>:call VimspectorHelp()<CR>
+        nnoremap <buffer> gc <cmd>:GitGutterDisable<CR><cmd>:call vimspector#Continue()<CR> 
+        nnoremap <buffer> gp <cmd>:call vimspector#Pause()<CR>
+        nnoremap <buffer> ge <cmd>:call vimspector#Stop()<CR>
+        nnoremap <buffer> gq <cmd>:call VimspectorExit()<CR>
+        nnoremap <buffer> gb <cmd>:call vimspector#ToggleBreakpoint()<CR>
+        nnoremap <buffer> <silent> gB <cmd>:<c-u>call vimspector#ToggleBreakpoint(
                     \ { 'condition': input( 'Enter condition expression: ' ),
                     \   'hitCondition': '0' }
                     \ )<CR>
-        nnoremap <buffer> gl :call UpdateVimspectorBreakpoints()<CR>
-        nnoremap <buffer> g] :call VimspectorFrameUp()<CR>
-        nnoremap <buffer> g[ :call VimspectorFrameDown()<CR>
-        nnoremap <buffer> g<Space> :call VimspectorCurrentLine()<CR>
-        nnoremap gT :call VimspectorCurrentLine()<CR>
-        nnoremap <buffer> gs :call vimspector#StepInto()<CR>
-        nnoremap <buffer> gn :call vimspector#StepOver()<CR>
-        nnoremap <buffer> go :call vimspector#StepOut()<CR>
-        nnoremap <buffer> gt :call VimspectorRunToCursor()<CR>
+        nnoremap <buffer> gl <cmd>:call UpdateVimspectorBreakpoints()<CR>
+        nnoremap <buffer> g] <cmd>:call VimspectorFrameUp()<CR>
+        nnoremap <buffer> g[ <cmd>:call VimspectorFrameDown()<CR>
+        nnoremap <buffer> g<Space> <cmd>:call VimspectorCurrentLine()<CR>
+        nnoremap gT <cmd>:call VimspectorCurrentLine()<CR>
+        nnoremap <buffer> gs <cmd>:call vimspector#StepInto()<CR>
+        nnoremap <buffer> gn <cmd>:call vimspector#StepOver()<CR>
+        nnoremap <buffer> go <cmd>:call vimspector#StepOut()<CR>
+        nnoremap <buffer> gt <cmd>:call VimspectorRunToCursor()<CR>
         nnoremap <buffer> g: :VimspectorEval 
     endfunction
 
@@ -2215,12 +2215,12 @@ endpy
 " ***********************************************************************
 
     if has('nvim')
-        nnoremap ,qq :GdbSaveBreakpoints<CR>:sleep 1<CR>:GdbDebugStop<CR>
+        nnoremap ,qq <cmd>:GdbSaveBreakpoints<CR><cmd>:sleep 1<CR><cmd>:GdbDebugStop<CR>
         if exists(':tnoremap')
             tnoremap <c-b> save breakpoints .gdb_breakpoints<CR>q<CR>
         endif
     else
-        nnoremap ,qq :call TermDebugSendCommand('save breakpoints .gdb_breakpoints')<CR>:call TermDebugSendCommand('q')<CR>
+        nnoremap ,qq <cmd>:call TermDebugSendCommand('save breakpoints .gdb_breakpoints')<CR><cmd>:call TermDebugSendCommand('q')<CR>
         if exists(':tnoremap')
             tnoremap <c-b> save breakpoints .gdb_breakpoints<CR>q<CR>
         endif
@@ -2243,15 +2243,15 @@ endpy
 
     let g:formatdef_clangformat ="'clang-format -lines='.a:firstline.':'.a:lastline.' --assume-filename=\"'.expand('%:p').'\" -style=\"{ AlignTrailingComments: true, '.(&textwidth ? 'ColumnLimit: '.&textwidth.', ' : '').(&expandtab ? 'UseTab: Never, IndentWidth: '.shiftwidth() : 'UseTab: Always').'}\"'"
     " map ,f to format file
-    nnoremap ,f :Autoformat<CR>
-    xnoremap ,f :Autoformat<CR>
+    nnoremap ,f <cmd>:Autoformat<CR>
+    xnoremap ,f <cmd>:Autoformat<CR>
 
 " ***********************************************************************
 " 7.6.2_Neoformat
 " ***********************************************************************
 
-    " nnoremap ,f :Neoformat<CR>
-    " xnoremap ,f :Neoformat<CR>
+    " nnoremap ,f <cmd>:Neoformat<CR>
+    " xnoremap ,f <cmd>:Neoformat<CR>
 
     " following command contains bug: after command, ,cc will be mapped to cpp
     " run command
@@ -2323,24 +2323,24 @@ endpy
         "   'd'   called: find functions that function under cursor calls
 
         " - mappings for cscope
-        nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
-        nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
-        nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
-        nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>	
-        nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>	
-        nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>	
-        " nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-        nmap <C-\>i :cs find i <C-R>=expand("%:p:t")<CR>$<CR>
-        nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-\>s <cmd>:cs find s <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-\>g <cmd>:cs find g <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-\>c <cmd>:cs find c <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-\>t <cmd>:cs find t <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-\>e <cmd>:cs find e <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-\>f <cmd>:cs find f <C-R>=expand("<cfile>")<CR><CR>	
+        " nmap <C-\>i <cmd>:cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+        nmap <C-\>i <cmd>:cs find i <C-R>=expand("%:p:t")<CR>$<CR>
+        nmap <C-\>d <cmd>:cs find d <C-R>=expand("<cword>")<CR><CR>	
 
-        nmap <Space>ss :cs find s <C-R>=expand("<cword>")<CR><CR>	
-        nmap <Space>sg :cs find g <C-R>=expand("<cword>")<CR><CR>	
-        nmap <Space>sc :cs find c <C-R>=expand("<cword>")<CR><CR>	
-        nmap <Space>st :cs find t <C-R>=expand("<cword>")<CR><CR>	
-        nmap <Space>se :cs find e <C-R>=expand("<cword>")<CR><CR>	
-        nmap <Space>sf :cs find f <C-R>=expand("<cfile>")<CR><CR>	
-        nmap <Space>si :cs find i <C-R>=expand("%:p:t")<CR>$<CR>
-        nmap <Space>sd :cs find d <C-R>=expand("<cword>")<CR><CR>	
+        nmap <Space>ss <cmd>:cs find s <C-R>=expand("<cword>")<CR><CR>	
+        nmap <Space>sg <cmd>:cs find g <C-R>=expand("<cword>")<CR><CR>	
+        nmap <Space>sc <cmd>:cs find c <C-R>=expand("<cword>")<CR><CR>	
+        nmap <Space>st <cmd>:cs find t <C-R>=expand("<cword>")<CR><CR>	
+        nmap <Space>se <cmd>:cs find e <C-R>=expand("<cword>")<CR><CR>	
+        nmap <Space>sf <cmd>:cs find f <C-R>=expand("<cfile>")<CR><CR>	
+        nmap <Space>si <cmd>:cs find i <C-R>=expand("%:p:t")<CR>$<CR>
+        nmap <Space>sd <cmd>:cs find d <C-R>=expand("<cword>")<CR><CR>	
     endif
 
 
@@ -2448,7 +2448,7 @@ endpy
     au BufNewFile,BufRead *.idp setf edp
 
     " - run freefem++
-    au FileType  edp nnoremap ,cc :w<CR>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
+    au FileType  edp nnoremap ,cc <cmd>:w<CR><cmd>:call Run_to_tmux_or_directly("cd ".expand('%:p:h')." && FreeFem++ ".expand('%:p'))<CR>
 
     " - load completion.edp for better completion
     au FileType  edp call s:LoadFreefemCompletion()
@@ -2467,9 +2467,9 @@ endpy
 " 8.4_Python settings
 " ***********************************************************************
     " - run current python buffer
-    autocmd FileType python nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("python3 " . expand("%:p"))<CR>
+    autocmd FileType python nnoremap <buffer> ,cc <cmd>:w<CR><cmd>:call Run_to_tmux_or_directly("python3 " . expand("%:p"))<CR>
     " - debug current python buffer
-    autocmd FileType python nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartPDB python -m pdb <c-r>%<CR>
+    autocmd FileType python nnoremap <buffer> ,cd <cmd>:w<CR><cmd>:cd %:h<CR><cmd>:GdbStartPDB python -m pdb <c-r>%<CR>
     " - set .ufl as python type file(fenics ufl file)
     au BufNewFile,BufRead *.ufl setf python
 
@@ -2533,15 +2533,15 @@ endpy
     endf
 
     " - map to run matlab/octave file
-    autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:!octave %<CR>
-    autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("octave " . expand("%:p"))<CR>
+    autocmd FileType matlab nnoremap <buffer> ,cc <cmd>:w<CR><cmd>:!octave %<CR>
+    autocmd FileType matlab nnoremap <buffer> ,cc <cmd>:w<CR><cmd>:call Run_to_tmux_or_directly("octave " . expand("%:p"))<CR>
     if executable('matlab')
-        autocmd FileType matlab nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("run('" . expand("%:p") . "')")<CR>
+        autocmd FileType matlab nnoremap <buffer> ,cc <cmd>:w<CR><cmd>:call Run_to_tmux_or_directly("run('" . expand("%:p") . "')")<CR>
     endif
 
     " - map to go to matlab help/definition
-    autocmd FileType matlab nnoremap <buffer> K :call MatlabHelp()<CR>
-    autocmd FileType matlab nnoremap <buffer> gd :call MatlabGoToDefinition()<CR>
+    autocmd FileType matlab nnoremap <buffer> K <cmd>:call MatlabHelp()<CR>
+    autocmd FileType matlab nnoremap <buffer> gd <cmd>:call MatlabGoToDefinition()<CR>
 
     if executable('matlab')
         " How many counts :ClearAllBreakpoints is called
@@ -2581,27 +2581,27 @@ endpy
 
         " - map to matlab debugging command
         " matlab debug: gb  - toggle breakpoint
-        autocmd FileType matlab nnoremap <buffer> gb :call Toggle_breakpoints_for_matlab()<CR>
+        autocmd FileType matlab nnoremap <buffer> gb <cmd>:call Toggle_breakpoints_for_matlab()<CR>
         " matlab debug: glb - list breakpoints
-        autocmd FileType matlab nnoremap <buffer> glb :call Run_to_tmux_or_directly('dbstatus')<CR>
+        autocmd FileType matlab nnoremap <buffer> glb <cmd>:call Run_to_tmux_or_directly('dbstatus')<CR>
         " matlab debug: gc  - continue
-        autocmd FileType matlab nnoremap <buffer> gc :call Run_to_tmux_or_directly('dbcont')<CR>
+        autocmd FileType matlab nnoremap <buffer> gc <cmd>:call Run_to_tmux_or_directly('dbcont')<CR>
         " matlab debug: gn  - step next
-        autocmd FileType matlab nnoremap <buffer> gn :call Run_to_tmux_or_directly('dbstep')<CR>
+        autocmd FileType matlab nnoremap <buffer> gn <cmd>:call Run_to_tmux_or_directly('dbstep')<CR>
         " matlab debug: gs  - step in
-        autocmd FileType matlab nnoremap <buffer> gs :call Run_to_tmux_or_directly('dbstep in')<CR>
+        autocmd FileType matlab nnoremap <buffer> gs <cmd>:call Run_to_tmux_or_directly('dbstep in')<CR>
         " matlab debug: go  - step out
-        autocmd FileType matlab nnoremap <buffer> go :call Run_to_tmux_or_directly('dbstep out')<CR>
+        autocmd FileType matlab nnoremap <buffer> go <cmd>:call Run_to_tmux_or_directly('dbstep out')<CR>
         " matlab debug: gq  - quit debug
-        autocmd FileType matlab nnoremap <buffer> gq :call Run_to_tmux_or_directly('dbquit')<CR>
+        autocmd FileType matlab nnoremap <buffer> gq <cmd>:call Run_to_tmux_or_directly('dbquit')<CR>
         " matlab debug: gls - show current line
-        autocmd FileType matlab nnoremap <buffer> gls :call Run_to_tmux_or_directly('dbstack')<CR>
+        autocmd FileType matlab nnoremap <buffer> gls <cmd>:call Run_to_tmux_or_directly('dbstack')<CR>
         " matlab debug: gku  - up one stack
-        autocmd FileType matlab nnoremap <buffer> gku :call Run_to_tmux_or_directly('dbup')<CR>
+        autocmd FileType matlab nnoremap <buffer> gku <cmd>:call Run_to_tmux_or_directly('dbup')<CR>
         " matlab debug: gkd  - down one stack
-        autocmd FileType matlab nnoremap <buffer> gkd :call Run_to_tmux_or_directly('dbdown')<CR>
+        autocmd FileType matlab nnoremap <buffer> gkd <cmd>:call Run_to_tmux_or_directly('dbdown')<CR>
         " matlab debug: g?  - show help
-        autocmd FileType matlab nnoremap <buffer> g? :!cat ~/Software/vim/vimrc <bar>grep 'matlab debug:'<CR>
+        autocmd FileType matlab nnoremap <buffer> g? <cmd>:!cat ~/Software/vim/vimrc <bar>grep 'matlab debug:'<CR>
         if $TMUX != ''
             autocmd BufWritePost *.m call Run_to_tmux_or_directly('clear ' . expand('%:p'))
         endif
@@ -2613,32 +2613,32 @@ endpy
 " ***********************************************************************
 
     " - map to run current javascript buffer
-    autocmd FileType javascript nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("node " . expand("%:p"))<CR>
+    autocmd FileType javascript nnoremap <buffer> ,cc <cmd>:w<CR><cmd>:call Run_to_tmux_or_directly("node " . expand("%:p"))<CR>
 
 " ***********************************************************************
 " 8.7_C/C++ settings
 " ***********************************************************************
 
     " - map to run current c/cpp project/file
-    autocmd FileType c,cpp nnoremap <buffer> ,cc :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output")<CR>
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cc :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:t')." --less-output")<CR>
+    autocmd FileType c,cpp nnoremap <buffer> ,cc <cmd>:w<CR><cmd>:cd %:h<CR><cmd>:silent! Gcd<CR><cmd>:call VimuxCdWorkingDirectory()<CR><cmd>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output")<CR>
+    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cc <cmd>:w<CR><cmd>:cd %:h<CR><cmd>:silent! Gcd<CR><cmd>:call VimuxCdWorkingDirectory()<CR><cmd>:call Run_to_tmux_or_directly("cmake_run ".expand('%:t')." --less-output")<CR>
     " - map to make current c/cpp project/file
-    autocmd FileType c,cpp nnoremap <buffer> ,cm :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --make-only")<CR>
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cm :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:t')." --make-only")<CR>
+    autocmd FileType c,cpp nnoremap <buffer> ,cm <cmd>:w<CR><cmd>:cd %:h<CR><cmd>:silent! Gcd<CR><cmd>:call VimuxCdWorkingDirectory()<CR><cmd>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --make-only")<CR>
+    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cm <cmd>:w<CR><cmd>:cd %:h<CR><cmd>:silent! Gcd<CR><cmd>:call VimuxCdWorkingDirectory()<CR><cmd>:call Run_to_tmux_or_directly("cmake_run ".expand('%:t')." --make-only")<CR>
 
     " - map to run c/cpp with mpi
     let g:mpi_processors_num=4
     com! -nargs=1 SetMpiProcessors let g:mpi_processors_num=<args>
-    autocmd FileType c,cpp nnoremap <buffer> ,cp :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output --make-only && mpirun -n ".g:mpi_processors_num." `make_find_executable`")<CR>
-    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cp :w<CR>:cd %:h<CR>:silent! Gcd<CR>:call VimuxCdWorkingDirectory()<CR>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output --make-only && mpirun -n ".g:mpi_processors_num." `make_find_executable`")<CR>
+    autocmd FileType c,cpp nnoremap <buffer> ,cp <cmd>:w<CR><cmd>:cd %:h<CR><cmd>:silent! Gcd<CR><cmd>:call VimuxCdWorkingDirectory()<CR><cmd>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output --make-only && mpirun -n ".g:mpi_processors_num." `make_find_executable`")<CR>
+    autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cp <cmd>:w<CR><cmd>:cd %:h<CR><cmd>:silent! Gcd<CR><cmd>:call VimuxCdWorkingDirectory()<CR><cmd>:call Run_to_tmux_or_directly("cmake_run ".expand('%:p')." --less-output --make-only && mpirun -n ".g:mpi_processors_num." `make_find_executable`")<CR>
 
     if has('nvim')
         " - debug current c/cpp project
-        autocmd FileType c,cpp nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:silent! Gcd<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
-        autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:silent! Gcd<CR>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
+        autocmd FileType c,cpp nnoremap <buffer> ,cd <cmd>:w<CR><cmd>:cd %:h<CR><cmd>:silent! Gcd<CR><cmd>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
+        autocmd BufRead,BufNewFile  CMakeLists.txt nnoremap <buffer> ,cd <cmd>:w<CR><cmd>:cd %:h<CR><cmd>:silent! Gcd<CR><cmd>:GdbStart gdb -q -command="$HOME/Software/vim/gdb_init" `make_find_executable` <CR>
     else
-        autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:silent! Gcd<CR>:exec "Termdebug " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>hstart<CR>source .gdb_breakpoints<CR>
-        " autocmd FileType c,cpp nnoremap <buffer> ,cd :set mouse=a<CR>:w<CR>:cd %:h<CR>:silent! Gcd<CR>:exec "Termdebug -command=~/Software/vim/gdb_init " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>h
+        autocmd FileType c,cpp nnoremap <buffer> ,cd <cmd>:set mouse=a<CR><cmd>:w<CR><cmd>:cd %:h<CR><cmd>:silent! Gcd<CR><cmd>:exec "Termdebug " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>hstart<CR>source .gdb_breakpoints<CR>
+        " autocmd FileType c,cpp nnoremap <buffer> ,cd <cmd>:set mouse=a<CR><cmd>:w<CR><cmd>:cd %:h<CR><cmd>:silent! Gcd<CR><cmd>:exec "Termdebug -command=~/Software/vim/gdb_init " . system('make_find_executable')<CR><c-w>j<c-w>j<c-w>L:sleep 1<CR><c-w>h
     endif
 
 
@@ -2651,7 +2651,7 @@ endpy
 
 if has('nvim')
     " - map to debug current bash buffer
-    autocmd FileType sh nnoremap <buffer> ,cd :w<CR>:cd %:h<CR>:GdbStartBashDB bashdb <c-r>%<CR>
+    autocmd FileType sh nnoremap <buffer> ,cd <cmd>:w<CR><cmd>:cd %:h<CR><cmd>:GdbStartBashDB bashdb <c-r>%<CR>
 endif
 
 " ***********************************************************************
@@ -2664,15 +2664,15 @@ endif
 " ***********************************************************************
 
     " - map to create/goto abbreviation
-    autocmd FileType tex vnoremap <buffer> <m-s> "vy:call VisualSetAbbreviation()<CR>
-    autocmd FileType tex nnoremap <buffer> <m-s> :call ShowAbbreviations()<CR>
-    autocmd FileType tex inoremap <buffer> <m-s> <c-o>:call ShowAbbreviations()<CR>
-    autocmd BufRead,BufNewFile */abbrev_defs.vim nnoremap <buffer> <m-s> :b#<CR>
-    autocmd BufRead,BufNewFile */abbrev_defs.vim inoremap <buffer> <m-s> <c-o>:b#<CR>
+    autocmd FileType tex vnoremap <buffer> <m-s> "vy<cmd>:call VisualSetAbbreviation()<CR>
+    autocmd FileType tex nnoremap <buffer> <m-s> <cmd>:call ShowAbbreviations()<CR>
+    autocmd FileType tex inoremap <buffer> <m-s> <c-o><cmd>:call ShowAbbreviations()<CR>
+    autocmd BufRead,BufNewFile */abbrev_defs.vim nnoremap <buffer> <m-s> <cmd>:b#<CR>
+    autocmd BufRead,BufNewFile */abbrev_defs.vim inoremap <buffer> <m-s> <c-o><cmd>:b#<CR>
 
     " - latex mode jump to bibtex
-    autocmd FileType tex nnoremap <buffer> <m-r> :e $HOME/Software/latex/bibtex/bib/ref.bib<CR>
-    autocmd BufRead,BufNewFile $HOME/Software/latex/bibtex/bib/ref.bib nnoremap <buffer> <m-r> :b#<CR>
+    autocmd FileType tex nnoremap <buffer> <m-r> <cmd>:e $HOME/Software/latex/bibtex/bib/ref.bib<CR>
+    autocmd BufRead,BufNewFile $HOME/Software/latex/bibtex/bib/ref.bib nnoremap <buffer> <m-r> <cmd>:b#<CR>
 
     " - auto load abbreviation at latex startup
     autocmd FileType tex LoadAbbreviations
@@ -2718,14 +2718,14 @@ endif
         nmap <buffer> ,b <plug>(vimtex-compile)
         nmap <buffer> ,c <plug>(vimtex-clean)
         nmap <buffer> ,v <plug>(vimtex-view)
-        inoremap <buffer> <m-v> <c-o>:VimtexView<CR>
+        inoremap <buffer> <m-v> <c-o><cmd>:VimtexView<CR>
         nmap <buffer> ,r <plug>(vimtex-reverse-search)
         nmap <buffer> ,e <plug>(vimtex-errors)
         inoremap <buffer> <c-d> _{}<left>
         inoremap <buffer> <c-u> ^{}<left>
         inoremap <buffer> <c-o> $$<left>
         inoremap <buffer> <c-b> \textbf{}<left>
-        nnoremap <buffer> ? :echo "Keymap: (1) ,b : compile  (2) ,v : view\n        (3) ,e : show errors  (4) ,c : clean\n        (5) M-s : create/goto abbreviation  (6) M-r : show bib file"<CR>
+        nnoremap <buffer> ? <cmd>:echo "Keymap: (1) ,b : compile  (2) ,v : view\n        (3) ,e : show errors  (4) ,c : clean\n        (5) M-s : create/goto abbreviation  (6) M-r : show bib file"<CR>
         nnoremap <buffer> z? ?
     endfunction
     autocmd FileType tex call DefLatexMappings()
@@ -2757,7 +2757,7 @@ endif
 " 8.10_Go settings
 " ***********************************************************************
     " - map to run current go project/file
-    autocmd FileType go nnoremap <buffer> ,cc :w<CR>:call Run_to_tmux_or_directly("go run " . expand("%:p"))<CR>
+    autocmd FileType go nnoremap <buffer> ,cc <cmd>:w<CR><cmd>:call Run_to_tmux_or_directly("go run " . expand("%:p"))<CR>
 
 " ***********************************************************************
 " 9_Utilities ***********************************************************
@@ -2856,8 +2856,8 @@ endif
     " execute 'autocmd BufRead,BufNewFile ' . g:toBeTranslate_file . ' autocmd TextChangedI <buffer> call TranslateCount(5)'
     execute 'autocmd BufRead,BufNewFile ' . g:toBeTranslate_file . ' autocmd TextChanged <buffer> call TranslateCount(0)'
     execute 'autocmd BufRead,BufNewFile ' . g:toBeTranslate_file . ' autocmd CursorHoldI,CursorHold <buffer> call TranslateCount(0)'
-    execute 'autocmd BufRead,BufNewFile ' . g:toBeTranslate_file . ' map <buffer> <c-s> :call TranslateCount(0)<CR>'
-    execute 'autocmd BufRead,BufNewFile ' . g:toBeTranslate_file . ' inoremap <buffer> <c-s> <c-o>:call TranslateCount(0)<CR>'
+    execute 'autocmd BufRead,BufNewFile ' . g:toBeTranslate_file . ' map <buffer> <c-s> <cmd>:call TranslateCount(0)<CR>'
+    execute 'autocmd BufRead,BufNewFile ' . g:toBeTranslate_file . ' inoremap <buffer> <c-s> <c-o><cmd>:call TranslateCount(0)<CR>'
     execute 'autocmd BufRead,BufNewFile ' . g:translation_dir . '/translated.txt' . ' set autoread'
 
     " - s: function to translate repl file
@@ -2885,7 +2885,7 @@ endif
     endfunction
 
     " - map SPC hr to start repl translation
-    nnoremap <space>hr :exec 'e ' . g:toBeTranslate_file<CR><c-w><c-o>:vs<CR><C-w>l:exec 'e ' . g:translation_dir . '/translated.txt'<CR><c-w>h
+    nnoremap <space>hr <cmd>:exec 'e ' . g:toBeTranslate_file<CR><c-w><c-o>:vs<CR><C-w>l:exec 'e ' . g:translation_dir . '/translated.txt'<CR><c-w>h
 
     " - function to translate region
     function! Translate()
@@ -2897,10 +2897,10 @@ endif
     endfunction
 
     " - map SPC hc to translate
-    " vnoremap <silent> <c-h>c :<C-u>Ydv<CR>
-    nnoremap <silent> <Space>hc :<C-u>Ydc<CR>
-    vnoremap <silent> <Space>hc "vy :call Translate()<CR>
-    noremap <Space>htc :<C-u>Yde<CR>
+    " vnoremap <silent> <c-h>c <cmd>:<C-u>Ydv<CR>
+    nnoremap <silent> <Space>hc <cmd>:<C-u>Ydc<CR>
+    vnoremap <silent> <Space>hc "vy <cmd>:call Translate()<CR>
+    noremap <Space>htc <cmd>:<C-u>Yde<CR>
 
 " ***********************************************************************
 " 9.2_Vim-multiple-cursor
@@ -2947,14 +2947,14 @@ endif
 " ***********************************************************************
 
     " - map SPC 0 to toggle nerdtree
-    nnoremap <Space>0 :call CloseMaximize()<CR>:NERDTreeToggle<CR>
+    nnoremap <Space>0 <cmd>:call CloseMaximize()<CR><cmd>:NERDTreeToggle<CR>
 
     " - map SPC fp to find current file in nerdtree
-    nnoremap <Space>fp :call CloseMaximize()<CR>:NERDTreeFind<CR>
+    nnoremap <Space>fp <cmd>:call CloseMaximize()<CR><cmd>:NERDTreeFind<CR>
 
     " - map SPC <enter>/M-m to toggle tagbar
-    nnoremap <Space><CR> :TagbarToggle<CR>
-    nnoremap <A-m> :TagbarToggle<CR>
+    nnoremap <Space><CR> <cmd>:TagbarToggle<CR>
+    nnoremap <A-m> <cmd>:TagbarToggle<CR>
 
     " - order tags by order in the file instead of by name. Press s to toggle.
     let g:tagbar_sort = 0
@@ -2964,7 +2964,7 @@ endif
 " ***********************************************************************
 
     " - map SPC gs to show git status
-    nnoremap <Space>gs :Gstatus<CR>
+    nnoremap <Space>gs <cmd>:Gstatus<CR>
     " in Gstatus window:
     " -	        add/reset file (works in visual mode too)
     " <Enter>	open current file in the window below
@@ -2973,30 +2973,30 @@ endif
     " c?        Show help
 
     " - map SPC gd to show git difference
-    nnoremap <Space>gd :Gvdiffsplit<CR>
+    nnoremap <Space>gd <cmd>:Gvdiffsplit<CR>
     " - map SPC gc to commit for git
-    nnoremap <Space>gc :Gcommit<CR>
+    nnoremap <Space>gc <cmd>:Gcommit<CR>
 
     " - map SPC gfm/SPC gfr to move/remove for git
-    nnoremap <Space>gfm :Gmove<CR>
-    nnoremap <Space>gfr :Gremove<CR>
+    nnoremap <Space>gfm <cmd>:Gmove<CR>
+    nnoremap <Space>gfr <cmd>:Gremove<CR>
 
     " - map SPC gl to show git history
-    nnoremap <Space>gl :let g:glog_cursor=line(".")<CR>:0Gclog<CR>
+    nnoremap <Space>gl <cmd>:let g:glog_cursor=line(".")<CR><cmd>:0Gclog<CR>
     " - map to show next/previous history in git history mode
-    nnoremap <Space>gn :cnext<CR>
-    nnoremap [q :cnext<CR>
-    nnoremap <Space>gp :cprev<CR>
-    nnoremap ]q :cprev<CR>
-    nnoremap <Space>gN :cprev<CR>
+    nnoremap <Space>gn <cmd>:cnext<CR>
+    nnoremap [q <cmd>:cnext<CR>
+    nnoremap <Space>gp <cmd>:cprev<CR>
+    nnoremap ]q <cmd>:cprev<CR>
+    nnoremap <Space>gN <cmd>:cprev<CR>
 
     " - some other mappings for git
     " revert current file
-    nnoremap <Space>gr :Gread<CR>
+    nnoremap <Space>gr <cmd>:Gread<CR>
     " stage current file
-    nnoremap <Space>ga :Gwrite<CR>
+    nnoremap <Space>ga <cmd>:Gwrite<CR>
     " show commit time
-    nnoremap <Space>gb :Gblame<CR>
+    nnoremap <Space>gb <cmd>:Gblame<CR>
 
     " - move to the same line when swithing in git history mode
     au! BufLeave  fugitive://*  let g:glog_cursor=line(".")
@@ -3156,9 +3156,9 @@ endif
     " - ctrlp extensions
     let g:ctrlp_extensions = [ 'line' ]
 
-    " nnoremap <c-f> :CtrlPLine %<CR>
+    " nnoremap <c-f> <cmd>:CtrlPLine %<CR>
     " - map C-p to ctrlp
-    nmap <c-p> :CtrlP .<CR>
+    nmap <c-p> <cmd>:CtrlP .<CR>
     " let g:ctrlp_map = '<c-p>'
 
     " - set current working directory for ctrlp
@@ -3187,7 +3187,7 @@ endif
 " ***********************************************************************
 
     let g:tcomment_opleader1="<space>;"
-    nnoremap <space>;;  :TComment<CR>
+    nnoremap <space>;;  <cmd>:TComment<CR>
 
 " ***********************************************************************
 " 9.8_Scratch
@@ -3286,7 +3286,7 @@ endif
         redraw!
     endfunction
     command! -bar RangerChooser call RangeChooser()
-    nnoremap <Space>r :<C-U>RangerChooser<CR>
+    nnoremap <Space>r <cmd>:<C-U>RangerChooser<CR>
 
 " ***********************************************************************
 " 9.12_Abbreviation
@@ -3318,7 +3318,7 @@ endif
         silent call SaveAbbr(l:set_abb_str . l:abb_formula)
     endfunction
     " - map SPC va to set visual region to new abbreviation
-    vnoremap <Space>va "vy:call VisualSetAbbreviation()<CR>
+    vnoremap <Space>va "vy<cmd>:call VisualSetAbbreviation()<CR>
 
     " - function to save abbreviation (to file ./abbrev_defs.vim)
     function! SaveAbbr(abb_formula)
@@ -3346,7 +3346,7 @@ endif
     endfunction
 
     " - map C-c C-c to reload abbreviation when in ./abbrev_defs.vim
-    autocmd BufRead,BufNewFile abbrev_defs.vim nnoremap <buffer> <C-c><C-c> :abclear<CR>:source %<CR>
+    autocmd BufRead,BufNewFile abbrev_defs.vim nnoremap <buffer> <C-c><C-c> <cmd>:abclear<CR><cmd>:source %<CR>
 
 " ***********************************************************************
 " 9.13_Undotree
@@ -3399,8 +3399,8 @@ let g:silent_unsupported=1
     let g:goyo_width='100%'
     let g:goyo_height='100%'
 
-    nnoremap <space>zz :call ToggleZenMode(1)<cr>
-    nnoremap <space>wM :call ToggleZenMode(0)<cr>
+    nnoremap <space>zz <cmd>:call ToggleZenMode(1)<cr>
+    nnoremap <space>wM <cmd>:call ToggleZenMode(0)<cr>
 
     if !exists('g:is_zen_mode')
         let g:is_zen_mode=0
