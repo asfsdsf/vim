@@ -195,6 +195,12 @@ if exists('*plug#begin')
 
     " - Theme / Interface plugins
     " Plug 'nathanaelkane/vim-indent-guides'  " visually displaying indent levels in Vim.
+    if has('nvim')
+        Plug 'RRethy/vim-illuminate'  " automatically highlighting other uses of the word under the cursor
+        Plug 'folke/noice.nvim'  " replaces the UI for messages, cmdline and the popupmenu.
+        Plug 'MunifTanjim/nui.nvim'  " UI Component Library for Neovim.(For other plugins)
+        Plug 'rcarriga/nvim-notify'  " A fancy, configurable, notification manager for NeoVim
+    endif
     Plug 'kien/rainbow_parentheses.vim'
     Plug 'vim-airline/vim-airline'  " beautiful bar at bottom
     Plug 'vim-airline/vim-airline-themes'  " beautiful bar at bottom
@@ -214,9 +220,17 @@ if exists('*plug#begin')
     Plug 'atelierbram/Base2Tone-vim' " colorschemes for Vim – one of the syntax-highlighting applications containing the colorschemes of Base2Tone which were based on Duotone Themes by Simurai for Atom.
     Plug 'colepeters/spacemacs-theme.vim' " A theme modelled after nashamri/spacemacs-theme
 
+    " Always load the vim-devicons as the very last one.
+    Plug 'ryanoasis/vim-devicons'  " provides the same icons as well as colors for each icon.
 
     " required
     call plug#end()
+
+    if has('nvim')
+        lua require("noice").setup()
+        
+        lua require("notify").setup({stages = "slide",level = "warn",timeout = 2000,max_width = 80,{background_colour="#000000"}})
+    endif
 endif
 " Put your non-Plugin stuff after this line
 
@@ -318,6 +332,10 @@ endif
             set background=dark
             AirlineTheme hybrid
             exec 'colorscheme ' . g:dark_color_scheme
+            if(has("nvim"))
+                highlight Normal guibg=none
+                highlight NonText guibg=none
+            endif
         endif
     endfunction
 
@@ -379,6 +397,10 @@ endif
     if g:vim_plug_installed
         if (&background=='dark')
             exec 'colorscheme ' . g:dark_color_scheme
+            if(has("nvim"))
+                highlight Normal guibg=none
+                highlight NonText guibg=none
+            endif
         else
             exec 'colorscheme ' . g:light_color_scheme
         endif
@@ -971,7 +993,7 @@ endif
     nnoremap <silent> <Space>wh :call CloseMaximize()<CR><C-w>h
     nnoremap <silent> <Space>wj :call CloseMaximize()<CR><C-w>j
     nnoremap <silent> <Space>wk :call CloseMaximize()<CR><C-w>k
-    nnoremap <silent> <Space>wl :call CloseMaximize()<CR><C-w>l
+    nnoremap <silent> <Space>wl <cmd>:call CloseMaximize()<CR><C-w>l
 
     " - map to move window position
     nnoremap <Space>wH :call CloseMaximize()<CR><C-w>H
@@ -1133,7 +1155,7 @@ endif
 
     " - map SPC fvd to go to dot file(this file)
     execute "com! OpenVimrcDotFile e " . b:dot_file_path
-    nnoremap <Space>fvd :OpenVimrcDotFile<CR>
+    nnoremap <Space>fvd <cmd>:OpenVimrcDotFile<CR>
     " - map SPC fvR to source dot file
     execute "nnoremap <Space>fvR :source " . b:dot_file_path . "<CR>"
 
