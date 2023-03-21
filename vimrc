@@ -231,7 +231,7 @@ if exists('*plug#begin')
 
     " - setup lua plugins
     if has('nvim-0.5.0')
-        lua require("notify").setup({stages = "slide",level = "info",timeout = 2000,max_width = 80,{background_colour="#000000"}})
+        lua require("notify").setup({stages = "slide",level = "warn",timeout = 2000,max_width = 80,{background_colour="#000000"}})
         lua require("noice").setup({ routes = { { view = "mini", filter = { event = "msg_showmode" }, }, }, })
         
     endif
