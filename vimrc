@@ -117,6 +117,7 @@ if exists('*plug#begin')
     " - git support plugins
     " - generic programming support
     " - theme / interface plugins
+    " - setup lua plugins
 " ***********************************************************************
 
     " - utility plugins
@@ -178,6 +179,9 @@ if exists('*plug#begin')
     Plug 'tpope/vim-fugitive' " A git wrapper for vim
     Plug 'airblade/vim-gitgutter'  " A Vim plugin which shows a git diff in the sign column and stages/previews/undoes hunks and partial hunks.
     Plug 'Xuyuanp/nerdtree-git-plugin'  " A plugin of NERDTree showing git status
+    if has('nvim-0.5.0')
+        Plug 'kdheepak/lazygit.nvim'
+    end
 
     " - generic programming support
     Plug 'terryma/vim-expand-region'  " Expand region like emacs
@@ -195,7 +199,7 @@ if exists('*plug#begin')
 
     " - Theme / Interface plugins
     " Plug 'nathanaelkane/vim-indent-guides'  " visually displaying indent levels in Vim.
-    if has('nvim')
+    if has('nvim-0.5.0')
         Plug 'RRethy/vim-illuminate'  " automatically highlighting other uses of the word under the cursor
         Plug 'folke/noice.nvim'  " replaces the UI for messages, cmdline and the popupmenu.
         Plug 'MunifTanjim/nui.nvim'  " UI Component Library for Neovim.(For other plugins)
@@ -226,9 +230,10 @@ if exists('*plug#begin')
     " required
     call plug#end()
 
-    if has('nvim')
+    " - setup lua plugins
+    if has('nvim-0.5.0')
         lua require("notify").setup({stages = "slide",level = "info",timeout = 2000,max_width = 80,{background_colour="#000000"}})
-        lua require("noice").setup({ routes = { { view = "notify", filter = { event = "msg_showmode" }, }, }, })
+        lua require("noice").setup({ routes = { { view = "mini", filter = { event = "msg_showmode" }, }, }, })
         
     endif
 endif
@@ -787,6 +792,7 @@ endif
     " - map SPC / to search current folder
     " - map to search lines in all buffers
     " - map C-f search inside current buffer
+    " - function to search content saved in @v
     " - map * to search selection in visual mode
     " - don't copy when using c and C to change text
 " 6.6_Maps for files
@@ -1081,8 +1087,14 @@ endif
     " search inside current buffer
     nnoremap <c-f>  <cmd>:BLines<CR>
 
+    " - function to search content saved in @v
+    function! SearchSelected()
+        let @/ = '\V' . substitute(escape(@v,'/\'),'\n','\\n','g')
+        call search('\V' . substitute(escape(@v,'/\'),'\n','\\n','g'))
+    endfunction
+
     " - map * to search selection in visual mode
-    vnoremap * "vy/\V<C-R>=substitute(escape(@v,'/\'),'\n','\\n','g')<CR><CR>
+    vnoremap * "vy<cmd>:call SearchSelected()<CR>
 
     " - map C-h to replace
     nnoremap <A-H> :%s//gc<left><left><left>
