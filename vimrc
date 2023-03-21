@@ -208,7 +208,6 @@ if exists('*plug#begin')
     Plug 'kien/rainbow_parentheses.vim'
     Plug 'vim-airline/vim-airline'  " beautiful bar at bottom
     Plug 'vim-airline/vim-airline-themes'  " beautiful bar at bottom
-    Plug 'ryanoasis/vim-devicons'  " iconize symbols
     Plug 'morhetz/gruvbox'  "retro groove color scheme for Vim
     Plug 'mhinz/vim-startify'  " The fancy start screen for Vim.
 
@@ -314,6 +313,9 @@ endif
     " - set background to dark
     set background=dark
 
+    " - set background transparent
+    let g:transparent_background=1
+
     " - Enables 24-bit RGB color in the TUI
     if (has("termguicolors"))
       set termguicolors
@@ -337,7 +339,7 @@ endif
             set background=dark
             AirlineTheme hybrid
             exec 'colorscheme ' . g:dark_color_scheme
-            if(has("nvim"))
+            if(has("nvim") && g:transparent_background)
                 highlight Normal guibg=none
                 highlight NonText guibg=none
             endif
@@ -402,7 +404,7 @@ endif
     if g:vim_plug_installed
         if (&background=='dark')
             exec 'colorscheme ' . g:dark_color_scheme
-            if(has("nvim"))
+            if(has("nvim") && g:transparent_background)
                 highlight Normal guibg=none
                 highlight NonText guibg=none
             endif
@@ -802,7 +804,6 @@ endif
     " - open the folder containing current file
     " - open current file with default system software
     " - open the terminal with current file path as working directory
-    " - map gf to go to filename under cursor
     " - map to open file by path
     " - map to open file/git file in directory/git project
     " - map to open file in project
@@ -1135,9 +1136,6 @@ endif
     if exists("$TERMINOLOGY")
         nnoremap <Space>ft <cmd>:silent! !terminology -d %:p:h &<CR>
     endif
-
-    " - map gf to go to filename under cursor
-    nnoremap <c-c><c-o> gf
 
     " - map to open file by path
     function! g:OpenFileByPath()
@@ -1978,6 +1976,11 @@ endif  " end if g:vim_plug_installed
         endif
         if g:is_zen_mode
             Goyo
+            set signcolumn=yes
+            if(has("nvim") && g:transparent_background)
+                highlight Normal guibg=none
+                highlight NonText guibg=none
+            endif
             if executable('tmux') && strlen($TMUX)
                 " silent! !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
                 silent! !tmux set status on
@@ -3420,7 +3423,11 @@ let g:silent_unsupported=1
     function! ToggleZenMode(withTmux)
         if g:is_zen_mode  " Leave zen mode
             Goyo
-            set signcolumn=no
+            set signcolumn=yes
+            if(has("nvim") && g:transparent_background)
+                highlight Normal guibg=none
+                highlight NonText guibg=none
+            endif
             if executable('tmux') && strlen($TMUX) && a:withTmux==1
                 " silent! !tmux resize-pane -Z
                 silent! !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
@@ -3435,7 +3442,7 @@ let g:silent_unsupported=1
                 silent! !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
             endif
             redraw
-            sleep 500m
+            sleep 200m
             exec 'Goyo 120-100%x100%-100%'
             let g:is_zen_mode=1
         endif
