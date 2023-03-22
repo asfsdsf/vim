@@ -206,7 +206,14 @@ if exists('*plug#begin')
         Plug 'rcarriga/nvim-notify'  " A fancy, configurable, notification manager for NeoVim
     endif
     Plug 'kien/rainbow_parentheses.vim'
-    Plug 'vim-airline/vim-airline'  " beautiful bar at bottom
+    if has('nvim')
+        Plug 'nvim-lualine/lualine.nvim'  " fast and easy to configure Neovim statusline written in Lua.
+        " If you want to have icons in your statusline choose one of these
+        Plug 'kyazdani42/nvim-web-devicons'
+    else
+        Plug 'vim-airline/vim-airline'  " beautiful bar at bottom
+        " Plug 'itchyny/lightline.vim'  " A light and configurable statusline/tabline plugin for Vim (replacement for airline)
+    endif
     Plug 'vim-airline/vim-airline-themes'  " beautiful bar at bottom
     Plug 'morhetz/gruvbox'  "retro groove color scheme for Vim
     Plug 'mhinz/vim-startify'  " The fancy start screen for Vim.
@@ -556,6 +563,7 @@ endif
 " ***********************************************************************
 " 4.1_Vim-Airline settings
 " ***********************************************************************
+if !has('nvim')  " airline slow down neovim. Use lualine.nvim instead
     let g:airline#extensions#tabline#enabled = 1
     let g:airline_powerline_fonts = 1
     if (&background=='dark')
@@ -598,6 +606,7 @@ endif
         call airline#add_statusline_func('MaxmizedSign')
     endif
 
+endif
 " ***********************************************************************
 " 4.2_Devicons settings
 " ***********************************************************************
@@ -3448,16 +3457,28 @@ let g:silent_unsupported=1
 " -1_lua plugins setup **************************************************
     " - setup nvim-notify
     " - enable and setup noice.nvim
+    " - enable and setup lualine
 " ***********************************************************************
 
 if g:vim_plug_installed
     " - setup nvim-notify
-    if has('nvim-0.5.0')
+if has('nvim-0.5.0')
         lua require("notify").setup({stages = "static",level = "info",timeout = 2000,max_width = 80,background_colour="#000000"})
     " - enable and setup noice.nvim
         lua require("noice").setup({ routes = { { view = "cmdline", filter = { event = "msg_showmode" }, }, }, })
         
-    endif
+endif
+if has('nvim')
+    " - enable and setup lualine
+lua <<EOF
+    require('lualine').setup{
+    sections = {lualine_a = { { 'mode', fmt = function(str) return str:sub(1,3) end }, 'g:isToggledVertically' },
+                lualine_b = {'branch', 'diff', 'diagnostics'},
+                lualine_c = {'filename'},
+        }
+    }
+EOF
+endif
 endif
 
 " ***********************************************************************
