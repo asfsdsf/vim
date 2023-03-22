@@ -78,6 +78,7 @@
 " 9.14_Neomake
 " 9.15_fcitx.vim
 " 9.16_zen-mode.nvim
+" -1_lua plugins setup **************************************************
 " ***********************************************************************
 
 " ***********************************************************************
@@ -117,7 +118,6 @@ if exists('*plug#begin')
     " - git support plugins
     " - generic programming support
     " - theme / interface plugins
-    " - setup lua plugins
 " ***********************************************************************
 
     " - utility plugins
@@ -229,12 +229,6 @@ if exists('*plug#begin')
     " required
     call plug#end()
 
-    " - setup lua plugins
-    if has('nvim-0.5.0')
-        lua require("notify").setup({stages = "slide",level = "warn",timeout = 2000,max_width = 80,{background_colour="#000000"}})
-        lua require("noice").setup({ routes = { { view = "mini", filter = { event = "msg_showmode" }, }, }, })
-        
-    endif
 endif
 " Put your non-Plugin stuff after this line
 
@@ -957,6 +951,8 @@ endif
     nnoremap <Space>bd <cmd>:call CloseBuffer()<CR>
     " - map to show message buffer
     nnoremap <Space>bm <cmd>:messages<CR>
+    nnoremap <Space>bm <cmd>:Notifications<CR><c-w>w
+    nnoremap <Space>bM <cmd>:lua require("notify").dismiss({pending = true})<CR>
 
     " - map to show buffers
     " nnoremap <Space>bb <cmd>:CtrlPBuffer<CR>
@@ -3447,6 +3443,22 @@ let g:silent_unsupported=1
             let g:is_zen_mode=1
         endif
     endfunction
+
+" ***********************************************************************
+" -1_lua plugins setup **************************************************
+    " - setup nvim-notify
+    " - enable and setup noice.nvim
+" ***********************************************************************
+
+if g:vim_plug_installed
+    " - setup nvim-notify
+    if has('nvim-0.5.0')
+        lua require("notify").setup({stages = "static",level = "info",timeout = 2000,max_width = 80,background_colour="#000000"})
+    " - enable and setup noice.nvim
+        lua require("noice").setup({ routes = { { view = "cmdline", filter = { event = "msg_showmode" }, }, }, })
+        
+    endif
+endif
 
 " ***********************************************************************
 " Variable used to judge whether it is the first time to source vimrc
