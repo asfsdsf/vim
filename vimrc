@@ -154,7 +154,7 @@ if exists('*plug#begin')
         Plug 'liuchengxu/vista.vim'  " View and search LSP symbols, tags in Vim/NeoVim.
     endif
     " sudo apt install nodejs yarnpkg
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}  " Intellisense engine for Vim8 & Neovim, full language server protocol support as VSCode
+    Plug 'neoclide/coc.nvim', {'branch': 'release', 'tag':'v0.0.82'}  " Intellisense engine for Vim8 & Neovim, full language server protocol support as VSCode
 
     " - languages plugins
     Plug 'JuliaEditorSupport/julia-vim'  " Vim support for Julia. http://julialang.org/
@@ -960,7 +960,6 @@ endif
     nnoremap <Space>bd <cmd>:call CloseBuffer()<CR>
     " - map to show message buffer
     nnoremap <Space>bm <cmd>:messages<CR>
-    nnoremap <Space>bm <cmd>:Notifications<CR><c-w>w
     nnoremap <Space>bM <cmd>:lua require("notify").dismiss({pending = true})<CR>
 
     " - map to show buffers
@@ -3463,7 +3462,7 @@ let g:silent_unsupported=1
 if g:vim_plug_installed
     " - setup nvim-notify
 if has('nvim-0.5.0')
-        lua require("notify").setup({stages = "static",level = "info",timeout = 2000,max_width = 80,background_colour="#000000"})
+        lua require("notify").setup({max_height=5,render = "compact",stages = "static",level = "info",timeout = 2000,max_width = 300,background_colour="#000000"})
     " - enable and setup noice.nvim
         lua require("noice").setup({ routes = { { view = "cmdline", filter = { event = "msg_showmode" }, }, }, })
         
@@ -3471,11 +3470,19 @@ endif
 if has('nvim')
     " - enable and setup lualine
 lua <<EOF
+    local function MaxmizedSignText()
+        if vim.g["isToggledVertically"] == 1 then return "M" else return "" end
+    end
+
     require('lualine').setup{
-    sections = {lualine_a = { { 'mode', fmt = function(str) return str:sub(1,3) end }, 'g:isToggledVertically' },
-                lualine_b = {'branch', 'diff', 'diagnostics'},
-                lualine_c = {'filename'},
-        }
+    options = {
+      section_separators = { left = '', right = '' },
+      -- component_separators = { left = '', right = '' }
+      component_separators = { left = '', right = '' }
+    },
+    sections = {lualine_a = {MaxmizedSignText,'branch', 'diff', 'diagnostics'},
+                lualine_b = {'filename'},
+        },
     }
 EOF
 endif
