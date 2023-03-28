@@ -1161,7 +1161,7 @@ endif
     " - copy current file path
     " nnoremap <Space>fy <cmd>:silent exec '!printf ' . expand('%:p') . ' <bar> xclip -selection clipboard'<CR>
     nnoremap <Space>fy <cmd>:let @+ = expand("%:p")<CR>
-    nnoremap <Space>yy <cmd>:let @+ = expand("%:p")<CR>
+    nnoremap <Space>yy <cmd>:let @+ = expand("%:p")<CR><cmd>:echo 'current file path copied'<CR>
     " - edit file whose path is copied
     nnoremap <Space>fe <cmd>:exec "e " . expand(@+)<CR>
     nnoremap <Space>ye <cmd>:exec "e " . expand(@+)<CR>
@@ -2816,7 +2816,7 @@ endif
 " 9.5.1_Fzf
     " - this is the default extra key bindings for fzf
     " - layout for fzf
-    " - in Neovim, you can set up fzf window using a Vim command
+    " - set preview window for fzf
     " - customize fzf colors to match your color scheme
     " - enable per-command history for fzf
     " - command to search help (FindActions) with fzf
@@ -3031,6 +3031,11 @@ endif
 " 9.5.1_Fzf
 " ***********************************************************************
 
+    " - disable terminal default fzf default options to prevent conflicts
+    let $FZF_DEFAULT_OPTS = ''
+    " - set custom bindings for fzf (different from fzf_action)
+    let g:fzf_custom_bindings = '--bind=ctrl-u:preview-page-up,ctrl-d:preview-page-down,alt-u:preview-up,alt-d:preview-down,alt-k:preview-up,alt-j:preview-down'
+
     " - this is the default extra key bindings for fzf
     let g:fzf_action = {
       \ 'ctrl-t': 'tab split',
@@ -3041,12 +3046,16 @@ endif
 
     " - layout for fzf
     " - down / up / left / right
-    let g:fzf_layout = { 'up': '~40%' }
-
-    " - in Neovim, you can set up fzf window using a Vim command
-    let g:fzf_layout = { 'window': 'enew' }
-    let g:fzf_layout = { 'window': '-tabnew' }
-    let g:fzf_layout = { 'window': 'belowright 10split enew' }
+    " let g:fzf_layout = { 'up': '~40%' }
+    " let g:fzf_layout = { 'window': 'enew' }
+    " let g:fzf_layout = { 'window': '-tabnew' }
+    let g:fzf_layout = { 'window': 'belowright 30split enew'}
+    " - set preview window for fzf
+    " Preview window is hidden by default. You can toggle it with ctrl-/.
+    " It will show on the right with 50% width, but if the width is smaller
+    " than 70 columns, it will show above(up) the candidate list
+    " let g:fzf_preview_window = ['hidden,right,50%,<70(up,65%)', 'ctrl-/']
+    let g:fzf_preview_window = ['right,50%,<40(up,65%)', 'ctrl-/']
 
     " - customize fzf colors to match your color scheme
     let g:fzf_colors =
@@ -3081,7 +3090,7 @@ endif
 
     " - command to preview and open project file with fzf
     command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse']}), <bang>0)
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': g:fzf_custom_bindings}), <bang>0)
 
     command! -bang -nargs=* Ag
     \ call fzf#vim#ag(<q-args>,
@@ -3093,7 +3102,7 @@ endif
     \ call fzf#vim#grep(
     \ 'cat_to_fzf_ag_format ' . expand('%') ,
     \ 0,
-    \ fzf#vim#with_preview({'options': '--layout=reverse'},'up:60%'),
+    \ fzf#vim#with_preview({'options': g:fzf_custom_bindings}),
     \ <bang>0)
 
 
@@ -3105,7 +3114,7 @@ endif
         exec "silent !~/Software/vim/format_help/format_for_changes " . expand("%")
 
         call fzf#vim#grep(
-        \ 'cat ~/Software/vim/odd_txt_for_vim.txt ' , 0,fzf#vim#with_preview({'options': '--layout=reverse'},'up:60%'), a:fullscreen)
+        \ 'cat ~/Software/vim/odd_txt_for_vim.txt ' , 0,fzf#vim#with_preview({'options': g:fzf_custom_bindings}), a:fullscreen)
     endfunction
     " - command to show changes of current files with fzf
     command! -nargs=* -bang SearchChanges call Changes_results(<q-args>, <bang>0)
@@ -3118,13 +3127,13 @@ endif
         exec "silent !~/Software/vim/format_help/format_for_jumps " . expand("%")
 
         call fzf#vim#grep(
-        \ 'cat ~/Software/vim/odd_txt_for_vim.txt ' , 0,fzf#vim#with_preview({'options': '--layout=reverse'},'up:60%'), a:fullscreen)
+        \ 'cat ~/Software/vim/odd_txt_for_vim.txt ' , 0,fzf#vim#with_preview({'options': g:fzf_custom_bindings}), a:fullscreen)
     endfunction
     " - command to show jumps location with fzf
     command! -nargs=* -bang JumpsResults call Jumps_results(<q-args>, <bang>0)
 
     " - command to show most recent file with fzf
-    command! -bang -nargs=* FzfMrf call fzf#vim#history(fzf#vim#with_preview({'options': '--layout=reverse'},<bang>0?'up:65%':'right:50%'),<bang>0)
+    command! -bang -nargs=* FzfMrf call fzf#vim#history(fzf#vim#with_preview({'options': g:fzf_custom_bindings}),<bang>0)
 
     " - s: function to get buffers name list
     function! s:buffer_list()
@@ -3151,7 +3160,7 @@ endif
     " - function to show buffers with fzf
     function! Fzf_buffers(query,fullscreen)
       call fzf#vim#grep(
-      \ "echo '" . s:buffer_list() . "'" , 0,fzf#vim#with_preview({'options': '--layout=reverse'},'up:65%'), a:fullscreen)
+      \ "echo '" . s:buffer_list() . "'" , 0,fzf#vim#with_preview({'options': g:fzf_custom_bindings}), a:fullscreen)
     endfunction
     " - command to show buffers with fzf
     command! -nargs=* -bang FzfBuffers call Fzf_buffers(<q-args>, <bang>0)
@@ -3462,7 +3471,7 @@ let g:silent_unsupported=1
 if g:vim_plug_installed
     " - setup nvim-notify
 if has('nvim-0.5.0')
-        lua require("notify").setup({max_height=5,render = "compact",stages = "static",level = "info",timeout = 2000,max_width = 300,background_colour="#000000"})
+        lua require("notify").setup({max_height=10,render = "compact",stages = "static",level = "info",timeout = 2000,max_width = 300,background_colour="#000000"})
     " - enable and setup noice.nvim
         lua require("noice").setup({ routes = { { view = "cmdline", filter = { event = "msg_showmode" }, }, }, })
         
@@ -3482,6 +3491,7 @@ lua <<EOF
     },
     sections = {lualine_a = {MaxmizedSignText,'branch', 'diff', 'diagnostics'},
                 lualine_b = {'filename'},
+                lualine_c = {},
         },
     }
 EOF
