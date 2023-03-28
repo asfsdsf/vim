@@ -843,6 +843,7 @@ endif
     " - set filetype to be the same with previous file when searching 
     " - set filetype to be the same with previous file when replacing in command-line mode
     " - execute the command under the cursor and then have the command-line window open again
+    " - map <c-h> to search command history or search history in command line mode
 " 6.9_Unite.vim
 " ***********************************************************************
 
@@ -1331,6 +1332,10 @@ endif
 
     " Debug mode auto command
     " au CmdwinEnter [>] do something
+
+    " - map <c-h> to search command history or search history in command line mode
+    " cnoremap <c-h> <c-u>History:<CR>
+    cnoremap <expr> <c-f> getcmdtype() =~ '^[/?]$' ? '<c-u><CR><cmd>History/<CR>' : (getcmdtype() =~ '^:$' ? '<c-u>History:<CR>':'<c-h>')
 
 " ***********************************************************************
 " 6.9_Unite.vim
@@ -2822,6 +2827,7 @@ endif
     " - command to search help (FindActions) with fzf
     " - command to show search help (FindActions) for keyword
     " - command to preview and open project file with fzf
+    " - command to preview and open git project file with fzf
     " - function to show changes of current files with fzf
     " - command to show changes of current files with fzf
     " - function to show jumps location with fzf
@@ -3034,7 +3040,7 @@ endif
     " - disable terminal default fzf default options to prevent conflicts
     let $FZF_DEFAULT_OPTS = ''
     " - set custom bindings for fzf (different from fzf_action)
-    let g:fzf_custom_bindings = '--bind=ctrl-u:preview-page-up,ctrl-d:preview-page-down,alt-u:preview-up,alt-d:preview-down,alt-k:preview-up,alt-j:preview-down'
+    let g:fzf_custom_bindings = '--bind=ctrl-u:preview-page-up,ctrl-d:preview-page-down,alt-u:preview-up,alt-d:preview-down,alt-k:preview-up,alt-j:preview-down,ctrl-o:toggle-preview-wrap'
 
     " - this is the default extra key bindings for fzf
     let g:fzf_action = {
@@ -3055,7 +3061,7 @@ endif
     " It will show on the right with 50% width, but if the width is smaller
     " than 70 columns, it will show above(up) the candidate list
     " let g:fzf_preview_window = ['hidden,right,50%,<70(up,65%)', 'ctrl-/']
-    let g:fzf_preview_window = ['right,50%,<40(up,65%)', 'ctrl-/']
+    let g:fzf_preview_window = ['right,50%,<100(up,65%),wrap', 'ctrl-/']
 
     " - customize fzf colors to match your color scheme
     let g:fzf_colors =
@@ -3092,10 +3098,13 @@ endif
     command! -bang -nargs=? -complete=dir Files
     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': g:fzf_custom_bindings}), <bang>0)
 
+    " - command to preview and open git project file with fzf
+    command! -bang -nargs=? GFiles call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(<q-args> == "?" ? { "placeholder": "", 'options': g:fzf_custom_bindings} : {'options': g:fzf_custom_bindings}), <bang>0)
+
     command! -bang -nargs=* Ag
     \ call fzf#vim#ag(<q-args>,
-    \ <bang>0 ? fzf#vim#with_preview('up:60%')
-    \ : fzf#vim#with_preview('right:50%:hidden', '?'),
+    \ <bang>0 ? fzf#vim#with_preview({'options': g:fzf_custom_bindings})
+    \ : fzf#vim#with_preview({'options': g:fzf_custom_bindings}),
     \ <bang>0)
 
     command! -nargs=* -bang AgCurrentFile 
