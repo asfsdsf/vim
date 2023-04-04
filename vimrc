@@ -154,7 +154,7 @@ if exists('*plug#begin')
         Plug 'liuchengxu/vista.vim'  " View and search LSP symbols, tags in Vim/NeoVim.
     endif
     " sudo apt install nodejs yarnpkg
-    Plug 'neoclide/coc.nvim', {'branch': 'release', 'tag':'v0.0.82'}  " Intellisense engine for Vim8 & Neovim, full language server protocol support as VSCode
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}  " Intellisense engine for Vim8 & Neovim, full language server protocol support as VSCode
 
     " - languages plugins
     Plug 'JuliaEditorSupport/julia-vim'  " Vim support for Julia. http://julialang.org/
@@ -196,6 +196,21 @@ if exists('*plug#begin')
     Plug 'tpope/vim-surround'  " surround.vim: quoting/parenthesizing made simple
     Plug 'SirVer/ultisnips'  " Track the engine.
     Plug 'honza/vim-snippets'  " Snippets are separated from the engine. Add this if you want them:
+    if has('nvim')
+      function! UpdateRemotePlugins(...)
+        " Needed to refresh runtime files
+        let &rtp=&rtp
+        UpdateRemotePlugins
+      endfunction
+
+      Plug 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }  " auto prompt command menu
+    else
+      Plug 'gelguy/wilder.nvim'  " auto prompt command menu
+
+      " To use Python remote plugin features in Vim, can be skipped
+      Plug 'roxma/nvim-yarp'
+      Plug 'roxma/vim-hug-neovim-rpc'
+    endif
 
     " - Theme / Interface plugins
     " Plug 'nathanaelkane/vim-indent-guides'  " visually displaying indent levels in Vim.
@@ -761,6 +776,8 @@ endif
     " - map SPC ty to toggle paste mode
     " - map gm to go to pair
     " - map H/L to move to begin/end of the line
+    " - map k/j to physical move line up/down
+    " - map gk/gj to visual move line up/down
     " - goto tags (symbols) in current file finder mapping
     " - goto tags (symbols) in all files finder mapping
     " - recent changes in all buffers
@@ -824,6 +841,7 @@ endif
     " - map to hide all auxiliary display
     " - map to zoom in/out
     " - map to move line up/down
+    " - map '' to show marks
     " - map to run python and output to current line
     " - function to save layout
     " - function to load layout
@@ -904,6 +922,18 @@ endif
     nnoremap L $
     vnoremap H ^
     vnoremap L $
+
+    " - map k/j to physical move line up/down
+    nnoremap j gj
+    nnoremap k gk
+    xnoremap j gj
+    xnoremap k gk
+
+    " - map gk/gj to visual move line up/down
+    nnoremap gk k
+    nnoremap gj j
+    xnoremap gj j
+    xnoremap gk k
 
     " - goto tags (symbols) in current file finder mapping
     nnoremap ,gt <cmd>:CtrlPBufTag<CR>
@@ -1215,6 +1245,9 @@ endif
     nnoremap ]e        <cmd>:move +1<CR>
     nnoremap [e        <cmd>:move -2<CR>
 
+    " - map '' to show marks
+    nnoremap '' <cmd>:Marks<CR>
+
     " - map to run python and output to current line
     nnoremap <Space>mcc <cmd>:w<CR><cmd>:!python %<CR>
 
@@ -1371,6 +1404,7 @@ endif
     " - add coc status to statusline below
     " - map <tab>/<s-tab> to go to next/prev snippet for coc.nvim
     " - disable auto pair of < for c,cpp files for coc.nvim
+    " - set location for coc-settings.json
     " - coc language server settings for kotlin
     " - let VimspectorPrompt buffer use omni completion
     " - coc user settings 
@@ -1386,7 +1420,7 @@ endif
     " - map goTo code navigation.
     " - map K to show documentation in preview window.
     " - map function and class text objects such as select inside function vif
-    " - map to generate clangd compile_commands.json according to Cmakelists.txt
+    " - map to generate clangd/ccls compile_commands.json according to Cmakelists.txt
     " - map to restart coc server
     " - map to change python interpreter
     " - map to run coc command
@@ -1528,15 +1562,23 @@ if g:vim_plug_installed
     " sudo apt intall nodejs
     " sudo apt install npm
     " npm install -g yarn
-    "
-    " To open configuration file:
-    " :CocConfig
+    " npm i -g pyright
     " To install clangd
     " :CocCommand clangd.install
+    " To install ccls
+    " sudo apt install ccls
     " To use it with python:
     " pip install jedi pylint neovim dbus-python
     " # maybe `apt install python3-venv` is needed
+    " # jedi-language-server will be auto installed when a python file is 
+    " # open. But it takes long time with bad network.
+    " # can install it manually by
     " pip install jedi-language-server
+    "
+    "
+    " To open configuration file:
+    " :CocConfig
+    " use clangd or ccls can be set in coc-settings.json
     "
     " - coc plugins list
     " coc-omni is for vimspector's console completion
@@ -1550,13 +1592,16 @@ if g:vim_plug_installed
     \ 'coc-cmake',
     \ 'coc-java',
     \ 'coc-go',
+    \ 'coc-pyright',
     \ 'coc-omni'
     \ ]
     let g:coc_source_omni_filetypes=["VimspectorPrompt"]
 
     " - add coc status to statusline below
     if !exists('g:vimrc_has_been_sourced')
-        set statusline^=%{coc#status()}
+        if exists('*coc#status')
+            set statusline^=%{coc#status()}
+        end
     endif
 
     " - map <tab>/<s-tab> to go to next/prev snippet for coc.nvim
@@ -1567,9 +1612,12 @@ if g:vim_plug_installed
     autocmd FileType c,cpp let b:coc_pairs_disabled = ['<']
     autocmd FileType VimspectorPrompt let b:coc_pairs_disabled = ["(", "[", "{", "<", "'", "\"", "`"]
 
+    " - set location for coc-settings.json
+    let g:coc_config_home=$HOME.'/Software/vim/coc'
+
     " following is replacement for coc-settings.json
-    if !empty($DISPLAY)  " if not on server
-        " - coc language server settings for kotlin
+    if !empty($DISPLAY) && exists('*coc#status')  " if not on server
+    " - coc language server settings for kotlin
         call coc#config('languageserver', {
             \ "kotlin": {
             \ "command": "kotlin-language-server",
@@ -1592,7 +1640,7 @@ if g:vim_plug_installed
         \ "coc.preferences.enableFloatHighlight": v:false,
         \}
 
-    if !empty($DISPLAY)  " if not on server
+    if !empty($DISPLAY) && exists('*coc#status') " if not on server
         " - highlight the symbol and its references when holding the cursor.
         autocmd CursorHold * silent call CocActionAsync('highlight')
     endif
@@ -1608,6 +1656,10 @@ if g:vim_plug_installed
         nnoremap <silent><nowait><expr> <up> coc#float#has_scroll() ? coc#float#scroll(0) : "\<up>"
         " nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
         " nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+        inoremap <silent><nowait><expr> <down> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<down>"
+        inoremap <silent><nowait><expr> <up> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<up>"
+        vnoremap <silent><nowait><expr> <down> coc#float#has_scroll() ? coc#float#scroll(1) : "\<down>"
+        vnoremap <silent><nowait><expr> <up> coc#float#has_scroll() ? coc#float#scroll(0) : "\<up>"
     else
         " For vim to scroll floating window
         function Find_cursor_popup(...)
@@ -1696,7 +1748,9 @@ if g:vim_plug_installed
             exec "normal!\<left>\<right>"
             " call coc#float#close_all()
         else
-            call CocActionAsync('showSignatureHelp') 
+            if exists('*coc#status')
+                call CocActionAsync('showSignatureHelp') 
+            endif
             let g:is_coc_show_signature=1
         endif
     endfunction
@@ -1757,7 +1811,7 @@ if g:vim_plug_installed
     xmap ac <Plug>(coc-classobj-a)
     omap ac <Plug>(coc-classobj-a)
 
-    " - map to generate clangd compile_commands.json according to Cmakelists.txt
+    " - map to generate clangd/ccls compile_commands.json according to Cmakelists.txt
     nnoremap <Space>cg <cmd>:cd %:h<CR><cmd>:silent! Gcd<CR><cmd>:call VimuxCdWorkingDirectory()<CR><cmd>:call Run_to_tmux_or_directly("generate_clangd_json")<CR>
     " - map to restart coc server
     nnoremap <Space>cr <cmd>:CocRestart<CR>
@@ -2812,6 +2866,9 @@ endif
     " - map SPC gs to show git status
     " - map SPC gd to show git difference
     " - map SPC gc to commit for git
+    " - map SPC gh to show commit history in normal mode
+    " - map SPC gh to show commit history in visual mode
+    " - map SPC gh to show commit history in nor
     " - map SPC gfm/SPC gfr to move/remove for git
     " - map SPC gl to show git history
     " - map to show next/previous history in git history mode
@@ -3001,6 +3058,11 @@ endif
     nnoremap <Space>gd <cmd>:Gvdiffsplit<CR>
     " - map SPC gc to commit for git
     nnoremap <Space>gc <cmd>:Gcommit<CR>
+
+    " - map SPC gh to show commit history in normal mode
+    nnoremap <Space>gh <cmd>:BCommits<CR>
+    " - map SPC gh to show commit history in visual mode
+    xnoremap <Space>gh :BCommits<CR>
 
     " - map SPC gfm/SPC gfr to move/remove for git
     nnoremap <Space>gfm <cmd>:Gmove<CR>
@@ -3474,6 +3536,7 @@ let g:silent_unsupported=1
 " -1_lua plugins setup **************************************************
     " - setup nvim-notify
     " - enable and setup noice.nvim
+    " - enable and setup wilder
     " - enable and setup lualine
 " ***********************************************************************
 
@@ -3486,6 +3549,25 @@ if has('nvim-0.5.0')
         
 endif
 if has('nvim')
+
+    " - enable and setup wilder
+    " Default keys
+    call wilder#setup({
+          \ 'modes': [':', '/', '?'],
+          \ 'next_key': '<Tab>',
+          \ 'previous_key': '<S-Tab>',
+          \ 'accept_key': '<Down>',
+          \ 'reject_key': '<Up>',
+          \ })
+    call wilder#set_option('renderer', wilder#popupmenu_renderer(wilder#popupmenu_palette_theme({
+          \ 'border': 'rounded',
+          \ 'max_height': '75%',
+          \ 'min_height': 0,
+          \ 'prompt_position': 'top',
+          \ 'reverse': 0,
+          \ })))
+
+    " lua require'lspconfig'.pyright.setup{}
     " - enable and setup lualine
 lua <<EOF
     local function MaxmizedSignText()
