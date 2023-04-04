@@ -78,7 +78,7 @@
 " 9.14_Neomake
 " 9.15_fcitx.vim
 " 9.16_zen-mode.nvim
-" -1_lua plugins setup **************************************************
+" -4_lua Theme plugins settings *****************************************
 " ***********************************************************************
 
 " ***********************************************************************
@@ -164,13 +164,20 @@ if exists('*plug#begin')
     Plug 'benmills/vimux'  " vim plugin to interact with tmux
     Plug 'christoomey/vim-tmux-navigator'  " Seamless navigation between tmux panes and vim splits
     " Plug 'w0rp/ale'  " Syntax checking for python
-    Plug 'puremourning/vimspector'  " A multi-language debugging plugin for Vim
     if has('nvim')
         Plug 'sakhnik/nvim-gdb', { 'do': ':UpdateRemotePlugins' }
+        Plug 'mfussenegger/nvim-dap'
+        Plug 'ldelossa/nvim-dap-projects'  " per project config file support for dap. if not found, use origin config instead
+        " Plug 'Pocco81/dap-buddy.nvim'
+        " Plug 'rcarriga/nvim-dap-ui'
+        " Plug 'mfussenegger/nvim-dap-python'
+        " Plug 'leoluz/nvim-dap-go'
+        " Plug 'mfussenegger/nvim-jdtls'  " java debugger with the help of dap
     else
+        Plug 'puremourning/vimspector'  " A multi-language debugging plugin for Vim
         packadd termdebug
     endif
-    Plug 'Chiel92/vim-autoformat'  " Provide easy code formatting in Vim by integrating existing code formatters.
+    Plug 'vim-autoformat/vim-autoformat'  " Provide easy code formatting in Vim by integrating existing code formatters.
     Plug 'neomake/neomake'  " Asynchronous linting and make framework for Neovim/Vim (auto async make)
     Plug 'sbdchd/neoformat' " A (Neo)vim plugin for formatting code.
     Plug 'mattn/emmet-vim'  " for html
@@ -2321,11 +2328,14 @@ endpy
 
     let g:formatdef_clangformat ="'clang-format -lines='.a:firstline.':'.a:lastline.' --assume-filename=\"'.expand('%:p').'\" -style=\"{ AlignTrailingComments: true, '.(&textwidth ? 'ColumnLimit: '.&textwidth.', ' : '').(&expandtab ? 'UseTab: Never, IndentWidth: '.shiftwidth() : 'UseTab: Always').'}\"'"
     " map ,f to format file
-    nnoremap ,f <cmd>:Autoformat<CR>
-    xnoremap ,f <cmd>:Autoformat<CR>
+    if executable('clang-format')
+        nnoremap ,f <cmd>:Autoformat<CR>
+        xnoremap ,f <cmd>:Autoformat<CR>
+    end
+
 
 " ***********************************************************************
-" 7.6.2_Neoformat
+" 7.6.2_Neoformat (Deprecated)
 " ***********************************************************************
 
     " nnoremap ,f <cmd>:Neoformat<CR>
@@ -2335,7 +2345,7 @@ endpy
     " run command
 
 " ***********************************************************************
-" 7.7_Ale
+" 7.7_Ale (Deprecated)
 " ***********************************************************************
 
     " let g:ale_sign_error = '✗'
@@ -3533,11 +3543,14 @@ let g:silent_unsupported=1
     endfunction
 
 " ***********************************************************************
-" -1_lua plugins setup **************************************************
+" -4_lua Theme plugins settings *****************************************
     " - setup nvim-notify
     " - enable and setup noice.nvim
     " - enable and setup wilder
     " - enable and setup lualine
+" -7_lua Language tools *************************************************
+" -7.1_nvim-dap
+    " - map for debug mode of nvim-dap
 " ***********************************************************************
 
 if g:vim_plug_installed
@@ -3588,6 +3601,74 @@ lua <<EOF
 EOF
 endif
 endif
+
+" ***********************************************************************
+" -7_lua Language tools *************************************************
+" -7.1_nvim-dap
+    " - map for debug mode of nvim-dap
+" ***********************************************************************
+" Debug Adapter installation:
+" https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation
+
+if has('nvim')
+    " - map for debug mode of nvim-dap
+    nnoremap <space>dd <cmd>:lua require'dap'.continue()<CR>
+    nnoremap <space>db <cmd>:lua require'dap'.toggle_breakpoint()<CR>
+    nnoremap <space>dc <cmd>:lua require'dap'.continue()<CR>
+    nnoremap <space>dn <cmd>:lua require'dap'.step_over()<CR>
+    nnoremap <space>ds <cmd>:lua require'dap'.step_into()<CR>
+    nnoremap <space>do <cmd>:lua require'dap'.step_out()<CR>
+    nnoremap <space>dr <cmd>:lua require'dap'.repl.open()<CR>
+
+    " - debug Adapter installation for dap
+    " sudo apt install lldb
+    " sudo ln -s /bin/lldb-vscode-14 /usr/local/bin/lldb-vscode
+lua <<EOF
+    -- adapter
+    local dap = require('dap')
+    dap.adapters.lldb = {
+      type = 'executable',
+      command = '/usr/local/bin/lldb-vscode', -- adjust as needed, must be absolute path
+      name = 'lldb'
+    }
+
+    -- configuration
+    local dap = require('dap')
+dap.configurations.cpp = {
+      {
+        name = 'Launch',
+        type = 'lldb',
+        request = 'launch',
+        program = function()
+          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        end,
+        cwd = '${workspaceFolder}',
+        stopOnEntry = true,
+        args = {},
+
+        -- 💀
+        -- if you change `runInTerminal` to true, you might need to change the yama/ptrace_scope setting:
+        --
+        --    echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+        --
+        -- Otherwise you might get the following error:
+        --
+        --    Error on launch: Failed to attach to the target process
+        --
+        -- But you should be aware of the implications:
+        -- https://www.kernel.org/doc/html/latest/admin-guide/LSM/Yama.html
+        -- runInTerminal = false,
+      },
+    }
+
+    -- If you want to use this for Rust and C, add something like this:
+
+    dap.configurations.c = dap.configurations.cpp
+    dap.configurations.rust = dap.configurations.cpp
+EOF
+
+endif
+
 
 " ***********************************************************************
 " Variable used to judge whether it is the first time to source vimrc
