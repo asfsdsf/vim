@@ -168,9 +168,7 @@ if exists('*plug#begin')
         Plug 'sakhnik/nvim-gdb', { 'do': ':UpdateRemotePlugins' }
         Plug 'mfussenegger/nvim-dap'
         Plug 'ldelossa/nvim-dap-projects'  " per project config file support for dap. if not found, use origin config instead
-        " Plug 'Pocco81/dap-buddy.nvim'
-        " Plug 'rcarriga/nvim-dap-ui'
-        " Plug 'mfussenegger/nvim-dap-python'
+        Plug 'rcarriga/nvim-dap-ui'
         " Plug 'leoluz/nvim-dap-go'
         " Plug 'mfussenegger/nvim-jdtls'  " java debugger with the help of dap
     else
@@ -399,7 +397,7 @@ endif
         else
             if g:vim_plug_installed
                 GitGutterEnable
-                if !exists('#airline')
+                if exists('#airline')
                     AirlineToggle
                 endif
                 silent! AirlineRefresh
@@ -412,6 +410,30 @@ endif
             set laststatus=2
             set showcmd
             let s:hidden_all=0
+        endif
+    endfunction
+
+    " - function to toggle current buffer auxiliary display
+    let b:hidden_current = 0
+    function! ToggleCurrentAuxiliaryDisplay()
+        if !exists('b:hidden_current')
+            let b:hidden_current = 0
+        endif
+        if b:hidden_current == 0
+            if g:vim_plug_installed
+                GitGutterBufferDisable
+            endif
+            set nonumber
+            set norelativenumber
+            let b:hidden_current=1
+        else
+            if g:vim_plug_installed
+                GitGutterBufferEnable
+            endif
+            set number
+            set relativenumber
+            set signcolumn=yes
+            let b:hidden_current=0
         endif
     endfunction
 
@@ -1239,7 +1261,11 @@ endif
     nnoremap <Space>TL <cmd>:windo call ToggleLineNumber()<CR>
 
     " - map to hide all auxiliary display
-    nnoremap <Space>tt <cmd>:call ToggleAllAuxiliaryDisplay()<CR>
+    nnoremap <Space>TT <cmd>:call ToggleAllAuxiliaryDisplay()<CR>
+    nnoremap <Space>tT <cmd>:call ToggleAllAuxiliaryDisplay()<CR>
+
+    " - map to hide all auxiliary display
+    nnoremap <Space>tt <cmd>:call ToggleCurrentAuxiliaryDisplay()<CR>
 
     " - map to toggle git gutter
     nnoremap <Space>Tg <cmd>:GitGutterToggle<CR>
@@ -1786,11 +1812,19 @@ if g:vim_plug_installed
     " - map <c-j> to jump to the floating window in normal mode
     nnoremap <c-j> <cmd>:call Jump_to_float()<CR>
 
+    " - map SPC rn to rename
+    nnoremap <Space>rn <Plug>(coc-rename)
+    nnoremap <Space>rN <Plug>(coc-refactor)
+    " nnoremap <Space>rrrrr <Plug>(coc-format)
+    nnoremap <Space>rr <Plug>(coc-codeaction)
+    xnoremap <Space>rr <Plug>(coc-codeaction-selected)
+
     " use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
     " - map to navigate diagnostic
     nmap <silent> <Space>ep <Plug>(coc-diagnostic-prev)
     nmap <silent> <Space>eN <Plug>(coc-diagnostic-prev)
     nmap <silent> <Space>en <Plug>(coc-diagnostic-next)
+    nmap <silent> <Space>ee <Plug>(coc-diagnostic-info)
     " - map goTo code navigation.
     nmap <silent> gd <Plug>(coc-definition)
     nmap <silent> gy <Plug>(coc-type-definition)
@@ -2579,7 +2613,9 @@ endpy
         " --- Show octave help --------------------------------------------------
             e /tmp/odd_for_vim_matlab.md
             1,$d
-            exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
+            " exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
+
+            exec "read !octave <(echo 'help " . l:word_under_cursor . "') 2&>/dev/null"
             exec 'normal! gg'
             write
         endif
@@ -2608,13 +2644,15 @@ endpy
             let @+=l:odd_clipboard
         elseif !empty(glob('$HOME/Software/ifem/ifem/'))
         " --- Show ifem definition ----------------------------------------------
-            let l:ifem_file_path=system('ag -l "^function .+\W' . expand('<cword>') . '\W" $HOME/Software/ifem/ifem/')
+            " let l:ifem_file_path=system('ag -l "^function .+\W' . expand('<cword>') . '\W" $HOME/FileExchange/VirtualBox_win7/matlab_lib/mylib/')
+            " exec "view " . l:ifem_file_path
+            let l:ifem_file_path=system('octave_cmd_path ' . expand('<cword>') . ' 2&>/dev/null')
             exec "view " . l:ifem_file_path
         else
         " --- Show octave help --------------------------------------------------
             e /tmp/odd_for_vim_matlab.md
             1,$d
-            exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
+            exec "read !octave <(echo 'help " . l:word_under_cursor . "') 2&>/dev/null"
             exec 'normal! gg'
             write
         endif
@@ -3395,7 +3433,7 @@ endif
         redraw!
     endfunction
     command! -bar RangerChooser call RangeChooser()
-    nnoremap <Space>r <cmd>:<C-U>RangerChooser<CR>
+    nnoremap <Space>r0 <cmd>:<C-U>RangerChooser<CR>
 
 " ***********************************************************************
 " 9.12_Abbreviation
@@ -3612,17 +3650,74 @@ endif
 
 if has('nvim')
     " - map for debug mode of nvim-dap
-    nnoremap <space>dd <cmd>:lua require'dap'.continue()<CR>
+    nnoremap <space>dd <cmd>:call DapEnter()<CR>
     nnoremap <space>db <cmd>:lua require'dap'.toggle_breakpoint()<CR>
+    nnoremap <space>dB <cmd>:lua require'dap'.toggle_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
     nnoremap <space>dc <cmd>:lua require'dap'.continue()<CR>
+    nnoremap <space>de <cmd>:lua require'dap'.terminate()<CR>
+    nnoremap <space>dq <cmd>:call DapExit()<CR>
+    nnoremap <space>dp <cmd>:lua require'dap'.pause()<CR>
     nnoremap <space>dn <cmd>:lua require'dap'.step_over()<CR>
     nnoremap <space>ds <cmd>:lua require'dap'.step_into()<CR>
     nnoremap <space>do <cmd>:lua require'dap'.step_out()<CR>
+    nnoremap <space>d] <cmd>:lua require'dap'.up()<CR>
+    nnoremap <space>d[ <cmd>:lua require'dap'.down()<CR>
     nnoremap <space>dr <cmd>:lua require'dap'.repl.open()<CR>
+    nnoremap <space>dt <cmd>:lua require"dap".run_to_cursor()<CR>
+    nnoremap <space>dT <cmd>:lua require"dap".focus_frame()<CR>
+    nnoremap <space>d0 <cmd>:lua require"dapui".toggle()<CR>
+    nnoremap <space>dR <cmd>:lua require"dapui".open({reset=true})<CR>
+    vnoremap <space>dE <cmd>lua require("dapui").eval()<CR>
+    nnoremap <space>dE <cmd>:lua require("dapui").eval()<CR>
+    vnoremap <space>d: <cmd>lua require("dapui").eval()<CR>
+    nnoremap <space>d: <cmd>:lua require("dapui").eval()<CR>
 
-    " - debug Adapter installation for dap
+    " - function to map vimspector buffer keymap
+    function! MapDap()
+        nnoremap <buffer> g? <cmd>:call DapHelp()<CR>
+        nmap <buffer> gb <space>db
+        nmap <buffer> gB <space>dB
+        nmap <buffer> gc <space>dc
+        nmap <buffer> ge <space>de
+        nmap <buffer> gp <space>dp
+        nmap <buffer> gq <space>dq
+        nmap <buffer> gn <space>dn
+        nmap <buffer> gs <space>ds
+        nmap <buffer> go <space>do
+        nmap <buffer> g] <space>d]
+        nmap <buffer> g[ <space>d[
+        nmap <buffer> gr <space>dr
+        nmap <buffer> gt <space>dt
+        nmap <buffer> gT <space>dT
+        nmap <buffer> <space>0 <space>d0
+        nmap <buffer> g0 <space>d0
+        nmap <buffer> gR <space>dR
+        nmap <buffer> <space>R <space>dR
+        nmap <buffer> gE <space>d:
+        vnoremap <buffer> gE <cmd>lua require("dapui").eval()<CR>
+        nmap <buffer> g: <space>d:
+        vnoremap <buffer> g: <cmd>lua require("dapui").eval()<CR>
+    endfunction
+
+    autocmd FileType dapui_watches call MapDap()
+    autocmd FileType dapui_stacks call MapDap()
+    autocmd FileType dapui_breakpoints call MapDap()
+    autocmd FileType dapui_scopes call MapDap()
+    autocmd FileType dapui_console call MapDap()
+    autocmd FileType dap-repl call MapDap()
+
+    " - set sign for dap
+lua <<EOF
+    dap = require('dap')
+    vim.fn.sign_define('DapBreakpoint', {text='🛑', texthl='', linehl='', numhl=''})
+    vim.fn.sign_define('DapBreakpointCondition', {text='❓', texthl='', linehl='', numhl=''})
+    vim.fn.sign_define('DapBreakpointRejected', {text='🚫', texthl='', linehl='', numhl=''})
+
+EOF
+
+    " - debug Adapter installation for dap c/c++
     " sudo apt install lldb
-    " sudo ln -s /bin/lldb-vscode-14 /usr/local/bin/lldb-vscode
+    "" sudo ln -s /bin/lldb-vscode-14 /usr/local/bin/lldb-vscode
 lua <<EOF
     -- adapter
     local dap = require('dap')
@@ -3667,6 +3762,152 @@ dap.configurations.cpp = {
     dap.configurations.rust = dap.configurations.cpp
 EOF
 
+    " - debug Adapter installation for dap c/c++
+    " conda create -n debugpy python
+    " conda activate debugpy
+    " pip install debugpy
+    lua <<EOF
+    -- adapter
+    local dap = require('dap')
+    dap.adapters.python = {
+      type = 'executable';
+      command = '/home/zky/Software/anaconda/anaconda3/envs/debugpy/bin/python';
+      args = { '-m', 'debugpy.adapter' };
+    }
+
+    -- configuration
+    local dap = require('dap')
+    dap.configurations.python = {
+      {
+        -- The first three options are required by nvim-dap
+        type = 'python'; -- the type here established the link to the adapter definition: `dap.adapters.python`
+        request = 'launch';
+        name = "Launch file";
+
+        -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
+
+        program = "${file}"; -- This configuration will launch the current file if used.
+        pythonPath = function()
+          -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
+          -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
+          -- You could adapt this - to for example use the `VIRTUAL_ENV` environment variable.
+          local currentpythonpath=vim.fn.system('printf $(which python)')
+          return currentpythonpath
+        end;
+      },
+    }
+EOF
+
+    " - enable and config nvim-dap-ui
+    "" This is modified from default values
+    lua <<EOF
+    require("dapui").setup(
+{
+    controls = {
+      element = "repl",
+      enabled = true,
+      icons = {
+        disconnect = "✕",
+        pause = "⏸",
+        play = "▶",
+        run_last = "⟲",
+        step_back = "←",
+        step_into = "→",
+        step_out = "↑",
+        step_over = "↷",
+        terminate = "■"
+      }
+    },
+    element_mappings = {},
+    expand_lines = true,
+    floating = {
+      border = "single",
+      max_height = 0.5,
+      max_width = 0.5,
+      mappings = {
+        close = { "q", "<Esc>" }
+      }
+    },
+    force_buffers = true,
+    icons = {
+      collapsed = "▸",
+      current_frame = "▸",
+      expanded = "▾"
+    },
+    layouts = { {
+        elements = { {
+            id = "scopes",
+            size = 0.25
+          }, {
+            id = "breakpoints",
+            size = 0.25
+          }, {
+            id = "stacks",
+            size = 0.25
+          }, {
+            id = "watches",
+            size = 0.25
+          } },
+        position = "left",
+        size = 40
+      }, {
+        elements = { {
+            id = "repl",
+            size = 0.5
+          }, {
+            id = "console",
+            size = 0.5
+          } },
+        position = "bottom",
+        size = 10
+      } },
+    mappings = {
+      edit = "e",
+      expand = { "<CR>", "<2-LeftMouse>" },
+      open = { "o", "<RightMouse>" },
+      remove = "d",
+      repl = "r",
+      toggle = "t"
+    },
+    render = {
+      indent = 1,
+      max_value_lines = 100
+    }
+  }
+    )
+EOF
+
+
+    " - function to enter dap debug mode
+    function! DapEnter()
+        GitGutterDisable
+        call MapDap()
+        let g:dap_code_buffer_type=&filetype
+        augroup DapBufferMappings 
+            autocmd!
+            exec 'autocmd FileType ' . g:dap_code_buffer_type . ' call MapDap()'
+        augroup end
+        echo 'autocmd called '
+        lua require'dap'.continue()
+        lua require"dapui".open()
+    endfunction
+
+    " - function to exit vimspector debug mode
+    function! DapExit()
+        autocmd! DapBufferMappings
+        GitGutterEnable
+        lua require'dap'.terminate()
+        lua require"dapui".close()
+        sleep 1
+        " reopen code buffer to unmap buffer map
+        bdelete
+        edit #
+    endfunction
+
+    " - function to show dap help message
+    function!DapHelp()
+        echo "Left then right click or press o in breakpoints or frame to jump. For more keymaps, type <space>hdk then dap to see."
+    endfunction
 endif
 
 
