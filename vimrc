@@ -824,6 +824,7 @@ endif
     " - map to go to last buffer
     " - map to close buffer
     " - map to show message buffer
+    " - map to hide notification floating
     " - map to show buffers
     " - map to go to Scratch buffer
     " - map to close buffe and window
@@ -1023,7 +1024,11 @@ endif
     nnoremap <Space>bd <cmd>:call CloseBuffer()<CR>
     " - map to show message buffer
     nnoremap <Space>bm <cmd>:messages<CR>
-    nnoremap <Space>bM <cmd>:lua require("notify").dismiss({pending = true})<CR>
+
+    " - map to hide notification floating
+    nnoremap <silent> <Space>bM <cmd>:lua require("notify").dismiss({pending = true})<CR>
+    nnoremap <silent> <c-z> :lua require("notify").dismiss({pending = false})<CR>
+    inoremap <silent> <c-z> <c-o>:lua require("notify").dismiss({pending = false})<CR>
 
     " - map to show buffers
     " nnoremap <Space>bb <cmd>:CtrlPBuffer<CR>
@@ -1336,6 +1341,7 @@ endif
 
     " - map to describe key
     nnoremap <Space>hdk <cmd>:Maps<CR>
+    inoremap <a-x>hdk <plug>(fzf-maps-i)
 
     " - map to show snippets
     nnoremap <Space>hds <cmd>:Snippets<CR>
