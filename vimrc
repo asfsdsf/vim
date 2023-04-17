@@ -46,6 +46,7 @@
 " 7.7_Ale
 " 7.8_Cscope
 " 7.9_Vista
+" 7.10_copilot.vim
 " 8_Language settings ***************************************************
 " 8.1_Html/css
 " 8.2_Julia
@@ -81,6 +82,8 @@
 " -4_lua Theme plugins settings *****************************************
 " -7_lua Language tools *************************************************
 " -7.1_nvim-dap
+" -9_Utilities **********************************************************
+" -9.1_neo-tree.nvim
 " ***********************************************************************
 
 " ***********************************************************************
@@ -126,7 +129,9 @@ if exists('*plug#begin')
     Plug '~/Software/vim/plugins/mysnippets/'
     Plug 'asfsdsf/toggle_maximize.vim'  " toggle maximize window
     Plug 'junegunn/goyo.vim'  " toggle zen mode
-    Plug 'scrooloose/nerdtree'  " file tree
+    if !has('nvim')
+        Plug 'scrooloose/nerdtree'  " file tree
+    endif
     Plug 'majutsushi/tagbar'  " file names at top bar
     " Plug 'vimwiki/vimwiki'  " Personal Wiki for Vim http://vimwiki.github.io/
     Plug 'mtth/scratch.vim'  " Unobtrusive scratch window
@@ -157,6 +162,7 @@ if exists('*plug#begin')
     endif
     " sudo apt install nodejs yarnpkg
     Plug 'neoclide/coc.nvim', {'branch': 'release'}  " Intellisense engine for Vim8 & Neovim, full language server protocol support as VSCode
+    Plug 'github/copilot.vim'
 
     " - languages plugins
     Plug 'JuliaEditorSupport/julia-vim'  " Vim support for Julia. http://julialang.org/
@@ -171,8 +177,9 @@ if exists('*plug#begin')
         Plug 'mfussenegger/nvim-dap'
         Plug 'ldelossa/nvim-dap-projects'  " per project config file support for dap. if not found, use origin config instead
         Plug 'rcarriga/nvim-dap-ui'
-        " Plug 'leoluz/nvim-dap-go'
+        Plug 'leoluz/nvim-dap-go'
         " Plug 'mfussenegger/nvim-jdtls'  " java debugger with the help of dap
+        Plug 'echasnovski/mini.nvim', { 'branch': 'stable' }
     else
         Plug 'puremourning/vimspector'  " A multi-language debugging plugin for Vim
         packadd termdebug
@@ -225,6 +232,8 @@ if exists('*plug#begin')
         Plug 'RRethy/vim-illuminate'  " automatically highlighting other uses of the word under the cursor
         Plug 'folke/noice.nvim'  " replaces the UI for messages, cmdline and the popupmenu.
         Plug 'MunifTanjim/nui.nvim'  " UI Component Library for Neovim.(For other plugins)
+        Plug 'nvim-lua/plenary.nvim'  " for neo-tree
+        Plug 'nvim-neo-tree/neo-tree.nvim', { 'branch': 'v2.x' }  
         Plug 'rcarriga/nvim-notify'  " A fancy, configurable, notification manager for NeoVim
     endif
     Plug 'kien/rainbow_parentheses.vim'
@@ -1520,6 +1529,8 @@ endif
     " - add nearby function to status line
     " - run to activate obtaining nearby functions for status line automatically
     " - fzf layout for vista
+" 7.10_copilot.vim
+    " - map to show copilot panel
 " ***********************************************************************
 
 
@@ -1616,6 +1627,8 @@ if g:vim_plug_installed
     " # open. But it takes long time with bad network.
     " # can install it manually by
     " pip install jedi-language-server
+    " To use it with go:
+    " sudo apt install gopls
     "
     "
     " To open configuration file:
@@ -2501,6 +2514,14 @@ endpy
         \   "function": "\uf794",
         \   "variable": "\uf71b",
         \ }
+
+" ***********************************************************************
+" 7.10_copilot.vim
+" ***********************************************************************
+    " - map to show copilot panel
+    nnoremap <silent> <leader>cp <cmd>:Copilot panel<CR>
+    inoremap <silent> <a-i> <esc><cmd>:Copilot panel<CR>
+ 
 
 " ***********************************************************************
 " 8_Language settings ***************************************************
@@ -3596,9 +3617,7 @@ let g:silent_unsupported=1
     " - enable and setup wilder
     " - enable and setup lualine
     " - enable and setup nvim-treesitter
-" -7_lua Language tools *************************************************
-" -7.1_nvim-dap
-    " - map for debug mode of nvim-dap
+    " - enable and setup mini.indentscope
 " ***********************************************************************
 
 if g:vim_plug_installed
@@ -3608,7 +3627,7 @@ if has('nvim-0.5.0')
     " - enable and setup noice.nvim
         lua require("noice").setup({ routes = { { view = "cmdline", filter = { event = "msg_showmode" }, }, }, })
         
-endif
+endif  " end if has('nvim-0.5.0')
 if has('nvim')
 
     " - enable and setup wilder
@@ -3692,13 +3711,22 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 EOF
-endif
-endif
+
+lua require('mini.indentscope').setup()
+endif  " end if has('nvim')
 
 " ***********************************************************************
 " -7_lua Language tools *************************************************
 " -7.1_nvim-dap
     " - map for debug mode of nvim-dap
+    " - set sign for dap
+    " - debug Adapter installation for dap c/c++
+    " - debug Adapter installation for dap python
+    " - enable nvim-dap-go
+    " - enable and config nvim-dap-ui
+    " - function to enter dap debug mode
+    " - function to exit dap debug mode
+    " - function to show dap help message
 " ***********************************************************************
 " Debug Adapter installation:
 " https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation
@@ -3817,7 +3845,7 @@ dap.configurations.cpp = {
     dap.configurations.rust = dap.configurations.cpp
 EOF
 
-    " - debug Adapter installation for dap c/c++
+    " - debug Adapter installation for dap python
     " conda create -n debugpy python
     " conda activate debugpy
     " pip install debugpy
@@ -3852,6 +3880,10 @@ EOF
       },
     }
 EOF
+
+    " - enable nvim-dap-go
+    " sudo apt install delve
+    lua require('dap-go').setup()
 
     " - enable and config nvim-dap-ui
     "" This is modified from default values
@@ -3947,7 +3979,7 @@ EOF
         lua require"dapui".open()
     endfunction
 
-    " - function to exit vimspector debug mode
+    " - function to exit dap debug mode
     function! DapExit()
         autocmd! DapBufferMappings
         GitGutterEnable
@@ -3963,8 +3995,27 @@ EOF
     function!DapHelp()
         echo "Left then right click or press o in breakpoints or frame to jump. For more keymaps, type <space>hdk then dap to see."
     endfunction
-endif
 
+
+" ***********************************************************************
+" -9_Utilities **********************************************************
+" -9.1_neo-tree.nvim
+    " - map SPC 0 to toggle neo-tree
+" ***********************************************************************
+
+" ***********************************************************************
+" -9.1_neo-tree.nvim
+" ***********************************************************************
+
+    " - map SPC 0 to toggle neo-tree
+    nnoremap <Space>0 <cmd>:call CloseMaximize()<CR><cmd>:NeoTreeFocusToggle<CR>
+
+    " - map SPC fp to show file in neo-tree
+    nnoremap <Space>fp <cmd>:call CloseMaximize()<CR><cmd>:Neotree  dir=%:p:h:h reveal_file=%:p reveal_force_cwd<CR>
+
+endif  " end if has('nvim')
+
+endif  " end if g:vim_plug_installed
 
 " ***********************************************************************
 " Variable used to judge whether it is the first time to source vimrc

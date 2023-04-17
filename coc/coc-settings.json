@@ -13,6 +13,15 @@
           "directory": "/tmp/ccls"
         }
       }
+  },
+  "go": {
+    "command": "gopls",
+    "rootPatterns": ["go.work", "go.mod", ".vim/", ".git/", ".hg/"],
+    "trace.server": "verbose",
+    "filetypes": ["go"],
+    "initializationOptions": {
+      "usePlaceholders": true
+    }
   }
 }
 }
