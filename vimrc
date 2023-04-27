@@ -240,7 +240,6 @@ if exists('*plug#begin')
     if has('nvim')
         Plug 'nvim-lualine/lualine.nvim'  " fast and easy to configure Neovim statusline written in Lua.
         " If you want to have icons in your statusline choose one of these
-        Plug 'kyazdani42/nvim-web-devicons'
         Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     else
         Plug 'vim-airline/vim-airline'  " beautiful bar at bottom
@@ -262,6 +261,9 @@ if exists('*plug#begin')
     Plug 'atelierbram/Base2Tone-vim' " colorschemes for Vim – one of the syntax-highlighting applications containing the colorschemes of Base2Tone which were based on Duotone Themes by Simurai for Atom.
     Plug 'colepeters/spacemacs-theme.vim' " A theme modelled after nashamri/spacemacs-theme
 
+    if has('nvim')
+        Plug 'kyazdani42/nvim-web-devicons'
+    endif
     " Always load the vim-devicons as the very last one.
     Plug 'ryanoasis/vim-devicons'  " provides the same icons as well as colors for each icon.
 
@@ -1687,10 +1689,10 @@ if g:vim_plug_installed
     " you can't use coc#config()
     " - coc user settings 
     let g:coc_user_config={
-        \ "diagnostic.errorSign": '✗',
-        \ "diagnostic.warningSign": '⚠',
-        \ "diagnostic.infoSign": '⚐',
-        \ "diagnostic.hintSign": '🔔',
+        \ "diagnostic.errorSign": '',
+        \ "diagnostic.warningSign": '',
+        \ "diagnostic.infoSign": '',
+        \ "diagnostic.hintSign": '',
         \ "diagnostic.signOffset": 9999,
         \ "coc.preferences.enableFloatHighlight": v:false,
         \}
@@ -1903,14 +1905,14 @@ endif  " end if g:vim_plug_installed
 " ***********************************************************************
 
     " - function to run to another window if in tmux mode. Else run directly
-    fun! Run_to_tmux_or_directly(command_str)
+    function! Run_to_tmux_or_directly(command_str)
         if exists('$TMUX')
             call VimuxRunCommand(a:command_str)
             call feedkeys("<CR>")
         else
             exec "!" . a:command_str
         endif
-    endf
+    endfunction
 
     " when origin filetype==""
     " - set VimuxReplDefaultFiletype for repl
@@ -2635,7 +2637,7 @@ endpy
     " echo join(map(split(globpath(&rtp, 'ftplugin/*.vim'), '\n'), 'fnamemodify(v:val, ":t:r")'), "\n")
 
     " - function to show matlab help
-    fun! MatlabHelp()
+    function! MatlabHelp()
         let l:word_under_cursor = expand("<cword>")
         if executable('matlab')
             call Run_to_tmux_or_directly('help ' . l:word_under_cursor)
@@ -2651,7 +2653,7 @@ endpy
         endif
     endfunction
     " - function to go to matlab definition
-    fun! MatlabGoToDefinition()
+    function! MatlabGoToDefinition()
         let l:word_under_cursor = expand("<cword>")
         if bufname('/' . l:word_under_cursor . '.m')!=''
             exec 'b ' . bufname('/' . l:word_under_cursor . '.m')
@@ -2686,7 +2688,7 @@ endpy
             exec 'normal! gg'
             write
         endif
-    endf
+    endfunction
 
     " - map to run matlab/octave file
     autocmd FileType matlab nnoremap <buffer> ,cc <cmd>:w<CR><cmd>:!octave %<CR>
@@ -2706,7 +2708,7 @@ endpy
         endif
 
         " - function to toggle breakpoints for matlab
-        fun! Toggle_breakpoints_for_matlab()
+        function! Toggle_breakpoints_for_matlab()
             if !exists("b:matlab_breakpoints_lists")
                 let b:matlab_breakpoints_lists=[]
             endif
@@ -2728,7 +2730,7 @@ endpy
             endif
         endfunction
         " - command to clear all breakpoints for matlab
-        fun! Clear_all_breakpoints_for_matlab()
+        function! Clear_all_breakpoints_for_matlab()
                 call Run_to_tmux_or_directly("dbclear all")
                 let g:matlab_clear_counts=g:matlab_clear_counts+1
         endfunction
@@ -3792,9 +3794,9 @@ if has('nvim')
     " - set sign for dap
 lua <<EOF
     dap = require('dap')
-    vim.fn.sign_define('DapBreakpoint', {text='🛑', texthl='', linehl='', numhl=''})
-    vim.fn.sign_define('DapBreakpointCondition', {text='❓', texthl='', linehl='', numhl=''})
-    vim.fn.sign_define('DapBreakpointRejected', {text='🚫', texthl='', linehl='', numhl=''})
+    vim.fn.sign_define('DapBreakpoint', {text='', texthl='', linehl='', numhl=''})
+    vim.fn.sign_define('DapBreakpointCondition', {text='', texthl='', linehl='', numhl=''})
+    vim.fn.sign_define('DapBreakpointRejected', {text='', texthl='', linehl='', numhl=''})
 
 EOF
 
@@ -4001,6 +4003,11 @@ EOF
 " -9_Utilities **********************************************************
 " -9.1_neo-tree.nvim
     " - map SPC 0 to toggle neo-tree
+    " - disable fuzzy finder in neo-tree
+    " - remap y to traditional copy
+    " - map Y to copy-to-clipboard
+    " - remap motion key
+    " - map SPC fp to show file in neo-tree
 " ***********************************************************************
 
 " ***********************************************************************
@@ -4009,6 +4016,31 @@ EOF
 
     " - map SPC 0 to toggle neo-tree
     nnoremap <Space>0 <cmd>:call CloseMaximize()<CR><cmd>:NeoTreeFocusToggle<CR>
+
+    lua require("neo-tree").setup({filesystem = {window={mappings={["/"]="none"}}}})
+
+    " - disable fuzzy finder in neo-tree
+    " - disable copy-to-clipboard in neo-tree
+    " - map Y to copy-to-clipboard
+    " - remap motion key
+lua <<EOF
+require("neo-tree").setup({
+    filesystem = {
+    window={mappings={
+    -- disable copy-to-clipboard in neo-tree
+        ["/"]="none",
+    -- disable fuzzy finder in neo-tree
+        ["y"]="none",
+    -- map Y to copy-to-clipboard
+        ["Y"]="copy_to_clipboard",
+    -- remap motion key
+        ["w"]="none",
+        ["e"]="none",
+        ["l"]="none",
+    }
+    }}
+})
+EOF
 
     " - map SPC fp to show file in neo-tree
     nnoremap <Space>fp <cmd>:call CloseMaximize()<CR><cmd>:Neotree  dir=%:p:h:h reveal_file=%:p reveal_force_cwd<CR>
