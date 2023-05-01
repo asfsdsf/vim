@@ -46,11 +46,11 @@ M.comment = {
 M.general = {
   n = {
     -- [";"] = { ":", "enter command mode", opts = { nowait = true } },
-    ["<leader>tc"] = {":lua require('base46').toggle_transparency()<CR>", "Toggle transparency"},
+    ["<leader>Tc"] = {":lua require('base46').toggle_transparency()<CR>", "Toggle transparency"},
     ["<c-c><c-o>"] = {"<cmd>:call OpenUrlUnderCursor()<CR>","Open url under cursor"},
   },
   i = {
-    ["<c-s>"] = {"<c-o><cmd>:update<CR>", ""},
+    ["<c-s>"] = {"<c-o><cmd>:update<CR>", "Save file"},
 
   }
 }
@@ -58,12 +58,12 @@ M.general = {
 M.motions = {
   n = {
     ["<c-y>"] = {"<c-r>+", ""},
-    ["<space>tp"] = {"<cmd>:call g:TogglePaste()<cr>", ""},
-    ["gm"] = {"%", ""},
-    ["H"] = {"^", ""},
-    ["L"] = {"$", ""},
-    ["]e"] = {"       <cmd>:move +1<CR>", ""},
-    ["[e"] = {"       <cmd>:move -2<CR>", ""},
+    ["<space>tp"] = {"<cmd>:call g:TogglePaste()<cr>", "Toggle paste mode"},
+    ["gm"] = {"%", "Go to match pair"},
+    ["H"] = {"^", "Start of line"},
+    ["L"] = {"$", "End of line"},
+    ["]e"] = {"       <cmd>:move +1<CR>", "Move line down"},
+    ["[e"] = {"       <cmd>:move -2<CR>", "Move line up"},
     ["<leader>en"] = {":lua vim.diagnostic.goto_next()<CR>", "Next Diagnostic"},
     ["<leader>ep"] = {":lua vim.diagnostic.goto_prev()<CR>", "Previous Diagnostic"},
     ["<leader>eN"] = {":lua vim.diagnostic.goto_prev()<CR>", "Previous Diagnostic"},
@@ -90,15 +90,17 @@ M.motions = {
   },
   v = {
     ["gm"] = {"%", ""},
+    ["H"] = {"^", "Start of line"},
+    ["L"] = {"$", "End of line"},
   }
 }
 
 M.tabs = {
   n = {
-    ["<leader>tl"] = {"gt", ""},
-    ["<leader>th"] = {"gT", ""},
-    ["<leader>tn"] = {"<cmd>:tabnew<CR>", ""},
-    ["<leader>tc"] = {"<cmd>:tabclose<CR>", ""},
+    ["<leader>tl"] = {"gt", "Next tab"},
+    ["<leader>th"] = {"gT", "Previous tab"},
+    ["<leader>tn"] = {"<cmd>:tabnew<CR>", "New tab"},
+    ["<leader>tc"] = {"<cmd>:tabclose<CR>", "Close tab"},
   },
 }
 
@@ -203,6 +205,13 @@ M.search = {
     ["<c-h>"] = {":%s//gc<left><left><left>", ""},
     ["<space>fs"] = {"<cmd>:w !sudo tee %<CR>", ""},
     ["<Space>fr"] = {"<cmd>:call CloseMaximize()<CR><cmd>:FzfMrf!<CR>", "Recent files"},
+    ["<Space>fvv"] = {"<cmd>:OpenVimrcDotFile<CR>", "Open vim config"},
+    ["<Space>fvd"] = {":exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/custom/plugins.lua') <CR>", "Open settings file"},
+    ["<Space>fvD"] = {":exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/plugins/init.lua') <CR>", "Open default settings file"},
+    ["<Space>fvm"] = {":exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/custom/mappings.lua') <CR>", "Open mappings file"},
+    ["<Space>fvi"] = {":exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/custom/init.lua') <CR>", "Open init file"},
+    ["<Space>fvf"] = {":exec ('e ' . g:NvChadDir . '/vimrc_functions') <CR>", "Open functions file"},
+    ["<Space>fvc"] = {":exec ('e ' . g:NvChadDir . '/vimrc_for_lua') <CR>", "Open command file"},
     ["<Space>fO"] = {"<cmd>:!cd %:p:h && xdg-open '<cfile>' & <CR>", ""},
     ["<Space>fd"] = {"<cmd>:!nautilus %:p:h &<CR>", "Open in external directory"},
     ["<Space>fo"] = {"<cmd>:!cd %:p:h && xdg-open %:p & <CR>", "Open with external app"},
@@ -236,7 +245,6 @@ M.utils = {
     ["<Space>fe"] = {"<cmd>:exec 'e ' . expand(@+)<CR>", ""},
     ["<Space>ye"] = {"<cmd>:exec 'e ' . expand(@+)<CR>", ""},
     ["<Space>pp"] = {"<cmd>:exec 'e ' . expand(@+)<CR>", ""},
-    ["<Space>fvd"] = {"<cmd>:OpenVimrcDotFile<CR>", ""},
     -- ["<Space><Space>"] = {"<cmd>:Commands<CR>", ""},
     ["<Space><Space>"] = {":<c-f>", ""},
     ["<f5>"] = {"<cmd>:e<CR>", ""},
@@ -255,6 +263,8 @@ M.utils = {
     ["<space>hr"] = {"<cmd>:exec 'e ' . g:toBeTranslate_file<CR><c-w><c-o>:vs<CR><C-w>l:exec 'e ' . g:translation_dir . '/translated.txt'<CR><c-w>h", "Interactive translate"},
     ["<Space>hc"] = {"<cmd>:<C-u>Ydc<CR>", "Translate word under cursor"},
     ["<Space>htc"] = {"<cmd>:<C-u>Yde<CR>", ""},
+    ["<leader>;;"] = {"<cmd>:TComment<CR>", "Comment current line"},
+    ["<Space>id"] = {"<cmd>:r !echo '***********************************************************************'<CR><cmd>:TComment<CR>5l", ""},
   },
   i = {
     ["<A-z>"] = {"<c-o><cmd>:call ToggleZenMode(1)<CR>", ""},
@@ -428,6 +438,7 @@ M.disabled = {
     ["<leader>c"] = "",
     ["<leader>fb"] = "",
     ["<leader>fo"] = "",
+    ["<leader>tc"] = "",
     ["gcc"] = "",
     ["gbc"] = "",
   },

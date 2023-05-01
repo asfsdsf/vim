@@ -3,11 +3,21 @@
 vim.api.nvim_command "set runtimepath^=~/.vim runtimepath+=~/.vim/after"
 vim.api.nvim_command "let &packpath = &runtimepath"
 vim.g.vim_plug_installed = true
-local vimrc = "~/Software/vim/NvChad/vimrc_for_lua"
+vim.g.NvChadDir = "~/Software/vim/NvChad"
+local vimrc = vim.g.NvChadDir .. "/vimrc_for_lua"
 vim.cmd.source(vimrc)
 vim.g.is_zen_mode = false
-local vimrcfunctions = "~/Software/vim/NvChad/vimrc_functions"
+local vimrcfunctions = vim.g.NvChadDir .. "/vimrc_functions"
 vim.cmd.source(vimrcfunctions)
+
+-- Enable cursorline
+vim.cmd [[
+
+   augroup ilikecursorline
+      autocmd VimEnter * :highlight CursorLine guibg=#282a2e
+   augroup END
+
+]]
 
 -- local autocmd = vim.api.nvim_create_autocmd
 

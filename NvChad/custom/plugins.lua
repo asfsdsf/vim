@@ -81,15 +81,22 @@ local plugins = {
         c = { name = "code" },
         d = { name = "dapDebug" },
         e = { name = "error" },
-        f = { name = "file" },
+        f = { name = "file",
+          v = { name = "config"},
+        },
         g = { name = "git" },
-        h = { name = "help" },
+        h = { name = "help",
+          d = { name = "describe"},
+        },
         i = { name = "insert" },
         l = { name = "session" },
         q = { name = "quit" },
         t = { name = "toggle" },
         w = { name = "windows" },
       }, { prefix = "<leader>" })
+      require("which-key").register({
+        ["<leader>;"] = { name = "comment" },
+      })
     end,
   },
 
@@ -103,6 +110,7 @@ local plugins = {
 --     - vim-tmux-navigator             -- vim tmux integration
 --     - vim-visual-multi               -- multiple cursors
 --     - guess-indent.nvim              -- guess indent
+--     - tomtom/tcomment_vim
 -- ***********************************************************************
 
   {
@@ -147,6 +155,11 @@ local plugins = {
   {
     "nmac427/guess-indent.nvim",
     config = function() require("guess-indent").setup {} end,
+    lazy = false,
+  },
+
+  {
+    "tomtom/tcomment_vim",
     lazy = false,
   },
 
@@ -329,7 +342,12 @@ local plugins = {
 
   {
     "nvim-tree/nvim-tree.lua",
-    enabled = false
+    enabled = false,
+  },
+
+  {
+    "numToStr/Comment.nvim",
+    enabled = false,
   },
 }
 

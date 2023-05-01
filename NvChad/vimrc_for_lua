@@ -552,8 +552,6 @@ endif
 
     " - map SPC fvd to go to dot file(this file)
     execute "com! OpenVimrcDotFile e " . b:dot_file_path
-    " - map SPC fvR to source dot file
-    execute "nnoremap <Space>fvR <cmd>:source " . b:dot_file_path . "<CR>"
 
 
     " nnoremap <Space>ff <cmd>:CtrlP %<CR>
