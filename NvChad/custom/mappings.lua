@@ -1,0 +1,422 @@
+---@type MappingsTable
+
+-- See also ./init.lua
+-- See also ./plugins.lua
+
+-- ***********************************************************************
+-- Mappings ************************************************************
+--   1. Nvchad default mappings
+--   9. disable Nvchad default mappings
+-- ***********************************************************************
+
+local M = {}
+
+M.telescope = {
+  n = {
+    ["<Space><Space>"] = { "<cmd> Telescope commands <CR>", "find files" },
+  }
+}
+
+-- ***********************************************************************
+--   1. Nvchad default mappings
+-- ***********************************************************************
+
+M.comment = {
+  plugin = true,
+
+  -- toggle comment in both modes
+  n = {
+    ["<leader>;;"] = {
+      function()
+        require("Comment.api").toggle.linewise.current()
+      end,
+      "toggle comment",
+    },
+    ["<Space>id"] = {"<cmd>:r !echo '***********************************************************************'<CR><cmd>: lua require('Comment.api').toggle.linewise.current()<CR>5l", ""},
+  },
+
+  v = {
+    ["<leader>;"] = {
+      "<ESC><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
+      "toggle comment",
+    },
+  },
+}
+
+
+-- ***********************************************************************
+M.general = {
+  n = {
+    -- [";"] = { ":", "enter command mode", opts = { nowait = true } },
+    ["<leader>tc"] = {":lua require('base46').toggle_transparency()<CR>", "Toggle transparency"},
+    ["<c-c><c-o>"] = {"<cmd>:call OpenUrlUnderCursor()<CR>",""},
+  },
+  i = {
+    ["<c-s>"] = {"<c-o><cmd>:update<CR>", ""},
+
+  }
+}
+
+M.motions = {
+  n = {
+    ["<c-y>"] = {"<c-r>+", ""},
+    ["<space>tp"] = {"<cmd>:call g:TogglePaste()<cr>", ""},
+    ["gm"] = {"%", ""},
+    ["H"] = {"^", ""},
+    ["L"] = {"$", ""},
+    ["]e"] = {"       <cmd>:move +1<CR>", ""},
+    ["[e"] = {"       <cmd>:move -2<CR>", ""},
+  },
+  i = {
+    ["<c-b>"] = {"<left>",""},
+    ["<c-j>"] = {"<down>",""},
+    ["<c-k>"] = {"<up>",""},
+    ["<c-f>"] = {"<right>",""},
+    ["<c-h>"] = {"<left>",""},
+    ["<c-l>"] = {"<right>",""},
+    ["<A-b>"] = {"<c-left>",""},
+    ["<A-f>"] = {"<c-right>",""},
+    ["<A-h>"] = {"<c-left>",""},
+    ["<A-l>"] = {"<c-right>",""},
+    ["<A-j>"] = {"<c-o>o", ""},
+    ["<A-k>"] = {"<c-o>O", ""},
+    ["<c-a>"] = {"<c-o>^", ""},
+    ["<c-e>"] = {"<c-o>$", ""},
+  },
+  c = {
+    ["<c-a>"] = {"<home>", ""},
+    ["<c-e>"] = {"<end>", ""},
+  },
+  v = {
+    ["gm"] = {"%", ""},
+  }
+}
+
+M.tabs = {
+  n = {
+    ["<leader>tl"] = {"gt", ""},
+    ["<leader>th"] = {"gT", ""},
+    ["<leader>tn"] = {"<cmd>:tabnew<CR>", ""},
+    ["<leader>tc"] = {"<cmd>:tabclose<CR>", ""},
+  },
+}
+
+M.buffers = {
+  n = {
+    ["<A-n>"] = {"<cmd>:bn<CR>", ""},
+    ["<A-p>"] = {"<cmd>:bp<CR>", ""},
+    ["<Space>bn"] = {"<cmd>:bn<CR>", ""},
+    ["]b"] = {"<cmd>:bn<CR>", ""},
+    ["<Space>bp"] = {"<cmd>:bp<CR>", ""},
+    ["[b"] = {"<cmd>:bp<CR>", ""},
+    ["<Space><Tab>"] = {"<cmd>:b#<CR>", ""},
+    ["<Space>bd"] = {"<cmd>:call CloseBuffer()<CR>", ""},
+    ["<Space>bm"] = {"<cmd>:messages<CR>", ""},
+    ["<Space>bM"] = {"<cmd>:lua require('notify').dismiss({pending = true})<CR>", ""},
+    ["<Space>bb"] = {"<cmd>:FzfBuffers!<CR>", ""},
+    ["<Space>bs"] = {"<cmd>:Scratch<CR>", ""},
+    ["<Space>bx"] = {"<cmd>:call CloseMaximize()<CR><cmd>:bp<cr><cmd>:silent! exec 'bd #'<CR><cmd>:close<CR>", ""},
+    ["<Space>b1"] = {"<cmd>:bfirst<CR>", ""},
+    ["<Space>b2"] = {"<cmd>:call g:GotoNthBuffer('1')<CR>", ""},
+    ["<Space>b3"] = {"<cmd>:call g:GotoNthBuffer('2')<CR>", ""},
+    ["<Space>b4"] = {"<cmd>:call g:GotoNthBuffer('3')<CR>", ""},
+    ["<Space>b5"] = {"<cmd>:call g:GotoNthBuffer('4')<CR>", ""},
+    ["<Space>b6"] = {"<cmd>:call g:GotoNthBuffer('5')<CR>", ""},
+    ["<Space>b7"] = {"<cmd>:call g:GotoNthBuffer('6')<CR>", ""},
+    ["<Space>b8"] = {"<cmd>:call g:GotoNthBuffer('7')<CR>", ""},
+    ["<Space>b9"] = {"<cmd>:call g:GotoNthBuffer('8')<CR>", ""},
+  }
+}
+
+M.windows = {
+  n = {
+    ["<A-J>"] = {"<C-W>j", ""},
+    ["<A-K>"] = {"<C-W>k", ""},
+    ["<A-L>"] = {"<C-W>l", ""},
+    ["<A-H>"] = {"<C-W>h", ""},
+    ["<Space>wh"] = {"<cmd>:call CloseMaximize()<CR><C-w>h", ""},
+    ["<Space>wj"] = {"<cmd>:call CloseMaximize()<CR><C-w>j", ""},
+    ["<Space>wk"] = {"<cmd>:call CloseMaximize()<CR><C-w>k", ""},
+    ["<Space>wl"] = {"<cmd>:call CloseMaximize()<CR><C-w>l", ""},
+    ["<Space>wH"] = {"<cmd>:call CloseMaximize()<CR><C-w>H", ""},
+    ["<Space>wJ"] = {"<cmd>:call CloseMaximize()<CR><C-w>J", ""},
+    ["<Space>wK"] = {"<cmd>:call CloseMaximize()<CR><C-w>K", ""},
+    ["<Space>wL"] = {"<cmd>:call CloseMaximize()<CR><C-w>L", ""},
+    ["<Space>w/"] = {"<cmd>:call CloseMaximize()<CR><cmd>:vs<CR>", ""},
+    ["<Space>w-"] = {"<cmd>:call CloseMaximize()<CR><cmd>:sp<CR>", ""},
+    ["<Space>ww"] = {"<cmd>:call CloseMaximize()<CR><C-w>w", ""},
+    ["<Space>w="] = {"<cmd>:call CloseMaximize()<CR><C-w>=", ""},
+    ["<Space>wd"] = {"<cmd>:call CloseMaximize()<CR><cmd>:close<CR>", ""},
+    ["<Space>wx"] = {"<cmd>:call CloseMaximize()<CR><cmd>:bp<cr><cmd>:silent! exec 'bd #'<CR><cmd>:close<CR>", ""},
+    ["<Space>wo"] = {"<cmd>:call CloseMaximize()<CR><C-w><C-o>", ""},
+    ["<c-down>"] = {"2<C-w>-", ""},
+    ["<c-up>"] = {"2<C-w>+", ""},
+    ["<c-left>"] = {"2<C-w><", ""},
+    ["<c-right>"] = {"2<C-w>>", ""},
+    ["<Space>1"] = {" <cmd>:call CloseMaximize()<CR>1<C-w><C-w>", ""},
+    ["<Space>2"] = {" <cmd>:call CloseMaximize()<CR>2<C-w><C-w>", ""},
+    ["<Space>3"] = {" <cmd>:call CloseMaximize()<CR>3<C-w><C-w>", ""},
+    ["<Space>4"] = {" <cmd>:call CloseMaximize()<CR>4<C-w><C-w>", ""},
+    ["<Space>5"] = {" <cmd>:call CloseMaximize()<CR>5<C-w><C-w>", ""},
+    ["<Space>6"] = {" <cmd>:call CloseMaximize()<CR>6<C-w><C-w>", ""},
+    ["<Space>7"] = {" <cmd>:call CloseMaximize()<CR>7<C-w><C-w>", ""},
+    ["<Space>8"] = {" <cmd>:call CloseMaximize()<CR>8<C-w><C-w>", ""},
+    ["<Space>9"] = {" <cmd>:call CloseMaximize()<CR>9<C-w><C-w>", ""},
+    ["<a-1>"] = {" <cmd>:call VimspectorToggleHide(1,1)<CR>", ""},
+    ["<a-2>"] = {" <cmd>:call VimspectorToggleHide(2,1)<CR>", ""},
+    ["<a-3>"] = {" <cmd>:call VimspectorToggleHide(3,1)<CR>", ""},
+    ["<a-4>"] = {" <cmd>:call VimspectorToggleHide(4,1)<CR>", ""},
+    ["<a-5>"] = {" <cmd>:call VimspectorToggleHide(5,1)<CR>", ""},
+    ["<a-6>"] = {" <cmd>:call VimspectorToggleHide(6,1)<CR>", ""},
+    ["<a-7>"] = {" <cmd>:call VimspectorToggleHide(7,1)<CR>", ""},
+    ["<a-8>"] = {" <cmd>:call VimspectorToggleHide(8,1)<CR>", ""},
+    ["<a-9>"] = {" <cmd>:call VimspectorToggleHide(9,1)<CR>", ""},
+    ["<space><a-1>"] = {" <cmd>:call VimspectorToggleHide(1,2)<CR>", ""},
+    ["<space><a-2>"] = {" <cmd>:call VimspectorToggleHide(2,2)<CR>", ""},
+    ["<space><a-3>"] = {" <cmd>:call VimspectorToggleHide(3,2)<CR>", ""},
+    ["<space><a-4>"] = {" <cmd>:call VimspectorToggleHide(4,2)<CR>", ""},
+    ["<space><a-5>"] = {" <cmd>:call VimspectorToggleHide(5,2)<CR>", ""},
+    ["<space><a-6>"] = {" <cmd>:call VimspectorToggleHide(6,2)<CR>", ""},
+    ["<space><a-7>"] = {" <cmd>:call VimspectorToggleHide(7,2)<CR>", ""},
+    ["<space><a-8>"] = {" <cmd>:call VimspectorToggleHide(8,2)<CR>", ""},
+    ["<space><a-9>"] = {" <cmd>:call VimspectorToggleHide(9,2)<CR>", ""},
+    ["<c-1>"] = {" <cmd>:call VimspectorToggleHide(1,2)<CR>", ""},
+    ["<c-2>"] = {" <cmd>:call VimspectorToggleHide(2,2)<CR>", ""},
+    ["<c-3>"] = {" <cmd>:call VimspectorToggleHide(3,2)<CR>", ""},
+    ["<c-4>"] = {" <cmd>:call VimspectorToggleHide(4,2)<CR>", ""},
+    ["<c-5>"] = {" <cmd>:call VimspectorToggleHide(5,2)<CR>", ""},
+    ["<c-6>"] = {" <cmd>:call VimspectorToggleHide(6,2)<CR>", ""},
+    ["<c-7>"] = {" <cmd>:call VimspectorToggleHide(7,2)<CR>", ""},
+    ["<c-8>"] = {" <cmd>:call VimspectorToggleHide(8,2)<CR>", ""},
+    ["<c-9>"] = {" <cmd>:call VimspectorToggleHide(9,2)<CR>", ""},
+  },
+  i = {
+
+  },
+}
+
+M.search = {
+  n = {
+    ["<Space>/"] = {" <cmd>:Ag!<CR>", ""},
+    ["<A-H>"] = {":%s//gc<left><left><left>", ""},
+    ["<c-h>"] = {":%s//gc<left><left><left>", ""},
+    ["<space>fs"] = {"<cmd>:w !sudo tee %<CR>", ""},
+    ["<Space>fr"] = {"<cmd>:call CloseMaximize()<CR><cmd>:FzfMrf!<CR>", ""},
+    ["<Space>fO"] = {"<cmd>:!cd %:p:h && xdg-open '<cfile>' & <CR>", ""},
+    ["<Space>fd"] = {"<cmd>:!nautilus %:p:h &<CR>", ""},
+    ["<Space>fo"] = {"<cmd>:!cd %:p:h && xdg-open %:p & <CR>", ""},
+    -- ["<Space>ft"] = {"<cmd>:silent! !gnome-terminal --working-directory=%:p:h &<CR>", ""},
+    ["<Space>ft"] = {"<cmd>:silent! !terminology -d %:p:h &<CR>", ""},
+    ["<Space>ff"] = {"<cmd>:call CloseMaximize()<CR><cmd>:call g:OpenFileByPath()<CR>", ""},
+    ["<Space>pf"] = {"<cmd>:call CloseMaximize()<CR><cmd>:GFiles!<CR>", ""},
+    ["<Space>pF"] = {"<cmd>:call CloseMaximize()<CR><cmd>:Files!<CR>", ""},
+    ["''"] = {"<cmd>:Marks<CR>", ""},
+    ["<Space>hdk"] = {"<cmd>:Maps<CR>", ""},
+    ["<Space>hds"] = {"<cmd>:Snippets<CR>", ""},
+  },
+  i = {
+    ["<a-x>hdk"] = {"<plug>(fzf-maps-i)", ""},
+  },
+  v = {
+    ["<Space>/"] = {"\"vy<cmd>:exec 'Ag!' . escape(@v,'/\\()*+?[]$^<bar>')<CR>", ""},
+
+    ["<Space>b/"] = {"<cmd>:Lines<CR>", ""},
+    -- ["<c-f>"] = {" <cmd>:w<CR><cmd>:AgCurrentFile!<CR>", ""},
+    ["<c-f>"] = {" <cmd>:BLines<CR>", ""},
+
+  },
+}
+
+M.utils = {
+  n = {
+    ["<Space>fy"] = {"<cmd>:let @+ = expand('%:p')<CR>", ""},
+    ["<Space>yy"] = {"<cmd>:let @+ = expand('%:p')<CR><cmd>:echo 'current file path copied'<CR>", ""},
+    ["<Space>fe"] = {"<cmd>:exec 'e ' . expand(@+)<CR>", ""},
+    ["<Space>ye"] = {"<cmd>:exec 'e ' . expand(@+)<CR>", ""},
+    ["<Space>pp"] = {"<cmd>:exec 'e ' . expand(@+)<CR>", ""},
+    ["<Space>fvd"] = {"<cmd>:OpenVimrcDotFile<CR>", ""},
+    -- ["<Space><Space>"] = {"<cmd>:Commands<CR>", ""},
+    ["<Space><Space>"] = {":<c-f>", ""},
+    ["<f5>"] = {"<cmd>:e<CR>", ""},
+    ["<Space>z+"] = {"zR", ""},
+    ["<Space>z-"] = {"zM", ""},
+    ["<Space>qq"] = {"<cmd>:call CloseMaximize()<CR><cmd>:qa<CR>", ""},
+    ["<Space>cd"] = {"<cmd>:cd %:h<CR><cmd>:silent! Gcd<CR>", ""},
+    ["<Space>tw"] = {"<cmd>:ToggleWrap<CR>", ""},
+    ["<space>aa"] = {"<cmd>:FindActions<CR>", ""},
+    ["<space>aA"] = {":FindActionsFor<space>", ""},
+    ["<space>AA"] = {":FindActionsFor<space>", ""},
+    ["<space>ag"] = {"<cmd>:!gedit %<CR>", ""},
+    ["<space>au"] = {"<cmd>:UndotreeToggle<CR>", ""},
+    -- ["<space>as"] = {"<cmd>:terminal<CR>", ""},
+    ["<space>as"] = {"<cmd>:vertical terminal ++curwin<CR>", ""},
+    ["<space>hr"] = {"<cmd>:exec 'e ' . g:toBeTranslate_file<CR><c-w><c-o>:vs<CR><C-w>l:exec 'e ' . g:translation_dir . '/translated.txt'<CR><c-w>h", ""},
+    ["<Space>hc"] = {"<cmd>:<C-u>Ydc<CR>", ""},
+    ["<Space>htc"] = {"<cmd>:<C-u>Yde<CR>", ""},
+  },
+  i = {
+    ["<A-z>"] = {"<c-o><cmd>:call ToggleZenMode(1)<CR>", ""},
+  },
+  v = {
+    ["<Space>hc"] = {"\"vy <cmd>:call Translate()<CR>", ""},
+  }
+}
+
+M.display = {
+  n = {
+    ["<Space>Tn"] = {"<cmd>:call ToggleTheme()<CR>", ""},
+    ["<Space>Tl"] = {"<cmd>:call ToggleLineNumber()<CR>", ""},
+    ["<Space>TL"] = {"<cmd>:windo call ToggleLineNumber()<CR>", ""},
+    ["<Space>TT"] = {"<cmd>:call ToggleAllAuxiliaryDisplay()<CR>", ""},
+    ["<Space>tT"] = {"<cmd>:call ToggleAllAuxiliaryDisplay()<CR>", ""},
+    ["<Space>tt"] = {"<cmd>:call ToggleCurrentAuxiliaryDisplay()<CR>", ""},
+    ["<Space>Tg"] = {"<cmd>:GitGutterToggle<CR>", ""},
+  },
+
+}
+
+M.session = {
+  n = {
+
+  }
+}
+
+M.treesitter = {
+  n = {
+    ["<leader>tt"] = { ":TSPlaygroundToggle<CR>", "toggle treesitter playground" },
+  },
+}
+
+M.vim_tmux_navigator = {
+  plugin = true,
+  n = {
+    ["<a-l>"] = {":call CloseMaximize()<CR><cmd>:TmuxNavigateRight<CR>", "Go to window right (with tmux support)."},
+    ["<a-h>"] = {":call CloseMaximize()<CR><cmd>:TmuxNavigateLeft<CR>", "Go to window right (with tmux support)."},
+    ["<a-j>"] = {":call CloseMaximize()<CR><cmd>:TmuxNavigateDown<CR>", "Go to window right (with tmux support)."},
+    ["<a-k>"] = {":call CloseMaximize()<CR><cmd>:TmuxNavigateUp<CR>", "Go to window right (with tmux support)."},
+  }
+}
+
+M.undotree = {
+  plugin = true,
+  n = {
+    ["<leader>au"] = { ":let g:undotree_used=1<CR>:UndotreeToggle<CR>", "toggle undotree" },
+  },
+}
+
+M.copilot = {
+  plugin = true,
+  n = {
+    ["<leader>cp"] = { ":Copilot panel<CR>", "Copilot candidates" },
+  },
+  i = {
+    ["<a-i>"] = { "<esc>:Copilot panel<CR>", "Copilot candidates" }
+  }
+}
+
+M.neotree = {
+  n = {
+    ["<leader>0"] = { ":lua require'neo-tree'<CR>:call CloseMaximize()<CR><cmd>:NeoTreeFocusToggle<CR>", "Toggle neo-tree" },
+    ["<leader>fp"] = { ":lua require'neo-tree'<CR>:call CloseMaximize()<CR><cmd>:Neotree  dir=%:p:h:h reveal_file=%:p reveal_force_cwd<CR>", "show file in neo-tree" },
+  },
+}
+
+M.dap = {
+    n = {
+      ["<leader>dd"] = { ":call DapEnter()<CR>", "Dap start debugging" },
+      ["<space>db"] = { ":lua require'dap'.toggle_breakpoint()<CR>", "Dap toggle breakpoint"},
+      ["<space>dB"] = { ":lua require'dap'.toggle_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>", "Dap toggle conditional breakpoint"},
+      ["<space>dc"] = { ":lua require'dap'.continue()<CR>", "Dap continue"},
+      ["<space>de"] = { ":lua require'dap'.terminate()<CR>", "Dap terminate"},
+      ["<space>dq"] = { ":call DapExit()<CR>", "Dap exit"},
+      ["<space>dp"] = { ":lua require'dap'.pause()<CR>", "Dap pause"},
+      ["<space>dn"] = { ":lua require'dap'.step_over()<CR>", "Dap step over"},
+      ["<space>ds"] = { ":lua require'dap'.step_into()<CR>", "Dap step into"},
+      ["<space>do"] = { ":lua require'dap'.step_out()<CR>", "Dap step out"},
+      ["<space>d]"] = { ":lua require'dap'.up()<CR>", "Dap frame up"},
+      ["<space>d["] = { ":lua require'dap'.down()<CR>", "Dap frame down"},
+      ["<space>dr"] = { ":lua require'dap'.repl.open()<CR>", "Dap open"},
+      ["<space>dt"] = { ":lua require'dap'.run_to_cursor()<CR>", "Dap run to cursor"},
+      ["<space>dT"] = { ":lua require'dap'.focus_frame()<CR>", "Dap focus frame"},
+      ["<space>d0"] = { ":lua require'dapui'.toggle()<CR>", "Dap toggle auxiliary windows"},
+      ["<space>dR"] = { ":lua require'dapui'.open({reset=true})<CR>", "Dap reset windows"},
+      ["<space>dE"] = { ":lua require('dapui').eval()<CR>", "Dap eval"},
+      ["<space>d:"] = { ":lua require('dapui').eval()<CR>", "Dap eval"},
+    },
+    v = {
+      ["<space>dE"] = { "lua require('dapui').eval()<CR>", "Dap eval"},
+      ["<space>d:"] = { "lua require('dapui').eval()<CR>", "Dap eval"},
+    }
+}
+
+M.vimux = {
+  n = {
+    ["<space>:"] = {"<cmd>:call VimuxPromptCommand()<CR><c-f>:exec 'set filetype=' . g:previous_buf_filetype<CR>i", ""},
+    ["<space>v:"] = {"<cmd>:call VimuxPromptCommand()<CR>", ""},
+    ["<space>vo"] = {"<cmd>:call VimuxOpenRunner()<CR>", ""},
+    ["<space>vl"] = {"<cmd>:call VimuxRunLastCommand()<CR>", ""},
+    ["<space>vc"] = {"<cmd>:call VimuxCloseRunner()<CR>", ""},
+    ["<space>vr"] = {"<cmd>:call VimuxRunCommand('!!\\n')<CR>", ""},
+    ["<a-enter>"] = {"<cmd>:call VimuxSlimeNormal()<CR>j", ""},
+    ["<a-v>"] = {"<cmd>:call VimuxSlimeNormal()<CR>j", ""},
+    ["<space>vs"] = {"<cmd>:call VimuxSlimeNormal()<CR>", ""},
+    ["<space>vp"] = {"<cmd>:call VimuxForRepl()<CR>", ""},
+  },
+  i = {
+    ["<a-enter>"] = {"<c-o>$<c-o><cmd>:call VimuxSlimeNormal()<CR><enter>", ""},
+    ["<a-v>"] = {"<c-o>$<c-o><cmd>:call VimuxSlimeNormal()<CR><enter>", ""},
+  },
+  v = {
+    ["<a-enter>"] = {"\"vy <cmd>:call VimuxSlimeVisual()<CR>", ""},
+    ["<a-v>"] = {"\"vy <cmd>:call VimuxSlimeVisual()<CR>", ""},
+    ["<space>vs"] = {"\"vy <cmd>:call VimuxSlimeVisual()<CR>", ""},
+  }
+}
+
+M.browser_bookmarks = {
+  n = {
+    ["<leader>fb"] = { ":lua require 'browser_bookmarks'<CR>:Telescope bookmarks<CR>", "Browser bookmarks" },
+  },
+}
+
+M.tagbar = {
+  n = {
+    ["<A-m>"] = {"<cmd>:TagbarToggle<CR>", ""},
+    ["<Space><CR>"] = {"<cmd>:TagbarToggle<CR>", ""},
+  }
+}
+
+M.fugitive = {
+  n = {
+    ["<Space>gs"] = {"<cmd>:Gstatus<CR>", ""},
+    ["<Space>gd"] = {"<cmd>:Gvdiffsplit<CR>", ""},
+    ["<Space>gc"] = {"<cmd>:Gcommit<CR>", ""},
+    ["<Space>gh"] = {"<cmd>:BCommits<CR>", ""},
+    ["<Space>gfm"] = {"<cmd>:Gmove<CR>", ""},
+    ["<Space>gfr"] = {"<cmd>:Gremove<CR>", ""},
+    ["<Space>gl"] = {"<cmd>:let g:glog_cursor=line('.')<CR><cmd>:0Gclog<CR>", ""},
+    ["<Space>gn"] = {"<cmd>:cnext<CR>", ""},
+    ["[q"] = {"<cmd>:cnext<CR>", ""},
+    ["<Space>gp"] = {"<cmd>:cprev<CR>", ""},
+    ["]q"] = {"<cmd>:cprev<CR>", ""},
+    ["<Space>gN"] = {"<cmd>:cprev<CR>", ""},
+    ["<Space>gr"] = {"<cmd>:Gread<CR>", ""},
+    ["<Space>ga"] = {"<cmd>:Gwrite<CR>", ""},
+    ["<Space>gb"] = {"<cmd>:Gblame<CR>", ""},
+  },
+}
+
+M.disabled = {
+  n = {
+    ["<A-h>"] = "",
+    ["<leader>wk"] = "",
+    ["<leader>/"] = "",
+    ["<leader>c"] = "",
+    ["<leader>fb"] = "",
+  },
+  v = {
+    ["<leader>/"] = "",
+  }
+}
+
+return M
