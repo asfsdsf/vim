@@ -2,9 +2,9 @@
 
 vim.api.nvim_command "set runtimepath^=~/.vim runtimepath+=~/.vim/after"
 vim.api.nvim_command "let &packpath = &runtimepath"
+vim.g.vim_plug_installed = true
 local vimrc = "~/Software/vim/NvChad/vimrc_for_lua"
 vim.cmd.source(vimrc)
-vim.g.vim_plug_installed = true
 vim.g.is_zen_mode = false
 local vimrcfunctions = "~/Software/vim/NvChad/vimrc_functions"
 vim.cmd.source(vimrcfunctions)

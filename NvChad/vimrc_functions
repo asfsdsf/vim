@@ -184,6 +184,7 @@
         set relativenumber!
     endfunction
 
+    let s:hidden_all = 0
     function! ToggleAllAuxiliaryDisplay()
         if s:hidden_all == 0
             if g:vim_plug_installed
@@ -297,7 +298,7 @@
         return 0
     endfunction
 
-    function! s:Python_print()
+    function! Python_print()
         if expand('%:p')==$HOME."/Software/vim/python_for_vim.py"
             wq
             r !python $HOME/Software/vim/python_for_vim.py
@@ -321,7 +322,7 @@
         endif
     endfunction
 
-    function! s:DiffWithSaved()
+    function! DiffWithSaved()
       let filetype=&ft
       diffthis
       vnew | r # | normal! 1Gdd
@@ -329,7 +330,7 @@
       exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
     endfunction
 
-    function! s:OpenDirectoryFile(dir_path)
+    function! OpenDirectoryFile(dir_path)
         12sp $HOME/Software/vim/open_file_help.sh
         exec "normal! \<c-w>J"
         put =a:dir_path
@@ -337,7 +338,7 @@
         startinsert!
     endfunction
 
-    function! s:Compared_with_clipboard()
+    function! Compared_with_clipboard()
         diffthis
         vnew ~/Software/vim/clipboard
         execute 'normal!gg"_dG"+P'
@@ -440,7 +441,7 @@
         endif
     endfunction
 
-    function s:Toggle_Wrap()
+    function Toggle_Wrap()
         if &wrap
             windo set wrap!
         else
@@ -448,57 +449,16 @@
         endif
     endfunction
 
-    function! s:ChangeFileTypeIfReplacing()
+    function! ChangeFileTypeIfReplacing()
         if stridx(getline('.'),"s/") >= 0
             exec "set filetype=" . g:previous_buf_filetype
         endif
     endfunction
 
-    function! s:UniteSettings()
+    function! UniteSettings()
         au InsertLeave <buffer> :UniteClose
         imap <buffer> <TAB>   <Plug>(unite_select_next_line)
         imap <buffer> <s-TAB>   <Plug>(unite_select_previous_line)
-    endfunction
-
-        function Find_cursor_popup(...)
-            let radius = get(a:000, 0, 2)
-            let srow = screenrow()
-            let scol = screencol()
-
-            " it's necessary to test entire rect, as some popup might be quite small
-            for r in range(srow - radius, srow + radius)
-                for c in range(scol - radius, scol + radius)
-                    let winid = popup_locate(r, c)
-                    if winid != 0
-                        return winid
-                    endif
-                endfor
-            endfor
-
-            return 0
-        endfunction
-
-        function Scroll_cursor_popup(down)
-            let winid = Find_cursor_popup()
-            if winid == 0
-                return 0
-            endif
-
-            let pp = popup_getpos(winid)
-            call popup_setoptions( winid,
-                        \ {'firstline' : pp.firstline + ( a:down ? 8 : -8 ) } )
-
-            return 1
-        endfunction
-
-    function! s:check_back_space() abort
-      let col = col('.') - 1
-      return !col || getline('.')[col - 1]  =~ '\s'
-    endfunction
-
-    function! s:check_back_space() abort
-      let col = col('.') - 1
-      return !col || getline('.')[col - 1]  =~ '\s'
     endfunction
 
     function! Toggle_show_signature()
@@ -532,14 +492,6 @@
         if !empty(g:winids)
             call win_gotoid(g:winids[0])
         endif
-    endfunction
-
-    function! s:show_documentation()
-      if (index(['vim','help'], &filetype) >= 0)
-        execute 'h '.expand('<cword>')
-      else
-        call CocAction('doHover')
-      endif
     endfunction
 
     function! Run_to_tmux_or_directly(command_str)
@@ -864,7 +816,7 @@ endpy
       return get(b:, 'vista_nearest_method_or_function', '')
     endfunction
 
-    function!s:LoadFreefemCompletion()
+    function! LoadFreefemCompletion()
         if g:freefemCompletionNotLoaded
             let g:freefemCompletionNotLoaded=0
             view $HOME/Software/freefem++/freefem_include/completion.edp

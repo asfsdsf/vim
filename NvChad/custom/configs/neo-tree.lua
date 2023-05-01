@@ -5,20 +5,23 @@ if not present then
 end
 
 local options = {
-    filesystem = {
-    window={mappings={
-    -- disable copy-to-clipboard in neo-tree
+  filesystem = {
+    hide_gitignored = true,
+    window={
+      mappings={
+      -- disable copy-to-clipboard in neo-tree
         ["/"]="none",
-    -- disable fuzzy finder in neo-tree
+      -- disable fuzzy finder in neo-tree
         ["y"]="none",
-    -- map Y to copy-to-clipboard
+      -- map Y to copy-to-clipboard
         ["Y"]="copy_to_clipboard",
-    -- remap motion key
+      -- remap motion key
         ["w"]="none",
         ["e"]="none",
         ["l"]="none",
+      }
     }
-    }}
+  }
 }
 
 neotree.setup(options)

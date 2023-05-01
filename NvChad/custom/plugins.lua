@@ -25,6 +25,7 @@ local overrides = require "custom.configs.overrides"
 --     - mason.nvim
 --     - nvim-treesitter
 --     - nvim-tree.lua
+--     - which-key.nvim
 -- ***********************************************************************
 
 ---@type NvPluginSpec[]
@@ -40,6 +41,7 @@ local plugins = {
         "jose-elias-alvarez/null-ls.nvim",
         config = function()
           require "custom.configs.null-ls"
+          require("core.utils").load_mappings "null_ls"
         end,
       },
     },
@@ -70,10 +72,33 @@ local plugins = {
     opts = overrides.telescope,
   },
 
+  {
+    "folke/which-key.nvim",
+    init = function()
+      require("which-key").register({
+        a = { name = "tools" },
+        b = { name = "buffers" },
+        c = { name = "code" },
+        d = { name = "dapDebug" },
+        e = { name = "error" },
+        f = { name = "file" },
+        g = { name = "git" },
+        h = { name = "help" },
+        i = { name = "insert" },
+        l = { name = "session" },
+        q = { name = "quit" },
+        t = { name = "toggle" },
+        w = { name = "windows" },
+      }, { prefix = "<leader>" })
+    end,
+  },
+
+
 -- ***********************************************************************
 --   2. utility plugins
 --     - better-escape.nvim             -- use jj or jk to escape insert mode
 --     - toggle_maximize.vim            -- toggle maximize window
+--     - fugitive
 --     - vimux                          -- vim tmux integration
 --     - vim-tmux-navigator             -- vim tmux integration
 --     - vim-visual-multi               -- multiple cursors
@@ -92,14 +117,6 @@ local plugins = {
     "asfsdsf/toggle_maximize.vim",
     lazy = false,
   },
-
-  -- {
-  --   "scrooloose/nerdtree",
-  --   event = "InsertEnter",
-  --   config = function()
-  --     require("better_escape").setup()
-  --   end,
-  -- },
 
   {
     "benmills/vimux",
@@ -163,6 +180,7 @@ local plugins = {
 
   {
     "junegunn/fzf",
+    build = ":call fzf#install()",
     lazy = false,
   },
 
@@ -232,11 +250,30 @@ local plugins = {
   },
 
 -- ***********************************************************************
+--   6. git support plugins
+--     - vim-gitgutter                  -- git gutter
+--     - vim-fugitive                  -- git gutter
+-- ***********************************************************************
+
+  {
+    "airblade/vim-gitgutter",
+    lazy = false,
+  },
+
+  {
+    "tpope/vim-fugitive",
+    lazy = false,
+    init = function()
+      require("core.utils").load_mappings "fugitive"
+    end,
+  },
+
+
+-- ***********************************************************************
 --   8. theme / interface plugins
 --     - alpha-nvim                     -- dashboard
 --     - neo-tree                       -- file explorer
 --     - rainbow_parentheses.vim        -- rainbow parentheses
---     - vim-gitgutter                  -- git gutter
 --     - targets.vim                    -- text object
 --     - vim-visual-multi               -- multiple cursors
 --     - vim-surround                   -- surround text object
@@ -245,7 +282,7 @@ local plugins = {
     'goolord/alpha-nvim',
     lazy = false,
     config = function()
-        require 'alpha'.setup(require "custom.configs.alpha")
+      require 'alpha'.setup(require "custom.configs.alpha")
     end,
   },
 
@@ -267,11 +304,6 @@ local plugins = {
 
   {
     "kien/rainbow_parentheses.vim",
-    lazy = false,
-  },
-
-  {
-    "airblade/vim-gitgutter",
     lazy = false,
   },
 

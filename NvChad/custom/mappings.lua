@@ -4,7 +4,7 @@
 -- See also ./plugins.lua
 
 -- ***********************************************************************
--- Mappings ************************************************************
+-- Mappings **************************************************************
 --   1. Nvchad default mappings
 --   9. disable Nvchad default mappings
 -- ***********************************************************************
@@ -22,8 +22,6 @@ M.telescope = {
 -- ***********************************************************************
 
 M.comment = {
-  plugin = true,
-
   -- toggle comment in both modes
   n = {
     ["<leader>;;"] = {
@@ -49,7 +47,7 @@ M.general = {
   n = {
     -- [";"] = { ":", "enter command mode", opts = { nowait = true } },
     ["<leader>tc"] = {":lua require('base46').toggle_transparency()<CR>", "Toggle transparency"},
-    ["<c-c><c-o>"] = {"<cmd>:call OpenUrlUnderCursor()<CR>",""},
+    ["<c-c><c-o>"] = {"<cmd>:call OpenUrlUnderCursor()<CR>","Open url under cursor"},
   },
   i = {
     ["<c-s>"] = {"<c-o><cmd>:update<CR>", ""},
@@ -66,6 +64,9 @@ M.motions = {
     ["L"] = {"$", ""},
     ["]e"] = {"       <cmd>:move +1<CR>", ""},
     ["[e"] = {"       <cmd>:move -2<CR>", ""},
+    ["<leader>en"] = {":lua vim.diagnostic.goto_next()<CR>", "Next Diagnostic"},
+    ["<leader>ep"] = {":lua vim.diagnostic.goto_prev()<CR>", "Previous Diagnostic"},
+    ["<leader>eN"] = {":lua vim.diagnostic.goto_prev()<CR>", "Previous Diagnostic"},
   },
   i = {
     ["<c-b>"] = {"<left>",""},
@@ -105,17 +106,17 @@ M.buffers = {
   n = {
     ["<A-n>"] = {"<cmd>:bn<CR>", ""},
     ["<A-p>"] = {"<cmd>:bp<CR>", ""},
-    ["<Space>bn"] = {"<cmd>:bn<CR>", ""},
+    ["<Space>bn"] = {"<cmd>:bn<CR>", "Next buffer"},
     ["]b"] = {"<cmd>:bn<CR>", ""},
-    ["<Space>bp"] = {"<cmd>:bp<CR>", ""},
+    ["<Space>bp"] = {"<cmd>:bp<CR>", "Previous buffer"},
     ["[b"] = {"<cmd>:bp<CR>", ""},
-    ["<Space><Tab>"] = {"<cmd>:b#<CR>", ""},
-    ["<Space>bd"] = {"<cmd>:call CloseBuffer()<CR>", ""},
-    ["<Space>bm"] = {"<cmd>:messages<CR>", ""},
-    ["<Space>bM"] = {"<cmd>:lua require('notify').dismiss({pending = true})<CR>", ""},
-    ["<Space>bb"] = {"<cmd>:FzfBuffers!<CR>", ""},
-    ["<Space>bs"] = {"<cmd>:Scratch<CR>", ""},
-    ["<Space>bx"] = {"<cmd>:call CloseMaximize()<CR><cmd>:bp<cr><cmd>:silent! exec 'bd #'<CR><cmd>:close<CR>", ""},
+    ["<Space><Tab>"] = {"<cmd>:b#<CR>", "Most recent buffer"},
+    ["<Space>bd"] = {"<cmd>:call CloseBuffer()<CR>", "Close buffer"},
+    ["<Space>bm"] = {"<cmd>:messages<CR>", "Message buffer"},
+    ["<Space>bM"] = {"<cmd>:lua require('notify').dismiss({pending = true})<CR>", "Maximize buffer"},
+    ["<Space>bb"] = {"<cmd>:FzfBuffers!<CR>", "Show all buffers"},
+    ["<Space>bs"] = {"<cmd>:Scratch<CR>", "Scratch buffer"},
+    ["<Space>bx"] = {"<cmd>:call CloseMaximize()<CR><cmd>:bp<cr><cmd>:silent! exec 'bd #'<CR><cmd>:close<CR>", "Close buffer and window"},
     ["<Space>b1"] = {"<cmd>:bfirst<CR>", ""},
     ["<Space>b2"] = {"<cmd>:call g:GotoNthBuffer('1')<CR>", ""},
     ["<Space>b3"] = {"<cmd>:call g:GotoNthBuffer('2')<CR>", ""},
@@ -134,25 +135,25 @@ M.windows = {
     ["<A-K>"] = {"<C-W>k", ""},
     ["<A-L>"] = {"<C-W>l", ""},
     ["<A-H>"] = {"<C-W>h", ""},
-    ["<Space>wh"] = {"<cmd>:call CloseMaximize()<CR><C-w>h", ""},
-    ["<Space>wj"] = {"<cmd>:call CloseMaximize()<CR><C-w>j", ""},
-    ["<Space>wk"] = {"<cmd>:call CloseMaximize()<CR><C-w>k", ""},
-    ["<Space>wl"] = {"<cmd>:call CloseMaximize()<CR><C-w>l", ""},
-    ["<Space>wH"] = {"<cmd>:call CloseMaximize()<CR><C-w>H", ""},
-    ["<Space>wJ"] = {"<cmd>:call CloseMaximize()<CR><C-w>J", ""},
-    ["<Space>wK"] = {"<cmd>:call CloseMaximize()<CR><C-w>K", ""},
-    ["<Space>wL"] = {"<cmd>:call CloseMaximize()<CR><C-w>L", ""},
-    ["<Space>w/"] = {"<cmd>:call CloseMaximize()<CR><cmd>:vs<CR>", ""},
-    ["<Space>w-"] = {"<cmd>:call CloseMaximize()<CR><cmd>:sp<CR>", ""},
-    ["<Space>ww"] = {"<cmd>:call CloseMaximize()<CR><C-w>w", ""},
-    ["<Space>w="] = {"<cmd>:call CloseMaximize()<CR><C-w>=", ""},
-    ["<Space>wd"] = {"<cmd>:call CloseMaximize()<CR><cmd>:close<CR>", ""},
-    ["<Space>wx"] = {"<cmd>:call CloseMaximize()<CR><cmd>:bp<cr><cmd>:silent! exec 'bd #'<CR><cmd>:close<CR>", ""},
-    ["<Space>wo"] = {"<cmd>:call CloseMaximize()<CR><C-w><C-o>", ""},
-    ["<c-down>"] = {"2<C-w>-", ""},
-    ["<c-up>"] = {"2<C-w>+", ""},
-    ["<c-left>"] = {"2<C-w><", ""},
-    ["<c-right>"] = {"2<C-w>>", ""},
+    ["<Space>wh"] = {"<cmd>:call CloseMaximize()<CR><C-w>h", "Window go left"},
+    ["<Space>wj"] = {"<cmd>:call CloseMaximize()<CR><C-w>j", "Window go down"},
+    ["<Space>wk"] = {"<cmd>:call CloseMaximize()<CR><C-w>k", "Window go up"},
+    ["<Space>wl"] = {"<cmd>:call CloseMaximize()<CR><C-w>l", "Window go right"},
+    ["<Space>wH"] = {"<cmd>:call CloseMaximize()<CR><C-w>H", "Move window left"},
+    ["<Space>wJ"] = {"<cmd>:call CloseMaximize()<CR><C-w>J", "Move window down"},
+    ["<Space>wK"] = {"<cmd>:call CloseMaximize()<CR><C-w>K", "Move window up"},
+    ["<Space>wL"] = {"<cmd>:call CloseMaximize()<CR><C-w>L", "Move window right"},
+    ["<Space>w/"] = {"<cmd>:call CloseMaximize()<CR><cmd>:vs<CR>", "Split window right"},
+    ["<Space>w-"] = {"<cmd>:call CloseMaximize()<CR><cmd>:sp<CR>", "Split window down"},
+    ["<Space>ww"] = {"<cmd>:call CloseMaximize()<CR><C-w>w", "Switch to recent window"},
+    ["<Space>w="] = {"<cmd>:call CloseMaximize()<CR><C-w>=", "Balance window size"},
+    ["<Space>wd"] = {"<cmd>:call CloseMaximize()<CR><cmd>:close<CR>", "Close window"},
+    ["<Space>wx"] = {"<cmd>:call CloseMaximize()<CR><cmd>:bp<cr><cmd>:silent! exec 'bd #'<CR><cmd>:close<CR>", "Close window and buffer"},
+    ["<Space>wo"] = {"<cmd>:call CloseMaximize()<CR><C-w><C-o>", "Circle window"},
+    ["<c-down>"] = {"2<C-w>-", "Resize Window down"},
+    ["<c-up>"] = {"2<C-w>+", "Resize window up"},
+    ["<c-left>"] = {"2<C-w><", "Resize window left"},
+    ["<c-right>"] = {"2<C-w>>", "Resize window right"},
     ["<Space>1"] = {" <cmd>:call CloseMaximize()<CR>1<C-w><C-w>", ""},
     ["<Space>2"] = {" <cmd>:call CloseMaximize()<CR>2<C-w><C-w>", ""},
     ["<Space>3"] = {" <cmd>:call CloseMaximize()<CR>3<C-w><C-w>", ""},
@@ -201,28 +202,29 @@ M.search = {
     ["<A-H>"] = {":%s//gc<left><left><left>", ""},
     ["<c-h>"] = {":%s//gc<left><left><left>", ""},
     ["<space>fs"] = {"<cmd>:w !sudo tee %<CR>", ""},
-    ["<Space>fr"] = {"<cmd>:call CloseMaximize()<CR><cmd>:FzfMrf!<CR>", ""},
+    ["<Space>fr"] = {"<cmd>:call CloseMaximize()<CR><cmd>:FzfMrf!<CR>", "Recent files"},
     ["<Space>fO"] = {"<cmd>:!cd %:p:h && xdg-open '<cfile>' & <CR>", ""},
-    ["<Space>fd"] = {"<cmd>:!nautilus %:p:h &<CR>", ""},
-    ["<Space>fo"] = {"<cmd>:!cd %:p:h && xdg-open %:p & <CR>", ""},
+    ["<Space>fd"] = {"<cmd>:!nautilus %:p:h &<CR>", "Open in external directory"},
+    ["<Space>fo"] = {"<cmd>:!cd %:p:h && xdg-open %:p & <CR>", "Open with external app"},
     -- ["<Space>ft"] = {"<cmd>:silent! !gnome-terminal --working-directory=%:p:h &<CR>", ""},
-    ["<Space>ft"] = {"<cmd>:silent! !terminology -d %:p:h &<CR>", ""},
-    ["<Space>ff"] = {"<cmd>:call CloseMaximize()<CR><cmd>:call g:OpenFileByPath()<CR>", ""},
-    ["<Space>pf"] = {"<cmd>:call CloseMaximize()<CR><cmd>:GFiles!<CR>", ""},
-    ["<Space>pF"] = {"<cmd>:call CloseMaximize()<CR><cmd>:Files!<CR>", ""},
-    ["''"] = {"<cmd>:Marks<CR>", ""},
-    ["<Space>hdk"] = {"<cmd>:Maps<CR>", ""},
-    ["<Space>hds"] = {"<cmd>:Snippets<CR>", ""},
+    ["<Space>ft"] = {"<cmd>:silent! !x-terminal-emulator &<CR>", "Open external terminal"},
+    ["<Space>ff"] = {"<cmd>:call CloseMaximize()<CR><cmd>:call g:OpenFileByPath()<CR>", "Open file"},
+    ["<Space>pf"] = {"<cmd>:call CloseMaximize()<CR><cmd>:GFiles!<CR>", "Open file in this project"},
+    ["<Space>pF"] = {"<cmd>:call CloseMaximize()<CR><cmd>:Files!<CR>", "Open file in this directory"},
+    ["''"] = {"<cmd>:Marks<CR>", "Show all marks"},
+    ["<Space>hdk"] = {"<cmd>:Maps<CR>", "Show all keymaps"},
+    ["<Space>hds"] = {"<cmd>:Snippets<CR>", "Show all snippets"},
+    ["<Space>ee"] = {"<cmd>:Telescope diagnostics<CR>", "Show all diagnostics"},
   },
   i = {
-    ["<a-x>hdk"] = {"<plug>(fzf-maps-i)", ""},
+    ["<a-x>hdk"] = {"<plug>(fzf-maps-i)", "Show keymaps"},
   },
   v = {
-    ["<Space>/"] = {"\"vy<cmd>:exec 'Ag!' . escape(@v,'/\\()*+?[]$^<bar>')<CR>", ""},
+    ["<Space>/"] = {"\"vy<cmd>:exec 'Ag!' . escape(@v,'/\\()*+?[]$^<bar>')<CR>", "Search in current directory"},
 
-    ["<Space>b/"] = {"<cmd>:Lines<CR>", ""},
+    ["<Space>b/"] = {"<cmd>:Lines<CR>", "Search across buffer"},
     -- ["<c-f>"] = {" <cmd>:w<CR><cmd>:AgCurrentFile!<CR>", ""},
-    ["<c-f>"] = {" <cmd>:BLines<CR>", ""},
+    ["<c-f>"] = {" <cmd>:BLines<CR>", "Search lines"},
 
   },
 }
@@ -240,37 +242,37 @@ M.utils = {
     ["<f5>"] = {"<cmd>:e<CR>", ""},
     ["<Space>z+"] = {"zR", ""},
     ["<Space>z-"] = {"zM", ""},
-    ["<Space>qq"] = {"<cmd>:call CloseMaximize()<CR><cmd>:qa<CR>", ""},
-    ["<Space>cd"] = {"<cmd>:cd %:h<CR><cmd>:silent! Gcd<CR>", ""},
-    ["<Space>tw"] = {"<cmd>:ToggleWrap<CR>", ""},
-    ["<space>aa"] = {"<cmd>:FindActions<CR>", ""},
-    ["<space>aA"] = {":FindActionsFor<space>", ""},
-    ["<space>AA"] = {":FindActionsFor<space>", ""},
-    ["<space>ag"] = {"<cmd>:!gedit %<CR>", ""},
-    ["<space>au"] = {"<cmd>:UndotreeToggle<CR>", ""},
+    ["<Space>qq"] = {"<cmd>:call CloseMaximize()<CR><cmd>:qa<CR>", "Quit"},
+    ["<Space>cd"] = {"<cmd>:cd %:h<CR><cmd>:silent! Gcd<CR>", "Change working directory to current"},
+    ["<Space>tw"] = {"<cmd>:ToggleWrap<CR>", "Toggle wrap"},
+    ["<space>aa"] = {"<cmd>:FindActions<CR>", "Show actions help"},
+    ["<space>aA"] = {":FindActionsFor<space>", "Show actions for"},
+    ["<space>AA"] = {":FindActionsFor<space>", "Show actions for"},
+    ["<space>ag"] = {"<cmd>:!gedit %<CR>", "Open in gedit"},
+    ["<space>au"] = {"<cmd>:UndotreeToggle<CR>", "Undo tree toggle"},
     -- ["<space>as"] = {"<cmd>:terminal<CR>", ""},
     ["<space>as"] = {"<cmd>:vertical terminal ++curwin<CR>", ""},
-    ["<space>hr"] = {"<cmd>:exec 'e ' . g:toBeTranslate_file<CR><c-w><c-o>:vs<CR><C-w>l:exec 'e ' . g:translation_dir . '/translated.txt'<CR><c-w>h", ""},
-    ["<Space>hc"] = {"<cmd>:<C-u>Ydc<CR>", ""},
+    ["<space>hr"] = {"<cmd>:exec 'e ' . g:toBeTranslate_file<CR><c-w><c-o>:vs<CR><C-w>l:exec 'e ' . g:translation_dir . '/translated.txt'<CR><c-w>h", "Interactive translate"},
+    ["<Space>hc"] = {"<cmd>:<C-u>Ydc<CR>", "Translate word under cursor"},
     ["<Space>htc"] = {"<cmd>:<C-u>Yde<CR>", ""},
   },
   i = {
     ["<A-z>"] = {"<c-o><cmd>:call ToggleZenMode(1)<CR>", ""},
   },
   v = {
-    ["<Space>hc"] = {"\"vy <cmd>:call Translate()<CR>", ""},
+    ["<Space>hc"] = {"\"vy <cmd>:call Translate()<CR>", "Translate visual region"},
   }
 }
 
 M.display = {
   n = {
-    ["<Space>Tn"] = {"<cmd>:call ToggleTheme()<CR>", ""},
-    ["<Space>Tl"] = {"<cmd>:call ToggleLineNumber()<CR>", ""},
-    ["<Space>TL"] = {"<cmd>:windo call ToggleLineNumber()<CR>", ""},
-    ["<Space>TT"] = {"<cmd>:call ToggleAllAuxiliaryDisplay()<CR>", ""},
-    ["<Space>tT"] = {"<cmd>:call ToggleAllAuxiliaryDisplay()<CR>", ""},
-    ["<Space>tt"] = {"<cmd>:call ToggleCurrentAuxiliaryDisplay()<CR>", ""},
-    ["<Space>Tg"] = {"<cmd>:GitGutterToggle<CR>", ""},
+    ["<Space>Tn"] = {"<cmd>:call ToggleTheme()<CR>", "Toggle theme"},
+    ["<Space>Tl"] = {"<cmd>:call ToggleLineNumber()<CR>", "Toggle line number"},
+    ["<Space>TL"] = {"<cmd>:windo call ToggleLineNumber()<CR>", "Toggle all window line number"},
+    ["<Space>TT"] = {"<cmd>:call ToggleAllAuxiliaryDisplay()<CR>", "Toggle all auxiliary display"},
+    ["<Space>tT"] = {"<cmd>:call ToggleAllAuxiliaryDisplay()<CR>", "Toggle all auxiliary display"},
+    ["<Space>tt"] = {"<cmd>:call ToggleCurrentAuxiliaryDisplay()<CR>", "Toggle auxiliary display"},
+    ["<Space>Tg"] = {"<cmd>:GitGutterToggle<CR>", "Toggle git gutter"},
   },
 
 }
@@ -283,7 +285,7 @@ M.session = {
 
 M.treesitter = {
   n = {
-    ["<leader>tt"] = { ":TSPlaygroundToggle<CR>", "toggle treesitter playground" },
+    ["<leader>tt"] = { ":TSPlaygroundToggle<CR>", "Toggle treesitter playground" },
   },
 }
 
@@ -387,25 +389,37 @@ M.tagbar = {
 }
 
 M.fugitive = {
+  plugin = true,
   n = {
-    ["<Space>gs"] = {"<cmd>:Gstatus<CR>", ""},
-    ["<Space>gd"] = {"<cmd>:Gvdiffsplit<CR>", ""},
-    ["<Space>gc"] = {"<cmd>:Gcommit<CR>", ""},
+    ["<Space>gs"] = {"<cmd>:Gstatus<CR>", "Git status"},
+    ["<Space>gd"] = {"<cmd>:Gvdiffsplit<CR>", "Git diff"},
+    ["<Space>gc"] = {"<cmd>:Gcommit<CR>", "Git commit"},
     ["<Space>gh"] = {"<cmd>:BCommits<CR>", ""},
     ["<Space>gfm"] = {"<cmd>:Gmove<CR>", ""},
     ["<Space>gfr"] = {"<cmd>:Gremove<CR>", ""},
-    ["<Space>gl"] = {"<cmd>:let g:glog_cursor=line('.')<CR><cmd>:0Gclog<CR>", ""},
-    ["<Space>gn"] = {"<cmd>:cnext<CR>", ""},
-    ["[q"] = {"<cmd>:cnext<CR>", ""},
-    ["<Space>gp"] = {"<cmd>:cprev<CR>", ""},
-    ["]q"] = {"<cmd>:cprev<CR>", ""},
-    ["<Space>gN"] = {"<cmd>:cprev<CR>", ""},
+    ["<Space>gl"] = {"<cmd>:let g:glog_cursor=line('.')<CR><cmd>:0Gclog<CR>", "Git current file history"},
+    ["<Space>gn"] = {"<cmd>:cnext<CR>", "Git next history"},
+    ["<Space>gp"] = {"<cmd>:cprev<CR>", "Git previous history"},
+    ["<Space>gN"] = {"<cmd>:cprev<CR>", "Git previous history"},
     ["<Space>gr"] = {"<cmd>:Gread<CR>", ""},
     ["<Space>ga"] = {"<cmd>:Gwrite<CR>", ""},
     ["<Space>gb"] = {"<cmd>:Gblame<CR>", ""},
+    ["]q"] = {"<cmd>:cprev<CR>", "Git previous history"},
+    ["[q"] = {"<cmd>:cnext<CR>", "Git next history"},
   },
 }
 
+M.null_ls = {
+  plugin = true,
+  n = {
+    [",f"] = {":lua vim.lsp.buf.format({ timeout_ms = 2000 })<CR>", "format file"}
+  },
+}
+
+  
+-- ***********************************************************************
+--   9. disable Nvchad default mappings
+-- ***********************************************************************
 M.disabled = {
   n = {
     ["<A-h>"] = "",
@@ -413,6 +427,12 @@ M.disabled = {
     ["<leader>/"] = "",
     ["<leader>c"] = "",
     ["<leader>fb"] = "",
+    ["<leader>fo"] = "",
+    ["gcc"] = "",
+    ["gbc"] = "",
+  },
+  i = {
+    ["<c-e>"] = "",
   },
   v = {
     ["<leader>/"] = "",
