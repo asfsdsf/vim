@@ -184,6 +184,15 @@
         set relativenumber!
     endfunction
 
+    function! ToggleShowTabLine()
+        if &showtabline == 2
+            set showtabline=0
+        else
+            set showtabline=2
+        endif
+    endfunction
+
+
     let s:hidden_all = 0
     function! ToggleAllAuxiliaryDisplay()
         if s:hidden_all == 0
@@ -200,6 +209,7 @@
             set noshowmode
             set noshowcmd
             set noruler
+            set showtabline=0
             set laststatus=0
             let s:hidden_all=1
         else
@@ -215,6 +225,7 @@
             windo set signcolumn=yes
             set showmode
             set ruler
+            set showtabline=2
             set laststatus=2
             set showcmd
             let s:hidden_all=0

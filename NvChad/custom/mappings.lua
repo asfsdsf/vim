@@ -283,6 +283,7 @@ M.display = {
     ["<Space>tT"] = {"<cmd>:call ToggleAllAuxiliaryDisplay()<CR>", "Toggle all auxiliary display"},
     ["<Space>tt"] = {"<cmd>:call ToggleCurrentAuxiliaryDisplay()<CR>", "Toggle auxiliary display"},
     ["<Space>Tg"] = {"<cmd>:GitGutterToggle<CR>", "Toggle git gutter"},
+    ["<Space>Tb"] = {"<cmd>:call ToggleShowTabLine()<CR>","Toggle buffer line (tab line)"},
   },
 
 }
@@ -295,7 +296,7 @@ M.session = {
 
 M.treesitter = {
   n = {
-    ["<leader>tt"] = { ":TSPlaygroundToggle<CR>", "Toggle treesitter playground" },
+    -- ["<leader>tt"] = { ":TSPlaygroundToggle<CR>", "Toggle treesitter playground" },
   },
 }
 
@@ -338,6 +339,7 @@ M.dap = {
       ["<leader>dd"] = { ":call DapEnter()<CR>", "Dap start debugging" },
       ["<space>db"] = { ":lua require'dap'.toggle_breakpoint()<CR>", "Dap toggle breakpoint"},
       ["<space>dB"] = { ":lua require'dap'.toggle_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>", "Dap toggle conditional breakpoint"},
+      ["<space>dl"] = { ":Telescope dap list_breakpoints<CR>", "Dap list breakpoints"},
       ["<space>dc"] = { ":lua require'dap'.continue()<CR>", "Dap continue"},
       ["<space>de"] = { ":lua require'dap'.terminate()<CR>", "Dap terminate"},
       ["<space>dq"] = { ":call DapExit()<CR>", "Dap exit"},

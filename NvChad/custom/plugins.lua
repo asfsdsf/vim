@@ -254,6 +254,9 @@ local plugins = {
         "rcarriga/nvim-dap-ui",
         opts = { floating = { border = "rounded" } },
       },
+      {
+        "nvim-telescope/telescope-dap.nvim",
+      },
     },
 
     config = function()
