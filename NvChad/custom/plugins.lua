@@ -77,6 +77,7 @@ local plugins = {
     init = function()
       require("which-key").register({
         a = { name = "tools" },
+        A = { name = "Actions" },
         b = { name = "buffers" },
         c = { name = "code" },
         d = { name = "dapDebug" },
@@ -90,9 +91,14 @@ local plugins = {
         },
         i = { name = "insert" },
         l = { name = "session" },
+        p = { name = "paste/project" },
         q = { name = "quit" },
+        r = { name = "refactor" },
+        s = { name = "search" },
         t = { name = "toggle" },
         w = { name = "windows" },
+        y = { name = "yank" },
+        z = { name = "fold" },
       }, { prefix = "<leader>" })
       require("which-key").register({
         ["<leader>;"] = { name = "comment" },

@@ -2499,7 +2499,7 @@ endpy
       return get(b:, 'vista_nearest_method_or_function', '')
     endfunction
 
-    if !empty($DISPLAY)  " if not on server
+    if !empty($DISPLAY) && g:vim_plug_installed " if not on server
         set statusline+=%{NearestMethodOrFunction()}
 
         " - run to activate obtaining nearby functions for status line automatically
@@ -3627,7 +3627,7 @@ if g:vim_plug_installed
 if has('nvim-0.5.0')
         lua require("notify").setup({max_height=10,render = "compact",stages = "static",level = "info",timeout = 2000,max_width = 300,background_colour="#000000"})
     " - enable and setup noice.nvim
-        lua require("noice").setup({ routes = { { view = "cmdline", filter = { event = "msg_showmode" }, }, }, })
+        " lua require("noice").setup({ routes = { { view = "cmdline", filter = { event = "msg_showmode" }, }, }, })
         
 endif  " end if has('nvim-0.5.0')
 if has('nvim')
@@ -3683,7 +3683,7 @@ require'nvim-treesitter.configs'.setup {
   auto_install = true,
 
   -- List of parsers to ignore installing (for "all")
-  ignore_install = { "javascript" },
+  ignore_install = { "latex", "vim" },
 
   ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
   -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!

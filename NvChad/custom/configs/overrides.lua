@@ -122,8 +122,8 @@ M.telescope = {
     -- Default configuration for telescope goes here:
     -- config_key = value,
       layout_config = {
-        height = 100 ,
-        width = 200 ,
+        -- height = 100 ,
+        -- width = 200 ,
       },
     mappings = {
       i = {
