@@ -622,6 +622,21 @@
         call VimuxRunCommand(" cd `git rev-parse --show-toplevel 2>/dev/null || echo .`")
     endfunction
 
+
+    function! GetProjectPath()
+        " Check if the current directory is a Git repository
+        let l:git_root = system('git rev-parse --show-toplevel 2>/dev/null')
+        let l:git_root = substitute(l:git_root, '\n$', '', '')
+
+        " If it's a Git repository, return the root path
+        if !empty(l:git_root)
+            return l:git_root
+        endif
+
+        " If it's not a Git repository, return the directory of the current file
+        return expand('%:p:h')
+    endfunction
+
     function! ToggleMaximizeTmux()
         if !s:CheckWarnVimPlugInstalled()
             return

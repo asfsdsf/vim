@@ -147,10 +147,6 @@
     " - set updatetime to 1 second.This is used for CursorHold event
 " ***********************************************************************
 
-    " - start NERDTree when Vim is started without file arguments.
-    autocmd StdinReadPre * let s:std_in=1
-    " This comflict with vim-startify
-    " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 " ***********************************************************************
 " 3.1_Display
@@ -167,38 +163,10 @@
     " - highlight current column
     set cursorcolumn
 
-    " - have indent guides enabled by default
-    let g:indent_guides_enable_on_vim_startup = 1
-    " - set indent line size to one
-    let g:indent_guides_guide_size = 1
-    " - set indent line start level to 2
-    let g:indent_guides_start_level=2
-
-    " - make sure column line will be preserved when swiching buffer
-    set nostartofline
-
-    " - set 256 colors for vim
-    set t_Co=256
-    " - set background to dark
-    set background=dark
-
-    " - set background transparent
-    let g:transparent_background=1
-
-    " - Enables 24-bit RGB color in the TUI
-    if (has("termguicolors"))
-      set termguicolors
-    endif
-
     " - color conflict with TERMINOLOGY
     if exists("$TERMINOLOGY")
         set notermguicolors
     endif
-
-
-    " - access colors present in 256 colorspace
-    let base16colorspace=256
-
 
 " ***********************************************************************
 " 3.2_Basic settings
@@ -213,20 +181,20 @@
     set mouse=a
 
     " - conflict config for nvim and vim
-    if(!has("nvim"))
-        " Use system clipboard
-        set clipboard^=unnamed,unnamedplus
-        " Prevent Vim from clearing the clipboard on exit
-        autocmd VimLeave * call system("xsel -ib", getreg('+'))
-        " conlict with tmux(color will be gone without this)
-        if exists('+termguicolors')
-            let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-            let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-            set termguicolors
-        endif
-    else
-        set clipboard+=unnamedplus
-    endif
+    " if(!has("nvim"))
+    "     " Use system clipboard
+    "     set clipboard^=unnamed,unnamedplus
+    "     " Prevent Vim from clearing the clipboard on exit
+    "     autocmd VimLeave * call system("xsel -ib", getreg('+'))
+    "     " conlict with tmux(color will be gone without this)
+    "     if exists('+termguicolors')
+    "         let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    "         let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    "         set termguicolors
+    "     endif
+    " else
+    "     set clipboard+=unnamedplus
+    " endif
 
 
     " - smart case for / search
@@ -263,7 +231,7 @@
     set scrolloff=3
 
     " - set updatetime to 1 second.This is used for CursorHold event
-    set updatetime=1000
+    " set updatetime=1000
 
 " ***********************************************************************
 " 4_Theme plugins settings **********************************************
@@ -274,31 +242,6 @@
 " 4.3_rainbow_parentheses
 " ***********************************************************************
 
-
-" ***********************************************************************
-" 4.1_Vim-Airline settings
-" ***********************************************************************
-if !has('nvim')  " airline slow down neovim. Use lualine.nvim instead
-    let g:airline#extensions#tabline#enabled = 1
-    let g:airline_powerline_fonts = 1
-    if (&background=='dark')
-        let g:airline_theme='hybrid'
-    else
-        let g:airline_theme='papercolor'
-    endif
-    let g:hybrid_custom_term_colors = 1
-    let g:hybrid_reduced_contrast = 1
-
-
-
-    " - call those only once and only when vim-plug is installed(for airline)
-    if !exists('g:vimrc_has_been_sourced') && g:vim_plug_installed
-        call airline#add_statusline_func('WindowNumber')
-        call airline#add_inactive_statusline_func('WindowNumber')
-        call airline#add_statusline_func('MaxmizedSign')
-    endif
-
-endif
 " ***********************************************************************
 " 4.2_Devicons settings
 " ***********************************************************************
@@ -499,21 +442,6 @@ endif
         let g:in_paste_mode=0
     endif
 
-    " - map C-a/C-e to begin/end of the line in insert mode
-
-    " - map gm to go to pair
-
-    " - map H/L to move to begin/end of the line
-
-    " - map k/j to physical move line up/down
-
-    " - map gk/gj to visual move line up/down
-
-    " - goto tags (symbols) in current file finder mapping
-    " - goto tags (symbols) in all files finder mapping
-    " - recent changes in all buffers
-    " - recent changes in current buffer
-    " - recent jumps in current buffer
 
 " ***********************************************************************
 " 6.2_tab map
@@ -535,58 +463,17 @@ endif
 " 6.6_Maps for files
 " ***********************************************************************
 
-    " - map C-s to save buffer in insert mode(use C-s in vim will freeze)
-
     " - map SPC f s to save buffer with sudo privilige in vim(not neovim)
     if !has('nvim')
-    endif
-
-    " - map to go to recent file
-
-    " - open file under the cursor with default system software
-    " - open the folder containing current file
-    " - open current file with default system software
-    " - open the terminal with current file path as working directory
-    if exists("$TERMINOLOGY")
     endif
 
     " - map SPC fvd to go to dot file(this file)
     execute "com! OpenVimrcDotFile e " . b:dot_file_path
 
 
-    " nnoremap <Space>ff <cmd>:CtrlP %<CR>
-    " nnoremap <Space>ss <cmd>:CtrlPLine %<CR>  " Use <c-f> instead
-
 " ***********************************************************************
 " 6.7_Other map
 " ***********************************************************************
-
-    " - map SPC SPC to run command
-    if g:vim_plug_installed
-    else
-    endif
-
-    " - insert dividing line
-
-    " - map to switch theme
-
-    " - map to toggle line number display
-
-    " - map to toggle line number display for all windows
-
-    " - map to hide all auxiliary display
-
-    " - map to hide all auxiliary display
-
-    " - map to toggle git gutter
-
-    " - map to zoom in/out
-
-    " - map to move line up/down
-
-    " - map '' to show marks
-
-    " - map to run python and output to current line
 
     " - function to save layout
     let g:custom_layout_path="~/Software/vim/session"
@@ -605,18 +492,6 @@ endif
 
     " com!ToggleWrap windo set wrap
     com!ToggleWrap call Toggle_Wrap()
-    " - map to find actions
-    nmap <space>aa <cmd>:FindActions<CR>
-    nmap <space>aA :FindActionsFor<space>
-    nmap <space>AA :FindActionsFor<space>
-    " - map to open current file by gedit
-    nmap <space>ag <cmd>:!gedit %<CR>
-    " - map to show undo tree
-    nmap <space>au <cmd>:UndotreeToggle<CR>
-    " - map to open built-in terminal
-    if has('nvim')
-    else
-    endif
 
     " - map ,er to execute vim line/selected region in normal/visual mode
     autocmd FileType vim vnoremap <buffer> ,er "vy <cmd>:@v<CR>
@@ -636,9 +511,8 @@ endif
     au CmdwinEnter [/?]  exec "set filetype=" . g:previous_buf_filetype
 
 
-
     " - set filetype to be the same with previous file when replacing in command-line mode
-    au CmdwinEnter [:] call s:ChangeFileTypeIfReplacing()
+    au CmdwinEnter [:] call ChangeFileTypeIfReplacing()
 
     " - execute the command under the cursor and then have the command-line window open again
     autocmd CmdwinEnter * map <buffer> <F5> <CR>q:
@@ -890,12 +764,6 @@ endif
 " ***********************************************************************
 " 8.1_Html/css
 " ***********************************************************************
-
-" emmet-vim {{{ 
-    " - Enable just for html/css
-    let g:user_emmet_install_global = 0
-    autocmd FileType html,css EmmetInstall
-" }}}
 
 
 " ***********************************************************************
@@ -1427,17 +1295,6 @@ endif
     " - command to show buffers with fzf
     command! -nargs=* -bang FzfBuffers call Fzf_buffers(<q-args>, <bang>0)
 
-    " - map SPC hk to search keymap definition
-    nmap <space>hk <plug>(fzf-maps-n)
-    xmap <space>hk <plug>(fzf-maps-x)
-    omap <space>hk <plug>(fzf-maps-o)
-    imap <a-m>hk <plug>(fzf-maps-i)
-
-    " - map for insert mode completion with fzf
-    imap <c-x>w <plug>(fzf-complete-word)
-    imap <c-x>f <plug>(fzf-complete-path)
-    imap <c-x>j <plug>(fzf-complete-file-ag)
-    imap <c-x>l <plug>(fzf-complete-line)
 
 " ***********************************************************************
 " 9.5.2_Ctrlp
@@ -1448,7 +1305,7 @@ endif
 
     " nnoremap <c-f> <cmd>:CtrlPLine %<CR>
     " - map C-p to ctrlp
-    nmap <c-p> <cmd>:CtrlP .<CR>
+    " nmap <c-p> <cmd>:CtrlP .<CR>
     " let g:ctrlp_map = '<c-p>'
 
     " - set current working directory for ctrlp

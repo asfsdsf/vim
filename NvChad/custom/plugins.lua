@@ -102,7 +102,13 @@ local plugins = {
       }, { prefix = "<leader>" })
       require("which-key").register({
         ["<leader>;"] = { name = "comment" },
+        ["<leader>sk"] = { name = "Search key" },
       })
+      require("which-key").register({
+        h = { name = "help",
+          d = { name = "describe" },
+        }
+      }, { prefix = "<a-x>" })
     end,
   },
 
@@ -182,6 +188,14 @@ local plugins = {
     init = function()
       require("core.utils").load_mappings "browser_bookmarks"
     end,
+  },
+
+  {
+    "tom-anders/telescope-vim-bookmarks.nvim",
+    dependencies = {
+      "MattesGroeger/vim-bookmarks",
+      "nvim-telescope/telescope.nvim",
+    },
   },
 
 -- ***********************************************************************

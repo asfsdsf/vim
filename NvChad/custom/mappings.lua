@@ -15,14 +15,25 @@ M.telescope = {
   n = {
     ["<Space><Space>"] = { "<cmd> Telescope commands <CR>", "Find commands" },
     ["<Space>sc"] = { "<cmd> Telescope command_history <CR>", "Command history" },
+    ["<Space>sM"] = { "<cmd> Telescope vim_bookmarks all <CR>", "Search all bookmarks" },
+    ["<Space>sm"] = { "<cmd> Telescope vim_bookmarks current_file <CR>", "Search current file bookmarks" },
     ["<Space>s:"] = { "<cmd> Telescope command_history <CR>", "Command history" },
     ["<Space>ss"] = { "<cmd> Telescope search_history <CR>", "Search history" },
     ["<Space>s/"] = { "<cmd> Telescope search_history <CR>", "Search history" },
-    ["<Space>st"] = { "<cmd> Telescope commands <CR>", "Search theme" },
+    ["<Space>st"] = { "<cmd> Telescope themes <CR>", "Search theme" },
     ["<Space>sj"] = { "<cmd> Telescope jumplist <CR>", "Jump lists" },
+    ["<Space>skn"] = { "<cmd> Telescope jumplist <CR>", "Search normal mode key" },
     ["<Space>gh"] = {"<cmd>:Telescope git_commits<CR>", "Telescope commits about current file"},
     ["<Space>ee"] = {"<cmd>:Telescope diagnostics<CR>", "Show all diagnostics"},
   }
+}
+
+M.bookmarks = {
+  n = {
+    ["ma"] = { "<cmd> :Telescope vim_bookmarks all <CR>", "Search all bookmarks" },
+    ["ms"] = { ":exec 'BookmarkSave ' . GetProjectPath() . '/.vim_bookmarks'<CR>", "Save project bookmarks" },
+    ["ml"] = { ":lua require('telescope').load_extension('vim_bookmarks')<CR>:exec 'BookmarkLoad ' . GetProjectPath() . '/.vim_bookmarks'<CR>:Telescope vim_bookmarks all <CR>", "Load project bookmarks" },
+  },
 }
 
 -- ***********************************************************************
