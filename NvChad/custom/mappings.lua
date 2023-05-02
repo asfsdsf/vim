@@ -464,6 +464,7 @@ M.disabled = {
     ["<leader>tc"] = "",
     ["<leader>wl"] = "",
     ["<leader>wK"] = "",
+    ["<leader>ff"] = "",
     ["gcc"] = "",
     ["gbc"] = "",
   },

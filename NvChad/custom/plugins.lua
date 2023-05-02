@@ -1,5 +1,7 @@
 -- Default settings: ../plugins/init.lua
 
+-- See also: https://github.com/NvChad/nvchad.github.io/tree/src/src/routes/(index)/docs/config
+
 -- See also ./init.lua
 -- See also ./mappings.lua
 
