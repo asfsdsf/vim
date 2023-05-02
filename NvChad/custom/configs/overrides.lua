@@ -156,7 +156,7 @@ M.telescope = {
     -- Now the picker_config_key will be applied every time you call this
     -- builtin picker
   },
-  extensions_list = { "themes", "terms", "bookmarks", "dap", "vim_bookmarks"},
+  extensions_list = { "themes", "terms", "bookmarks", "dap", "vim_bookmarks", "repo"},
 }
 
 return M

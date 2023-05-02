@@ -23,6 +23,7 @@ M.telescope = {
     ["<Space>st"] = { "<cmd> Telescope themes <CR>", "Search theme" },
     ["<Space>sj"] = { "<cmd> Telescope jumplist <CR>", "Jump lists" },
     ["<Space>skn"] = { "<cmd> Telescope jumplist <CR>", "Search normal mode key" },
+    ["<Space>sp"] = { ":if executable('fdfind') | exec 'Telescope repo' | else | echo 'Command is not executable. apt install fd-find' | endif<CR>", "Search git projects" },
     ["<Space>gh"] = {"<cmd>:Telescope git_commits<CR>", "Telescope commits about current file"},
     ["<Space>ee"] = {"<cmd>:Telescope diagnostics<CR>", "Show all diagnostics"},
   }
@@ -31,8 +32,8 @@ M.telescope = {
 M.bookmarks = {
   n = {
     ["ma"] = { "<cmd> :Telescope vim_bookmarks all <CR>", "Search all bookmarks" },
-    ["ms"] = { ":exec 'BookmarkSave ' . GetProjectPath() . '/.vim_bookmarks'<CR>", "Save project bookmarks" },
-    ["ml"] = { ":lua require('telescope').load_extension('vim_bookmarks')<CR>:exec 'BookmarkLoad ' . GetProjectPath() . '/.vim_bookmarks'<CR>:Telescope vim_bookmarks all <CR>", "Load project bookmarks" },
+    ["ms"] = { ":!mkdir -p $HOME/.vim/vim_bookmarks<CR>:exec 'BookmarkSave ' . $HOME . '/.vim/vim_bookmarks/' . EscapePathToString(GetProjectPath()) . '.bm'<CR>", "Save project bookmarks" },
+    ["ml"] = { ":lua require('telescope').load_extension('vim_bookmarks')<CR>:exec 'BookmarkLoad ' . $HOME . '/.vim/vim_bookmarks/' . EscapePathToString(GetProjectPath()) . '.bm'<CR>", "Load project bookmarks" },
   },
 }
 
@@ -239,6 +240,7 @@ M.search = {
     ["<Space>ft"] = {"<cmd>:silent! !x-terminal-emulator &<CR>", "Open external terminal"},
     ["<Space>ff"] = {"<cmd>:call CloseMaximize()<CR><cmd>:call g:OpenFileByPath()<CR>", "Open file"},
     ["<Space>pf"] = {"<cmd>:call CloseMaximize()<CR><cmd>:GFiles!<CR>", "Open file in this project"},
+    ["<Space>pp"] = { ":if executable('fdfind') | exec 'Telescope repo' | else | echo 'Command is not executable. apt install fd-find' | endif<CR>", "Search git projects" },
     ["<Space>pF"] = {"<cmd>:call CloseMaximize()<CR><cmd>:Files!<CR>", "Open file in this directory"},
     ["''"] = {"<cmd>:Marks<CR>", "Show all marks"},
     ["<Space>hdk"] = {"<cmd>:Maps<CR>", "Show all keymaps"},
@@ -263,7 +265,7 @@ M.utils = {
     ["<Space>yy"] = {"<cmd>:let @+ = expand('%:p')<CR><cmd>:echo 'current file path copied'<CR>", "Copy file path"},
     ["<Space>fe"] = {"<cmd>:exec 'e ' . expand(@+)<CR>", "Edit file with path in clipboard"},
     ["<Space>ye"] = {"<cmd>:exec 'e ' . expand(@+)<CR>", "Edit file with path in clipboard"},
-    ["<Space>pp"] = {"<cmd>:exec 'e ' . expand(@+)<CR>", "Edit file with path in clipboard"},
+    ["<Space>pP"] = {"<cmd>:exec 'e ' . expand(@+)<CR>", "Edit file with path in clipboard"},
     -- ["<Space><Space>"] = {"<cmd>:Commands<CR>", ""},
     ["<Space><Space>"] = {":<c-f>", "Find commands"},
     ["<f5>"] = {"<cmd>:e<CR>", "Update file"},
@@ -461,6 +463,7 @@ M.disabled = {
     ["<leader>fo"] = "",
     ["<leader>tc"] = "",
     ["<leader>wl"] = "",
+    ["<leader>wK"] = "",
     ["gcc"] = "",
     ["gbc"] = "",
   },

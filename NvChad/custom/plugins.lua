@@ -95,7 +95,8 @@ local plugins = {
         q = { name = "quit" },
         r = { name = "refactor" },
         s = { name = "search" },
-        t = { name = "toggle" },
+        t = { name = "toggle/tab" },
+        T = { name = "toggle" },
         w = { name = "windows" },
         y = { name = "yank" },
         z = { name = "fold" },
@@ -194,6 +195,14 @@ local plugins = {
     "tom-anders/telescope-vim-bookmarks.nvim",
     dependencies = {
       "MattesGroeger/vim-bookmarks",
+      "nvim-telescope/telescope.nvim",
+    },
+  },
+
+  {
+    "cljoly/telescope-repo.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope.nvim",
     },
   },

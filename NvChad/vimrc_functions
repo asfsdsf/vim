@@ -637,6 +637,17 @@
         return expand('%:p:h')
     endfunction
 
+    function! EscapePathToString(path)
+
+        " Remove leading and trailing whitespaces
+        let l:trimmed_path = substitute(fnamemodify(a:path, ":p"), '^\s*\(.\{-}\)\s*\n$', '\1', '')
+
+        " Replace slashes with percent signs
+        let l:swp_string = substitute(l:trimmed_path, '[/\\]', '%', 'g')
+
+        return l:swp_string
+    endfunction
+
     function! ToggleMaximizeTmux()
         if !s:CheckWarnVimPlugInstalled()
             return
