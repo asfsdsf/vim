@@ -99,6 +99,7 @@ local plugins = {
         s = { name = "search" },
         t = { name = "toggle/tab" },
         T = { name = "toggle" },
+        v = { name = "vimux" },
         w = { name = "windows" },
         y = { name = "yank" },
         z = { name = "fold" },
@@ -148,7 +149,7 @@ local plugins = {
         return os.getenv("TMUX") ~= nil
     end,
   },
-  
+
   {
     "christoomey/vim-tmux-navigator",
     lazy = false,
@@ -159,7 +160,7 @@ local plugins = {
       require("core.utils").load_mappings "vim_tmux_navigator"
     end,
   },
-  
+
   {
     "mg979/vim-visual-multi",
     config = function()
@@ -252,6 +253,7 @@ local plugins = {
 -- ***********************************************************************
 --   4. completion plugins
 --     - copilot.vim                    -- github copilot
+--     - fcitx.vim                      -- fcitx support
 -- ***********************************************************************
 
   {
@@ -296,6 +298,12 @@ local plugins = {
     end,
   },
 
+-- (auto switch chinese input method) keep and restore fcitx state when leaving/re-entering insert mode 
+  {
+    "lilydjwg/fcitx.vim",
+    event = "InsertEnter",
+  },
+
 -- ***********************************************************************
 --   6. git support plugins
 --     - vim-gitgutter                  -- git gutter
@@ -324,6 +332,7 @@ local plugins = {
 --     - targets.vim                    -- text object
 --     - vim-visual-multi               -- multiple cursors
 --     - vim-surround                   -- surround text object
+--     - zen-mode.nvim                  -- zen mode
 -- ***********************************************************************
   {
     'goolord/alpha-nvim',
@@ -363,10 +372,21 @@ local plugins = {
     "mg979/vim-visual-multi",
     lazy = false,
   },
-  
+
   {
     "tpope/vim-surround",
     event = "InsertEnter",
+  },
+
+  {
+    "folke/zen-mode.nvim",
+    config = function()
+      require("zen-mode").setup {
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+      }
+    end
   },
 
 -- ***********************************************************************

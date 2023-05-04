@@ -77,7 +77,6 @@ M.general = {
 
 M.motions = {
   n = {
-    ["<c-y>"] = {"<c-r>+", ""},
     ["<space>tp"] = {"<cmd>:call g:TogglePaste()<cr>", "Toggle paste mode"},
     ["gm"] = {"%", "Go to match pair"},
     ["H"] = {"^", "Start of line"},
@@ -89,18 +88,19 @@ M.motions = {
     ["<leader>eN"] = {":lua vim.diagnostic.goto_prev()<CR>", "Previous Diagnostic"},
   },
   i = {
+    ["<c-y>"] = {"<c-r>+", "Paste"},
     ["<c-b>"] = {"<left>",""},
     ["<c-j>"] = {"<down>",""},
     ["<c-k>"] = {"<up>",""},
     ["<c-f>"] = {"<right>",""},
     ["<c-h>"] = {"<left>",""},
     ["<c-l>"] = {"<right>",""},
-    ["<A-b>"] = {"<c-left>",""},
-    ["<A-f>"] = {"<c-right>",""},
-    ["<A-h>"] = {"<c-left>",""},
-    ["<A-l>"] = {"<c-right>",""},
-    ["<A-j>"] = {"<c-o>o", ""},
-    ["<A-k>"] = {"<c-o>O", ""},
+    ["<a-b>"] = {"<c-left>",""},
+    ["<a-f>"] = {"<c-right>",""},
+    ["<a-h>"] = {"<c-left>",""},
+    ["<a-l>"] = {"<c-right>",""},
+    ["<a-j>"] = {"<c-o>o", ""},
+    ["<a-k>"] = {"<c-o>O", ""},
     ["<c-a>"] = {"<c-o>^", ""},
     ["<c-e>"] = {"<c-o>$", ""},
   },
@@ -109,7 +109,7 @@ M.motions = {
     ["<c-e>"] = {"<end>", ""},
   },
   v = {
-    ["gm"] = {"%", ""},
+    ["gm"] = {"%", "Go to match pair"},
     ["H"] = {"^", "Start of line"},
     ["L"] = {"$", "End of line"},
   }
@@ -126,8 +126,8 @@ M.tabs = {
 
 M.buffers = {
   n = {
-    ["<A-n>"] = {"<cmd>:bn<CR>", ""},
-    ["<A-p>"] = {"<cmd>:bp<CR>", ""},
+    ["<a-n>"] = {"<cmd>:bn<CR>", ""},
+    ["<a-p>"] = {"<cmd>:bp<CR>", ""},
     ["<Space>bn"] = {"<cmd>:bn<CR>", "Next buffer"},
     ["]b"] = {"<cmd>:bn<CR>", ""},
     ["<Space>bp"] = {"<cmd>:bp<CR>", "Previous buffer"},
@@ -136,7 +136,8 @@ M.buffers = {
     ["<Space>bd"] = {"<cmd>:call CloseBuffer()<CR>", "Close buffer"},
     ["<Space>bm"] = {"<cmd>:messages<CR>", "Message buffer"},
     ["<Space>bM"] = {"<cmd>:lua require('notify').dismiss({pending = true})<CR>", "Maximize buffer"},
-    ["<Space>bb"] = {"<cmd>:FzfBuffers!<CR>", "Show all buffers"},
+    -- ["<Space>bb"] = {"<cmd>:FzfBuffers!<CR>", "Show all buffers"},
+    ["<Space>bb"] = {"<cmd>lua require('telescope.builtin').buffers({ sort_lastused = true, ignore_current_buffer = true })<CR>", "Show all buffers"},
     ["<Space>bs"] = {"<cmd>:Scratch<CR>", "Scratch buffer"},
     ["<Space>bx"] = {"<cmd>:call CloseMaximize()<CR><cmd>:bp<cr><cmd>:silent! exec 'bd #'<CR><cmd>:close<CR>", "Close buffer and window"},
     ["<Space>b1"] = {"<cmd>:bfirst<CR>", ""},
@@ -153,10 +154,12 @@ M.buffers = {
 
 M.windows = {
   n = {
-    ["<A-J>"] = {"<C-W>j", ""},
-    ["<A-K>"] = {"<C-W>k", ""},
-    ["<A-L>"] = {"<C-W>l", ""},
-    ["<A-H>"] = {"<C-W>h", ""},
+    ["<A-j>"] = {"<C-W>j", ""},
+    ["<A-k>"] = {"<C-W>k", ""},
+    ["<A-l>"] = {"<C-W>l", ""},
+    ["<A-h>"] = {"<C-W>h", ""},
+    ["<A-z>"] = {":lua require('zen-mode').toggle({})<CR>", "Toggle zen mode"},
+    ["<Space>wM"] = {":lua require('zen-mode').toggle({})<CR>", "Toggle zen mode"},
     ["<Space>wh"] = {"<cmd>:call CloseMaximize()<CR><C-w>h", "Window go left"},
     ["<Space>wj"] = {"<cmd>:call CloseMaximize()<CR><C-w>j", "Window go down"},
     ["<Space>wk"] = {"<cmd>:call CloseMaximize()<CR><C-w>k", "Window go up"},
@@ -185,24 +188,24 @@ M.windows = {
     ["<Space>7"] = {" <cmd>:call CloseMaximize()<CR>7<C-w><C-w>", ""},
     ["<Space>8"] = {" <cmd>:call CloseMaximize()<CR>8<C-w><C-w>", ""},
     ["<Space>9"] = {" <cmd>:call CloseMaximize()<CR>9<C-w><C-w>", ""},
-    ["<a-1>"] = {" <cmd>:call VimspectorToggleHide(1,1)<CR>", ""},
-    ["<a-2>"] = {" <cmd>:call VimspectorToggleHide(2,1)<CR>", ""},
-    ["<a-3>"] = {" <cmd>:call VimspectorToggleHide(3,1)<CR>", ""},
-    ["<a-4>"] = {" <cmd>:call VimspectorToggleHide(4,1)<CR>", ""},
-    ["<a-5>"] = {" <cmd>:call VimspectorToggleHide(5,1)<CR>", ""},
-    ["<a-6>"] = {" <cmd>:call VimspectorToggleHide(6,1)<CR>", ""},
-    ["<a-7>"] = {" <cmd>:call VimspectorToggleHide(7,1)<CR>", ""},
-    ["<a-8>"] = {" <cmd>:call VimspectorToggleHide(8,1)<CR>", ""},
-    ["<a-9>"] = {" <cmd>:call VimspectorToggleHide(9,1)<CR>", ""},
-    ["<space><a-1>"] = {" <cmd>:call VimspectorToggleHide(1,2)<CR>", ""},
-    ["<space><a-2>"] = {" <cmd>:call VimspectorToggleHide(2,2)<CR>", ""},
-    ["<space><a-3>"] = {" <cmd>:call VimspectorToggleHide(3,2)<CR>", ""},
-    ["<space><a-4>"] = {" <cmd>:call VimspectorToggleHide(4,2)<CR>", ""},
-    ["<space><a-5>"] = {" <cmd>:call VimspectorToggleHide(5,2)<CR>", ""},
-    ["<space><a-6>"] = {" <cmd>:call VimspectorToggleHide(6,2)<CR>", ""},
-    ["<space><a-7>"] = {" <cmd>:call VimspectorToggleHide(7,2)<CR>", ""},
-    ["<space><a-8>"] = {" <cmd>:call VimspectorToggleHide(8,2)<CR>", ""},
-    ["<space><a-9>"] = {" <cmd>:call VimspectorToggleHide(9,2)<CR>", ""},
+    ["<A-1>"] = {" <cmd>:call VimspectorToggleHide(1,1)<CR>", ""},
+    ["<A-2>"] = {" <cmd>:call VimspectorToggleHide(2,1)<CR>", ""},
+    ["<A-3>"] = {" <cmd>:call VimspectorToggleHide(3,1)<CR>", ""},
+    ["<A-4>"] = {" <cmd>:call VimspectorToggleHide(4,1)<CR>", ""},
+    ["<A-5>"] = {" <cmd>:call VimspectorToggleHide(5,1)<CR>", ""},
+    ["<A-6>"] = {" <cmd>:call VimspectorToggleHide(6,1)<CR>", ""},
+    ["<A-7>"] = {" <cmd>:call VimspectorToggleHide(7,1)<CR>", ""},
+    ["<A-8>"] = {" <cmd>:call VimspectorToggleHide(8,1)<CR>", ""},
+    ["<A-9>"] = {" <cmd>:call VimspectorToggleHide(9,1)<CR>", ""},
+    ["<space><A-1>"] = {" <cmd>:call VimspectorToggleHide(1,2)<CR>", ""},
+    ["<space><A-2>"] = {" <cmd>:call VimspectorToggleHide(2,2)<CR>", ""},
+    ["<space><A-3>"] = {" <cmd>:call VimspectorToggleHide(3,2)<CR>", ""},
+    ["<space><A-4>"] = {" <cmd>:call VimspectorToggleHide(4,2)<CR>", ""},
+    ["<space><A-5>"] = {" <cmd>:call VimspectorToggleHide(5,2)<CR>", ""},
+    ["<space><A-6>"] = {" <cmd>:call VimspectorToggleHide(6,2)<CR>", ""},
+    ["<space><A-7>"] = {" <cmd>:call VimspectorToggleHide(7,2)<CR>", ""},
+    ["<space><A-8>"] = {" <cmd>:call VimspectorToggleHide(8,2)<CR>", ""},
+    ["<space><A-9>"] = {" <cmd>:call VimspectorToggleHide(9,2)<CR>", ""},
     ["<c-1>"] = {" <cmd>:call VimspectorToggleHide(1,2)<CR>", ""},
     ["<c-2>"] = {" <cmd>:call VimspectorToggleHide(2,2)<CR>", ""},
     ["<c-3>"] = {" <cmd>:call VimspectorToggleHide(3,2)<CR>", ""},
@@ -221,7 +224,6 @@ M.windows = {
 M.search = {
   n = {
     ["<Space>/"] = {" <cmd>:Ag!<CR>", ""},
-    ["<A-H>"] = {":%s//gc<left><left><left>", ""},
     ["<c-h>"] = {":%s//gc<left><left><left>", ""},
     ["<space>fs"] = {"<cmd>:w !sudo tee %<CR>", ""},
     ["<Space>fr"] = {"<cmd>:call CloseMaximize()<CR><cmd>:FzfMrf!<CR>", "Recent files"},
@@ -288,7 +290,7 @@ M.utils = {
     ["<Space>id"] = {"<cmd>:r !echo '***********************************************************************'<CR><cmd>:TComment<CR>5l", ""},
   },
   i = {
-    ["<A-z>"] = {"<c-o><cmd>:call ToggleZenMode(1)<CR>", ""},
+    ["<A-z>"] = {"<c-o><cmd>:lua require('zen-mode').toggle({})<CR>", ""},
   },
   v = {
     ["<Space>hc"] = {"\"vy <cmd>:call Translate()<CR>", "Translate visual region"},
@@ -387,24 +389,24 @@ M.dap = {
 M.vimux = {
   n = {
     ["<space>:"] = {"<cmd>:call VimuxPromptCommand()<CR><c-f>:exec 'set filetype=' . g:previous_buf_filetype<CR>i", ""},
-    ["<space>v:"] = {"<cmd>:call VimuxPromptCommand()<CR>", ""},
-    ["<space>vo"] = {"<cmd>:call VimuxOpenRunner()<CR>", ""},
-    ["<space>vl"] = {"<cmd>:call VimuxRunLastCommand()<CR>", ""},
-    ["<space>vc"] = {"<cmd>:call VimuxCloseRunner()<CR>", ""},
-    ["<space>vr"] = {"<cmd>:call VimuxRunCommand('!!\\n')<CR>", ""},
-    ["<a-enter>"] = {"<cmd>:call VimuxSlimeNormal()<CR>j", ""},
-    ["<a-v>"] = {"<cmd>:call VimuxSlimeNormal()<CR>j", ""},
-    ["<space>vs"] = {"<cmd>:call VimuxSlimeNormal()<CR>", ""},
-    ["<space>vp"] = {"<cmd>:call VimuxForRepl()<CR>", ""},
+    ["<space>v:"] = {"<cmd>:call VimuxPromptCommand()<CR>", "Prompt tmux command"},
+    ["<space>vo"] = {"<cmd>:call VimuxOpenRunner()<CR>", "Tmux runner"},
+    ["<space>vl"] = {"<cmd>:call VimuxRunLastCommand()<CR>", "Tmux "},
+    ["<space>vc"] = {"<cmd>:call VimuxCloseRunner()<CR>", "Tmux close runner"},
+    ["<space>vr"] = {"<cmd>:call VimuxRunCommand('!!\\n')<CR>", "Tmux repeat previous command"},
+    ["<a-enter>"] = {":call VimuxSlimeNormal()<CR>j", "Tmux line to run"},
+    ["<a-v>"] = {"<cmd>:call VimuxSlimeNormal()<CR>j", "Tmux line to run"},
+    ["<space>vs"] = {"<cmd>:call VimuxSlimeNormal()<CR>", "Tmux line to run"},
+    ["<space>vp"] = {"<cmd>:call VimuxForRepl()<CR>", "Tmux repl"},
   },
   i = {
     ["<a-enter>"] = {"<c-o>$<c-o><cmd>:call VimuxSlimeNormal()<CR><enter>", ""},
     ["<a-v>"] = {"<c-o>$<c-o><cmd>:call VimuxSlimeNormal()<CR><enter>", ""},
   },
   v = {
-    ["<a-enter>"] = {"\"vy <cmd>:call VimuxSlimeVisual()<CR>", ""},
+    ["<A-enter>"] = {"\"vy :call VimuxSlimeVisual()<CR>", ""},
     ["<a-v>"] = {"\"vy <cmd>:call VimuxSlimeVisual()<CR>", ""},
-    ["<space>vs"] = {"\"vy <cmd>:call VimuxSlimeVisual()<CR>", ""},
+    ["<space>vs"] = {"\"vy :call VimuxSlimeVisual()<CR>", "Tmux block to run"},
   }
 }
 
@@ -416,7 +418,7 @@ M.browser_bookmarks = {
 
 M.tagbar = {
   n = {
-    ["<A-m>"] = {"<cmd>:TagbarToggle<CR>", ""},
+    ["<a-m>"] = {"<cmd>:TagbarToggle<CR>", ""},
     ["<Space><CR>"] = {"<cmd>:TagbarToggle<CR>", ""},
   }
 }
@@ -424,9 +426,9 @@ M.tagbar = {
 M.fugitive = {
   plugin = true,
   n = {
-    ["<Space>gs"] = {"<cmd>:Gstatus<CR>", "Git status"},
+    ["<Space>gs"] = {"<cmd>:Git status<CR>", "Git status"},
     ["<Space>gd"] = {"<cmd>:Gvdiffsplit<CR>", "Git diff"},
-    ["<Space>gc"] = {"<cmd>:Gcommit<CR>", "Git commit"},
+    ["<Space>gc"] = {"<cmd>:Git commit<CR>", "Git commit"},
     ["<Space>gfm"] = {"<cmd>:GMove", "Git move to"},
     ["<Space>gfr"] = {"<cmd>:GRemove<CR>", "Git remove(delete with buffer left)"},
     ["<Space>gfd"] = {"<cmd>:GDelete<CR>", "Git delete"},
@@ -453,6 +455,8 @@ M.null_ls = {
 -- ***********************************************************************
 --   9. disable Nvchad default mappings
 -- ***********************************************************************
+
+-- Note that key like <A-h> and <C-h> should be with capital letter.
 M.disabled = {
   n = {
     ["<A-h>"] = "",
@@ -467,6 +471,9 @@ M.disabled = {
     ["<leader>ff"] = "",
     ["gcc"] = "",
     ["gbc"] = "",
+    ["<C-h>"] = "",
+    ["<leader>v"] = "",
+    ["<leader>cm"] = "",
   },
   i = {
     ["<c-e>"] = "",

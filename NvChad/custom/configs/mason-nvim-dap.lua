@@ -8,7 +8,7 @@ M.ensure_installed = { "python", "delve" }
 -- *                         PYTHON DEBUGGING                            *
 -- ***********************************************************************
 
-python_opts = function(source_name)
+local python_opts = function(source_name)
     local dap = require "dap"
     dap.adapters.python = {
       type = "executable",
