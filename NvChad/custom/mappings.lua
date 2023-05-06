@@ -86,6 +86,12 @@ M.motions = {
     ["<leader>en"] = {":lua vim.diagnostic.goto_next()<CR>", "Next Diagnostic"},
     ["<leader>ep"] = {":lua vim.diagnostic.goto_prev()<CR>", "Previous Diagnostic"},
     ["<leader>eN"] = {":lua vim.diagnostic.goto_prev()<CR>", "Previous Diagnostic"},
+    ["<leader>es"] = {
+      function()
+        vim.diagnostic.open_float { border = "rounded" }
+      end,
+      "Show floating diagnostic",
+    },
   },
   i = {
     ["<c-y>"] = {"<c-r>+", "Paste"},
@@ -228,13 +234,13 @@ M.search = {
     ["<space>fs"] = {"<cmd>:w !sudo tee %<CR>", ""},
     ["<Space>fr"] = {"<cmd>:call CloseMaximize()<CR><cmd>:FzfMrf!<CR>", "Recent files"},
     ["<Space>fvv"] = {"<cmd>:OpenVimrcDotFile<CR>", "Open vim config"},
-    ["<Space>fvd"] = {":exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/custom/plugins.lua') <CR>", "Open settings file"},
-    ["<Space>fvD"] = {":exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/plugins/init.lua') <CR>", "Open default settings file"},
-    ["<Space>fvm"] = {":exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/custom/mappings.lua') <CR>", "Open mappings file"},
-    ["<Space>fvM"] = {":exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/core/mappings.lua') <CR>", "Open default mappings file"},
-    ["<Space>fvi"] = {":exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/custom/init.lua') <CR>", "Open init file"},
-    ["<Space>fvf"] = {":exec ('e ' . g:NvChadDir . '/vimrc_functions') <CR>", "Open functions file"},
-    ["<Space>fvc"] = {":exec ('e ' . g:NvChadDir . '/vimrc_for_lua') <CR>", "Open command file"},
+    ["<Space>fvd"] = {"<cmd>:exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/custom/plugins.lua') <CR>", "Open settings file"},
+    ["<Space>fvD"] = {"<cmd>:exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/plugins/init.lua') <CR>", "Open default settings file"},
+    ["<Space>fvm"] = {"<cmd>:exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/custom/mappings.lua') <CR>", "Open mappings file"},
+    ["<Space>fvM"] = {"<cmd>:exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/core/mappings.lua') <CR>", "Open default mappings file"},
+    ["<Space>fvi"] = {"<cmd>:exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/custom/init.lua') <CR>", "Open init file"},
+    ["<Space>fvf"] = {"<cmd>:exec ('e ' . g:NvChadDir . '/vimrc_functions') <CR>", "Open functions file"},
+    ["<Space>fvc"] = {"<cmd>:exec ('e ' . g:NvChadDir . '/vimrc_for_lua') <CR>", "Open command file"},
     ["<Space>fO"] = {"<cmd>:!cd %:p:h && xdg-open '<cfile>' & <CR>", ""},
     ["<Space>fd"] = {"<cmd>:!nautilus %:p:h &<CR>", "Open in external directory"},
     ["<Space>fo"] = {"<cmd>:!cd %:p:h && xdg-open %:p & <CR>", "Open with external app"},
@@ -276,6 +282,8 @@ M.utils = {
     ["<Space>qq"] = {"<cmd>:call CloseMaximize()<CR><cmd>:qa<CR>", "Quit"},
     ["<Space>cd"] = {"<cmd>:cd %:h<CR><cmd>:silent! Gcd<CR>", "Change working directory to current"},
     ["<Space>tw"] = {"<cmd>:ToggleWrap<CR>", "Toggle wrap"},
+    ["<Space>tf"] = {"<cmd>:lua require'treesitter-context'<CR>:TSContextToggle<CR>", "Toggle show environment(function)"},
+    ["<C-t>"] = {"<cmd>:lua require'treesitter-context'<CR>:TSContextToggle<CR>", "Toggle show environment(function)"},
     ["<space>aa"] = {"<cmd>:FindActions<CR>", "Show actions help"},
     ["<space>aA"] = {":FindActionsFor<space>", "Show actions for"},
     ["<space>AA"] = {":FindActionsFor<space>", "Show actions for"},
@@ -291,6 +299,7 @@ M.utils = {
   },
   i = {
     ["<A-z>"] = {"<c-o><cmd>:lua require('zen-mode').toggle({})<CR>", ""},
+    ["<C-t>"] = {"<cmd>lua require'treesitter-context'<CR><cmd>TSContextToggle<CR>", "Toggle show environment(function)"},
   },
   v = {
     ["<Space>hc"] = {"\"vy <cmd>:call Translate()<CR>", "Translate visual region"},
@@ -451,6 +460,71 @@ M.null_ls = {
   },
 }
 
+
+M.languages = {
+  n = {
+    ["gD"] = {
+      function()
+        vim.lsp.buf.declaration()
+      end,
+      "lsp declaration",
+    },
+    ["gd"] = {
+      function()
+        vim.lsp.buf.definition()
+      end,
+      "lsp definition",
+    },
+    ["K"] = {
+      function()
+        vim.lsp.buf.hover()
+      end,
+      "lsp hover",
+    },
+    ["gi"] = {
+      function()
+        vim.lsp.buf.implementation()
+      end,
+      "lsp implementation",
+    },
+    ["<leader>ct"] = {
+      function()
+        vim.lsp.buf.type_definition()
+      end,
+      "lsp definition type",
+    },
+    ["<leader>rn"] = {
+      function()
+        require("nvchad_ui.renamer").open()
+      end,
+      "lsp rename",
+    },
+    ["<leader>ca"] = {
+      function()
+        vim.lsp.buf.code_action()
+      end,
+      "lsp code_action",
+    },
+    ["gr"] = {
+      function()
+        -- vim.lsp.buf.references()
+        require("telescope.builtin").lsp_references()
+      end,
+      "lsp references",
+    },
+  },
+  i = {
+    ["<C-q>"] = {
+      "<cmd>silent!lua vim.lsp.buf.signature_help()<CR>",
+      -- Following function can not be silent
+      -- function()
+      --   vim.lsp.buf.signature_help()
+      -- end,
+      "lsp signature help",
+    },
+  }
+}
+
   
 -- ***********************************************************************
 --   9. disable Nvchad default mappings
@@ -474,6 +548,13 @@ M.disabled = {
     ["<C-h>"] = "",
     ["<leader>v"] = "",
     ["<leader>cm"] = "",
+    ["]c"] = "",
+    ["[c"] = "",
+    ["<leader>n"] = "",
+    ["<leader>rn"] = "",
+    ["<leader>ra"] = "",
+    ["<leader>ls"] = "",
+    ["<leader>D"] = "",
   },
   i = {
     ["<c-e>"] = "",

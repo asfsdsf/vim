@@ -943,6 +943,7 @@ endif
 
     " - latex mode jump to bibtex
     autocmd FileType tex nnoremap <buffer> <m-r> <cmd>:e $HOME/Software/latex/bibtex/bib/ref.bib<CR>
+    autocmd FileType tex inoremap <buffer> <m-r> <cmd>e $HOME/Software/latex/bibtex/bib/ref.bib<CR>
     autocmd BufRead,BufNewFile $HOME/Software/latex/bibtex/bib/ref.bib nnoremap <buffer> <m-r> <cmd>:b#<CR>
 
     " - auto load abbreviation at latex startup
