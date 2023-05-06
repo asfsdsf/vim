@@ -166,6 +166,7 @@ local buttons = {
   val = {
     { type = "text", val = "Quick links", opts = { hl = "SpecialComment", position = "center" } },
     { type = "padding", val = 1 },
+    dashboard.button("l", "鈴 Lazy", ":Lazy <CR>"),
     dashboard.button("f", "  Find file", ":Telescope find_files <CR>"),
     dashboard.button("e", "  New file", ":ene <BAR> startinsert <CR>"),
     dashboard.button("p", "  Find project", ":Telescope projects <CR>"),
@@ -173,7 +174,7 @@ local buttons = {
     dashboard.button("t", "  Find text", ":Telescope live_grep <CR>"),
     dashboard.button("m", "⌨  mappings configurations", ":exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/custom/mappings.lua') <CR>"),
     dashboard.button("s", "  Settings", ":exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/custom/plugins.lua') <CR>"),
-      dashboard.button("b", "  Bookmarks", ":Telescope marks<CR>" ),
+    dashboard.button("b", "  Bookmarks", ":Telescope marks<CR>" ),
     dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
   },
   position = "center",

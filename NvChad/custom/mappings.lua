@@ -101,14 +101,14 @@ M.motions = {
     ["<c-f>"] = {"<right>",""},
     ["<c-h>"] = {"<left>",""},
     ["<c-l>"] = {"<right>",""},
-    ["<a-b>"] = {"<c-left>",""},
-    ["<a-f>"] = {"<c-right>",""},
-    ["<a-h>"] = {"<c-left>",""},
-    ["<a-l>"] = {"<c-right>",""},
-    ["<a-j>"] = {"<c-o>o", ""},
-    ["<a-k>"] = {"<c-o>O", ""},
-    ["<c-a>"] = {"<c-o>^", ""},
-    ["<c-e>"] = {"<c-o>$", ""},
+    ["<a-b>"] = {"<c-left>","Word back"},
+    ["<a-f>"] = {"<c-right>","Word forward"},
+    ["<a-h>"] = {"<c-left>","Word back"},
+    ["<a-l>"] = {"<c-right>","Word forward"},
+    ["<a-j>"] = {"<c-o>o", "New line down"},
+    ["<a-k>"] = {"<c-o>O", "New line up"},
+    ["<c-a>"] = {"<c-o>^", "Move to end"},
+    ["<c-e>"] = {"<c-o>$", "Move to start"},
   },
   c = {
     ["<c-a>"] = {"<home>", ""},
@@ -132,8 +132,8 @@ M.tabs = {
 
 M.buffers = {
   n = {
-    ["<a-n>"] = {"<cmd>:bn<CR>", ""},
-    ["<a-p>"] = {"<cmd>:bp<CR>", ""},
+    ["<a-n>"] = {"<cmd>:bn<CR>", "Next buffer"},
+    ["<a-p>"] = {"<cmd>:bp<CR>", "Previous buffer"},
     ["<Space>bn"] = {"<cmd>:bn<CR>", "Next buffer"},
     ["]b"] = {"<cmd>:bn<CR>", ""},
     ["<Space>bp"] = {"<cmd>:bp<CR>", "Previous buffer"},
@@ -144,7 +144,7 @@ M.buffers = {
     ["<Space>bM"] = {"<cmd>:lua require('notify').dismiss({pending = true})<CR>", "Maximize buffer"},
     -- ["<Space>bb"] = {"<cmd>:FzfBuffers!<CR>", "Show all buffers"},
     ["<Space>bb"] = {"<cmd>lua require('telescope.builtin').buffers({ sort_lastused = true, ignore_current_buffer = true })<CR>", "Show all buffers"},
-    ["<Space>bs"] = {"<cmd>:Scratch<CR>", "Scratch buffer"},
+    ["<Space>bs"] = {"<cmd>:Lazy load scratch.vim<CR><cmd>:Scratch<CR>", "Scratch buffer"},
     ["<Space>bx"] = {"<cmd>:call CloseMaximize()<CR><cmd>:bp<cr><cmd>:silent! exec 'bd #'<CR><cmd>:close<CR>", "Close buffer and window"},
     ["<Space>b1"] = {"<cmd>:bfirst<CR>", ""},
     ["<Space>b2"] = {"<cmd>:call g:GotoNthBuffer('1')<CR>", ""},
@@ -164,8 +164,8 @@ M.windows = {
     ["<A-k>"] = {"<C-W>k", ""},
     ["<A-l>"] = {"<C-W>l", ""},
     ["<A-h>"] = {"<C-W>h", ""},
-    ["<A-z>"] = {":lua require('zen-mode').toggle({})<CR>", "Toggle zen mode"},
-    ["<Space>wM"] = {":lua require('zen-mode').toggle({})<CR>", "Toggle zen mode"},
+    ["<A-z>"] = {"<cmd>:call ToggleZenMode(1)<CR>", "Toggle zen mode(with tmux support)"},
+    ["<Space>wM"] = {"<cmd>:call ToggleZenMode(0)<CR>", "Toggle zen mode"},
     ["<Space>wh"] = {"<cmd>:call CloseMaximize()<CR><C-w>h", "Window go left"},
     ["<Space>wj"] = {"<cmd>:call CloseMaximize()<CR><C-w>j", "Window go down"},
     ["<Space>wk"] = {"<cmd>:call CloseMaximize()<CR><C-w>k", "Window go up"},
@@ -229,8 +229,11 @@ M.windows = {
 
 M.search = {
   n = {
-    ["<Space>/"] = {" <cmd>:Ag!<CR>", ""},
-    ["<c-h>"] = {":%s//gc<left><left><left>", ""},
+    ["<Space>/"] = {" <cmd>:Ag!<CR>", "Search in directory(Ag)"},
+    ["<leader>b/"] = {"<cmd>:Lines<CR>", "Search across buffer"},
+    -- ["<c-f>"] = {" <cmd>:w<CR><cmd>:AgCurrentFile!<CR>", ""},
+    ["<c-f>"] = {" <cmd>:BLines<CR>", "Search lines"},
+    ["<c-h>"] = {":%s//gc<left><left><left>", "Replace"},
     ["<space>fs"] = {"<cmd>:w !sudo tee %<CR>", ""},
     ["<Space>fr"] = {"<cmd>:call CloseMaximize()<CR><cmd>:FzfMrf!<CR>", "Recent files"},
     ["<Space>fvv"] = {"<cmd>:OpenVimrcDotFile<CR>", "Open vim config"},
@@ -258,11 +261,8 @@ M.search = {
     ["<a-x>hdk"] = {"<plug>(fzf-maps-i)", "Show keymaps"},
   },
   v = {
-    ["<Space>/"] = {"\"vy<cmd>:exec 'Ag!' . escape(@v,'/\\()*+?[]$^<bar>')<CR>", "Search in current directory"},
-
-    ["<Space>b/"] = {"<cmd>:Lines<CR>", "Search across buffer"},
-    -- ["<c-f>"] = {" <cmd>:w<CR><cmd>:AgCurrentFile!<CR>", ""},
-    ["<c-f>"] = {" <cmd>:BLines<CR>", "Search lines"},
+    ["*"] = {'"vy<cmd>:call SearchSelected()<CR>',"Search selected region"},
+    ["<Space>/"] = {"\"vy<cmd>:exec 'Ag!' . escape(@v,'/\\()*+?[]$^<bar>')<CR>", "Search selection in current directory"},
 
   },
 }
@@ -288,7 +288,7 @@ M.utils = {
     ["<space>aA"] = {":FindActionsFor<space>", "Show actions for"},
     ["<space>AA"] = {":FindActionsFor<space>", "Show actions for"},
     ["<space>ag"] = {"<cmd>:!gedit %<CR>", "Open in gedit"},
-    ["<space>au"] = {"<cmd>:UndotreeToggle<CR>", "Undo tree toggle"},
+    ["<space>au"] = {"<cmd>:Lazy load undotree<CR><cmd>:UndotreeToggle<CR>", "Undo tree toggle"},
     -- ["<space>as"] = {"<cmd>:terminal<CR>", ""},
     ["<space>as"] = {"<cmd>:vertical terminal ++curwin<CR>", ""},
     ["<space>hr"] = {"<cmd>:exec 'e ' . g:toBeTranslate_file<CR><c-w><c-o>:vs<CR><C-w>l:exec 'e ' . g:translation_dir . '/translated.txt'<CR><c-w>h", "Interactive translate"},
@@ -298,7 +298,7 @@ M.utils = {
     ["<Space>id"] = {"<cmd>:r !echo '***********************************************************************'<CR><cmd>:TComment<CR>5l", ""},
   },
   i = {
-    ["<A-z>"] = {"<c-o><cmd>:lua require('zen-mode').toggle({})<CR>", ""},
+    ["<A-z>"] = {"<cmd>call ToggleZenMode(1)<CR>", ""},
     ["<C-t>"] = {"<cmd>lua require'treesitter-context'<CR><cmd>TSContextToggle<CR>", "Toggle show environment(function)"},
   },
   v = {
@@ -427,8 +427,8 @@ M.browser_bookmarks = {
 
 M.tagbar = {
   n = {
-    ["<a-m>"] = {"<cmd>:TagbarToggle<CR>", ""},
-    ["<Space><CR>"] = {"<cmd>:TagbarToggle<CR>", ""},
+    ["<a-m>"] = {"<cmd>:TagbarToggle<CR>", "Toggle tagbar"},
+    ["<Space><CR>"] = {"<cmd>:TagbarToggle<CR>", "Toggle tagbar"},
   }
 }
 
@@ -555,6 +555,7 @@ M.disabled = {
     ["<leader>ra"] = "",
     ["<leader>ls"] = "",
     ["<leader>D"] = "",
+    ["<leader>b"] = "",
   },
   i = {
     ["<c-e>"] = "",

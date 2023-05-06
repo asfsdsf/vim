@@ -5,15 +5,15 @@ M.lazy_nvim = {
   ui = {
     icons = {
       cmd = "⌘",
-      config = "",
-      event = "",
-      init = ">",
+      config = "🛠",
+      event = "📅",
+      init = "",
       import = " ",
-      keys = " ",
-      plugin = " ",
-      runtime = " ",
+      keys = "🗝",
+      plugin = "🔌",
+      runtime = "💻",
       source = " ",
-      start = "☛",
+      start = "🚀",
       task = "✔ ",
       list = {
         "●",
@@ -43,7 +43,7 @@ M.treesitter = {
     "go",
     "python",
   },
-  ignore_install = { "latex" },
+  ignore_install = {},
   indent = {
     enable = true,
     -- disable = {
@@ -80,12 +80,12 @@ M.mason = {
     -- c/cpp stuff
     "clangd",
     "clang-format",
+    "cpptools",
 
     -- python stuff
     "pyright",
     "black",
     "debugpy",
-    "cpptools",
   },
 }
 

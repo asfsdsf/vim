@@ -676,12 +676,7 @@
             silent! call ToggleMaximize()
         endif
         if g:is_zen_mode
-            Goyo
-            set signcolumn=yes
-            if(has("nvim") && g:transparent_background)
-                highlight Normal guibg=none
-                highlight NonText guibg=none
-            endif
+            lua require('zen-mode').toggle({})
             if executable('tmux') && strlen($TMUX)
                 " silent! !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
                 silent! !tmux set status on
@@ -1120,12 +1115,7 @@ endpy
 
     function! ToggleZenMode(withTmux)
         if g:is_zen_mode  " Leave zen mode
-            Goyo
-            set signcolumn=yes
-            if(has("nvim") && g:transparent_background)
-                highlight Normal guibg=none
-                highlight NonText guibg=none
-            endif
+            lua require('zen-mode').toggle({})
             if executable('tmux') && strlen($TMUX) && a:withTmux==1
                 " silent! !tmux resize-pane -Z
                 silent! !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
@@ -1133,15 +1123,14 @@ endpy
             endif
             let g:is_zen_mode=0
         else  " Enter zen mode
-            set signcolumn=no
             if executable('tmux') && strlen($TMUX) && a:withTmux==1
                 silent! !tmux set status off
                 " silent! !tmux resize-pane -Z 
                 silent! !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
             endif
             redraw
-            sleep 200m
-            exec 'Goyo 120-100%x100%-100%'
+            sleep 10m
+            lua require('zen-mode').toggle({})
             let g:is_zen_mode=1
         endif
     endfunction

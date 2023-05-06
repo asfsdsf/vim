@@ -126,7 +126,11 @@ local plugins = {
 --     - vim-tmux-navigator             -- vim tmux integration
 --     - vim-visual-multi               -- multiple cursors
 --     - guess-indent.nvim              -- guess indent
---     - tomtom/tcomment_vim
+--     - tomtom/tcomment_vim            -- comment utility
+--     - browser-bookmarks.nvim         -- browser bookmarks(telescope extension)
+--     - telescope-vim-bookmarks.nvim   -- bookmarks with telescope support
+--     - telescope-repo.nvim            -- telescope extension for repo (SPC p p)
+--     - scratch.vim                   -- scratch buffer
 -- ***********************************************************************
 
   {
@@ -210,6 +214,10 @@ local plugins = {
     },
   },
 
+  {
+    "vim-scripts/scratch.vim",
+  },
+
 -- ***********************************************************************
 --   3. Search plugins
 --     - undotree                       -- undo tree
@@ -220,7 +228,6 @@ local plugins = {
 
   {
     "mbbill/undotree",
-    lazy = false,
   },
 
   {
