@@ -118,7 +118,7 @@ M.motions = {
     ["<c-e>"] = {"<end>", ""},
     ["<c-h>"] = {"<left>","Move left"},
     ["<c-l>"] = {"<right>","Move right"},
-    ["<c-f>"] = {"<right>","Move right"},
+    -- ["<c-f>"] = {"<right>","Move right"},
     ["<c-b>"] = {"<left>","Move left"},
     ["<a-b>"] = {"<c-left>","Word back"},
     ["<a-f>"] = {"<c-right>","Word forward"},
@@ -278,8 +278,11 @@ M.search = {
     ["<Space>/"] = {"\"vy<cmd>:exec 'Ag!' . escape(@v,'/\\()*+?[]$^<bar>')<CR>", "Search selection in current directory"},
   },
   x = {
-    ["<c-h>"] = {":s//gc<left><left><left>","Replace in the region"}
+    ["<c-h>"] = {":s//gc<left><left><left>","Replace in the region"},
   },
+  c = {
+    ["<c-f>"] = {"<cmd>call SearchHistoryHandler()<CR>","Search command/search history"},
+  }
 }
 
 M.utils = {
@@ -574,9 +577,11 @@ M.disabled = {
     ["<leader>ls"] = "",
     ["<leader>D"] = "",
     ["<leader>b"] = "",
+    ["<leader>q"] = "",
   },
   i = {
-    ["<c-e>"] = "",
+    ["<C-e>"] = "",
+    ["<C-b>"] = "",
   },
   v = {
     ["<leader>/"] = "",

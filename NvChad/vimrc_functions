@@ -1194,3 +1194,14 @@ endpy
       let @+ = a:cmd
       return ""
     endfunction
+    
+    function!SearchHistoryHandler()
+        " Use this function with cnoremap
+        " Search command history in command line mode
+        " Search search history in search mode
+        if getcmdtype() == '/'
+            exec 'Telescope search_history'
+        else
+            exec 'Telescope command_history'
+        endif
+    endfunction
