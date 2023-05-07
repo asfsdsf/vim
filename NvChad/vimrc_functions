@@ -1189,3 +1189,8 @@ endpy
         echo "Left then right click or press o in breakpoints or frame to jump. For more keymaps, type <space>hdk then dap to see."
     endfunction
 
+    cnoremap <C-x> <C-\>eSetClipboard(getcmdline())<CR>
+    function! SetClipboard(cmd) abort
+      let @+ = a:cmd
+      return ""
+    endfunction

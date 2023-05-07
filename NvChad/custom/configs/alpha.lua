@@ -1,5 +1,19 @@
 -- https://fsymbols.com/text-art/
-function hsbToRGB(h, s, b)
+local dump
+dump = function (o)
+   if type(o) == 'table' then
+      local s = '{\n'
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. ','
+      end
+      return s .. '},\n'
+   else
+      return tostring(o)
+   end
+end
+
+local function hsbToRGB(h, s, b)
     local r, g, bl
     local i = math.floor(h * 6)
     local f = h * 6 - i
@@ -32,12 +46,12 @@ end
 
 
 local startH, startS, startB, jumpH, jumpS, jumpB
-startH = 0.4
-jumpH = 0.2/20
+startH = 0.2
+jumpH = -0.2/20
 startS = 0.5
 jumpS = 0.5/20
-startB = 0.5
-jumpB = 0.5/20
+startB = 0.7
+jumpB = 0.3/20
 for i = 1, 20 do
   local colori
   colori = hsbToRGB(startH, startS, startB)
@@ -77,6 +91,19 @@ local coolLines = {
   [[╋┃┃╋┃┏┓┃┗┛┃┣━━┃┣━━┃┃]],
   [[┏┫┣┓┃┏┓┃┃┃┃┃┃━━┫┃━━┫]],
   [[┗━━┛┗┛┗┻┻┻┛┗━━━┻━━━┛]],
+}
+
+local bearLines = {
+  [[   ▄▀▀▀▄▄▄▄▄▄▄▀▀▀▄    ]],
+  [[   █▒▒░░░░░░░░░▒▒█    ]],
+  [[    █░░█░░░░░█░░█     ]],
+  [[ ▄▄  █░░░▀█▀░░░█  ▄▄  ]],
+  [[█░░█ ▀▄░░░░░░░▄▀ █░░█ ]],
+  [[█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█]],
+  [[█░░╦─╦╔╗╦─╔╗╔╗╔╦╗╔╗░░█]],
+  [[█░░║║║╠─║─║─║║║║║╠─░░█]],
+  [[█░░╚╩╝╚╝╚╝╚╝╚╝╩─╩╚╝░░█]],
+  [[█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█]],
 }
 
 local function lineToStartGradient(lines)
@@ -120,8 +147,9 @@ end
 local cool = lineToStartGradient(coolLines)
 local neovimIcon = lineToStartGradient(neovimIconLines)
 local iamzz = lineToStartGradient(iamzzLines)
+local bear = lineToStartGradient(bearLines)
 
-local headers = {cool, neovimIcon, iamzz}
+local headers = {cool, neovimIcon, iamzz, bear}
 
 local function header_chars()
   math.randomseed(os.time())
@@ -147,6 +175,7 @@ local function header_color()
     }
     table.insert(lines, line)
   end
+  -- print(dump(lines))
 
   local output = {
     type = "group",
@@ -217,25 +246,12 @@ local section_mru = {
     },
 }
 config.layout[2] = config.layout[1]
+print("ewiofjwoeifjeiw")
 config.layout[1] = header_color()
 config.layout[3] = section_mru_cwd
 config.layout[4] = section_mru
 config.layout[6] = buttons
 
-local dump
-dump = function (o)
-   if type(o) == 'table' then
-      local s = '{\n'
-      for k,v in pairs(o) do
-         if type(k) ~= 'number' then k = '"'..k..'"' end
-         s = s .. '['..k..'] = ' .. dump(v) .. ','
-      end
-      return s .. '},\n'
-   else
-      return tostring(o)
-   end
-end
-
--- print(dump(config.layout[2]))
+-- print(dump(config.layout[1]))
 
 return config

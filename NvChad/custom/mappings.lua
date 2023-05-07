@@ -95,12 +95,13 @@ M.motions = {
   },
   i = {
     ["<c-y>"] = {"<c-r>+", "Paste"},
-    ["<c-b>"] = {"<left>",""},
-    ["<c-j>"] = {"<down>",""},
-    ["<c-k>"] = {"<up>",""},
-    ["<c-f>"] = {"<right>",""},
-    ["<c-h>"] = {"<left>",""},
-    ["<c-l>"] = {"<right>",""},
+    ["<c-x>"] = {"<c-o>:normal! 0v$hd<CR>"},
+    ["<c-b>"] = {"<left>","Move left"},
+    ["<c-j>"] = {"<down>","Move down"},
+    ["<c-k>"] = {"<up>","Move up"},
+    ["<c-f>"] = {"<right>","Move right"},
+    ["<c-h>"] = {"<left>","Move left"},
+    ["<c-l>"] = {"<right>","Move right"},
     ["<a-b>"] = {"<c-left>","Word back"},
     ["<a-f>"] = {"<c-right>","Word forward"},
     ["<a-h>"] = {"<c-left>","Word back"},
@@ -111,8 +112,18 @@ M.motions = {
     ["<c-e>"] = {"<c-o>$", "Move to start"},
   },
   c = {
+    ["<c-y>"] = {"<c-r>+", "Paste"},
+    ["<c-x>"] = {"<C-\\>eSetClipboard(getcmdline())<CR>", "Cut"},
     ["<c-a>"] = {"<home>", ""},
     ["<c-e>"] = {"<end>", ""},
+    ["<c-h>"] = {"<left>","Move left"},
+    ["<c-l>"] = {"<right>","Move right"},
+    ["<c-f>"] = {"<right>","Move right"},
+    ["<c-b>"] = {"<left>","Move left"},
+    ["<a-b>"] = {"<c-left>","Word back"},
+    ["<a-f>"] = {"<c-right>","Word forward"},
+    ["<a-h>"] = {"<c-left>","Word back"},
+    ["<a-l>"] = {"<c-right>","Word forward"},
   },
   v = {
     ["gm"] = {"%", "Go to match pair"},
@@ -254,8 +265,10 @@ M.search = {
     ["<Space>pp"] = { ":if executable('fdfind') | exec 'Telescope repo' | else | echo 'Command is not executable. apt install fd-find' | endif<CR>", "Search git projects" },
     ["<Space>pF"] = {"<cmd>:call CloseMaximize()<CR><cmd>:Files!<CR>", "Open file in this directory"},
     ["''"] = {"<cmd>:Marks<CR>", "Show all marks"},
-    ["<Space>hdk"] = {"<cmd>:Maps<CR>", "Show all keymaps"},
-    ["<Space>hds"] = {"<cmd>:Snippets<CR>", "Show all snippets"},
+    ["<Space>hdk"] = {"<cmd>Maps<CR>", "Show all keymaps"},
+    ["<Space>hds"] = {"<cmd>Snippets<CR>", "Show all snippets"},
+    ["<Space>hdv"] = {"<cmd>Telescope vim_options<CR>", "Show all vim options"},
+    ["<Space>hdp"] = {"<cmd>Lazy show<CR>", "Show all plugins"},
   },
   i = {
     ["<a-x>hdk"] = {"<plug>(fzf-maps-i)", "Show keymaps"},
@@ -263,7 +276,9 @@ M.search = {
   v = {
     ["*"] = {'"vy<cmd>:call SearchSelected()<CR>',"Search selected region"},
     ["<Space>/"] = {"\"vy<cmd>:exec 'Ag!' . escape(@v,'/\\()*+?[]$^<bar>')<CR>", "Search selection in current directory"},
-
+  },
+  x = {
+    ["<c-h>"] = {":s//gc<left><left><left>","Replace in the region"}
   },
 }
 
@@ -534,6 +549,7 @@ M.languages = {
 M.disabled = {
   n = {
     ["<A-h>"] = "",
+    ["<A-v>"] = "",
     ["<leader>wk"] = "",
     ["<leader>/"] = "",
     ["<leader>c"] = "",
@@ -543,6 +559,8 @@ M.disabled = {
     ["<leader>wl"] = "",
     ["<leader>wK"] = "",
     ["<leader>ff"] = "",
+    ["<leader>f"] = "",
+    ["<leader>h"] = "",
     ["gcc"] = "",
     ["gbc"] = "",
     ["<C-h>"] = "",

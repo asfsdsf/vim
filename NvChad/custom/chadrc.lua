@@ -16,11 +16,11 @@ M.ui = {
   statusline = {
     -- theme = "vscode_colored", -- default/vscode/vscode_colored/minimal
     overriden_modules = function()
-      local statusline0 = require "nvchad_ui.statusline.default"
+      -- local statusline0 = require "nvchad_ui.statusline.default"
       return {
         fileInfo = function()
           local icon = "  "
-          sep_r = " "
+          local sep_r = " "
           local filename = (vim.fn.expand "%" == "" and "Empty ") or vim.fn.expand "%:t"
 
           if filename ~= "Empty " then

@@ -72,6 +72,18 @@ local plugins = {
   {
     "nvim-telescope/telescope.nvim",
     opts = overrides.telescope,
+    config = function(_, opts)
+      dofile(vim.g.base46_cache .. "telescope")
+      local telescope = require "telescope"
+      telescope.setup(opts)
+
+      -- load extensions
+      for _, ext in ipairs(opts.extensions_list) do
+        telescope.load_extension(ext)
+      end
+
+      require("custom.configs.telescope")
+    end, -- Override to setup telescope
   },
 
   {
