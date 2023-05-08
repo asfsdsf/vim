@@ -358,6 +358,7 @@ local plugins = {
 --     - vim-surround                   -- surround text object
 --     - zen-mode.nvim                  -- zen mode
 --     - treesitter-context            -- shwo function environment
+--     - image.nvim                    -- image preview
 -- ***********************************************************************
   {
     'goolord/alpha-nvim',
@@ -474,6 +475,35 @@ local plugins = {
     "nvim-treesitter/nvim-treesitter-textobjects",
     opts = treesitter_plug.textobjects_opts,
     config = treesitter_plug.textobjects_config,
+  },
+
+  {
+    'samodostal/image.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      {
+        'm00qek/baleia.nvim',
+        tag = 'v1.3.0',
+      },
+    },
+    opts = {
+      render = {
+        min_padding = 5,
+        show_label = true,
+        use_dither = true,
+        foreground_color = true,
+        background_color = true
+      },
+      events = {
+        update_on_nvim_resize = true,
+      },
+    },
+    init = function ()
+      if not vim.fn.executable('ascii-image-converter') then
+        vim.api.nvim_command('echo "Command is not executable. snap install ascii-image-converter"')
+      end
+    end,
+    lazy = false,
   },
 -- ***********************************************************************
 --   -1. disable Nvchad default plugins

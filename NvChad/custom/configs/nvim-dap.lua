@@ -1,9 +1,17 @@
+-- To ensure tools installed:
+-- See mason config in: 
+-- ./overrides.lua
+-- To config lsp, see also:
+-- ./lspconfig.lua
 local present, dap = pcall(require, "dap")
 
 if not present then
   return
 end
-
+local prompt_args = function()
+  local argument_string = vim.fn.input('Program arguments: ')
+  return vim.fn.split(argument_string, " ", true)
+end
 -- adapter
 -- dap.adapters.python = {
 --   type = 'executable';
@@ -29,6 +37,7 @@ dap.configurations.python = {
     request = 'launch';
     name = "Launch file";
     program = "${file}"; -- This configuration will launch the current file if used.
+    args = prompt_args,
     pythonPath = function()
       -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
       -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
@@ -38,6 +47,80 @@ dap.configurations.python = {
     end;
   },
 }
+
+-- ***********************************************************************
+-- *                         GO DEBUGGING                                *
+-- ***********************************************************************
+-- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#go-using-delve-directly
+dap.adapters.delve = {
+  type = 'server',
+  port = '${port}',
+  executable = {
+    command = 'dlv',
+    args = {'dap', '-l', '127.0.0.1:${port}'},
+  }
+}
+
+-- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
+dap.configurations.go = {
+  {
+    type = "delve",
+    name = "Debug",
+    request = "launch",
+    program = "${file}",
+    args = prompt_args,
+  },
+  {
+    type = "delve",
+    name = "Debug test", -- configuration for debugging test files
+    request = "launch",
+    mode = "test",
+    program = "${file}",
+  },
+  -- works with go.mod packages and sub packages 
+  {
+    type = "delve",
+    name = "Debug test (go.mod)",
+    request = "launch",
+    mode = "test",
+    program = "./${relativeFileDirname}",
+  },
+}
+
+-- ***********************************************************************
+-- *                         BASH DEBUGGING                              *
+-- ***********************************************************************
+
+-- local dap_utils = dap.utils
+-- local BASH_DEBUG_ADAPTER_BIN = dap_utils.MASON_BIN_PATH .. "/bash-debug-adapter"
+-- local BASHDB_DIR = dap_utils.MASON_PACKAGE_PATH .. "/bash-debug-adapter/extension/bashdb_dir"
+local MASON_PATH = vim.fn.stdpath('data') .. "/mason"
+local BASH_DEBUG_ADAPTER_BIN = MASON_PATH .. "/bin/bash-debug-adapter"
+local BASHDB_DIR = MASON_PATH .. "/packages/bash-debug-adapter/extension/bashdb_dir"
+dap.adapters.sh = {
+  type = "executable",
+  command = BASH_DEBUG_ADAPTER_BIN,
+}
+dap.configurations.sh = {
+  {
+    name = "Launch Bash debugger",
+    type = "sh",
+    request = "launch",
+    program = "${file}",
+    cwd = "${fileDirname}",
+    pathBashdb = BASHDB_DIR .. "/bashdb",
+    pathBashdbLib = BASHDB_DIR,
+    pathBash = "bash",
+    pathCat = "cat",
+    pathMkfifo = "mkfifo",
+    pathPkill = "pkill",
+    env = {},
+    args = prompt_args,
+    -- showDebugOutput = true,
+    -- trace = true,
+  }
+}
+
 
 -- ***********************************************************************
 -- *                         GENERAL DEBUGGING                           *

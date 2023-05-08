@@ -233,7 +233,6 @@ local function header_color()
     }
     table.insert(lines, line)
   end
-  -- print(dump(lines))
 
   local output = {
     type = "group",
@@ -255,7 +254,7 @@ local buttons = {
     { type = "padding", val = 1 },
     dashboard.button("l", "鈴 Lazy", ":Lazy <CR>"),
     dashboard.button("f", "  Find file", ":Telescope find_files <CR>"),
-    dashboard.button("e", "  New file", ":ene <BAR> startinsert <CR>"),
+    dashboard.button("e", "  New file", "<cmd>:Lazy load scratch.vim<CR><cmd>:Scratch<CR>startinsert <CR>"),
     dashboard.button("p", "  Find project", ":Telescope projects <CR>"),
     dashboard.button("r", "  Recently used files", ":Telescope oldfiles <CR>"),
     dashboard.button("t", "  Find text", ":Telescope live_grep <CR>"),
@@ -304,7 +303,6 @@ local section_mru = {
     },
 }
 config.layout[2] = config.layout[1]
-print("ewiofjwoeifjeiw")
 config.layout[1] = header_color()
 config.layout[3] = section_mru_cwd
 config.layout[4] = section_mru
