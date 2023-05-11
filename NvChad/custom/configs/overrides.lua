@@ -173,10 +173,12 @@ M.mason = {
     -- ***********************************************************************
     -- bash stuff
     -- ***********************************************************************
-    -- completion, linter
+    -- completion, linter (Will use shell check if system shellcheck available)
     "bash-language-server",
     -- debugger
     "bash-debug-adapter",
+    -- linter (If system shellcheck not available, use this instead manually)
+    "shellcheck",
   },
 }
 
