@@ -73,11 +73,52 @@ M.treesitter = {
   },
 }
 
+
+---@param lsp_name string
+local function resolve_package(lsp_name)
+  local Optional = require('mason-core.optional')
+  local registry = require('mason-registry')
+	return Optional.of_nilable(lsp_name):map(function(package_name)
+		local ok, pkg = pcall(registry.get_package, package_name)
+		if ok then
+			return pkg
+		end
+	end)
+end
+
+-- This function is from path/to/NvChad/lazy/mason-nvim-dap.nvim/lua/mason-nvim-dap/ensure_installed.lua
+local function ensure_installation(ensure_installed)
+	local Package = require('mason-core.package')
+	for _, source_identifier in ipairs(ensure_installed) do
+		local source_name, version = Package.Parse(source_identifier)
+		resolve_package(source_name):if_present(
+			-- -@param pkg Package
+			function(pkg)
+				if not pkg:is_installed() then
+					vim.notify(('[mason.nvim] installing %s'):format(pkg.name))
+					pkg:install({
+						version = version,
+					}):once(
+						'closed',
+						vim.schedule_wrap(function()
+							if pkg:is_installed() then
+								vim.notify(('[mason.nvim] %s was installed'):format(pkg.name))
+							end
+						end)
+					)
+				end
+			end
+		)
+	end
+end
+
 -- To config lsp, see also:
 -- ./lspconfig.lua
 -- To config debugger, see also:
 -- ./nvim-dap.lua
 M.mason = {
+
+  ensure_installation = ensure_installation,
   ensure_installed = {
     -- ***********************************************************************
     -- lua stuff

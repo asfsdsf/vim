@@ -59,6 +59,20 @@ local plugins = {
   {
     "williamboman/mason.nvim",
     opts = overrides.mason,
+    config = function(_, opts)
+      dofile(vim.g.base46_cache .. "mason")
+      require("mason").setup(opts)
+
+      -- Add command `MasonInstallAll` to install all mason binaries listed
+      vim.api.nvim_create_user_command("MasonInstallAll", function()
+        vim.cmd("MasonInstall " .. table.concat(opts.ensure_installed, " "))
+      end, {})
+
+      vim.g.mason_binaries_list = opts.ensure_installed
+
+      -- Install all mason binaries listed
+      overrides.mason.ensure_installation(opts.ensure_installed)
+    end,
   },
 
   {
@@ -347,11 +361,15 @@ local plugins = {
     end,
   },
 
+  {
+    "kdheepak/lazygit.nvim",
+  },
 
 -- ***********************************************************************
 --   8. theme / interface plugins
 --     - alpha-nvim                     -- dashboard
 --     - neo-tree                       -- file explorer
+--     - symbols-outline.nvim           -- symbols outline
 --     - rainbow_parentheses.vim        -- rainbow parentheses
 --     - targets.vim                    -- text object
 --     - vim-visual-multi               -- multiple cursors
@@ -382,6 +400,13 @@ local plugins = {
       require("core.utils").load_mappings "neotree"
       require "custom.configs.neo-tree"
     end,
+  },
+
+  {
+    "simrat39/symbols-outline.nvim",
+    init = function()
+      require("symbols-outline").setup()
+    end
   },
 
   {

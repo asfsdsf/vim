@@ -11,6 +11,18 @@
 
 local M = {}
 
+-- Default options for opts:
+-- local opts = {
+--   mode = "n", -- NORMAL mode
+--   -- prefix: use "<leader>f" for example for mapping everything related to finding files
+--   -- the prefix is prepended to every mapping part of `mappings`
+--   prefix = "",
+--   buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
+--   silent = true, -- use `silent` when creating keymaps
+--   noremap = true, -- use `noremap` when creating keymaps
+--   nowait = false, -- use `nowait` when creating keymaps
+-- }
+
 M.telescope = {
   n = {
     ["<Space><Space>"] = { "<cmd> Telescope commands <CR>", "Find commands" },
@@ -95,7 +107,7 @@ M.motions = {
   },
   i = {
     ["<c-y>"] = {"<c-r>+", "Paste"},
-    ["<c-x>"] = {"<c-o>:normal! 0v$hd<CR>"},
+    ["<c-x>"] = {"<c-o>:normal! 0v$hd<CR>", "Cut current line"},
     ["<c-b>"] = {"<left>","Move left"},
     ["<c-j>"] = {"<down>","Move down"},
     ["<c-k>"] = {"<up>","Move up"},
@@ -113,7 +125,7 @@ M.motions = {
   },
   c = {
     ["<c-y>"] = {"<c-r>+", "Paste"},
-    ["<c-x>"] = {"<C-\\>eSetClipboard(getcmdline())<CR>", "Cut"},
+    ["<c-x>"] = {"<C-\\>eSetClipboard(getcmdline())<CR>", "Cut commands"},
     ["<c-a>"] = {"<home>", ""},
     ["<c-e>"] = {"<end>", ""},
     ["<c-h>"] = {"<left>","Move left"},
@@ -443,10 +455,10 @@ M.browser_bookmarks = {
   },
 }
 
-M.tagbar = {
+M.symbol_outline = {
   n = {
-    ["<a-m>"] = {"<cmd>:TagbarToggle<CR>", "Toggle tagbar"},
-    ["<Space><CR>"] = {"<cmd>:TagbarToggle<CR>", "Toggle tagbar"},
+    ["<a-m>"] = {"<cmd>lua require'symbols-outline'.toggle_outline()<CR>", "Toggle symbols outline"},
+    ["<Space><CR>"] = {"<cmd>lua require'symbols-outline'.toggle_outline()<CR>", "Toggle symbols outline"},
   }
 }
 
@@ -468,6 +480,12 @@ M.fugitive = {
     ["<Space>gb"] = {"<cmd>:Git blame<CR>", "Git blame"},
     ["]q"] = {"<cmd>:cprev<CR>", "Git previous history"},
     ["[q"] = {"<cmd>:cnext<CR>", "Git next history"},
+  },
+}
+
+M.lazygit = {
+  n = {
+    ["<Space>gg"] = {"<cmd>:lua require'lazygit'.lazygit()<CR>", "Lazygit"},
   },
 }
 
@@ -538,7 +556,16 @@ M.languages = {
       -- function()
       --   vim.lsp.buf.signature_help()
       -- end,
-      "lsp signature help",
+      -- "lsp signature help",
+      -- silent = true,
+    },
+  },
+  v = {
+    ["<leader>ca"] = {
+      function()
+        vim.lsp.buf.code_action()
+      end,
+      "lsp code_action",
     },
   }
 }
