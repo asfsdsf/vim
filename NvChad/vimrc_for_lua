@@ -496,6 +496,7 @@
     " - map ,er to execute vim line/selected region in normal/visual mode
     autocmd FileType vim vnoremap <buffer> ,er "vy <cmd>:@v<CR>
     autocmd FileType vim nnoremap <buffer> ,er <cmd>:exec getline(".")<CR>
+    autocmd FileType lua vnoremap <buffer> ,er "vy <cmd>:call ExecuteLuaVisual()<CR>
 
 " ***********************************************************************
 " 6.8_Command mode keymap
@@ -816,7 +817,7 @@
     endif
 
     " - map to go to matlab help/definition
-    autocmd FileType matlab nnoremap <buffer> K <cmd>:call MatlabHelp()<CR>
+    autocmd FileType matlab nnoremap <buffer> K <cmd>:lua MatlabHelp()<CR>
     autocmd FileType matlab nnoremap <buffer> gd <cmd>:call MatlabGoToDefinition()<CR>
 
     if executable('matlab')

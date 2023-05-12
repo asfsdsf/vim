@@ -548,6 +548,13 @@ M.languages = {
       end,
       "lsp references",
     },
+    ["gd"] = {
+      function()
+        -- vim.lsp.buf.definition()
+        require("telescope.builtin").lsp_definitions()
+      end,
+      "lsp definitions",
+    }
   },
   i = {
     ["<C-q>"] = {

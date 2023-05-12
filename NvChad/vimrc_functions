@@ -858,21 +858,21 @@ endpy
         endif
     endfunction
 
-    function! MatlabHelp()
-        let l:word_under_cursor = expand("<cword>")
-        if executable('matlab')
-            call Run_to_tmux_or_directly('help ' . l:word_under_cursor)
-        else
-        " --- Show octave help --------------------------------------------------
-            e /tmp/odd_for_vim_matlab.md
-            1,$d
-            " exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
-
-            exec "read !octave <(echo 'help " . l:word_under_cursor . "') 2&>/dev/null"
-            exec 'normal! gg'
-            write
-        endif
-    endfunction
+    " function! MatlabHelp()
+    "     let l:word_under_cursor = expand("<cword>")
+    "     if executable('matlab')
+    "         call Run_to_tmux_or_directly('help ' . l:word_under_cursor)
+    "     else
+    "     " --- Show octave help --------------------------------------------------
+    "         e /tmp/odd_for_vim_matlab.md
+    "         1,$d
+    "         " exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
+    "
+    "         exec "read !octave <(echo 'help " . l:word_under_cursor . "') 2&>/dev/null"
+    "         exec 'normal! gg'
+    "         write
+    "     endif
+    " endfunction
 
     function! MatlabGoToDefinition()
         let l:word_under_cursor = expand("<cword>")
@@ -1205,3 +1205,61 @@ endpy
             exec 'Telescope command_history'
         endif
     endfunction
+
+    function!ExecuteLuaVisual()
+        " delete empty line (mainly for python)
+        let g:lua_visual_delete_blank_line=substitute(@v,'\n\n\+','\n','g')
+        if(&filetype=='python')
+            " add empty line to jump out of block (for python, ipython does
+            " not need the following line)
+            let g:lua_visual_delete_blank_line=substitute(g:lua_visual_delete_blank_line,'\(\n\s[^\n]\+\n\)\(\S\)','\1\n\2','g')
+            " don't jump for else: and elif: (for python)
+            let g:lua_visual_delete_blank_line=substitute(g:lua_visual_delete_blank_line,'\n\nelse:','\nelse:','g')
+            let g:lua_visual_delete_blank_line=substitute(g:lua_visual_delete_blank_line,'\n\(\nelif\W\)','\1','g')
+        endif
+        lua local f =loadstring(vim.g.lua_visual_delete_blank_line);pcall(f)
+    endfunction
+
+
+lua <<EOF
+    function MatlabHelp()
+      local Popup = require("nui.popup")
+      local event = require("nui.utils.autocmd").event
+      local word_under_cursor = vim.fn.expand("<cword>")
+      if word_under_cursor == "" then
+        print("No word under cursor found")
+        return
+      end
+
+      local popup = Popup({
+        enter = true,
+        focusable = true,
+        border = {
+          style = "rounded",
+        },
+        position = "50%",
+        size = {
+          width = "80%",
+          height = "60%",
+        },
+      })
+
+      -- mount/open the component
+      popup:mount()
+
+      -- unmount component when cursor leaves buffer
+      popup:on(event.BufLeave, function()
+        popup:unmount()
+      end)
+
+      local cmd = "octave <(echo 'help " .. word_under_cursor .. "') 2&>/dev/null"
+      local output = vim.fn.system(cmd)
+      lines = {}
+      for line in string.gmatch(output, "[^\r\n]+") do
+        table.insert(lines, line)
+      end
+
+      vim.api.nvim_buf_set_lines(popup.bufnr, 0, 1, false, lines)
+      vim.api.nvim_buf_set_option(popup.bufnr, 'filetype', "vimdoc")
+    end
+EOF

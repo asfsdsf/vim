@@ -47,10 +47,12 @@ M.treesitter = {
     "make",
     "markdown",
     "markdown_inline",
+    "matlab",
     "python",
     "typescript",
     "tsx",
     "vim",
+    "vimdoc",
   },
   ignore_install = {},
   indent = {
