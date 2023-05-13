@@ -51,6 +51,7 @@ end
 telescope.setup {
   defaults = {
     layout_strategy = "vertical",
+    wrap_results = true,
     -- Default configuration for telescope goes here:
     -- config_key = value,
     layout_config = {
@@ -66,6 +67,8 @@ telescope.setup {
         ["<C-h>"] = "which_key",
         ['<C-y>'] = yank_preview_lines,
         ['<m-p>'] = require('telescope.actions.layout').toggle_preview,
+        ['<C-j>'] = "move_selection_next",
+        ['<C-k>'] = "move_selection_previous",
       },
     },
     preview = {
