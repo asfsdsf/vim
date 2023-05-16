@@ -21,8 +21,11 @@ M.override = {
   IndentBlanklineContextStart = {
     fg = "#15ff00",
   },
+  Visual = { bg = "#737373", },
+  VisualNOS = { bg = "#737373", },
   CursorLine = { bg = "#696969" },
   CursorColumn = { bg = "#696969" },
+  Cursor = {bg = "#FFFFFF"}
   -- CursorLineNr = { fg = "#000000", bg = "#FFFFFF" },
 }
 
