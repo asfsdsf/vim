@@ -30,6 +30,7 @@ local treesitter_plug = require "custom.configs.treesitter-plug"
 --     - nvim-treesitter
 --     - nvim-tree.lua
 --     - which-key.nvim
+--     - indent-blankline.nvim
 -- ***********************************************************************
 
 ---@type NvPluginSpec[]
@@ -139,6 +140,11 @@ local plugins = {
         }
       }, { prefix = "<a-x>" })
     end,
+  },
+
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    opts = overrides.indent_blankline,
   },
 
 

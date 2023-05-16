@@ -381,12 +381,11 @@ M.undotree = {
 }
 
 M.copilot = {
-  plugin = true,
   n = {
     ["<leader>cp"] = { ":Copilot panel<CR>", "Copilot candidates" },
   },
   i = {
-    ["<a-i>"] = { "<esc>:Copilot panel<CR>", "Copilot candidates" }
+    ["<A-i>"] = { "<esc>:Copilot panel<CR>", "Copilot candidates" }
   }
 }
 
@@ -617,6 +616,7 @@ M.disabled = {
   i = {
     ["<C-e>"] = "",
     ["<C-b>"] = "",
+    ["<A-i>"] = "",
   },
   v = {
     ["<leader>/"] = "",

@@ -21,6 +21,10 @@ M.override = {
   IndentBlanklineContextStart = {
     fg = "#15ff00",
   },
+  Comment = {
+    fg = "#a1a1a1",
+    italic = true,
+  },
   Visual = { bg = "#737373", },
   VisualNOS = { bg = "#737373", },
   CursorLine = { bg = "#696969" },
