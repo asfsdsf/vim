@@ -252,7 +252,8 @@ M.windows = {
 
 M.search = {
   n = {
-    ["<Space>/"] = {" <cmd>:Ag!<CR>", "Search in directory(Ag)"},
+    -- ["<Space>/"] = {" <cmd>:Ag!<CR>", "Search in directory(Ag)"},
+    ["<Space>/"] = {"<cmd>:Telescope live_grep<CR>", "Search in directory"},
     ["<leader>b/"] = {"<cmd>:Lines<CR>", "Search across buffer"},
     -- ["<c-f>"] = {" <cmd>:w<CR><cmd>:AgCurrentFile!<CR>", ""},
     ["<c-f>"] = {" <cmd>:BLines<CR>", "Search lines"},

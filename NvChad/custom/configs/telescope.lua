@@ -84,6 +84,12 @@ telescope.setup {
     -- Now the picker_config_key will be applied every time you call this
     -- builtin picker
   },
-  extensions_list = { "themes", "terms", "bookmarks", "dap", "vim_bookmarks", "repo"},
 }
+
+local extensions_list = { "themes", "terms", "bookmarks", "dap", "vim_bookmarks", "repo"}
+
+-- load extensions
+for _, ext in ipairs(extensions_list) do
+  telescope.load_extension(ext)
+end
 

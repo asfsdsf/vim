@@ -90,16 +90,10 @@ local plugins = {
 
   {
     "nvim-telescope/telescope.nvim",
-    opts = overrides.telescope,
     config = function(_, opts)
       dofile(vim.g.base46_cache .. "telescope")
       local telescope = require "telescope"
       telescope.setup(opts)
-
-      -- load extensions
-      for _, ext in ipairs(opts.extensions_list) do
-        telescope.load_extension(ext)
-      end
 
       require("custom.configs.telescope")
     end, -- Override to setup telescope
@@ -283,6 +277,10 @@ local plugins = {
         vim.g.copilot_no_tab_map = true
         vim.cmd [[
             imap <silent><script><expr> <C-r> copilot#Accept("\<CR>")
+              let g:copilot_filetypes = {
+                    \ 'TelescopePrompt': v:false,
+                    \ 'TelescopeResults': v:false,
+                    \ }
         ]]
     end,
     ft = "tex",
