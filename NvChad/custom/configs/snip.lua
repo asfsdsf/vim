@@ -17,15 +17,16 @@ end
 -- ***********************************************************************
 -- For quick jump
 -- ***********************************************************************
--- require("custom.configs.luasnip.all")
--- require("custom.configs.luasnip.cpp")
--- require("custom.configs.luasnip.go")
--- require("custom.configs.luasnip.latex")
--- require("custom.configs.luasnip.lua")
--- require("custom.configs.luasnip.markdown")
--- require("custom.configs.luasnip.matlab")
--- require("custom.configs.luasnip.python")
--- require("custom.configs.luasnip.vim")
+require("custom.configs.luasnip.all")
+require("custom.configs.luasnip.cpp")
+require("custom.configs.luasnip.go")
+require("custom.configs.luasnip.latex")
+require("custom.configs.luasnip.lua")
+require("custom.configs.luasnip.markdown")
+require("custom.configs.luasnip.matlab")
+require("custom.configs.luasnip.python")
+require("custom.configs.luasnip.sh")
+require("custom.configs.luasnip.vim")
 
 
 -- ***********************************************************************
@@ -40,6 +41,7 @@ local lua_types = {
   "markdown",
   "matlab",
   "python",
+  "sh",
   "vim",
 }
 for _, lua_type in ipairs(lua_types) do
