@@ -31,6 +31,7 @@ local treesitter_plug = require "custom.configs.treesitter-plug"
 --     - nvim-tree.lua
 --     - which-key.nvim
 --     - indent-blankline.nvim
+--     - LuaSnip
 -- ***********************************************************************
 
 ---@type NvPluginSpec[]
@@ -147,6 +148,59 @@ local plugins = {
     opts = overrides.indent_blankline,
   },
 
+  {
+    "L3MON4D3/LuaSnip",
+    opts = overrides.luasnip,
+    config = function(_, opts)
+      require("plugins.configs.others").luasnip(opts)
+      local luasnip_opt = require("custom.configs.snip")
+      require("luasnip").config.setup(luasnip_opt)
+    end,
+  },
+
+  {
+    -- "cmp"
+    "hrsh7th/nvim-cmp",
+    config = function(_, opts)
+      -- Disable some default mappings
+      opts["mapping"]["<C-f>"] = nil
+      opts["mapping"]["<C-Space>"] = nil
+      opts["mapping"]["<Tab>"] = nil
+      opts["mapping"]["<S-Tab>"] = nil
+
+      local cmp = require "cmp"
+
+      -- Disable lua jump for <tab> and <s-tab>
+      opts["mapping"]["<Tab>"] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.select_next_item()
+        elseif require("luasnip").expandable() then
+          vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand", true, true, true), "")
+        else
+          fallback()
+        end
+      end, {
+        "i",
+        "s",
+      })
+      opts["mapping"]["<S-Tab>"] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.select_prev_item()
+        else
+          fallback()
+        end
+      end, {
+        "i",
+        "s",
+      })
+
+      opts["mapping"]["<C-d>"] = cmp.mapping.scroll_docs(4)
+      opts["mapping"]["<C-u>"] = cmp.mapping.scroll_docs(-4)
+      opts["mapping"]["<C-v>"] = cmp.mapping.complete()
+      opts["mapping"]["<C-v>"] = cmp.mapping.complete()
+      require("cmp").setup(opts)
+    end,
+  },
 
 -- ***********************************************************************
 --   2. utility plugins

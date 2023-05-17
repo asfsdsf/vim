@@ -108,12 +108,37 @@ M.motions = {
   i = {
     ["<c-y>"] = {"<c-r>+", "Paste"},
     ["<c-x>"] = {"<c-o>:normal! 0v$hd<CR>", "Cut current line"},
-    ["<c-b>"] = {"<left>","Move left"},
-    ["<c-j>"] = {"<down>","Move down"},
+    -- ["<c-b>"] = {"<left>","Move left"},
+    ["<c-b>"] = {function()
+      local ls = require "luasnip"
+      if ls.jumpable(-1) then
+        ls.jump(-1)
+      else
+        vim.cmd('norm! h')
+      end
+    end, "Move left"},
+    -- ["<c-j>"] = {"<down>","Move down"},
+    ["<c-j>"] = {function()
+      local ls = require "luasnip"
+      if ls.choice_active() then
+        ls.change_choice(1)
+      else
+        vim.cmd('norm! j')
+      end
+    end ,"Move down"},
     ["<c-k>"] = {"<up>","Move up"},
-    ["<c-f>"] = {"<right>","Move right"},
     ["<c-h>"] = {"<left>","Move left"},
     ["<c-l>"] = {"<right>","Move right"},
+    -- ["<c-f>"] = {"<right>","Move right"},
+    ["<c-f>"] = {
+    function()
+      local ls = require "luasnip"
+      if ls.expand_or_jumpable() then
+        ls.expand_or_jump()
+      else
+        vim.cmd('norm! l')
+      end
+    end ,"Move right"},
     ["<a-b>"] = {"<c-left>","Word back"},
     ["<a-f>"] = {"<c-right>","Word forward"},
     ["<a-h>"] = {"<c-left>","Word back"},
@@ -141,7 +166,34 @@ M.motions = {
     ["gm"] = {"%", "Go to match pair"},
     ["H"] = {"^", "Start of line"},
     ["L"] = {"$", "End of line"},
-  }
+  },
+  s = {
+    ["<c-f>"] = {
+    function()
+      local ls = require "luasnip"
+      if ls.expand_or_jumpable() then
+        ls.expand_or_jump()
+      else
+        vim.cmd('norm! l')
+      end
+    end ,"Move right"},
+    ["<c-b>"] = {function()
+      local ls = require "luasnip"
+      if ls.jumpable(-1) then
+        ls.jump(-1)
+      else
+        vim.cmd('norm! h')
+      end
+    end, "Move left"},
+    ["<c-j>"] = {function()
+      local ls = require "luasnip"
+      if ls.choice_active() then
+        ls.change_choice(1)
+      else
+        vim.cmd('norm! j')
+      end
+    end ,"Move down"},
+  },
 }
 
 M.tabs = {
@@ -258,7 +310,7 @@ M.search = {
     -- ["<c-f>"] = {" <cmd>:w<CR><cmd>:AgCurrentFile!<CR>", ""},
     ["<c-f>"] = {" <cmd>:BLines<CR>", "Search lines"},
     ["<c-h>"] = {":%s//gc<left><left><left>", "Replace"},
-    ["<space>fs"] = {"<cmd>:w !sudo tee %<CR>", ""},
+    -- ["<space>fs"] = {"<cmd>:w !sudo tee %<CR>", ""},
     ["<Space>fr"] = {"<cmd>:call CloseMaximize()<CR><cmd>:FzfMrf!<CR>", "Recent files"},
     ["<Space>fvv"] = {"<cmd>:OpenVimrcDotFile<CR>", "Open vim config"},
     ["<Space>fvd"] = {"<cmd>:exec ('e ' . fnamemodify($MYVIMRC, ':h') . '/lua/custom/plugins.lua') <CR>", "Open settings file"},
@@ -284,7 +336,7 @@ M.search = {
     ["<Space>hdp"] = {"<cmd>Lazy show<CR>", "Show all plugins"},
   },
   i = {
-    ["<a-x>hdk"] = {"<plug>(fzf-maps-i)", "Show keymaps"},
+    ["<A-x>hdk"] = {"<plug>(fzf-maps-i)", "Show keymaps"},
   },
   v = {
     ["*"] = {'"vy<cmd>:call SearchSelected()<CR>',"Search selected region"},
@@ -575,6 +627,12 @@ M.languages = {
       "lsp code_action",
     },
   }
+}
+
+M.luasnip = {
+  n = {
+    ["<leader>fsR"] = {"<cmd>cd ~/Software/vim/NvChad/| source ~/Software/vim/NvChad/custom/configs/snip.lua<CR>", "Reload snippets"},
+  },
 }
 
   
