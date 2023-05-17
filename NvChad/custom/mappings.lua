@@ -111,7 +111,10 @@ M.motions = {
     -- ["<c-b>"] = {"<left>","Move left"},
     ["<c-b>"] = {function()
       local ls = require "luasnip"
-      if ls.jumpable(-1) then
+      local neogen = require "neogen"
+      if neogen.jumpable(true) then
+        neogen.jump_prev()
+      elseif ls.jumpable(-1) then
         ls.jump(-1)
       else
         vim.cmd('norm! h')
@@ -133,7 +136,10 @@ M.motions = {
     ["<c-f>"] = {
     function()
       local ls = require "luasnip"
-      if ls.expand_or_jumpable() then
+      local neogen = require "neogen"
+      if neogen.jumpable() then
+        neogen.jump_next()
+      elseif ls.expand_or_jumpable() then
         ls.expand_or_jump()
       else
         vim.cmd('norm! l')
@@ -632,7 +638,11 @@ M.languages = {
 M.luasnip = {
   n = {
     ["<leader>fsR"] = {"<cmd>cd ~/Software/vim/NvChad/| source ~/Software/vim/NvChad/custom/configs/snip.lua<CR>", "Reload snippets"},
+    ["<leader>sd"] = {"<cmd>lua require'neogen'.generate()<CR>", "Generate docstring/annotation"},
   },
+  i = {
+    ["<C-]>"] = {"<cmd>lua require'neogen'.generate()<CR>", "Generate docstring/annotation"},
+  }
 }
 
   

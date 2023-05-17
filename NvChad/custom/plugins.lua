@@ -216,6 +216,7 @@ local plugins = {
 --     - telescope-vim-bookmarks.nvim   -- bookmarks with telescope support
 --     - telescope-repo.nvim            -- telescope extension for repo (SPC p p)
 --     - scratch.vim                   -- scratch buffer
+--     - neogen                        -- create annotations
 -- ***********************************************************************
 
   {
@@ -303,6 +304,10 @@ local plugins = {
     "vim-scripts/scratch.vim",
   },
 
+  {
+    "danymat/neogen",
+    opts = require("custom.configs.neogen")
+  },
 -- ***********************************************************************
 --   3. Search plugins
 --     - undotree                       -- undo tree

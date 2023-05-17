@@ -1,3 +1,5 @@
+-- For specification of code style,
+-- see: https://google.github.io/styleguide/
 if not pcall(require, "luasnip") then
   return {}
 end
