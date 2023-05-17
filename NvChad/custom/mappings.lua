@@ -129,7 +129,15 @@ M.motions = {
         vim.cmd('norm! j')
       end
     end ,"Move down"},
-    ["<c-k>"] = {"<up>","Move up"},
+    -- ["<c-k>"] = {"<up>","Move up"},
+    ["<c-k>"] = {function()
+      local ls = require "luasnip"
+      if ls.choice_active() then
+        ls.change_choice(-1)
+      else
+        vim.cmd('norm! j')
+      end
+    end ,"Move down"},
     ["<c-h>"] = {"<left>","Move left"},
     ["<c-l>"] = {"<right>","Move right"},
     -- ["<c-f>"] = {"<right>","Move right"},
@@ -139,8 +147,8 @@ M.motions = {
       local neogen = require "neogen"
       if neogen.jumpable() then
         neogen.jump_next()
-      elseif ls.expand_or_jumpable() then
-        ls.expand_or_jump()
+      elseif ls.jumpable(1) then
+        ls.jump(1)
       else
         vim.cmd('norm! l')
       end
@@ -177,8 +185,8 @@ M.motions = {
     ["<c-f>"] = {
     function()
       local ls = require "luasnip"
-      if ls.expand_or_jumpable() then
-        ls.expand_or_jump()
+      if ls.jumpable(1) then
+        ls.jump(1)
       else
         vim.cmd('norm! l')
       end
