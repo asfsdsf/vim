@@ -27,7 +27,7 @@ M.override = {
   },
   Visual = { bg = "#737373", },
   VisualNOS = { bg = "#737373", },
-  CursorLine = { bg = "#696969" },
+  CursorLine = { fg = "#FFFFFF", bg = "#696969" },
   CursorColumn = { bg = "#696969" },
   Cursor = {bg = "#FFFFFF"}
   -- CursorLineNr = { fg = "#000000", bg = "#FFFFFF" },

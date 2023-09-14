@@ -135,7 +135,7 @@ M.motions = {
       if ls.choice_active() then
         ls.change_choice(-1)
       else
-        vim.cmd('norm! j')
+        vim.cmd('norm! k')
       end
     end ,"Move down"},
     ["<c-h>"] = {"<left>","Move left"},
@@ -400,12 +400,13 @@ M.utils = {
   },
   v = {
     ["<Space>hc"] = {"\"vy <cmd>:call Translate()<CR>", "Translate visual region"},
+    ["<Space>qq"] = {"<cmd>:call CloseMaximize()<CR><cmd>:qa<CR>", "Quit"},
   }
 }
 
 M.display = {
   n = {
-    ["<Space>Tn"] = {"<cmd>:call ToggleTheme()<CR>", "Toggle theme"},
+    ["<Space>Tn"] = {":lua require('base46').toggle_theme()<CR>", "Toggle theme"},
     ["<Space>Tl"] = {"<cmd>:call ToggleLineNumber()<CR>", "Toggle line number"},
     ["<Space>TL"] = {"<cmd>:windo call ToggleLineNumber()<CR>", "Toggle all window line number"},
     ["<Space>TT"] = {"<cmd>:call ToggleAllAuxiliaryDisplay()<CR>", "Toggle all auxiliary display"},
