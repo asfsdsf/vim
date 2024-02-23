@@ -25,11 +25,12 @@ M.override = {
     fg = "#a1a1a1",
     italic = true,
   },
-  Visual = { bg = "#737373", },
+  Visual = { bg = "#b3b3b3", },
   VisualNOS = { bg = "#737373", },
-  CursorLine = { fg = "#FFFFFF", bg = "#696969" },
-  CursorColumn = { bg = "#696969" },
-  Cursor = {bg = "#FFFFFF"}
+  -- CursorLine = { fg = "#f0f0f0", bg = "#f0f0f0" },
+  CursorLine = { bg = "#dbdbdb" },
+  -- CursorColumn = { bg = "#696969" },
+  -- Cursor = {bg = "#f0f0f0"}
   -- CursorLineNr = { fg = "#000000", bg = "#FFFFFF" },
 }
 
