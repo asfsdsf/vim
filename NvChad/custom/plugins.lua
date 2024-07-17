@@ -32,6 +32,8 @@ local treesitter_plug = require "custom.configs.treesitter-plug"
 --     - which-key.nvim
 --     - indent-blankline.nvim
 --     - LuaSnip
+--     - nvim-cmp
+--     - nvim-autopairs                 -- auto pair
 -- ***********************************************************************
 
 ---@type NvPluginSpec[]
@@ -202,6 +204,19 @@ local plugins = {
     end,
   },
 
+  {
+    "nvim-autopairs",
+    config = function(_, opts)
+      require("nvim-autopairs").setup(opts)
+      -- setup cmp for autopairs
+      local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+      require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
+
+      -- disable """ which conflicts snips in python
+      require("nvim-autopairs").remove_rule('"""')
+    end,
+  },
+
 -- ***********************************************************************
 --   2. utility plugins
 --     - better-escape.nvim             -- use jj or jk to escape insert mode
@@ -215,8 +230,8 @@ local plugins = {
 --     - browser-bookmarks.nvim         -- browser bookmarks(telescope extension)
 --     - telescope-vim-bookmarks.nvim   -- bookmarks with telescope support
 --     - telescope-repo.nvim            -- telescope extension for repo (SPC p p)
---     - scratch.vim                   -- scratch buffer
---     - neogen                        -- create annotations
+--     - scratch.vim                    -- scratch buffer
+--     - neogen                         -- create annotations
 -- ***********************************************************************
 
   {

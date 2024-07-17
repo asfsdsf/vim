@@ -1,6 +1,7 @@
 set encoding=utf8
 
 " Ideavim reference manual: http://ideavim.sourceforge.net/vim/index.html
+" To search command, in jetbrain IDE, type :actionlist <search-name>
 """""""""""""""""""""""""""""""""""""
 " display
 """""""""""""""""""""""""""""""""""""
@@ -228,6 +229,7 @@ nnoremap <Space>ta :action ExternalTools_External Tools<cr>
 " Debug keymap
 """""""""""""""""""""""""""""""""""""
 nnoremap gb :action ToggleLineBreakpoint<cr>
+nnoremap gB :action ToggleBreakpointEnabled<cr>
 nnoremap gc :action Resume<cr>
 nnoremap ge :action EvaluateExpression<cr>
 vnoremap gE :action QuickEvaluateExpression<cr>

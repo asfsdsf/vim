@@ -106,6 +106,7 @@ local function pycdoc(args, parent, ostate)
   return snip
 end
 
+local python_doc_first_called=true
 M = {
   s({ trig = "cls", dscr = "Documented Class Structure" }, {
     t("class "),
@@ -143,7 +144,13 @@ M = {
   }),
   s({trig = '"""', dscr = "Generate docstring/annotation"},{
     f(function()
-      require("neogen").generate()
+      require('neogen').setup{ snippet_engine = "luasnip" }
+      -- TODO: generated content can not use luasnip forward / back keyboard
+      if python_doc_first_called then
+        python_doc_first_called=false
+      else
+        require('neogen').generate()
+      end
       return ""
     end)
   })

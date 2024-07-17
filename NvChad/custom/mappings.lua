@@ -150,7 +150,7 @@ M.motions = {
       elseif ls.jumpable(1) then
         ls.jump(1)
       else
-        vim.cmd('norm! l')
+        vim.api.nvim_input("<c-l>")
       end
     end ,"Move right"},
     ["<a-b>"] = {"<c-left>","Word back"},
@@ -499,7 +499,7 @@ M.vimux = {
     ["<space>vo"] = {"<cmd>:call VimuxOpenRunner()<CR>", "Tmux runner"},
     ["<space>vl"] = {"<cmd>:call VimuxRunLastCommand()<CR>", "Tmux "},
     ["<space>vc"] = {"<cmd>:call VimuxCloseRunner()<CR>", "Tmux close runner"},
-    ["<space>vr"] = {"<cmd>:call VimuxRunCommand('!!\\n')<CR>", "Tmux repeat previous command"},
+    ["<space>vr"] = {'<cmd>:call VimuxRunCommand("!!\\n")<CR>', "Tmux repeat previous command"},
     ["<a-enter>"] = {":call VimuxSlimeNormal()<CR>j", "Tmux line to run"},
     ["<a-v>"] = {"<cmd>:call VimuxSlimeNormal()<CR>j", "Tmux line to run"},
     ["<space>vs"] = {"<cmd>:call VimuxSlimeNormal()<CR>", "Tmux line to run"},
