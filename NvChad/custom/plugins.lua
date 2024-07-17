@@ -302,7 +302,14 @@ local plugins = {
   {
     "tom-anders/telescope-vim-bookmarks.nvim",
     dependencies = {
-      "MattesGroeger/vim-bookmarks",
+      {
+        "MattesGroeger/vim-bookmarks",
+        init = function()
+          vim.cmd [[
+            let g:bookmark_no_default_key_mappings = 1
+          ]]
+        end
+      },
       "nvim-telescope/telescope.nvim",
     },
   },

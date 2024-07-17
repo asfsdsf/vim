@@ -34,18 +34,36 @@ M.telescope = {
     ["<Space>s/"] = { "<cmd> Telescope search_history <CR>", "Search history" },
     ["<Space>st"] = { "<cmd> Telescope themes <CR>", "Search theme" },
     ["<Space>sj"] = { "<cmd> Telescope jumplist <CR>", "Jump lists" },
-    ["<Space>skn"] = { "<cmd> Telescope jumplist <CR>", "Search normal mode key" },
+    ["<Space>sk"] = { "<cmd> Telescope keymaps <CR>", "Search normal mode key" },
+    ["<Space>k"] = { "<cmd> Telescope keymaps <CR>", "Search normal mode key" },
     ["<Space>sp"] = { ":if executable('fdfind') | exec 'Telescope repo' | else | echo 'Command is not executable. apt install fd-find' | endif<CR>", "Search git projects" },
     ["<Space>gh"] = {"<cmd>:Telescope git_commits<CR>", "Telescope commits about current file"},
     ["<Space>ee"] = {"<cmd>:Telescope diagnostics<CR>", "Show all diagnostics"},
+  },
+  i = {
+    ["<A-x>sk"]= { "<cmd> Telescope keymaps <CR>", "Search insert mode key" },
+    ["<A-x>k"]= { "<cmd> Telescope keymaps <CR>", "Search insert mode key" },
+    ["<C-g>sk"]= { "<cmd> Telescope keymaps <CR>", "Search insert mode key" },
+    ["<C-g>k"]= { "<cmd> Telescope keymaps <CR>", "Search insert mode key" },
+  },
+  v = {
+    ["<A-x>sk"]= { "<cmd> Telescope keymaps <CR>", "Search visual mode key" },
+    ["<A-x>k"]= { "<cmd> Telescope keymaps <CR>", "Search visual mode key" },
+    ["<C-g>sk"]= { "<cmd> Telescope keymaps <CR>", "Search visual mode key" },
+    ["<C-g>k"]= { "<cmd> Telescope keymaps <CR>", "Search visual mode key" },
+    ["<Space>k"] = { "<cmd> Telescope keymaps <CR>", "Search visual mode key" },
   }
 }
 
 M.bookmarks = {
   n = {
-    ["ma"] = { "<cmd> :Telescope vim_bookmarks all <CR>", "Search all bookmarks" },
+    ["m/"] = { "<cmd> :Telescope vim_bookmarks all <CR>", "Search all bookmarks" },
+    ["mm"] = { "<cmd>lua require('telescope').load_extension('vim_bookmarks')<CR> <cmd>BookmarkToggle <CR>", "Toggle bookmarks" },
+    ["mi"] = { "<cmd>lua require('telescope').load_extension('vim_bookmarks')<CR> <cmd>BookmarkAnnotate <CR>", "Add annotation bookmarks" },
     ["ms"] = { ":!mkdir -p $HOME/.vim/vim_bookmarks<CR>:exec 'BookmarkSave ' . $HOME . '/.vim/vim_bookmarks/' . EscapePathToString(GetProjectPath()) . '.bm'<CR>", "Save project bookmarks" },
     ["ml"] = { ":lua require('telescope').load_extension('vim_bookmarks')<CR>:exec 'BookmarkLoad ' . $HOME . '/.vim/vim_bookmarks/' . EscapePathToString(GetProjectPath()) . '.bm'<CR>", "Load project bookmarks" },
+    ["mc"] = { "<cmd>lua require('telescope').load_extension('vim_bookmarks')<CR> <cmd>BookmarkClear <CR>", "Clear bookmarks except comment bookmarks" },
+    ["mx"] = { "<cmd>lua require('telescope').load_extension('vim_bookmarks')<CR> <cmd>BookmarkClearAll <CR>", "Clear bookmarks including comment bookmarks" },
   },
 }
 
@@ -90,6 +108,7 @@ M.general = {
 M.motions = {
   n = {
     ["<space>tp"] = {"<cmd>:call g:TogglePaste()<cr>", "Toggle paste mode"},
+    ["<space>Tp"] = {"<cmd>:call g:TogglePaste()<cr>", "Toggle paste mode"},
     ["gm"] = {"%", "Go to match pair"},
     ["H"] = {"^", "Start of line"},
     ["L"] = {"$", "End of line"},
@@ -380,7 +399,7 @@ M.utils = {
     ["<Space>cd"] = {"<cmd>:cd %:h<CR><cmd>:silent! Gcd<CR>", "Change working directory to current"},
     ["<Space>tw"] = {"<cmd>:ToggleWrap<CR>", "Toggle wrap"},
     ["<Space>tf"] = {"<cmd>:lua require'treesitter-context'<CR>:TSContextToggle<CR>", "Toggle show environment(function)"},
-    ["<C-t>"] = {"<cmd>:lua require'treesitter-context'<CR>:TSContextToggle<CR>", "Toggle show environment(function)"},
+    ["<C-t>"] = {"<cmd>:lua require'treesitter-context'<CR>:TSContextToggle<CR>", "Toggle show environment(function context)"},
     ["<space>aa"] = {"<cmd>:FindActions<CR>", "Show actions help"},
     ["<space>aA"] = {":FindActionsFor<space>", "Show actions for"},
     ["<space>AA"] = {":FindActionsFor<space>", "Show actions for"},
