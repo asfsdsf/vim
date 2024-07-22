@@ -388,6 +388,12 @@ local plugins = {
         ]]
     end,
     event = "InsertEnter",
+    enabled = false,
+  },
+
+  {
+    'Exafunction/codeium.vim',
+    event = 'BufEnter'
   },
 
 
