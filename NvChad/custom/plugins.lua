@@ -363,11 +363,10 @@ local plugins = {
     init = function()
         vim.g.copilot_no_tab_map = true
         vim.cmd [[
-            imap <silent><script><expr> <C-r> copilot#Accept("\<CR>")
-              let g:copilot_filetypes = {
-                    \ 'TelescopePrompt': v:false,
-                    \ 'TelescopeResults': v:false,
-                    \ }
+            let g:copilot_filetypes = {
+                  \ 'TelescopePrompt': v:false,
+                  \ 'TelescopeResults': v:false,
+                  \ }
         ]]
     end,
     ft = "tex",
@@ -393,9 +392,27 @@ local plugins = {
 
   {
     'Exafunction/codeium.vim',
-    event = 'BufEnter'
+    event = 'BufEnter',
+    init = function()
+      vim.g.codeium_disable_bindings = 1
+        vim.cmd [[
+            imap <script><silent><script><expr> <C-r> codeium#Accept()
+            imap <script><silent><script><expr> <C-g> codeium#AcceptNextLine()
+            imap <C-x> <cmd>call codeium#Complete()<CR>
+            imap <C-n> <cmd>call codeium#CycleCompletions(1)<CR>
+            imap <C-p> <cmd>call codeium#CycleCompletions(-1)<CR>
+        ]]
+    end
   },
 
+  {
+    url="/home/zky/Software/vim/plugins/ChatGPT.nvim.doubao.git",
+    branch="zky",
+    config = function()
+      require 'chatgpt'.setup(require "custom.configs.chatgpt")
+    end,
+    event = 'BufEnter',
+  },
 
 -- ***********************************************************************
 --   5. languages plugins

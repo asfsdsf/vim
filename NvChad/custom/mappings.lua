@@ -126,7 +126,7 @@ M.motions = {
   },
   i = {
     ["<c-y>"] = {"<c-r>+", "Paste"},
-    ["<c-x>"] = {"<c-o>:normal! 0v$hd<CR>", "Cut current line"},
+    -- ["<c-x>"] = {"<c-o>:normal! 0v$hd<CR>", "Cut current line"},
     -- ["<c-b>"] = {"<left>","Move left"},
     ["<c-b>"] = {function()
       local ls = require "luasnip"
@@ -475,6 +475,41 @@ M.copilot = {
   }
 }
 
+M.chatgpt = {
+  n = {
+    ["cc"] = {"<cmd>ChatGPT<CR>", "ChatGPT chat"},
+    ["ce"] = {"<cmd>ChatGPTEditWithInstruction<CR>", "ChatGPT edit with instruction"},
+    ["cg"] = {"<cmd>ChatGPTRun grammar_correction<CR>", "ChatGPT grammar correction"},
+    ["ct"] = {"<cmd>ChatGPTRun translate<CR>", "ChatGPT translate"},
+    ["ck"] = {"<cmd>ChatGPTRun keywords<CR>", "ChatGPT keywords"},
+    ["cd"] = {"<cmd>ChatGPTRun docstring<CR>", "ChatGPT docstring"},
+    ["ca"] = {"<cmd>ChatGPTRun add_tests<CR>", "ChatGPT add tests"},
+    ["co"] = {"<cmd>ChatGPTRun optimize_code<CR>", "ChatGPT optimize code"},
+    ["cs"] = {"<cmd>ChatGPTRun summarize<CR>", "ChatGPT summarize"},
+    ["cf"] = {"<cmd>ChatGPTRun fix_bugs<CR>", "ChatGPT fix bugs"},
+    ["cx"] = {"<cmd>ChatGPTRun explain_code<CR>", "ChatGPT explain code"},
+    ["cr"] = {"<cmd>ChatGPTRun roxygen_edit<CR>", "ChatGPT roxygen edit"},
+    ["cl"] = {"<cmd>ChatGPTRun code_readability_analysis<CR>", "ChatGPT code readability analysis"},
+  },
+  i = {
+    ["<c-x>"] = {"<cmd>ChatGPTCompleteCode<CR>", "ChatGPT code completion"},
+  },
+  v = {
+    ["ce"] = {"<cmd>ChatGPTEditWithInstruction<CR>", "ChatGPT edit with instruction"},
+    ["cg"] = {"<cmd>ChatGPTRun grammar_correction<CR>", "ChatGPT grammar correction"},
+    ["ct"] = {"<cmd>ChatGPTRun translate<CR>", "ChatGPT translate"},
+    ["ck"] = {"<cmd>ChatGPTRun keywords<CR>", "ChatGPT keywords"},
+    ["cd"] = {"<cmd>ChatGPTRun docstring<CR>", "ChatGPT docstring"},
+    ["ca"] = {"<cmd>ChatGPTRun add_tests<CR>", "ChatGPT add tests"},
+    ["co"] = {"<cmd>ChatGPTRun optimize_code<CR>", "ChatGPT optimize code"},
+    ["cs"] = {"<cmd>ChatGPTRun summarize<CR>", "ChatGPT summarize"},
+    ["cf"] = {"<cmd>ChatGPTRun fix_bugs<CR>", "ChatGPT fix bugs"},
+    ["cx"] = {"<cmd>ChatGPTRun explain_code<CR>", "ChatGPT explain code"},
+    ["cr"] = {"<cmd>ChatGPTRun roxygen_edit<CR>", "ChatGPT roxygen edit"},
+    ["cl"] = {"<cmd>ChatGPTRun code_readability_analysis<CR>", "ChatGPT code readability analysis"},
+  }
+}
+
 M.neotree = {
   n = {
     ["<leader>0"] = { ":lua require'neo-tree'<CR>:call CloseMaximize()<CR><cmd>:NeoTreeFocusToggle<CR>", "Toggle neo-tree" },
@@ -716,6 +751,7 @@ M.disabled = {
   },
   v = {
     ["<leader>/"] = "",
+    ["c"] = "",
   }
 }
 

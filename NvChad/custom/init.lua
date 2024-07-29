@@ -12,6 +12,7 @@ vim.cmd.source(vimrcfunctions)
 
 -- Enable cursorline
 vim.cmd [[
+   vmap c <Nop>
 
    augroup ilikecursorline
       autocmd VimEnter * :highlight CursorLine guibg=#696969
