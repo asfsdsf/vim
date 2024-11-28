@@ -106,42 +106,37 @@ local plugins = {
   {
     "folke/which-key.nvim",
     init = function()
-      require("which-key").register({
-        a = { name = "tools" },
-        A = { name = "Actions" },
-        b = { name = "buffers" },
-        c = { name = "code" },
-        d = { name = "dapDebug" },
-        e = { name = "error" },
-        f = { name = "file",
-          v = { name = "config"},
-        },
-        g = { name = "git" },
-        h = { name = "help",
-          d = { name = "describe"},
-        },
-        i = { name = "insert" },
-        l = { name = "session" },
-        p = { name = "paste/project" },
-        q = { name = "quit" },
-        r = { name = "refactor" },
-        s = { name = "search" },
-        t = { name = "toggle/tab" },
-        T = { name = "toggle" },
-        v = { name = "vimux" },
-        w = { name = "windows" },
-        y = { name = "yank" },
-        z = { name = "fold" },
-      }, { prefix = "<leader>" })
-      require("which-key").register({
-        ["<leader>;"] = { name = "comment" },
-        ["<leader>sk"] = { name = "Search key" },
+      require("which-key").add({
+        {"<leader>a", group = "tools" },
+        {"<leader>A", group = "Actions" },
+        {"<leader>b", group = "buffers" },
+        {"<leader>c", group = "code" },
+        {"<leader>d", group = "dapDebug" },
+        {"<leader>e", group = "error" },
+        {"<leader>g", group = "git" },
+        {"<leader>i", group = "insert" },
+        {"<leader>l", group = "session" },
+        {"<leader>p", group = "paste/project" },
+        {"<leader>q", group = "quit" },
+        {"<leader>r", group = "refactor" },
+        {"<leader>s", group = "search" },
+        {"<leader>t", group = "toggle/tab" },
+        {"<leader>T", group = "toggle" },
+        {"<leader>v", group = "vimux" },
+        {"<leader>w", group = "windows" },
+        {"<leader>y", group = "yank" },
+        {"<leader>z", group = "fold" },
+        {"<leader>;", group = "comment"},
+        {"<leader>sk", group = "Search key"},
+        {"<leader>h", group = "help"},
+        {"<leader>hd", group = "describe"},
+        {"<leader>f", group = "file"},
+        {"<leader>fv", group = "config"},
       })
-      require("which-key").register({
-        h = { name = "help",
-          d = { name = "describe" },
-        }
-      }, { prefix = "<a-x>" })
+      require("which-key").add({
+        {"<a-x>h", group = "help"},
+        {"<a-x>hd", group = "describe"},
+      })
     end,
   },
 
@@ -219,7 +214,6 @@ local plugins = {
 
 -- ***********************************************************************
 --   2. utility plugins
---     - better-escape.nvim             -- use jj or jk to escape insert mode
 --     - toggle_maximize.vim            -- toggle maximize window
 --     - fugitive
 --     - vimux                          -- vim tmux integration
@@ -233,14 +227,6 @@ local plugins = {
 --     - scratch.vim                    -- scratch buffer
 --     - neogen                         -- create annotations
 -- ***********************************************************************
-
-  {
-    "max397574/better-escape.nvim",
-    event = "InsertEnter",
-    config = function()
-      require("better_escape").setup()
-    end,
-  },
 
   {
     "asfsdsf/toggle_maximize.vim",
@@ -406,7 +392,7 @@ local plugins = {
   },
 
   {
-    url="/home/zky/Software/vim/plugins/ChatGPT.nvim.doubao.git",
+    url="~/Software/vim/plugins/ChatGPT.nvim.doubao.git",
     branch="zky",
     config = function()
       require 'chatgpt'.setup(require "custom.configs.chatgpt")
@@ -432,6 +418,7 @@ local plugins = {
       {
         "rcarriga/nvim-dap-ui",
         opts = { floating = { border = "rounded" } },
+        dependencies = { "nvim-neotest/nvim-nio" },
       },
       {
         "nvim-telescope/telescope-dap.nvim",
@@ -452,12 +439,18 @@ local plugins = {
 
 -- ***********************************************************************
 --   6. git support plugins
---     - vim-gitgutter                  -- git gutter
---     - vim-fugitive                  -- git gutter
+--     - vim-gitgutter                 -- git gutter
+--     - gitsigns                      -- Super fast git decorations implemented purely in Lua
+--     - vim-fugitive                  -- fugitive vim plugin
+--     - lazygit                       -- lazygit vim plugin
 -- ***********************************************************************
 
+  -- {
+  --   "airblade/vim-gitgutter",
+  --   lazy = false,
+  -- },
   {
-    "airblade/vim-gitgutter",
+    "lewis6991/gitsigns.nvim",
     lazy = false,
   },
 

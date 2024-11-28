@@ -41,7 +41,6 @@ M.treesitter = {
     "javascript",
     "json",
     "julia",
-    "lua",
     "latex",
     "kotlin",
     "make",

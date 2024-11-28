@@ -2,6 +2,12 @@
 
 To use this configuration, symlink `custom/` directory to `~/.config/NvChad/lua/custom`
 
+## Dependencies
+
+```shell
+sudo apt install tree-sitter-cli ripgrep fd-find luarocks
+```
+
 ## Initialization
 
 ```shell
