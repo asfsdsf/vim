@@ -37,3 +37,7 @@ nvc
 rm -rf ~/.config/NvChad/
 rm -rf ~/.local/share/NvChad/
 ```
+
+## Chatgpt setup
+Codium:
+doubao: It is setup in `path/to/NvChad/custom/configs/chatgpt.lua`. And the apikey is read from `~/.config/doubao/apikey`

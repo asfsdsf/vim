@@ -1,0 +1,4 @@
+{
+  "keyMappings": "# In chrome extension, click the extension to open the extension tab.\n# Scroll down the end. Click restore and choose this file.\nmap <a-h> previousTab\nmap <a-l> nextTab\nmap e scrollPageUp\nmap ' Marks.activateGotoMode\nmap gxx closeOtherTabs\nmap gr visitPreviousTab",
+  "settingsVersion": "2.1.2"
+}
