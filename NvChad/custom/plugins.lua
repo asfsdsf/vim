@@ -7,6 +7,8 @@
 
 local overrides = require "custom.configs.overrides"
 
+local avante_plug = require "custom.configs.avante"
+
 local treesitter_plug = require "custom.configs.treesitter-plug"
 
 -- ***********************************************************************
@@ -398,6 +400,16 @@ local plugins = {
       require 'chatgpt'.setup(require "custom.configs.chatgpt")
     end,
     event = 'BufEnter',
+  },
+
+  {
+    "yetone/avante.nvim",
+    event = avante_plug.event,
+    lazy = avante_plug.lazy,
+    version = avante_plug.version,
+    opts = avante_plug.opts,
+    build = avante_plug.build,
+    dependencies = avante_plug.dependencies,
   },
 
 -- ***********************************************************************
