@@ -7,9 +7,8 @@ M = {
     provider = "openai",
     openai = {
       endpoint = "https://api.deepseek.com",
-      model = "deepseek-chat",
+      model = "deepseek-reasoner",
       timeout = 30000, -- Timeout in milliseconds
-      temperature = 0,
       max_tokens = 8192,
       api_key_name = "DEEPSEEK_API_KEY", -- the shell command must prefixed with `^cmd:(.*)`
     },

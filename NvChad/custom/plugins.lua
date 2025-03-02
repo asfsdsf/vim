@@ -378,20 +378,20 @@ local plugins = {
     enabled = false,
   },
 
-  {
-    'Exafunction/codeium.vim',
-    event = 'BufEnter',
-    init = function()
-      vim.g.codeium_disable_bindings = 1
-        vim.cmd [[
-            imap <script><silent><script><expr> <C-r> codeium#Accept()
-            imap <script><silent><script><expr> <C-g> codeium#AcceptNextLine()
-            imap <C-x> <cmd>call codeium#Complete()<CR>
-            imap <C-n> <cmd>call codeium#CycleCompletions(1)<CR>
-            imap <C-p> <cmd>call codeium#CycleCompletions(-1)<CR>
-        ]]
-    end
-  },
+  -- {
+  --   'Exafunction/codeium.vim',
+  --   event = 'BufEnter',
+  --   init = function()
+  --     vim.g.codeium_disable_bindings = 1
+  --       vim.cmd [[
+  --           imap <script><silent><script><expr> <C-r> codeium#Accept()
+  --           imap <script><silent><script><expr> <C-g> codeium#AcceptNextLine()
+  --           imap <C-x> <cmd>call codeium#Complete()<CR>
+  --           imap <C-n> <cmd>call codeium#CycleCompletions(1)<CR>
+  --           imap <C-p> <cmd>call codeium#CycleCompletions(-1)<CR>
+  --       ]]
+  --   end
+  -- },
 
   {
     url="~/Software/vim/plugins/ChatGPT.nvim.doubao.git",
@@ -410,6 +410,50 @@ local plugins = {
     opts = avante_plug.opts,
     build = avante_plug.build,
     dependencies = avante_plug.dependencies,
+  },
+
+  {
+    'milanglacier/minuet-ai.nvim',
+    lazy = false,
+    config = function()
+      local end_point = os.getenv("MINUET_END_POINT") or "https://api.deepseek.com/chat/completions"
+      local model = os.getenv("MINUET_MODEL") or "qwen2.5-coder:7b"
+      require('minuet').setup {
+        virtualtext = {
+          auto_trigger_ft = {},
+          keymap = {
+            accept = '<A-A>',
+            accept_line = '<A-a>',
+            -- Cycle to prev completion item, or manually invoke completion
+            prev = '<A-[>',
+            -- Cycle to next completion item, or manually invoke completion
+            next = '<A-]>',
+            dismiss = '<A-e>',
+          },
+        },
+        request_timeout = 100,
+        n_completions = 10,
+        after_cursor_filter_length = 20,
+        provider = 'openai_fim_compatible',
+        provider_options = {
+          openai_fim_compatible = {
+            model = model,
+            end_point = end_point,
+            name = 'Ollama',
+            stream = true,
+            api_key = 'DEEPSEEK_API_KEY',
+            optional = {
+              stop = nil,
+              max_tokens = nil,
+            },
+          },
+        },
+      }
+      -- Enable virtual text if environment variables are set
+      if os.getenv("MINUET_END_POINT") or os.getenv("MINUET_MODEL") then
+        vim.cmd("Minuet virtualtext enable")
+      end
+    end,
   },
 
 -- ***********************************************************************
