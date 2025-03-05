@@ -415,8 +415,9 @@ local plugins = {
   {
     'milanglacier/minuet-ai.nvim',
     lazy = false,
+    enabled = os.getenv("MINUET_END_POINT") ~= nil,
     config = function()
-      local end_point = os.getenv("MINUET_END_POINT") or "https://api.deepseek.com/chat/completions"
+      local end_point = os.getenv("MINUET_END_POINT")
       local model = os.getenv("MINUET_MODEL") or "qwen2.5-coder:7b"
       require('minuet').setup {
         virtualtext = {
@@ -432,7 +433,7 @@ local plugins = {
           },
         },
         request_timeout = 100,
-        n_completions = 10,
+        n_completions = 2,
         after_cursor_filter_length = 20,
         provider = 'openai_fim_compatible',
         provider_options = {

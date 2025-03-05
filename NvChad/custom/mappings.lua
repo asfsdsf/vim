@@ -510,6 +510,12 @@ M.chatgpt = {
   }
 }
 
+M.avante = {
+  n = {
+    ["<leader>aC"] = { ":AvanteClear<CR>", "avante: clear history"}
+  }
+}
+
 M.neotree = {
   n = {
     ["<leader>0"] = { ":lua require'neo-tree'<CR>:call CloseMaximize()<CR><cmd>:NeoTreeFocusToggle<CR>", "Toggle neo-tree" },
