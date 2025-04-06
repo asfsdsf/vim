@@ -1,4 +1,37 @@
-
+//*********************************************************************
+//Use this config file
+//*********************************************************************
+// Copy this file as ~/.config/Code/User/settings.json
+// To add new vscode actions keymap: c-s-p to search the action -> click setting icon -> right click to copy command id
+//*********************************************************************
+//Command help:
+//*********************************************************************
+// see also:
+// https://medium.com/productivedev/toward-a-mouse-free-developer-experience-in-vscode-97e621d5136e
+//c-`         Toggle open/close terminal
+//c-s-s       Toggle vim mode
+//c-s-x       Open current file in vim
+//a-w         Maximaize window (toggle hide sidebar)
+//a-q         Toggle panel
+//a-f         Focus editor
+//a-s         Open settings
+//c-w         Close current window
+//a-c-j       Multiple cursor: add cursor down
+//a-c-k       Multiple cursor: add cursor up
+//a-leftclick Multiple cursor: add cursor by click
+//c-s-l       Multiple cursor: select all occurence
+//c-n         Multiple cursor: (in visual mode) setlect next occurence
+//gb          Multiple cursor: select next occurence
+//*********************************************************************
+//run help:
+//*********************************************************************
+// https://zhuanlan.zhihu.com/p/87864677
+// .vscode will be auto generated when vscode open project folder
+// c-s-p and type: c/c++ configuration(UI). and then set up something
+// c-s-p and type: tasks:configure default build task -> select g++
+// In topmenu -> click Run -> start debugging
+// Then settings will be saved to .vscode
+// copy the .vscode next time using other projects. And modify include in c/c++ configuration(UI)
 {
   "vim.easymotion": true,
   "vim.sneak": true,
@@ -7,180 +40,862 @@
   "vim.useCtrlKeys": true,
   "vim.hlsearch": true,
   "vim.insertModeKeyBindingsNonRecursive": [
-    // move when editing
+    //*********************************************************************
+    //** Move when editing in insert mode *******
+    //*********************************************************************
     {
-      "before": ["<c-h>"],
-      "after": ["left"]
+      "before": [ // c-h
+        "<c-h>"
+      ],
+      "after": [
+        "left"
+      ]
     },
     {
-      "before": ["<c-l>"],
-      "after": ["right"]
+      "before": [ // c-b
+        "<c-b>"
+      ],
+      "after": [
+        "left"
+      ]
     },
     {
-      "before": ["<c-j>"],
-      "after": ["down"]
+      "before": [ // c-l
+        "<c-l>"
+      ],
+      "after": [
+        "right"
+      ]
     },
     {
-      "before": ["<c-k>"],
-      "after": ["up"]
+      "before": [ // c-f
+        "<c-f>"
+      ],
+      "after": [
+        "right"
+      ]
     },
     {
-      "before": ["<c-e>"],
-      "commands": ["cursorEnd"]
+      "before": [ // c-j
+        "<c-j>"
+      ],
+      "after": [
+        "down"
+      ]
     },
     {
-      "before": ["<c-a>"],
-      "commands": ["cursorHome"]
+      "before": [ // c-k
+        "<c-k>"
+      ],
+      "after": [
+        "up"
+      ]
+    },
+    {
+      "before": [ // c-e
+        "<c-e>"
+      ],
+      "commands": [
+        "cursorEnd"
+      ]
+    },
+    {
+      "before": [ // c-a
+        "<c-a>"
+      ],
+      "commands": [
+        "cursorHome"
+      ]
     },
   ],
   "vim.visualModeKeyBindingsNonRecursive": [
     {
-      "before":["c-/"],
-      "commands":[
+      "before":[ // gm
+        "g",
+        "m"
+      ],
+      "after":[
+        "%"
+      ]
+    },
+    {
+      "before":[ // H
+        "H"
+      ],
+      "after":[
+        "^"
+      ]
+    },
+    {
+      "before":[ // L
+        "L"
+      ],
+      "after":[
+        "$"
+      ]
+    },
+    { // auxiliary visual keymap settings for multiple cursor
+      "before": [ // c-n
+        "<c-n>"
+      ],
+      "commands": [
+        "editor.action.addSelectionToNextFindMatch"
+      ]
+    },
+    {
+      "before": [ // c-/
+        "c-/"
+      ],
+      "commands": [
         "editor.action.blockComment"
       ]
-    }
+    },
+    {
+      "before": [ // <leader>v  Expand selection in visual mode
+        "<leader>",
+        "v"
+      ],
+      "after": [
+        "a",
+        "f"
+      ]
+    },
+    {
+      "before":["g","E"], // gE  debug: evaluate selection
+      "commands":[
+        "editor.debug.action.selectionToRepl"
+      ]
+    },
   ],
   "vim.normalModeKeyBindingsNonRecursive": [
+    //*********************************************************************
+    //** Fix insert mode shortcut ***************
+    //*********************************************************************
     {
-      "before": ["<leader>", "d"],
-      "after": ["d", "d"]
-    },
-    // fix insert mode shortcut
-    {
-      "before": ["i"],
-      "after": ["i","left","right"]
-    },
-    {
-      "before": ["I"],
-      "after": ["I","left","right"]
-    },
-    {
-      "before": ["A"],
-      "after": ["A","left","right"]
+      "before": [
+        "i"
+      ],
+      "after": [
+        "i",
+        "left",
+        "right"
+      ]
     },
     {
-      "before": ["o"],
-      "after": ["o","left","right"]
+      "before": [
+        "I"
+      ],
+      "after": [
+        "I",
+        "left",
+        "right"
+      ]
     },
     {
-      "before": ["O"],
-      "after": ["O","left","right"]
-    },
-
-    // window commands
-    // use alt+w to maximize pane
-    // use alt+ctrl+w to undo maximize pane
-    {
-        "before":["<leader>","w","-"],
-        "after":[":","s","p","<CR>"]
+      "before": [
+        "A"
+      ],
+      "after": [
+        "A",
+        "left",
+        "right"
+      ]
     },
     {
-        "before":["<leader>","w","/"],
-        "after":[":","v","s","p","<CR>"]
+      "before": [
+        "o"
+      ],
+      "after": [
+        "o",
+        "left",
+        "right"
+      ]
     },
     {
-        "before":["<leader>","w","d"],
-        "after":[":","q","<CR>"]
+      "before": [
+        "O"
+      ],
+      "after": [
+        "O",
+        "left",
+        "right"
+      ]
+    },
+    //*********************************************************************
+    //** Window commands ************************
+    //*********************************************************************
+    //a-w         Maximaize window (toggle hide sidebar)
+    // use ctrl+` to toggle terminal pane
+    {
+      "before": [ // <leader>z  Toggle zen mode
+        "<leader>",
+        "z"
+      ],
+      "commands": [
+        "workbench.action.toggleZenMode"
+      ]
     },
     {
-        "before":["<leader>","w","h"],
-        "after":["<c-w>","h"]
+      "before": [ // <leader>wm  Toggle maximize edit window
+        "<leader>",
+        "w",
+        "m"
+      ],
+      "commands": [
+        "workbench.action.closePanel",
+        "workbench.action.toggleSidebarVisibility",
+        "workbench.action.focusActiveEditorGroup"
+      ]
     },
     {
-        "before":["<leader>","w","j"],
-        "after":["<c-w>","j"]
+      "before": [ // <leader>w0
+        "<leader>",
+        "w",
+        "-"
+      ],
+      "after": [
+        ":",
+        "s",
+        "p",
+        "<CR>"
+      ]
     },
     {
-        "before":["<leader>","w","k"],
-        "after":["<c-w>","k"]
+      "before": [ // <leader>w/
+        "<leader>",
+        "w",
+        "/"
+      ],
+      "after": [
+        ":",
+        "v",
+        "s",
+        "p",
+        "<CR>"
+      ]
     },
     {
-        "before":["<leader>","w","l"],
-        "after":["<c-w>","l"]
-    },
-
-    // multiline commands
-    // use ctrl+left click to multi select
-
-    // files
-    {
-        "before":["<leader>","f","f"],
-        "commands":[
-          "workbench.action.files.openFile"
-        ]
+      "before": [ // <leader>wd
+        "<leader>",
+        "w",
+        "d"
+      ],
+      "commands":[
+        "workbench.action.closeEditorsInGroup"
+      ]
     },
     {
-        "before":["<leader>","f","d"],
-        "commands":[
-          "workbench.action.files.openFolder"
-        ]
+      "before": [ // <leader>wx
+        "<leader>",
+        "w",
+        "x"
+      ],
+      "commands":[
+        "workbench.action.closeEditorsInGroup"
+      ]
     },
     {
-        "before":["<leader>","f","r"],
-        "commands":[
-          "workbench.action.openRecent"
-        ]
+      "before": [ // <leader>bd
+        "<leader>",
+        "b",
+        "d"
+      ],
+      "after": [
+        ":",
+        "q",
+        "<CR>"
+      ]
     },
     {
-        "before":["<leader>","0"],
-        "commands":[
-          "workbench.view.explorer"
-        ]
-    },
-
-    // go to errors
-    {
-        "before":["<leader>","e","n"],
-        "commands":[
-          "editor.action.marker.nextInFiles"
-        ]
+      "before": [ // <leader>bx
+        "<leader>",
+        "b",
+        "x"
+      ],
+      "after": [
+        ":",
+        "q",
+        "<CR>"
+      ]
     },
     {
-        "before":["<leader>","e","N"],
-        "commands":[
-          "editor.action.marker.previousFiles"
-        ]
+      "before":[ // <leader>bb
+        "<leader>",
+        "b",
+        "b"
+      ],
+      "commands":[
+        "workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup"
+      ]
     },
     {
-        "before":["<leader>","e","p"],
-        "commands":[
-          "editor.action.marker.previousFiles"
-        ]
-    },
-
-    // else
-    {
-        "before":["<leader>","u"],
-        "commands":[
-          "editor.action.smartSelect.expand"
-        ]
+      "before": [ // <leader>wh
+        "<leader>",
+        "w",
+        "h"
+      ],
+      "after": [
+        "<c-w>",
+        "h"
+      ]
     },
     {
-        "before":["<leader>",";"],
-        "commands":[
-          "editor.action.commentLine"
-        ]
+      "before": [ // <leader>wj
+        "<leader>",
+        "w",
+        "j"
+      ],
+      "after": [
+        "<c-w>",
+        "j"
+      ]
     },
     {
-        "before":["<c-h>"],
-        "commands":[
-          "editor.action.startFindReplaceAction"
-        ]
+      "before": [ // <leader>wk
+        "<leader>",
+        "w",
+        "k"
+      ],
+      "after": [
+        "<c-w>",
+        "k"
+      ]
     },
     {
-        "before":["<leader>","a","a"],
-        "commands":[
-          "workbench.action.showCommands"
-        ]
-    }
-
+      "before": [ // <leader>wl
+        "<leader>",
+        "w",
+        "l"
+      ],
+      "after": [
+        "<c-w>",
+        "l"
+      ]
+    },
+    {
+      "before": [ // <leader><tab>
+        "<leader>",
+        "<tab>"
+      ],
+      "commands": [
+        "workbench.action.openNextRecentlyUsedEditorInGroup",
+        "list.select"
+      ],
+    },
+    //*********************************************************************
+    //** Multicursor commands ******************
+    //*********************************************************************
+    // See the beginning of this settings.json for more keymap for multiple cursor
+    {
+      "before": [  // c-n
+        "<c-n>"
+      ],
+      "after": [
+        "v",
+        "i",
+        "w"
+      ]
+    },
+    //*********************************************************************
+    //** Files **********************************
+    //*********************************************************************
+    {
+      "before": [ // <leader>fvd  Open vim settings file
+        "<leader>",
+        "f",
+        "v",
+        "d"
+      ],
+      "after": [
+        ":",
+        "e",
+        " ",
+        "~",
+        "/",
+        ".",
+        "c",
+        "o",
+        "n",
+        "f",
+        "i",
+        "g",
+        "/",
+        "C",
+        "o",
+        "d",
+        "e",
+        "/",
+        "U",
+        "s",
+        "e",
+        "r",
+        "/",
+        "s",
+        "e",
+        "t",
+        "t",
+        "i",
+        "n",
+        "g",
+        "s",
+        ".",
+        "j",
+        "s",
+        "o",
+        "n",
+        "<CR>"
+      ]
+    },
+    {
+      "before":[  // <leader>ft  Open terminal with current folder as working directory
+        "<leader>",
+        "f",
+        "t",
+      ],
+      "commands":[
+        "workbench.action.terminal.openNativeConsole"
+      ]
+    },
+    {
+      "before": [ // <leader>ff
+        "<leader>",
+        "f",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.files.openFile"
+      ]
+    },
+    {
+      "before":[ // <leader>pf
+        "<leader>",
+        "p",
+        "f"
+      ],
+      "commands":[
+        "workbench.action.quickOpen"
+      ]
+    },
+    {
+      "before": [ // <leader>pp
+        "<leader>",
+        "p",
+        "p"
+      ],
+      "commands": [
+        "workbench.action.files.openFolder"
+      ]
+    },
+    {
+      "before": [ // <leader>fd
+        "<leader>",
+        "f",
+        "d"
+      ],
+      "commands": [
+        "revealFileInOS"
+      ]
+    },
+    {
+      "before": [ // <leader>fO
+        "<leader>",
+        "f",
+        "O"
+      ],
+      "commands": [
+        "revealFileInOS"
+      ]
+    },
+    {
+      "before": [ // <leader>fo
+        "<leader>",
+        "f",
+        "o"
+      ],
+      "commands": [
+        "workbench.action.terminal.toggleTerminal",
+        {
+          "command": "workbench.action.terminal.sendSequence",
+          "args": {
+            "text": "xdg-open '${file}'\u000D"
+          }
+        },
+        "workbench.action.terminal.toggleTerminal",
+      ],
+    },
+    {
+      "before": [ // <leader>fp
+        "<leader>",
+        "f",
+        "p"
+      ],
+      "commands": [
+        "workbench.files.action.focusFilesExplorer"
+      ]
+    },
+    {
+      "before": [ // <leader>pr
+        "<leader>",
+        "p",
+        "r"
+      ],
+      "commands": [
+        "workbench.action.openRecent"
+      ]
+    },
+    {
+      "before": [ // <leader>fr
+        "<leader>",
+        "f",
+        "r"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
+    },
+    // Change folder/project to contain current file
+    {
+      "before": [ // <leader>cd
+        "<leader>",
+        "c",
+        "d"
+      ],
+      "commands": [
+        "workbench.action.terminal.toggleTerminal",
+        {
+          "command": "workbench.action.terminal.sendSequence",
+          "args": {
+            "text": "code -r `dirname '${file}'`\u000D"
+          }
+        },
+        "workbench.action.terminal.toggleTerminal",
+      ],
+    },
+    {
+      "before": [ // <leader>fs  Open internal terminal with current file path as working directory
+        "<leader>",
+        "f",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.terminal.toggleTerminal",
+        {
+          "command": "workbench.action.terminal.sendSequence",
+          "args": {
+            "text": "cd `dirname '${file}'`\u000D"
+          }
+        },
+      ],
+    },
+    {
+      "before": [ // <leader>0
+        "<leader>",
+        "0"
+      ],
+      "commands": [
+        "workbench.view.explorer"
+      ]
+    },
+    //*********************************************************************
+    //** Go to errors **************************
+    //*********************************************************************
+    {
+      "before": [ // <leader>en
+        "<leader>",
+        "e",
+        "n"
+      ],
+      "commands": [
+        "editor.action.marker.nextInFiles"
+      ]
+    },
+    {
+      "before": [ // <leader>eN
+        "<leader>",
+        "e",
+        "N"
+      ],
+      "commands": [
+        "editor.action.marker.prevInFiles"
+      ]
+    },
+    {
+      "before": [ // <leader>ep
+        "<leader>",
+        "e",
+        "p"
+      ],
+      "commands": [
+        "editor.action.marker.prevInFiles"
+      ]
+    },
+    //*********************************************************************
+    //** Else ***********************************
+    //*********************************************************************
+    {
+      "before": [ // ?  Show help
+        "?"
+      ],
+      "commands": [
+        "workbench.action.terminal.toggleTerminal",
+        {
+          "command": "workbench.action.terminal.sendSequence",
+          "args": {
+            "text": "vscodevim_help\u000D"
+          }
+        },
+        "workbench.action.terminal.toggleTerminal",
+      ],
+      "after": [
+        "<CR>"
+      ]
+    },
+    {
+      "before":[ // gm
+        "g",
+        "m"
+      ],
+      "after":[
+        "%"
+      ]
+    },
+    {
+      "before":[ // H
+        "H"
+      ],
+      "commands":[
+        "cursorHome"
+      ]
+    },
+    {
+      "before":[ // L
+        "L"
+      ],
+      "commands":[
+        "cursorEnd"
+      ]
+    },
+    {
+      "before": [ // <leader>v
+        "<leader>",
+        "v"
+      ],
+      "commands": [
+        "editor.action.smartSelect.expand"
+      ]
+    },
+    {
+      "before": [ // <leader>ak  Open settings file
+        "<leader>",
+        "a",
+        "k"
+      ],
+      "commands": [
+        "workbench.action.openGlobalKeybindings",
+      ]
+    },
+    {
+      "before": [ // <leader>;
+        "<leader>",
+        ";"
+      ],
+      "commands": [
+        "editor.action.commentLine"
+      ]
+    },
+    {
+      "before": [ // c-h
+        "<c-h>"
+      ],
+      "commands": [
+        "editor.action.startFindReplaceAction"
+      ]
+    },
+    {
+      "before": [ // <leader>aa
+        "<leader>",
+        "a",
+        "a"
+      ],
+      "commands": [
+        "workbench.action.showCommands"
+      ]
+    },
+    //*********************************************************************
+    //** Run & Debug project/file ***************
+    //*********************************************************************
+    {
+      "before": [ // <leader>cd  debug
+        "<leader>",
+        "c",
+        "d"
+      ],
+      "commands": [
+        "workbench.action.debug.start"
+      ]
+    },
+    {
+      "before": [ // <leader>cc  run
+        "<leader>",
+        "c",
+        "c"
+      ],
+      "commands": [
+        "workbench.action.debug.run",
+      ]
+    },
+    {
+      "before":[",","c","d"], // ,cd  debug:start debug
+      "commands":[
+        "workbench.action.debug.start"
+      ]
+    },
+    {
+      "before":[",","c","r"], // ,cr  debug:restart debug
+      "commands":[
+        "workbench.action.debug.restart"
+      ]
+    },
+    {
+      "before":["g","b"], // gb  debug:toggle breakpoint
+      "commands":[
+        "editor.debug.action.toggleBreakpoint"
+      ]
+    },
+    {
+      "before":["g","n"], // gn  debug:step over
+      "commands":[
+        "workbench.action.debug.stepOver"
+      ]
+    },
+    {
+      "before":["g","s"], // gs  debug:step into
+      "commands":[
+        "workbench.action.debug.stepInto"
+      ]
+    },
+    {
+      "before":["g","o"], // go  debug:step out
+      "commands":[
+        "workbench.action.debug.stepOut"
+      ]
+    },
+    {
+      "before":["g","t"], // gt  debug:run to cursor
+      "commands":[
+        "editor.debug.action.runToCursor"
+      ]
+    },
+    {
+      "before":["g","c"], // gc  debug:continue debug
+      "commands":[
+        "workbench.action.debug.continue"
+      ]
+    },
+    {
+      "before":["g","T"], // gT  debug:jump to cursor
+      "commands":[
+        "debug.jumpToCursor"
+      ]
+    },
+    {
+      "before":["g","E"], // gE  debug:evaluate line
+      "commands":[
+        "editor.debug.action.selectionToRepl"
+      ]
+    },
+    {
+      "before":["g","e"], // ge  debug:open evaluate console
+      "commands":[
+        "workbench.panel.repl.view.focus"
+      ]
+    },
   ],
-
-  //settings 
+  //*********************************************************************
+  //** Settings ********************************
+  //*********************************************************************
   "vim.leader": "<space>",
+  // disable some keys in vim mode
   "vim.handleKeys": {
     "<C-f>": false,
-    "<c-i>":false,
-  }
+    "<C-i>": false,
+    "<C-b>": false,
+    // "<C-n>": false,
+  },
+  "breadcrumbs.enabled": true,
+  "ycmd.path": "/home/ban/.nvim/plugged/YouCompleteMe/third_party/ycmd",
+  "ycmd.python": "/usr/bin/python3",
+  "C_Cpp.updateChannel": "Insiders",
+  "python.pythonPath": "/usr/bin/python3",
+  "zenMode.centerLayout": false,
+"julia.enableTelemetry": true,
+  "hediet.vscode-drawio.local-storage": "eyIuZHJhd2lvLWNvbmZpZyI6IntcImxhbmd1YWdlXCI6XCJcIixcImN1c3RvbUZvbnRzXCI6W10sXCJsaWJyYXJpZXNcIjpcImdlbmVyYWw7dW1sO2VyO2JwbW47Zmxvd2NoYXJ0O2Jhc2ljO2Fycm93czJcIixcImN1c3RvbUxpYnJhcmllc1wiOltcIkwuc2NyYXRjaHBhZFwiXSxcInBsdWdpbnNcIjpbXSxcInJlY2VudENvbG9yc1wiOltdLFwiZm9ybWF0V2lkdGhcIjpcIjI0MFwiLFwiY3JlYXRlVGFyZ2V0XCI6ZmFsc2UsXCJwYWdlRm9ybWF0XCI6e1wieFwiOjAsXCJ5XCI6MCxcIndpZHRoXCI6ODUwLFwiaGVpZ2h0XCI6MTEwMH0sXCJzZWFyY2hcIjp0cnVlLFwic2hvd1N0YXJ0U2NyZWVuXCI6dHJ1ZSxcImdyaWRDb2xvclwiOlwiI2QwZDBkMFwiLFwiZGFya0dyaWRDb2xvclwiOlwiIzZlNmU2ZVwiLFwiYXV0b3NhdmVcIjp0cnVlLFwicmVzaXplSW1hZ2VzXCI6bnVsbCxcIm9wZW5Db3VudGVyXCI6MCxcInZlcnNpb25cIjoxOCxcInVuaXRcIjoxLFwiaXNSdWxlck9uXCI6ZmFsc2UsXCJ1aVwiOlwiXCJ9In0=",
+  "workbench.editor.enablePreview": false,
+  "python.dataScience.askForKernelRestart": false,
+  "python.languageServer": "Pylance",
+  "python.dataScience.interactiveWindowMode": "perFile",
+  "workbench.editor.showTabs": "multiple",
+  "workbench.statusBar.visible": true,
+  "vscode-neovim.neovimExecutablePaths.linux": "/home/zky/Software/neovim/software/bin/nvim",
+  "vscode-neovim.neovimInitVimPaths.linux": "/home/zky/Software/neovim/vscode-neovim/init.vim",
+  "vscode-neovim.highlightGroups.highlights": {
+
+    "Directory": "vim",
+    "IncSearch": {
+      "backgroundColor": "theme.editor.findMatchBackground",
+      "borderColor": "theme.editor.findMatchBorder"
+    },
+    "Search": {
+      "backgroundColor": "theme.editor.findMatchHighlightBackground",
+      "borderColor": "theme.editor.findMatchHighlightBorder"
+    },
+    "Visual": {
+      "backgroundColor": "theme.editor.selectionBackground"
+    },
+    "Conceal": "vim",
+    "Substitute": "vim"
+  },
+  "vscode-neovim.mouseSelectionStartVisualMode": true,
+  "terminal.integrated.commandsToSkipShell": [
+    "language-julia.interrupt"
+  ],
+  "julia.symbolCacheDownload": true,
+  "terminal.integrated.inheritEnv": false,
+  "jupyter.askForKernelRestart": false,
+"security.workspace.trust.untrustedFiles": "open",
+  "editor.fontSize": 20,
+  "editor.fontVariations": false,
+  "editor.mouseWheelZoom": true,
+  "debug.console.fontSize": 20,
+  "terminal.integrated.fontSize": 20,
+  "chat.editor.fontSize": 20,
+  "scm.inputFontSize": 20,
+  "workbench.localHistory.mergeWindow": 16,
+  "markdown.preview.fontSize": 20,
+  "window.zoomLevel": 1.4,
+  "roo-cline.allowedCommands": [
+    "npm test",
+    "npm install",
+    "tsc",
+    "git log",
+    "git diff",
+    "git show"
+  ],
+  "vim.normalModeKeyBindings": []
 }
+
+// Variables Reference for commands arguments
+// ${workspaceFolder} - the path of the folder opened in VS Code
+// ${workspaceFolderBasename} - the name of the folder opened in VS Code without any slashes (/)
+// ${file} - the current opened file
+// ${relativeFile} - the current opened file relative to workspaceFolder
+// ${relativeFileDirname} - the current opened file's dirname relative to workspaceFolder
+// ${fileBasename} - the current opened file's basename
+// ${fileBasenameNoExtension} - the current opened file's basename with no file extension
+// ${fileDirname} - the current opened file's dirname
+// ${fileExtname} - the current opened file's extension
+// ${cwd} - the task runner's current working directory on startup
+// ${lineNumber} - the current selected line number in the active file
+// ${selectedText} - the current selected text in the active file
+// ${execPath} - the path to the running VS Code executable
+// ${defaultBuildTask} - the name of the default build task

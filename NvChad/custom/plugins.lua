@@ -421,7 +421,7 @@ local plugins = {
       local model = os.getenv("MINUET_MODEL") or "qwen2.5-coder:7b"
       require('minuet').setup {
         virtualtext = {
-          auto_trigger_ft = {},
+          auto_trigger_ft = {'*'},
           keymap = {
             accept = '<A-A>',
             accept_line = '<A-a>',
@@ -433,6 +433,9 @@ local plugins = {
           },
         },
         request_timeout = 100,
+        -- debounce the request in x milliseconds, set to 0 to disable debounce
+        debounce = 800,
+        throttle = 1500,
         n_completions = 2,
         after_cursor_filter_length = 20,
         provider = 'openai_fim_compatible',
@@ -450,10 +453,6 @@ local plugins = {
           },
         },
       }
-      -- Enable virtual text if environment variables are set
-      if os.getenv("MINUET_END_POINT") or os.getenv("MINUET_MODEL") then
-        vim.cmd("Minuet virtualtext enable")
-      end
     end,
   },
 
