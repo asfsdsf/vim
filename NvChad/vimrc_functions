@@ -1,0 +1,1256 @@
+" find function       function! UpdateRemotePlugins(...)
+"
+" find function     function! ToggleTheme()
+"
+" find function     function! ToggleLineNumber()
+"
+" find function     function! ToggleAllAuxiliaryDisplay()
+"
+" find function     function! ToggleCurrentAuxiliaryDisplay()
+"
+" find function     function! s:CheckWarnVimPlugInstalled()
+"
+" find function     function! Terminal_MetaMode(mode)
+"
+" find function         function! s:metacode(mode, key)
+"
+" find function     function! MaxmizedSign(...)
+"
+" find function     function!MaxmizedSignText()
+"
+" find function     function! WindowNumber(...)
+"
+" find function     function! s:Python_print()
+"
+" find function     function! OpenUrlUnderCursor()
+"
+" find function     function! s:DiffWithSaved()
+"
+" find function     function! s:OpenDirectoryFile(dir_path)
+"
+" find function     function! s:Compared_with_clipboard()
+"
+" find function     function! g:Vimscript_tips()
+"
+" find function     function! g:TogglePaste()
+"
+" find function     function!CloseBuffer()
+"
+" find function     function! g:GotoNthBuffer(nth_add_1)
+"
+" find function     function! SearchSelected()
+"
+" find function     function! g:OpenFileByPath()
+"
+" find function     function! SaveLayout(toInputName)
+"
+" find function     function! LoadLayout(toInputName)
+"
+" find function     function! s:ChangeFileTypeIfReplacing()
+"
+" find function     function! s:UniteSettings()
+"
+" find function     function! s:check_back_space() abort
+"
+" find function     function! s:check_back_space() abort
+"
+" find function     function! Toggle_show_signature()
+"
+" find function     function! Jump_to_float() abort
+"
+" find function     function! s:show_documentation()
+"
+" find function     function! Run_to_tmux_or_directly(command_str)
+"
+" find function     function! VimuxSlimeVisual()
+"
+" find function     function! VimuxShowPythonDocVisual()
+"
+" find function     function! VimuxSlimeNormal()
+"
+" find function     function! VimuxForRepl()
+"
+" find function     function! VimEnterExec()
+"
+" find function     function!VimuxCdWorkingDirectory()
+"
+" find function     function! ToggleMaximizeTmux()
+"
+" find function     function!CloseMaximize()
+"
+" find function     function! VimspectorSetupUi()
+"
+" find function     function!VimspectorHelp()
+"
+" find function     function!VimspectorConnected()
+"
+" find function     function!UpdateVimspectorBreakpoints()
+"
+" find function     function!VimspectorCurrentLine()
+"
+" find function     function!VimspectorRunToCursor()
+"
+" find function     function!VimspectorFrameUp()
+"
+" find function     function!VimspectorFrameDown()
+"
+" find function     function! VimspectorEnter()
+"
+" find function     function! VimspectorExit()
+"
+" find function     function! VimspectorToggleHide(win_nr,direction)
+"
+" find function     function! MapVimspector()
+"
+" find function     function! NearestMethodOrFunction() abort
+"
+" find function     function!s:LoadFreefemCompletion()
+"
+" find function     function! MatlabHelp()
+"
+" find function     function! MatlabGoToDefinition()
+"
+" find function         function! Toggle_breakpoints_for_matlab()
+"
+" find function         function! Clear_all_breakpoints_for_matlab()
+"
+" find function     function! DefLatexMappings()
+"
+" find function     function!StartLatexServer()
+"
+" find function     function!LatexAutoSave(save_count)
+"
+" find function     function! s:TranslateRepl()
+"
+" find function     function! TranslateCount(translateCount)
+"
+" find function     function! Translate()
+"
+" find function     function! Changes_results(query,fullscreen)
+"
+" find function     function! Jumps_results(query,fullscreen)
+"
+" find function     function! s:buffer_list()
+"
+" find function     function! Fzf_buffers(query,fullscreen)
+"
+" find function     function! RangeChooser()
+"
+" find function     function!VisualSetAbbreviation ()
+"
+" find function     function! SaveAbbr(abb_formula)
+"
+" find function     function! LoadAbbr()
+"
+" find function     function! ShowAbbreviations()
+"
+" find function     function! ToggleZenMode(withTmux)
+"
+" find function     function! MapDap()
+"
+" find function     function! DapEnter()
+"
+" find function     function! DapExit()
+"
+" find function     function!DapHelp()
+
+      function! UpdateRemotePlugins(...)
+        " Needed to refresh runtime files
+        let &rtp=&rtp
+        UpdateRemotePlugins
+      endfunction
+
+    function! ToggleTheme()
+        if !s:CheckWarnVimPlugInstalled()
+            return
+        end
+        if (&background=='dark')
+            set background=light
+            AirlineTheme papercolor
+            exec 'colorscheme ' . g:light_color_scheme
+        else
+            set background=dark
+            AirlineTheme hybrid
+            exec 'colorscheme ' . g:dark_color_scheme
+            if(has("nvim") && g:transparent_background)
+                highlight Normal guibg=none
+                highlight NonText guibg=none
+            endif
+        endif
+    endfunction
+
+    function! ToggleLineNumber()
+        set number!
+        set relativenumber!
+    endfunction
+
+    function! ToggleShowTabLine()
+        if &showtabline == 2
+            set showtabline=0
+        else
+            set showtabline=2
+        endif
+    endfunction
+
+
+    let s:hidden_all = 0
+    function! ToggleAllAuxiliaryDisplay()
+        if s:hidden_all == 0
+            if g:vim_plug_installed
+                if exists('#airline')
+                    AirlineToggle
+                endif
+                silent! AirlineRefresh
+            endif
+            windo set nonumber
+            windo set norelativenumber
+            set signcolumn=no
+            set noshowmode
+            set noshowcmd
+            set noruler
+            set showtabline=0
+            set laststatus=0
+            let s:hidden_all=1
+        else
+            if g:vim_plug_installed
+                if exists('#airline')
+                    AirlineToggle
+                endif
+                silent! AirlineRefresh
+            endif
+            set number
+            windo set relativenumber
+            windo set signcolumn=yes
+            set showmode
+            set ruler
+            set showtabline=2
+            set laststatus=2
+            set showcmd
+            let s:hidden_all=0
+        endif
+    endfunction
+
+    function! ToggleCurrentAuxiliaryDisplay()
+        if !exists('b:hidden_current')
+            let b:hidden_current = 0
+        endif
+        if b:hidden_current == 0
+            if g:vim_plug_installed
+            endif
+            set nonumber
+            set norelativenumber
+            let b:hidden_current=1
+        else
+            if g:vim_plug_installed
+            endif
+            set number
+            set relativenumber
+            set signcolumn=yes
+            let b:hidden_current=0
+        endif
+    endfunction
+
+    function! s:CheckWarnVimPlugInstalled()
+        if g:vim_plug_installed
+            return 1
+        else 
+            echohl WarningMsg
+            echomsg "vim-plug is not installed."
+            echohl None
+            finish
+            return 0
+        endif
+    endfunction
+
+    function! Terminal_MetaMode(mode)
+        set ttimeout
+        if $TMUX != ''
+            set ttimeoutlen=30
+        elseif &ttimeoutlen > 80 || &ttimeoutlen <= 0
+            set ttimeoutlen=80
+        endif
+        if has('nvim') || has('gui_running')
+            return
+        endif
+        function! s:metacode(mode, key)
+            if a:mode == 0
+                exec "set <M-".a:key.">=\e".a:key
+            else
+                exec "set <M-".a:key.">=\e]{0}".a:key."~"
+            endif
+        endfunc
+
+    endfunc
+
+    function! MaxmizedSign(...)
+        let builder = a:1
+        let context = a:2
+        call builder.add_section('airline_b', '%{MaxmizedSignText()}')
+        return 0
+    endfunction
+
+    function!MaxmizedSignText()
+        if g:isToggledVertically || g:isToggledHorizontally
+            return 'M'
+        else
+            return ''
+        endif
+
+    endfunction
+
+    function! WindowNumber(...)
+        let builder = a:1
+        let context = a:2
+        call builder.add_section('airline_b', '%{tabpagewinnr(tabpagenr())}')
+        return 0
+    endfunction
+
+    function! Python_print()
+        if expand('%:p')==$HOME."/Software/vim/python_for_vim.py"
+            wq
+            r !python $HOME/Software/vim/python_for_vim.py
+        else
+            vsplit $HOME/Software/vim/python_for_vim.py
+            execute "normal!gg\"pdG"
+    "        echo "press P to use last python file"
+        endif
+    endfunction
+
+    function! OpenUrlUnderCursor()
+        let path="/usr/bin/google-chrome-stable"
+        execute "normal BvEy"
+        let url=matchstr(@0, '[a-z]*:\/\/[^ >,;]*')
+        if url != ""
+            " silent exec "!open -a ".path." '".url."'" | redraw! 
+            silent exec "!/usr/bin/google-chrome-stable '".url."'&" | redraw!
+            echo "opened ".url
+        else
+            echo "No URL under cursor."
+        endif
+    endfunction
+
+    function! DiffWithSaved()
+      let filetype=&ft
+      diffthis
+      vnew | r # | normal! 1Gdd
+      diffthis
+      exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+    endfunction
+
+    function! OpenDirectoryFile(dir_path)
+        12sp $HOME/Software/vim/open_file_help.sh
+        exec "normal! \<c-w>J"
+        put =a:dir_path
+        exec "normal!k\"pdd"
+        startinsert!
+    endfunction
+
+    function! Compared_with_clipboard()
+        diffthis
+        vnew ~/Software/vim/clipboard
+        execute 'normal!gg"_dG"+P'
+        execute 'w'
+        diffthis
+    endfunction
+
+    function! g:Vimscript_tips()
+        echo "Use let: to show all variables.\n
+                    \and add following to show specific variables: (e.g. :let g:)\n
+                    \    g:  global variables  \n
+                    \    b:  local buffer variables  \n
+                    \    w:  local window variables  \n
+                    \    t:  local tab page variables  \n
+                    \    s:  script-local variables  \n
+                    \    l:  local function variables  \n
+                    \    v:  Vim variables."
+        echo "To search vim builtin functions, Run :help eval"
+    endfunction
+
+    function! g:TogglePaste()
+        if g:in_paste_mode
+            set nopaste
+            let g:in_paste_mode=0
+            echo "In nopaste mode now"
+        else
+            set paste
+            let g:in_paste_mode=1
+            echo "In paste mode now"
+        endif
+    endfunction
+
+    function!CloseBuffer()
+        let buf_num = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+        if buf_num <= 1
+            if exists(":Startify")
+                Startify
+            else
+                enew
+            endif
+        else
+            bp
+            bd#
+        endif
+    endfunction
+
+    function! g:GotoNthBuffer(nth_add_1)
+        " let g:previous_buf_name=bufname("#")
+        bfirst
+        exec a:nth_add_1 . "bn"
+        " let g:current_buf_name=bufname("%")
+        " exec "buffer " . g:previous_buf_name
+        " exec "buffer " . g:current_buf_name
+    endfunction
+
+    function! SearchSelected()
+        let @/ = '\V' . substitute(escape(@v,'/\'),'\n','\\n','g')
+        call search('\V' . substitute(escape(@v,'/\'),'\n','\\n','g'))
+    endfunction
+
+    function! g:OpenFileByPath()
+        12sp $HOME/Software/vim/open_file_help.sh
+        exec "normal! \<c-w>J"
+        r!pwd
+        exec "normal!k\"pdd"
+        startinsert!
+    endfunction
+
+    function! SaveLayout(toInputName)
+        cd %:h
+        silent! Gcd
+        if a:toInputName
+            call inputsave()
+            let s:input_layout_name=input('Please input layout(session) name: ')
+            call inputrestore()
+            let s:layout_path=g:custom_layout_manual_path . "/" . s:input_layout_name . ".vim"
+        else
+            let s:layout_dir=g:custom_layout_path . system("printf " . getcwd())
+            silent exec "!mkdir -p " . s:layout_dir
+            let s:layout_path=s:layout_dir . "/Session.vim"
+        endif
+        exec "mksession! " . s:layout_path
+    endfunction
+
+    function! LoadLayout(toInputName)
+        if a:toInputName
+            12sp $HOME/Software/vim/open_file_help.sh
+            exec "normal! \<c-w>J"
+            exec "r!echo " . g:custom_layout_manual_path
+            exec "normal!k\"pdd"
+            startinsert!
+
+            iunmap <buffer> <enter>
+            inoremap <buffer> <enter> <c-o><cmd>:stopinsert<CR><cmd>:let mycurf=expand("<cfile>")<CR><cmd>:bd!<CR><cmd>:execute("source ".mycurf)<CR>
+        else
+            let s:layout_dir=g:custom_layout_path . system("printf " . getcwd())
+            let s:layout_path=s:layout_dir . "/Session.vim"
+            exec "source " . s:layout_path
+
+        endif
+    endfunction
+
+    function Toggle_Wrap()
+        if &wrap
+            windo set wrap!
+        else
+            windo set wrap
+        endif
+    endfunction
+
+    function! ChangeFileTypeIfReplacing()
+        if stridx(getline('.'),"s/") >= 0
+            exec "set filetype=" . g:previous_buf_filetype
+        endif
+    endfunction
+
+    function! UniteSettings()
+        au InsertLeave <buffer> :UniteClose
+        imap <buffer> <TAB>   <Plug>(unite_select_next_line)
+        imap <buffer> <s-TAB>   <Plug>(unite_select_previous_line)
+    endfunction
+
+    function! Toggle_show_signature()
+        if !exists('g:is_coc_show_signature')
+            let g:is_coc_show_signature=1
+        endif
+        if g:is_coc_show_signature && coc#float#has_float()
+            let g:is_coc_show_signature=0
+            exec "normal!\<left>\<right>"
+            " call coc#float#close_all()
+        else
+            if exists('*coc#status')
+                call CocActionAsync('showSignatureHelp') 
+            endif
+            let g:is_coc_show_signature=1
+        endif
+    endfunction
+
+    function! Jump_to_float() abort
+        if !has('nvim')
+            return
+        endif
+        let g:winids =[]
+        for i in range(1, winnr('$'))
+            let id = win_getid(i)
+            let config = nvim_win_get_config(id)
+            if !empty(config) && !empty(config['relative']) && config['relative']=='win'
+                call add(g:winids, id)
+            endif
+        endfor
+        if !empty(g:winids)
+            call win_gotoid(g:winids[0])
+        endif
+    endfunction
+
+    function! Run_to_tmux_or_directly(command_str)
+        if exists('$TMUX')
+            call VimuxRunCommand(a:command_str)
+            call feedkeys("<CR>")
+        else
+            exec "!" . a:command_str
+        endif
+    endfunction
+
+    function! VimuxSlimeVisual()
+        " delete empty line (mainly for python)
+        let s:vimux_slime_delete_blank_line=substitute(@v,'\n\n\+','\n','g')
+        if(&filetype=='python')
+            " add empty line to jump out of block (for python, ipython does
+            " not need the following line)
+            let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\(\n\s[^\n]\+\n\)\(\S\)','\1\n\2','g')
+            " don't jump for else: and elif: (for python)
+            let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\n\nelse:','\nelse:','g')
+            let s:vimux_slime_delete_blank_line=substitute(s:vimux_slime_delete_blank_line,'\n\(\nelif\W\)','\1','g')
+        endif
+
+        call VimuxRunCommand(s:vimux_slime_delete_blank_line)
+        " add enter for python multiline command
+        if (count(s:vimux_slime_delete_blank_line,"\n") > 0 && (&filetype=='python'))
+            call VimuxRunCommand("")
+        endif
+    endfunction
+
+    function! VimuxShowPythonDocVisual()
+        let s:to_search_object= "print(" . @v . ".__doc__)"
+        call VimuxRunCommand(s:to_search_object)
+    endfunction
+
+    function! VimuxSlimeNormal()
+        call VimuxRunCommand(getline("."))
+    endfunction
+
+    function! VimuxForRepl()
+        if !exists("b:VimuxForReplFlag")
+            let b:VimuxForReplFlag=0
+        endif
+
+        if b:VimuxForReplFlag
+            iunmap <buffer> <enter>
+            vunmap <buffer> <enter>
+            nunmap <buffer> <enter>
+            if(&filetype=='python')
+                vunmap <buffer> K
+            endif
+            let b:VimuxForReplFlag=0
+            echo "REPL mode off."
+        else
+            inoremap <buffer> <enter> <c-o>$<c-o><cmd>:call VimuxSlimeNormal()<CR><enter>
+            vnoremap <buffer> <enter> "vy <cmd>:call VimuxSlimeVisual()<CR>
+            nnoremap <buffer> <enter> <cmd>:call VimuxSlimeNormal()<CR>j
+            " VimuxRunCommand("cd " . expand("%:p:h"))
+            if(!(&filetype=='matlab' && executable('matlab')))
+                call VimuxCdWorkingDirectory()
+            endif
+
+            let b:VimuxForReplFlag=1
+
+            if(&filetype=='')
+                exec "set filetype=" . g:VimuxReplDefaultFiletype
+            endif
+
+            " set initial code for specific filetype
+            if(&filetype=='python')
+                vnoremap <buffer> K     "vy <cmd>:call VimuxShowPythonDocVisual()<CR>
+                VimuxRunCommand("python")
+                echo "python repl mode is on."
+            endif
+            if(&filetype=='javascript')
+                VimuxRunCommand("node")
+                echo "javascript repl mode is on."
+            endif
+            if(&filetype=='matlab')
+                if(executable('matlab'))  " run matlab
+                    echo "Matlab repl mode is on."
+                else  " run octave
+                    VimuxRunCommand("octave --no-window-system")
+                endif
+            endif
+            if(&filetype=='julia')
+                VimuxRunCommand("julia")
+            endif
+
+            " if(&filetype=='vim') see function VimEnterExec
+        endif
+    endfunction
+
+    function! VimEnterExec()
+        if !exists("b:VimEterExecFlag")
+            let b:VimEterExecFlag=0
+        endif
+
+        if b:VimEterExecFlag
+            iunmap <buffer> <enter>
+            vunmap <buffer> <enter>
+            nunmap <buffer> <enter>
+            let b:VimEterExecFlag=0
+            echo "vim repl mode is off."
+        else
+            inoremap <buffer> <enter> <c-o>$<c-o><cmd>:exec getline(".")<CR><CR>
+            vnoremap <buffer> <enter> "vy <cmd>:@v<CR>
+            nnoremap <buffer> <enter> <cmd>:exec getline(".")<CR>j
+
+            let b:VimEterExecFlag=1
+            echo "vim repl mode is on."
+        endif
+    endfunction
+
+    function!VimuxCdWorkingDirectory()
+        call VimuxRunCommand(" cd ".expand('%:p:h'))
+        call VimuxRunCommand(" cd `git rev-parse --show-toplevel 2>/dev/null || echo .`")
+    endfunction
+
+
+    function! GetProjectPath()
+        " Check if the current directory is a Git repository
+        let l:git_root = system('git rev-parse --show-toplevel 2>/dev/null')
+        let l:git_root = substitute(l:git_root, '\n$', '', '')
+
+        " If it's a Git repository, return the root path
+        if !empty(l:git_root)
+            return l:git_root
+        endif
+
+        " If it's not a Git repository, return the directory of the current file
+        return expand('%:p:h')
+    endfunction
+
+    function! EscapePathToString(path)
+
+        " Remove leading and trailing whitespaces
+        let l:trimmed_path = substitute(fnamemodify(a:path, ":p"), '^\s*\(.\{-}\)\s*\n$', '\1', '')
+
+        " Replace slashes with percent signs
+        let l:swp_string = substitute(l:trimmed_path, '[/\\]', '%', 'g')
+
+        return l:swp_string
+    endfunction
+
+    function! ToggleMaximizeTmux()
+        if !s:CheckWarnVimPlugInstalled()
+            return
+        endif
+        if g:isToggledVertically || g:isToggledHorizontally
+            silent !tmux set status on
+            silent! call ToggleMaximize()
+            silent! !tmux resize-pane -Z
+            AirlineToggle
+        else
+            AirlineToggle
+            silent !tmux set status off
+            silent! !tmux resize-pane -Z 
+            redraw
+            sleep 100m
+            silent! call ToggleMaximize()
+        endif
+
+    endfunction
+
+    function!CloseMaximize()
+        if !g:vim_plug_installed
+            return
+        endif
+        if g:isToggledVertically || g:isToggledHorizontally
+            silent! call ToggleMaximize()
+        endif
+        if g:is_zen_mode
+            lua require('zen-mode').toggle({})
+            if executable('tmux') && strlen($TMUX)
+                " silent! !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+                silent! !tmux set status on
+            endif
+            let g:is_zen_mode=0
+        endif
+
+    endfunction
+
+    function! VimspectorSetupUi()
+        call win_gotoid(g:vimspector_session_windows.output)
+        set ft=asm
+        vert rightb copen
+        exec ":vert resize " . winwidth(g:vimspector_session_windows.output)/3
+        nnoremenu <silent> WinBar.ListBreakpoints <cmd>:call vimspector#ListBreakpoints()<CR>
+        call vimspector#ListBreakpoints()
+
+        call win_gotoid(g:vimspector_session_windows.code)
+        call MapVimspector()
+    endfunction
+
+    function!VimspectorHelp()
+        echo "To install vimspector, run :VimspectorInstall.\nFor a fresh project, run <space>dg to generate debug configuration file.\nKey <space>dk can show keymap for debugging.\nTo show breakpoints, press gl or <space>dl."
+    endfunction
+
+    function!VimspectorConnected()
+        let connected=py3eval("(not '_vimspector_session' in vars()) or _vimspector_session._connection==None")
+        if !connected
+            echo "Vimspector is not connected!"
+        endif
+        return connected=="False"
+    endfunction
+
+    function!UpdateVimspectorBreakpoints()
+        if VimspectorConnected()
+            let id=win_getid()
+            call vimspector#ListBreakpoints()
+            call win_gotoid(id)
+        endif
+    endfunction
+
+    function!VimspectorCurrentLine()
+        if VimspectorConnected()
+            py3 thread, frame = _vimspector_session._stackTraceView._line_to_frame[2];_vimspector_session._stackTraceView._SetCurrentThread(thread);_vimspector_session._stackTraceView._JumpToFrame(frame)
+        else
+            py3 from vimspector import utils;utils.UserMessage( 'Vimspector not connected, start a debug session first', persist=False, error=True )
+        endif
+    endfunction
+
+    function!VimspectorRunToCursor()
+        if VimspectorConnected()
+            call vimspector#RunToCursor()
+        else
+            py3 from vimspector import utils;utils.UserMessage( 'Vimspector not connected, start a debug session first', persist=False, error=True )
+        endif
+    endfunction
+
+    function!VimspectorFrameUp()
+        if VimspectorConnected()
+python3 << endpy
+vimspectorss=_vimspector_session._stackTraceView
+curframe=vimspectorss._current_frame
+frameindex=[fr[1] for fr in vimspectorss._line_to_frame.values()].index(curframe)
+thread, frame = list(vimspectorss._line_to_frame.values())[max(0,frameindex-1)]
+vimspectorss._SetCurrentThread(thread)
+_vimspector_session._stackTraceView._JumpToFrame(frame)
+endpy
+        else
+            py3 from vimspector import utils;utils.UserMessage( 'Vimspector not connected, start a debug session first', persist=False, error=True )
+        endif
+    endfunction
+
+    function!VimspectorFrameDown()
+        if VimspectorConnected()
+python3 << endpy
+vimspectorss=_vimspector_session._stackTraceView
+curframe=vimspectorss._current_frame
+frameindex=[fr[1] for fr in vimspectorss._line_to_frame.values()].index(curframe)
+thread, frame = list(vimspectorss._line_to_frame.values())[min(len(vimspectorss._line_to_frame)-1,frameindex+1)]
+vimspectorss._SetCurrentThread(thread)
+_vimspector_session._stackTraceView._JumpToFrame(frame)
+endpy
+        else
+            py3 from vimspector import utils;utils.UserMessage( 'Vimspector not connected, start a debug session first', persist=False, error=True )
+        endif
+    endfunction
+
+    function! VimspectorEnter()
+        let g:vimspector_code_buffer_type=&filetype
+        augroup VimspectorBufferMappings 
+            autocmd!
+            exec 'autocmd FileType ' . g:vimspector_code_buffer_type . ' call MapVimspector()'
+        augroup end
+        call vimspector#Continue()
+    endfunction
+
+    function! VimspectorExit()
+        autocmd! VimspectorBufferMappings
+        call vimspector#Reset()
+        sleep 1
+        " reopen code buffer to unmap buffer map
+        bdelete
+        edit #
+    endfunction
+
+    function! VimspectorToggleHide(win_nr,direction)
+        if winnr('$') == 1
+            echo 'There is only one window. Can not hide it.'
+            return
+        endif
+        call CloseMaximize()
+        let l:buf_num = winbufnr(a:win_nr)
+        if getbufvar(l:buf_num, 'hide_win') == ''
+            call setbufvar(l:buf_num, 'hide_win', 0)
+        endif
+        if getbufvar(l:buf_num, 'hide_win')
+            if getbufvar(l:buf_num, 'hide_win_height') > 0
+                exec a:win_nr . 'resize ' . getbufvar(l:buf_num, 'hide_win_height')
+            endif
+            if getbufvar(l:buf_num, 'hide_win_width') > 0
+                exec 'vertical ' . a:win_nr . 'resize ' . getbufvar(l:buf_num, 'hide_win_width')
+            endif
+            echo 'window ' . a:win_nr . ' unhided'
+        else
+            " vertical direction
+            if a:direction == 1
+                call setbufvar(l:buf_num, 'hide_win_height', -1)
+                call setbufvar(l:buf_num, 'hide_win_width', winwidth(a:win_nr))
+                exec 'vertical ' . a:win_nr . 'resize 1'
+            endif
+            " horizontal direction
+            if a:direction == 2
+                call setbufvar(l:buf_num, 'hide_win_height', winheight(a:win_nr))
+                call setbufvar(l:buf_num, 'hide_win_width', -1)
+                exec a:win_nr . 'resize 1'
+            endif
+            echo 'window ' . a:win_nr . ' hided'
+        endif
+        call setbufvar(l:buf_num, 'hide_win', 1-getbufvar(l:buf_num, 'hide_win'))
+    endfunction
+
+    function! MapVimspector()
+        nnoremap <buffer> g? <cmd>:call VimspectorHelp()<CR>
+        nnoremap <buffer> gc <cmd>:call vimspector#Continue()<CR> 
+        nnoremap <buffer> gp <cmd>:call vimspector#Pause()<CR>
+        nnoremap <buffer> ge <cmd>:call vimspector#Stop()<CR>
+        nnoremap <buffer> gq <cmd>:call VimspectorExit()<CR>
+        nnoremap <buffer> gb <cmd>:call vimspector#ToggleBreakpoint()<CR>
+        nnoremap <buffer> <silent> gB <cmd>:<c-u>call vimspector#ToggleBreakpoint(
+                    \ { 'condition': input( 'Enter condition expression: ' ),
+                    \   'hitCondition': '0' }
+                    \ )<CR>
+        nnoremap <buffer> gl <cmd>:call UpdateVimspectorBreakpoints()<CR>
+        nnoremap <buffer> g] <cmd>:call VimspectorFrameUp()<CR>
+        nnoremap <buffer> g[ <cmd>:call VimspectorFrameDown()<CR>
+        nnoremap <buffer> g<Space> <cmd>:call VimspectorCurrentLine()<CR>
+        nnoremap gT <cmd>:call VimspectorCurrentLine()<CR>
+        nnoremap <buffer> gs <cmd>:call vimspector#StepInto()<CR>
+        nnoremap <buffer> gn <cmd>:call vimspector#StepOver()<CR>
+        nnoremap <buffer> go <cmd>:call vimspector#StepOut()<CR>
+        nnoremap <buffer> gt <cmd>:call VimspectorRunToCursor()<CR>
+        nnoremap <buffer> g: :VimspectorEval 
+    endfunction
+
+    function! NearestMethodOrFunction() abort
+      return get(b:, 'vista_nearest_method_or_function', '')
+    endfunction
+
+    function! LoadFreefemCompletion()
+        if g:freefemCompletionNotLoaded
+            let g:freefemCompletionNotLoaded=0
+            view $HOME/Software/freefem++/freefem_include/completion.edp
+            set filetype=edp
+            echo "Completion.edp is loaded for completion of custom header functions"
+            b#
+        endif
+    endfunction
+
+    " function! MatlabHelp()
+    "     let l:word_under_cursor = expand("<cword>")
+    "     if executable('matlab')
+    "         call Run_to_tmux_or_directly('help ' . l:word_under_cursor)
+    "     else
+    "     " --- Show octave help --------------------------------------------------
+    "         e /tmp/odd_for_vim_matlab.md
+    "         1,$d
+    "         " exec "read !octave <(echo 'help " . l:word_under_cursor . "')"
+    "
+    "         exec "read !octave <(echo 'help " . l:word_under_cursor . "') 2&>/dev/null"
+    "         exec 'normal! gg'
+    "         write
+    "     endif
+    " endfunction
+
+    function! MatlabGoToDefinition()
+        let l:word_under_cursor = expand("<cword>")
+        if bufname('/' . l:word_under_cursor . '.m')!=''
+            exec 'b ' . bufname('/' . l:word_under_cursor . '.m')
+            return
+        endif
+        if executable('matlab')
+        " --- Open definition with matlab ---------------------------------------
+            let l:odd_clipboard=@+
+            call Run_to_tmux_or_directly('open ' . l:word_under_cursor)
+            call Run_to_tmux_or_directly(' yy')
+            sleep 800m
+            call Run_to_tmux_or_directly(' qq')
+
+            if filereadable(@+)
+                exec "e " . expand(@+)
+                " exec "echo " . expand(@+)
+            else
+                echo 'Fail to open matlab definition file.'
+            endif
+            let @+=l:odd_clipboard
+        elseif !empty(glob('$HOME/Software/ifem/ifem/'))
+        " --- Show ifem definition ----------------------------------------------
+            " let l:ifem_file_path=system('ag -l "^function .+\W' . expand('<cword>') . '\W" $HOME/FileExchange/VirtualBox_win7/matlab_lib/mylib/')
+            " exec "view " . l:ifem_file_path
+            let l:ifem_file_path=system('octave_cmd_path ' . expand('<cword>') . ' 2&>/dev/null')
+            exec "view " . l:ifem_file_path
+        else
+        " --- Show octave help --------------------------------------------------
+            e /tmp/odd_for_vim_matlab.md
+            1,$d
+            exec "read !octave <(echo 'help " . l:word_under_cursor . "') 2&>/dev/null"
+            exec 'normal! gg'
+            write
+        endif
+    endfunction
+
+        function! Toggle_breakpoints_for_matlab()
+            if !exists("b:matlab_breakpoints_lists")
+                let b:matlab_breakpoints_lists=[]
+            endif
+            if !exists("b:matlab_buffer_clear_count")
+                let b:matlab_buffer_clear_count=g:matlab_clear_counts
+            endif
+            if b:matlab_buffer_clear_count < g:matlab_clear_counts
+                let b:matlab_buffer_clear_count=g:matlab_clear_counts
+                let b:matlab_breakpoints_lists=[]
+            endif
+            if index(b:matlab_breakpoints_lists,line(".")) >= 0
+                call Run_to_tmux_or_directly("dbclear '" . expand("%:p") . "' at " . line("."))
+                call remove(b:matlab_breakpoints_lists,index(b:matlab_breakpoints_lists,line(".")))
+                echo 'breakpoint cleared'
+            else
+                call Run_to_tmux_or_directly("dbstop '" . expand("%:p") . "' at " . line("."))
+                call add(b:matlab_breakpoints_lists,line("."))
+                echo 'breakpoint added'
+            endif
+        endfunction
+
+        function! Clear_all_breakpoints_for_matlab()
+                call Run_to_tmux_or_directly("dbclear all")
+                let g:matlab_clear_counts=g:matlab_clear_counts+1
+        endfunction
+
+    function! DefLatexMappings()
+        nmap <buffer> ,i <plug>(vimtex-info)
+        nmap <buffer> ,b <plug>(vimtex-compile)
+        nmap <buffer> ,c <plug>(vimtex-clean)
+        nmap <buffer> ,v <plug>(vimtex-view)
+        inoremap <buffer> <m-v> <c-o><cmd>:VimtexView<CR>
+        nmap <buffer> ,r <plug>(vimtex-reverse-search)
+        nmap <buffer> ,e <plug>(vimtex-errors)
+        inoremap <buffer> <c-d> _{}<left>
+        inoremap <buffer> <c-u> ^{}<left>
+        inoremap <buffer> <c-o> $$<left>
+        inoremap <buffer> <c-b> \textbf{}<left>
+        nnoremap <buffer> ? <cmd>:echo "Keymap: (1) ,b : compile  (2) ,v : view\n        (3) ,e : show errors  (4) ,c : clean\n        (5) M-s : create/goto abbreviation  (6) M-r : show bib file"<CR>
+        nnoremap <buffer> z? ?
+    endfunction
+
+    function!StartLatexServer()
+        if empty(v:servername) && exists('*remote_startserver')
+          call remote_startserver('VIM')
+        endif
+    endfunction
+
+    function!LatexAutoSave(save_count)
+        if g:latex_auto_save_count >= a:save_count
+            let g:latex_auto_save_count=0
+            silent write
+        else
+            let g:latex_auto_save_count=g:latex_auto_save_count + 1
+        endif
+    endfunction
+
+    function! s:TranslateRepl()
+        if &modified
+            silent write
+            silent! exec '!translate "$(< ' . g:toBeTranslate_file . ')" > /tmp/oddtranslate && cat /tmp/oddtranslate > ' . g:translation_dir . '/translated.txt'
+        endif
+    endfunction
+
+    function! TranslateCount(translateCount)
+        if g:translate_count >= a:translateCount
+            let g:translate_count=0
+            call s:TranslateRepl()
+        else
+            let g:translate_count=g:translate_count + 1
+        endif
+    endfunction
+
+    function! Translate()
+        " let g:abcd=substitute(@v,"\'","\\'","g")
+        let s:translate_string=substitute(@v,"\'","","g")
+        let s:translate_string=substitute(s:translate_string,"\n",'    ',"g")
+        exec "!translate '" . s:translate_string . "'"
+        " exec "!translate '" . @v . "'"
+    endfunction
+
+    function! Changes_results(query,fullscreen)
+        redir! > ~/Software/vim/odd_txt_for_vim.txt
+        silent changes
+        redir end
+        exec "silent !~/Software/vim/format_help/format_for_changes " . expand("%")
+
+        call fzf#vim#grep(
+        \ 'cat ~/Software/vim/odd_txt_for_vim.txt ' , 0,fzf#vim#with_preview({'options': g:fzf_custom_bindings}), a:fullscreen)
+    endfunction
+
+    function! Jumps_results(query,fullscreen)
+        redir! > ~/Software/vim/odd_txt_for_vim.txt
+        silent jumps
+        redir end
+        exec "silent !~/Software/vim/format_help/format_for_jumps " . expand("%")
+
+        call fzf#vim#grep(
+        \ 'cat ~/Software/vim/odd_txt_for_vim.txt ' , 0,fzf#vim#with_preview({'options': g:fzf_custom_bindings}), a:fullscreen)
+    endfunction
+
+    function! s:buffer_list()
+      let l:list = filter(range(1, bufnr('$')),
+      \ "bufexists(v:val) && buflisted(v:val) && filereadable(expand('#' . v:val . ':p'))"
+      \ )
+      let l:buflist = map(l:list, 'bufname(v:val)')
+      let l:bufname_i=l:buflist[0]
+      let l:current_buf_name=bufname("%")
+      let l:previous_buf_name=bufname("#")
+      bufdo let b:current_line=line('.')
+      let l:bufnames_string = l:buflist[0] . ':' . getbufvar(l:bufname_i,"current_line") . ':'
+      for l:bufname_i in l:buflist[1:]
+          let l:bufnames_string = l:bufnames_string . '\n' . l:bufname_i . ':' . getbufvar(l:bufname_i,"current_line")  . ':'
+      endfor
+      bufdo unlet b:current_line
+      exec "buffer " . l:previous_buf_name
+      exec "buffer " . l:current_buf_name
+
+      " return map(l:list, 'bufname(v:val)')
+      return l:bufnames_string
+    endfunction
+
+    function! Fzf_buffers(query,fullscreen)
+      call fzf#vim#grep(
+      \ "echo '" . s:buffer_list() . "'" , 0,fzf#vim#with_preview({'options': g:fzf_custom_bindings}), a:fullscreen)
+    endfunction
+
+    function! RangeChooser()
+        let temp = tempname()
+        " The option "--choosefiles" was added in ranger 1.5.1. Use the next line
+        " with ranger 1.4.2 through 1.5.0 instead.
+        "exec 'silent !ranger --choosefile=' . shellescape(temp)
+        if has("gui_running")
+            exec 'silent !xterm -e ranger --choosefiles=' . shellescape(temp)
+        else
+            exec 'silent !ranger --choosefiles=' . shellescape(temp)
+        endif
+        if !filereadable(temp)
+            redraw!
+            " Nothing to read.
+            return
+        endif
+        let names = readfile(temp)
+        if empty(names)
+            redraw!
+            " Nothing to open.
+            return
+        endif
+        " Edit the first item.
+        exec 'edit ' . fnameescape(names[0])
+        " Add any remaning items to the arg list/buffer list.
+        for name in names[1:]
+            exec 'argadd ' . fnameescape(name)
+        endfor
+        redraw!
+    endfunction
+
+    function!VisualSetAbbreviation ()
+        cd %:h
+        " iabbrev will set abbreviation for insert mode
+        let l:abb_name = input('Please input abbreviation: ')
+
+        let l:abb_go_back=""
+        " if @v contains @@ substring
+        if stridx(@v,"@@")>=0
+            let l:abb_go_back="<esc>z?@@<CR>xxi"
+        endif
+
+        " let l:visual_region_text=substitute(@v,'|','<bar>','g')
+        " let l:visual_region_text=substitute(l:visual_region_text,'\n','<CR>','g')
+        " let l:abb_formula = "iabbrev " . l:abb_name . " " . l:visual_region_text . l:abb_go_back
+
+        let l:visual_region_text=substitute(@v,'\n *',"'" . '."\\n".' . "'",'g')
+        let l:set_abb_str="let g:myabbr" . l:abb_name . "='" . l:visual_region_text . "'\n"
+        exec l:set_abb_str
+        let l:abb_formula="iabbrev " . l:abb_name . " <c-r>=" . "g:myabbr" . l:abb_name . "<CR>" .l:abb_go_back
+        exec l:abb_formula
+        silent call SaveAbbr(l:set_abb_str . l:abb_formula)
+    endfunction
+
+    function! SaveAbbr(abb_formula)
+        redir >> ./abbrev_defs.vim
+        "foo.txt is the file in which you wish to add your abbreviations. For me, it
+        "is ~/.vim/ftplugin/tex.vim
+        echo a:abb_formula
+        redir END
+    endfunction
+
+    function! LoadAbbr()
+        cd %:h
+        if filereadable("./abbrev_defs.vim")
+            source ./abbrev_defs.vim
+        else
+            echo "there is no abbrev_defs.vim file in current directory"
+        endif
+    endfunction
+
+    function! ShowAbbreviations()
+        e ./abbrev_defs.vim
+    endfunction
+
+    function! ToggleZenMode(withTmux)
+        if g:is_zen_mode  " Leave zen mode
+            lua require('zen-mode').toggle({})
+            if executable('tmux') && strlen($TMUX) && a:withTmux==1
+                " silent! !tmux resize-pane -Z
+                silent! !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+                silent! !tmux set status on
+            endif
+            let g:is_zen_mode=0
+        else  " Enter zen mode
+            if executable('tmux') && strlen($TMUX) && a:withTmux==1
+                silent! !tmux set status off
+                " silent! !tmux resize-pane -Z 
+                silent! !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+            endif
+            redraw
+            sleep 10m
+            lua require('zen-mode').toggle({})
+            let g:is_zen_mode=1
+        endif
+    endfunction
+
+    function! MapDap()
+        nnoremap <buffer> g? <cmd>:call DapHelp()<CR>
+        nmap <buffer> gb <space>db
+        nmap <buffer> gB <space>dB
+        nmap <buffer> gc <space>dc
+        nmap <buffer> ge <space>de
+        nmap <buffer> gp <space>dp
+        nmap <buffer> gq <space>dq
+        nmap <buffer> gn <space>dn
+        nmap <buffer> gs <space>ds
+        nmap <buffer> go <space>do
+        nmap <buffer> g] <space>d]
+        nmap <buffer> g[ <space>d[
+        nmap <buffer> gr <space>dr
+        nmap <buffer> gt <space>dt
+        nmap <buffer> gT <space>dT
+        nmap <buffer> <space>0 <space>d0
+        nmap <buffer> g0 <space>d0
+        nmap <buffer> gR <space>dR
+        nmap <buffer> <space>R <space>dR
+        nmap <buffer> gE <space>d:
+        vnoremap <buffer> gE <cmd>lua require("dapui").eval()<CR>
+        nmap <buffer> g: <space>d:
+        vnoremap <buffer> g: <cmd>lua require("dapui").eval()<CR>
+    endfunction
+
+    function! DapEnter()
+        call MapDap()
+        let g:dap_code_buffer_type=&filetype
+        augroup DapBufferMappings 
+            autocmd!
+            exec 'autocmd FileType ' . g:dap_code_buffer_type . ' call MapDap()'
+        augroup end
+        echo 'autocmd called '
+        lua require'dap'.continue()
+        lua require"dapui".open()
+    endfunction
+
+    function! DapExit()
+        autocmd! DapBufferMappings
+        lua require'dap'.terminate()
+        lua require"dapui".close()
+        sleep 1
+        " reopen code buffer to unmap buffer map
+        bdelete
+        edit #
+    endfunction
+
+    function!DapHelp()
+        echo "Left then right click or press o in breakpoints or frame to jump. For more keymaps, type <space>hdk then dap to see."
+    endfunction
+
+    cnoremap <C-x> <C-\>eSetClipboard(getcmdline())<CR>
+    function! SetClipboard(cmd) abort
+      let @+ = a:cmd
+      return ""
+    endfunction
+    
+    function!SearchHistoryHandler()
+        " Use this function with cnoremap
+        " Search command history in command line mode
+        " Search search history in search mode
+        if getcmdtype() == '/'
+            exec 'Telescope search_history'
+        else
+            exec 'Telescope command_history'
+        endif
+    endfunction
+
+    function!ExecuteLuaVisual()
+        " delete empty line (mainly for python)
+        let g:lua_visual_delete_blank_line=substitute(@v,'\n\n\+','\n','g')
+        if(&filetype=='python')
+            " add empty line to jump out of block (for python, ipython does
+            " not need the following line)
+            let g:lua_visual_delete_blank_line=substitute(g:lua_visual_delete_blank_line,'\(\n\s[^\n]\+\n\)\(\S\)','\1\n\2','g')
+            " don't jump for else: and elif: (for python)
+            let g:lua_visual_delete_blank_line=substitute(g:lua_visual_delete_blank_line,'\n\nelse:','\nelse:','g')
+            let g:lua_visual_delete_blank_line=substitute(g:lua_visual_delete_blank_line,'\n\(\nelif\W\)','\1','g')
+        endif
+        lua local f =loadstring(vim.g.lua_visual_delete_blank_line);pcall(f)
+    endfunction
+
+
+lua <<EOF
+    function MatlabHelp()
+      local Popup = require("nui.popup")
+      local event = require("nui.utils.autocmd").event
+      local word_under_cursor = vim.fn.expand("<cword>")
+      if word_under_cursor == "" then
+        print("No word under cursor found")
+        return
+      end
+
+      local popup = Popup({
+        enter = true,
+        focusable = true,
+        border = {
+          style = "rounded",
+        },
+        position = "50%",
+        size = {
+          width = "80%",
+          height = "60%",
+        },
+      })
+
+      -- mount/open the component
+      popup:mount()
+
+      -- unmount component when cursor leaves buffer
+      popup:on(event.BufLeave, function()
+        popup:unmount()
+      end)
+
+      local cmd = "octave <(echo 'help " .. word_under_cursor .. "') 2&>/dev/null"
+      local output = vim.fn.system(cmd)
+      lines = {}
+      for line in string.gmatch(output, "[^\r\n]+") do
+        table.insert(lines, line)
+      end
+
+      vim.api.nvim_buf_set_lines(popup.bufnr, 0, 1, false, lines)
+      vim.api.nvim_buf_set_option(popup.bufnr, 'filetype', "vimdoc")
+    end
+EOF

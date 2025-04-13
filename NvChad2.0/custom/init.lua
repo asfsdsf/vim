@@ -3,7 +3,7 @@
 vim.api.nvim_command "set runtimepath^=~/.vim runtimepath+=~/.vim/after"
 vim.api.nvim_command "let &packpath = &runtimepath"
 vim.g.vim_plug_installed = true
-vim.g.NvChadDir = "~/Software/vim/NvChad"
+vim.g.NvChadDir = "~/Software/vim/NvChad2.0"
 local vimrc = vim.g.NvChadDir .. "/vimrc_for_lua"
 vim.cmd.source(vimrc)
 vim.g.is_zen_mode = false

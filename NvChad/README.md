@@ -1,6 +1,11 @@
-# NvChad v2.0
+# NvChad v2.5
 
-To use this configuration, symlink `custom/` directory to `~/.config/NvChad2.0/lua/custom`
+To use this configuration, clone `starter.git` to `~/.config/NvChad`:
+```shell
+git clone path/to/NvChad/starter.git ~/.config/NvChad/
+```
+
+The NvChad `starter` repository is originated from [https://github.com/NvChad/starter](https://github.com/NvChad/starter)
 
 ## Dependencies
 
@@ -13,10 +18,9 @@ sudo apt install tree-sitter-cli ripgrep fd-find luarocks
 ```shell
 # Make sure network connection
 export {http,https,ftp}_proxy='http://127.0.0.1:7890'
-alias nvc="NVIM_APPNAME=NvChad2.0 nvim"
-git clone https://github.com/NvChad/NvChad ~/.config/NvChad2.0 --depth 1
-ln -s ~/Software/vim/NvChad2.0/custom ~/.config/NvChad2.0/lua/custom
-nvc
+alias nv="NVIM_APPNAME=NvChad nvim"
+ln -s ~/Software/vim/NvChad/starter/ ~/.config/NvChad
+nv
 # Inside neovim, after the installation of nvchad, run :MasonIntallAll
 ```
 
@@ -25,23 +29,24 @@ Inside neovim, run `:Lazy` and press `U`
 
 ## Disk upgrade
 ```shell
-cd ~/.config/NvChad2.0/
+cd ~/.config/NvChad/
 git pull
-rm -rf ~/.local/share/NvChad2.0/
-nvc
+rm -rf ~/.local/share/NvChad/
+nv
 # Inside neovim, after the installation of nvchad, run :MasonIntallAll
 ```
 
 ## Uninstall
 ```shell
-rm -rf ~/.config/NvChad2.0/
-rm -rf ~/.local/share/NvChad2.0/
+rm -rf ~/.config/NvChad/
+rm -rf ~/.local/share/NvChad/
+rm -rf ~/.cache/NvChad/
 ```
 
 ## Plugins configuration
 ### Chatgpt setup
 Codium:
-doubao: It is setup in `path/to/NvChad2.0/custom/configs/chatgpt.lua`. And the apikey is read from `~/.config/doubao/apikey`
+doubao: It is setup in `path/to/NvChad/starter/lua/configs/chatgpt.lua`. And the apikey is read from `~/.config/doubao/apikey`
 llm.nvim:
 avante:
 
