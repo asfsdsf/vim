@@ -1,16 +1,41 @@
 M = {
   "yetone/avante.nvim",
   event = "VeryLazy",
-  lazy = false,
   version = false, -- set this if you want to always pull the latest change
   opts = {
     provider = "openai",
+    cursor_applying_provider = "deepseekchat",
     openai = {
       endpoint = "https://api.deepseek.com",
       model = "deepseek-chat",
       timeout = 30000, -- Timeout in milliseconds
       max_tokens = 8192,
       api_key_name = "DEEPSEEK_API_KEY", -- the shell command must prefixed with `^cmd:(.*)`
+    },
+    behaviour = {
+      auto_suggestions = false, -- Experimental stage
+      enable_token_counting = true, -- Whether to enable token counting. Default to true.
+      enable_cursor_planning_mode = false, -- Whether to enable Cursor Planning Mode. Default to false.
+      enable_claude_text_editor_tool_mode = false, -- Whether to enable Claude Text Editor Tool Mode.
+    },
+    vendors = {
+        --- ... existing vendors
+      deepseekchat = {
+        __inherited_from = 'openai',
+        endpoint = "https://api.deepseek.com",
+        model = "deepseek-chat",
+        timeout = 30000, -- Timeout in milliseconds
+        max_tokens = 8192,
+        api_key_name = "DEEPSEEK_API_KEY", -- the shell command must prefixed with `^cmd:(.*)`
+      },
+      doubao = {
+        __inherited_from = 'openai',
+        endpoint = "https://ark.cn-beijing.volces.com/api/v3",
+        model = "doubao-1-5-pro-32k-250115",
+        timeout = 30000, -- Timeout in milliseconds
+        max_tokens = 8192,
+        api_key_name = "DOUBAO_API_KEY", -- the shell command must prefixed with `^cmd:(.*)`
+      },
     },
   },
   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`

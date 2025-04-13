@@ -27,8 +27,8 @@ end
 dap.adapters.python = {
   type = "executable",
   -- command = vim.fn.system('printf $(dirname "$(realpath "$(which debugpy)")")') .. '/venv/bin/python',
-  command = '/home/zky/Software/anaconda/anaconda3/envs/debugpy/bin/python';
-  args = { "-m", "debugpy.adapter", },
+  command = vim.fn.system('printf "$(conda run -n debugpy which python)"'):gsub('\n', ''),
+  args = { "-m", "debugpy.adapter" },
 }
 dap.configurations.python = {
   {

@@ -9,6 +9,8 @@ local overrides = require "custom.configs.overrides"
 
 local avante_plug = require "custom.configs.avante"
 
+local llm_plug = require "custom.configs.llm"
+
 local treesitter_plug = require "custom.configs.treesitter-plug"
 
 -- ***********************************************************************
@@ -134,6 +136,9 @@ local plugins = {
         {"<leader>hd", group = "describe"},
         {"<leader>f", group = "file"},
         {"<leader>fv", group = "config"},
+        {"\\", group = "ai"},
+        {"\\c", group = "chatgpt"},
+        {"\\l", group = "llm"},
       })
       require("which-key").add({
         {"<a-x>h", group = "help"},
@@ -363,6 +368,10 @@ local plugins = {
 -- ***********************************************************************
 --   4. completion plugins
 --     - copilot.vim                    -- github copilot
+--     - ChatGPT.nvim                   -- ChatGPT chat plugin but using doubao
+--     - llm.nvim                       -- ai chat plugin
+--     - avante.nvim                    -- code agent
+--     - minuet-ai.nvim                 -- code completion
 --     - fcitx.vim                      -- fcitx support
 -- ***********************************************************************
 
@@ -395,11 +404,20 @@ local plugins = {
 
   {
     url="~/Software/vim/plugins/ChatGPT.nvim.doubao.git",
+    event = "VeryLazy",
     branch="zky",
     config = function()
       require 'chatgpt'.setup(require "custom.configs.chatgpt")
     end,
-    event = 'BufEnter',
+  },
+
+  {
+    "Kurama622/llm.nvim",
+    dependencies = llm_plug.dependencies,
+    event = llm_plug.event,
+    cmd = llm_plug.cmd,
+    config = llm_plug.config,
+    keys = llm_plug.keys,
   },
 
   {
@@ -456,6 +474,12 @@ local plugins = {
     end,
   },
 
+-- (auto switch chinese input method) keep and restore fcitx state when leaving/re-entering insert mode 
+  {
+    "lilydjwg/fcitx.vim",
+    event = "InsertEnter",
+  },
+
 -- ***********************************************************************
 --   5. languages plugins
 --     - nvim-dap                       -- debugger
@@ -485,12 +509,6 @@ local plugins = {
       require "custom.configs.nvim-dap"
       require("core.utils").load_mappings "dap"
     end,
-  },
-
--- (auto switch chinese input method) keep and restore fcitx state when leaving/re-entering insert mode 
-  {
-    "lilydjwg/fcitx.vim",
-    event = "InsertEnter",
   },
 
 -- ***********************************************************************
@@ -532,8 +550,8 @@ local plugins = {
 --     - vim-visual-multi               -- multiple cursors
 --     - vim-surround                   -- surround text object
 --     - zen-mode.nvim                  -- zen mode
---     - treesitter-context            -- shwo function environment
---     - image.nvim                    -- image preview
+--     - treesitter-context             -- shwo function environment
+--     - image.nvim                     -- image preview
 -- ***********************************************************************
   {
     'goolord/alpha-nvim',
@@ -687,6 +705,7 @@ local plugins = {
     end,
     lazy = false,
   },
+
 -- ***********************************************************************
 --   -1. disable Nvchad default plugins
 --     - nvim-tree                     -- Replaced by neo-tree
