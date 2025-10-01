@@ -5,7 +5,7 @@
 """ this function can only be added once. Hence you can
 " if !exists('g:vimrc_has_been_sourced')
 "     call airline#add_statusline_func('WindowNumber')
-" endif 
+" endif
 
 
 " ***********************************************************************
@@ -92,6 +92,8 @@
     " - set encoding to utf8
 " ***********************************************************************
 
+    set noreadonly
+
     " - Set dot_file_path for neovim and vim
     if has('nvim')
         let b:plug_path='~/.nvim/plugged'
@@ -104,7 +106,7 @@
     set nocompatible              " be improved, required
 
     " - set encoding to utf8
-    set encoding=utf8 
+    set encoding=utf8
 
     let g:vim_plug_installed=0
 
@@ -153,11 +155,11 @@ if exists('*plug#begin')
     " in ~/.nvim/plugged/YouCompleteMe for nvim
     " generate .ycm_extra_conf.py file according to CMakeList.txt for YouCompleteMe
     if !empty($DISPLAY)  " if not on server
-        Plug 'rdnetto/YCM-Generator',{ 'branch': 'develop'} 
+        Plug 'rdnetto/YCM-Generator',{ 'branch': 'develop'}
     endif
     if !empty($DISPLAY)  " if not on server
         " Plug 'Valloric/YouCompleteMe'  " auto complete engine
-        Plug 'lilydjwg/fcitx.vim'  " (auto switch chinese input method) keep and restore fcitx state when leaving/re-entering insert mode 
+        Plug 'lilydjwg/fcitx.vim'  " (auto switch chinese input method) keep and restore fcitx state when leaving/re-entering insert mode
         Plug 'liuchengxu/vista.vim'  " View and search LSP symbols, tags in Vim/NeoVim.
     endif
     " sudo apt install nodejs yarnpkg
@@ -233,7 +235,7 @@ if exists('*plug#begin')
         Plug 'folke/noice.nvim'  " replaces the UI for messages, cmdline and the popupmenu.
         Plug 'MunifTanjim/nui.nvim'  " UI Component Library for Neovim.(For other plugins)
         Plug 'nvim-lua/plenary.nvim'  " for neo-tree
-        Plug 'nvim-neo-tree/neo-tree.nvim', { 'branch': 'v2.x' }  
+        Plug 'nvim-neo-tree/neo-tree.nvim', { 'branch': 'v2.x' }
         Plug 'rcarriga/nvim-notify'  " A fancy, configurable, notification manager for NeoVim
     endif
     Plug 'kien/rainbow_parentheses.vim'
@@ -510,7 +512,7 @@ endif
     function! s:CheckWarnVimPlugInstalled()
         if g:vim_plug_installed
             return 1
-        else 
+        else
             echohl WarningMsg
             echomsg "vim-plug is not installed."
             echohl None
@@ -566,7 +568,9 @@ endif
         endif
     endfunc
      " Comment following line to disable meta key as alt
-    call Terminal_MetaMode(0)
+    if g:vim_plug_installed
+        call Terminal_MetaMode(0)
+    endif
 
     endif
 
@@ -740,7 +744,7 @@ endif
         execute "normal BvEy"
         let url=matchstr(@0, '[a-z]*:\/\/[^ >,;]*')
         if url != ""
-            " silent exec "!open -a ".path." '".url."'" | redraw! 
+            " silent exec "!open -a ".path." '".url."'" | redraw!
             silent exec "!/usr/bin/google-chrome-stable '".url."'&" | redraw!
             echo "opened ".url
         else
@@ -902,7 +906,7 @@ endif
     " - map ,er to execute vim line/selected region in normal/visual mode
 " 6.8_Command mode keymap
     " - command-line window enter insert mode automatically
-    " - set filetype to be the same with previous file when searching 
+    " - set filetype to be the same with previous file when searching
     " - set filetype to be the same with previous file when replacing in command-line mode
     " - execute the command under the cursor and then have the command-line window open again
     " - map <c-h> to search command history or search history in command line mode
@@ -1398,8 +1402,8 @@ endif
     " after :/?, type <c-f> to edit
     au CmdwinEnter [:/?]  startinsert
 
-    " - set filetype to be the same with previous file when searching 
-    "   because autocomplete will search all buffer with same filetype 
+    " - set filetype to be the same with previous file when searching
+    "   because autocomplete will search all buffer with same filetype
     au BufEnter * let g:previous_buf_filetype=&filetype
     au CmdwinEnter [/?]  exec "set filetype=" . g:previous_buf_filetype
 
@@ -1460,7 +1464,7 @@ endif
     " - set location for coc-settings.json
     " - coc language server settings for kotlin
     " - let VimspectorPrompt buffer use omni completion
-    " - coc user settings 
+    " - coc user settings
     " - highlight the symbol and its references when holding the cursor.
     " - scroll popup window with <c-d> and <c-u> in insert mode
     " - map <up> and <down> and <c-u> and <c-d> to scroll in coc.nvim floating windows such as documentation window
@@ -1523,7 +1527,7 @@ endif
 " 7.7_Ale
 " 7.8_Cscope
     " - use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
-    " - check cscope for definition of a symbol before checking ctags: 
+    " - check cscope for definition of a symbol before checking ctags:
     " - add any cscope database in current directory
     " - show msg when any other cscope db added
     " - mappings for cscope
@@ -1625,7 +1629,7 @@ if g:vim_plug_installed
     " To use it with python:
     " pip install jedi pylint neovim dbus-python
     " # maybe `apt install python3-venv` is needed
-    " # jedi-language-server will be auto installed when a python file is 
+    " # jedi-language-server will be auto installed when a python file is
     " # open. But it takes long time with bad network.
     " # can install it manually by
     " pip install jedi-language-server
@@ -1687,7 +1691,7 @@ if g:vim_plug_installed
 
     " User configuration object, define this variable when
     " you can't use coc#config()
-    " - coc user settings 
+    " - coc user settings
     let g:coc_user_config={
         \ "diagnostic.errorSign": '',
         \ "diagnostic.warningSign": '',
@@ -1806,7 +1810,7 @@ if g:vim_plug_installed
             " call coc#float#close_all()
         else
             if exists('*coc#status')
-                call CocActionAsync('showSignatureHelp') 
+                call CocActionAsync('showSignatureHelp')
             endif
             let g:is_coc_show_signature=1
         endif
@@ -1854,7 +1858,7 @@ if g:vim_plug_installed
     nmap <silent> gy <Plug>(coc-type-definition)
     nmap <silent> gi <Plug>(coc-implementation)
     nmap <silent> gr <Plug>(coc-references)
-    
+
     " - map K to show documentation in preview window.
     function! s:show_documentation()
       if (index(['vim','help'], &filetype) >= 0)
@@ -2086,7 +2090,7 @@ endif  " end if g:vim_plug_installed
         else
             AirlineToggle
             silent !tmux set status off
-            silent! !tmux resize-pane -Z 
+            silent! !tmux resize-pane -Z
             redraw
             sleep 100m
             silent! call ToggleMaximize()
@@ -2238,7 +2242,7 @@ endpy
     function! VimspectorEnter()
         GitGutterDisable
         let g:vimspector_code_buffer_type=&filetype
-        augroup VimspectorBufferMappings 
+        augroup VimspectorBufferMappings
             autocmd!
             exec 'autocmd FileType ' . g:vimspector_code_buffer_type . ' call MapVimspector()'
         augroup end
@@ -2303,7 +2307,7 @@ endpy
     nnoremap <Space>d? <cmd>:call VimspectorHelp()<CR>
     nnoremap <Space>dk <cmd>:FindActionsFor vimspector<CR>
     nnoremap <Space>dd <cmd>:call VimspectorEnter()<CR>
-    nnoremap <Space>dc <cmd>:GitGutterDisable<CR><cmd>:call vimspector#Continue()<CR> 
+    nnoremap <Space>dc <cmd>:GitGutterDisable<CR><cmd>:call vimspector#Continue()<CR>
     nnoremap ,cd <cmd>:call VimspectorEnter()<CR>
     nnoremap <Space>dp <cmd>:call vimspector#Pause()<CR>
     nnoremap <Space>dr <cmd>:call vimspector#Restart()<CR>
@@ -2324,7 +2328,7 @@ endpy
     nnoremap <Space>dn <cmd>:call vimspector#StepOver()<CR>
     nnoremap <Space>do <cmd>:call vimspector#StepOut()<CR>
     nnoremap <Space>dt <cmd>:call vimspector#RunToCursor()<CR>
-    nnoremap <Space>d: :VimspectorEval 
+    nnoremap <Space>d: :VimspectorEval
 
     " - map to copy .vimspector.json file to current directory for further config in project directory.
     nnoremap <Space>dg <cmd>:cd %:h<CR><cmd>:silent! Gcd<CR><cmd>:!cp ~/Software/vim/vimspector/.vimspector.json .<CR><cmd>:e .vimspector.json<CR>
@@ -2332,7 +2336,7 @@ endpy
     " - function to map vimspector buffer keymap
     function! MapVimspector()
         nnoremap <buffer> g? <cmd>:call VimspectorHelp()<CR>
-        nnoremap <buffer> gc <cmd>:GitGutterDisable<CR><cmd>:call vimspector#Continue()<CR> 
+        nnoremap <buffer> gc <cmd>:GitGutterDisable<CR><cmd>:call vimspector#Continue()<CR>
         nnoremap <buffer> gp <cmd>:call vimspector#Pause()<CR>
         nnoremap <buffer> ge <cmd>:call vimspector#Stop()<CR>
         nnoremap <buffer> gq <cmd>:call VimspectorExit()<CR>
@@ -2350,7 +2354,7 @@ endpy
         nnoremap <buffer> gn <cmd>:call vimspector#StepOver()<CR>
         nnoremap <buffer> go <cmd>:call vimspector#StepOut()<CR>
         nnoremap <buffer> gt <cmd>:call VimspectorRunToCursor()<CR>
-        nnoremap <buffer> g: :VimspectorEval 
+        nnoremap <buffer> g: :VimspectorEval
     endfunction
 
 " ***********************************************************************
@@ -2444,20 +2448,20 @@ endpy
         " - use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
         set cscopetag
 
-        " - check cscope for definition of a symbol before checking ctags: 
+        " - check cscope for definition of a symbol before checking ctags:
         " set to 1 if you want the reverse search order.
         set csto=0
 
         " - add any cscope database in current directory
         if filereadable("cscope.out")
-            cs add cscope.out  
-        " else add the database pointed to by environment variable 
+            cs add cscope.out
+        " else add the database pointed to by environment variable
         elseif $CSCOPE_DB != ""
             cs add $CSCOPE_DB
         endif
 
         " - show msg when any other cscope db added
-        set cscopeverbose  
+        set cscopeverbose
 
         "   's'   symbol: find all references to the token under cursor
         "   'g'   global: find global definition(s) of the token under cursor
@@ -2469,24 +2473,24 @@ endpy
         "   'd'   called: find functions that function under cursor calls
 
         " - mappings for cscope
-        nmap <C-\>s <cmd>:cs find s <C-R>=expand("<cword>")<CR><CR>	
-        nmap <C-\>g <cmd>:cs find g <C-R>=expand("<cword>")<CR><CR>	
-        nmap <C-\>c <cmd>:cs find c <C-R>=expand("<cword>")<CR><CR>	
-        nmap <C-\>t <cmd>:cs find t <C-R>=expand("<cword>")<CR><CR>	
-        nmap <C-\>e <cmd>:cs find e <C-R>=expand("<cword>")<CR><CR>	
-        nmap <C-\>f <cmd>:cs find f <C-R>=expand("<cfile>")<CR><CR>	
+        nmap <C-\>s <cmd>:cs find s <C-R>=expand("<cword>")<CR><CR>
+        nmap <C-\>g <cmd>:cs find g <C-R>=expand("<cword>")<CR><CR>
+        nmap <C-\>c <cmd>:cs find c <C-R>=expand("<cword>")<CR><CR>
+        nmap <C-\>t <cmd>:cs find t <C-R>=expand("<cword>")<CR><CR>
+        nmap <C-\>e <cmd>:cs find e <C-R>=expand("<cword>")<CR><CR>
+        nmap <C-\>f <cmd>:cs find f <C-R>=expand("<cfile>")<CR><CR>
         " nmap <C-\>i <cmd>:cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
         nmap <C-\>i <cmd>:cs find i <C-R>=expand("%:p:t")<CR>$<CR>
-        nmap <C-\>d <cmd>:cs find d <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-\>d <cmd>:cs find d <C-R>=expand("<cword>")<CR><CR>
 
-        nmap <Space>ss <cmd>:cs find s <C-R>=expand("<cword>")<CR><CR>	
-        nmap <Space>sg <cmd>:cs find g <C-R>=expand("<cword>")<CR><CR>	
-        nmap <Space>sc <cmd>:cs find c <C-R>=expand("<cword>")<CR><CR>	
-        nmap <Space>st <cmd>:cs find t <C-R>=expand("<cword>")<CR><CR>	
-        nmap <Space>se <cmd>:cs find e <C-R>=expand("<cword>")<CR><CR>	
-        nmap <Space>sf <cmd>:cs find f <C-R>=expand("<cfile>")<CR><CR>	
+        nmap <Space>ss <cmd>:cs find s <C-R>=expand("<cword>")<CR><CR>
+        nmap <Space>sg <cmd>:cs find g <C-R>=expand("<cword>")<CR><CR>
+        nmap <Space>sc <cmd>:cs find c <C-R>=expand("<cword>")<CR><CR>
+        nmap <Space>st <cmd>:cs find t <C-R>=expand("<cword>")<CR><CR>
+        nmap <Space>se <cmd>:cs find e <C-R>=expand("<cword>")<CR><CR>
+        nmap <Space>sf <cmd>:cs find f <C-R>=expand("<cfile>")<CR><CR>
         nmap <Space>si <cmd>:cs find i <C-R>=expand("%:p:t")<CR>$<CR>
-        nmap <Space>sd <cmd>:cs find d <C-R>=expand("<cword>")<CR><CR>	
+        nmap <Space>sd <cmd>:cs find d <C-R>=expand("<cword>")<CR><CR>
     endif
 
 
@@ -2523,7 +2527,7 @@ endpy
     " - map to show copilot panel
     nnoremap <silent> <leader>cp <cmd>:Copilot panel<CR>
     inoremap <silent> <a-i> <esc><cmd>:Copilot panel<CR>
- 
+
 
 " ***********************************************************************
 " 8_Language settings ***************************************************
@@ -2579,7 +2583,7 @@ endpy
 " 8.1_Html/css
 " ***********************************************************************
 
-" emmet-vim {{{ 
+" emmet-vim {{{
     " - Enable just for html/css
     let g:user_emmet_install_global = 0
     autocmd FileType html,css EmmetInstall
@@ -2990,7 +2994,7 @@ endif
     " - custom snippets are in folders under:
     " - map to trigger configuration
     " - map to jump forward/backward in snips
-    " - split your window when :UltiSnipsEdit 
+    " - split your window when :UltiSnipsEdit
     " - snip style for python
     " - snip meta data
 " 9.10_Vim-expand-region
@@ -3167,7 +3171,7 @@ endif
 
     " - move to the same line when swithing in git history mode
     au! BufLeave  fugitive://*  let g:glog_cursor=line(".")
-    " au! BufEnter  fugitive://*  exec g:glog_cursor 
+    " au! BufEnter  fugitive://*  exec g:glog_cursor
     au! BufEnter  fugitive://*  exec "if exists('g:glog_cursor')\n exec g:glog_cursor\n endif\n"
 
 " ***********************************************************************
@@ -3249,7 +3253,7 @@ endif
     \ : fzf#vim#with_preview({'options': g:fzf_custom_bindings}),
     \ <bang>0)
 
-    command! -nargs=* -bang AgCurrentFile 
+    command! -nargs=* -bang AgCurrentFile
     \ call fzf#vim#grep(
     \ 'cat_to_fzf_ag_format ' . expand('%') ,
     \ 0,
@@ -3400,11 +3404,11 @@ endif
     let g:UltiSnipsJumpForwardTrigger="<c-f>"
     let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 
-    " - split your window when :UltiSnipsEdit 
+    " - split your window when :UltiSnipsEdit
     let g:UltiSnipsEditSplit="vertical"
 
     " - snip style for python
-    "doxygen" sphinx" google" numpy" jedi" 
+    "doxygen" sphinx" google" numpy" jedi"
     let g:ultisnips_python_style="numpy"
 
     " - snip meta data
@@ -3432,7 +3436,7 @@ endif
     " Interactive with ranger - a file manager installed by sudo apt install ranger
 
     " Start ranger using ":RangerChooser" or the keybinding "<Space>r".  Once you
-    " select one or more files, press enter and ranger will quit again and vim 
+    " select one or more files, press enter and ranger will quit again and vim
     " will open the selected files.
 
     function! RangeChooser()
@@ -3602,7 +3606,7 @@ let g:silent_unsupported=1
             set signcolumn=no
             if executable('tmux') && strlen($TMUX) && a:withTmux==1
                 silent! !tmux set status off
-                " silent! !tmux resize-pane -Z 
+                " silent! !tmux resize-pane -Z
                 silent! !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
             endif
             redraw
@@ -3628,7 +3632,7 @@ if has('nvim-0.5.0')
         lua require("notify").setup({max_height=10,render = "compact",stages = "static",level = "info",timeout = 2000,max_width = 300,background_colour="#000000"})
     " - enable and setup noice.nvim
         " lua require("noice").setup({ routes = { { view = "cmdline", filter = { event = "msg_showmode" }, }, }, })
-        
+
 endif  " end if has('nvim-0.5.0')
 if has('nvim')
 
@@ -3972,7 +3976,7 @@ EOF
         GitGutterDisable
         call MapDap()
         let g:dap_code_buffer_type=&filetype
-        augroup DapBufferMappings 
+        augroup DapBufferMappings
             autocmd!
             exec 'autocmd FileType ' . g:dap_code_buffer_type . ' call MapDap()'
         augroup end
@@ -4056,5 +4060,6 @@ endif  " end if g:vim_plug_installed
 " " this function can only be added once. Hence you can
 " if exists('g:vimrc_has_been_sourced')
 "     call airline#add_statusline_func('WindowNumber')
-" endif 
+" endif
 let g:vimrc_has_been_sourced = 1
+
