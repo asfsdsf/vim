@@ -1,68 +1,27 @@
 ~/Software/vim/vim_tip/find_actions
-g;          Go to last edited location
-<c-^>       Switch to next buffer tab
-<a-n>       Switch to next buffer tab
-<a-p>       Switch to previous buffer tab
-gt          Go to next tab
+g;          Go to previous change location
+g,          Go to next change location
+<c-^>       Switch to alternate buffer
+<c-o>       Jump back to previous visited location
+<c-i>       Jump forward to next visited location
+gt          Go to next tab (outside a DAP debugging buffer)
+gT          Go to previous tab (outside a DAP debugging buffer)
 :tabnew     Open new tab
-gT          Go to previous tab
-\           Easymotion: prefix key of easy motion (\ is <leader>)
-s
-\s          Easymotion: find char bidirection
-\f          Easymotion: find char in all windows
-\j          Easymotion: go to line
-\k          Easymotion: go to line
-\w          Easamotion: go to word
-\n          Easamotion: go to matches
-<c-f>       Search by lines using CtrlP(Find Strings everywhere)
-<c-t>       Ctrlp: (ctrlp command) open the selected file in a new 'tab'.
-<c-v>       Ctrlp: (ctrlp command) open the selected file in a 'vertical' split.
-<c-s>       Ctrlp: (ctrlp command) open the selected file in a 'horizontal' split.
-<c-r>       Ctrlp: (ctrlp command) toggle regexp search 
-<c-d>       Ctrlp: (ctrlp command) toggle search by file name
-<c-n>       Ctrlp: (ctrlp command) next search
-<c-p>       Ctrlp: (ctrlp command) previous search
-<c-f>       Ctrlp: (ctrlp command) next search mode
-<c-b>       Ctrlp: (ctrlp command) previous search mode
-<c-z>       Ctrlp: (ctrlp command) mark file
-<c-o>       Ctrlp: (ctrlp command) open marked files
-<c-\>       Ctrlp: (ctrlp command) paste word/file under cursor
-<tab>       Ctrlp: (ctrlp command) auto complete directory
-<Space>/    Search by lines using Ag in current working directory(Find Strings everywhere)
-<c-w><c-_>  Expand current split vertically
-<c-w><c-|>  Expand current split horizontally
-<c-w><c-w>  Switch to next split
+<c-w><c-w>  Switch to next window
 <c-w>v      Split current window vertically
 <c-w>s      Split current window horizontally
-<c-w>H      Move the current window(split) to the "far left"
-<c-w>J      Move the current window(split) to the "far down"
-<c-w>K      Move the current window(split) to the "far up"
-<c-w>L      Move the current window(split) to the "far right"
-<c-w>h      Move to the "far left" window(split)
-<c-w>j      Move to the "far down" window(split)
-<c-w>k      Move to the "far up" window(split)
-<c-w>l      Move to the "far right" window(split)
-<c-t>       Open in new tab(CtrlP or fzf)
-<a-a>       Fzf: select all. (Then <enter> to open quickfix window with all selections to easily open them)
-<a-d>       Fzf: deselect all.
-'           Fzf: a term following the ' sign will match exactly
-<c-m>       Open ctags
-<a-s-j>     Multiple cursor: (normal,visual-multi) Add multiple cursor below(down)
-<a-s-k>     Multiple cursor: (normal,visual-multi) Add multiple cursor above(up)
-<c-n>       Multiple cursor: (normal,visual-multi) Find and extend multiple cursor in visual mode
-1           Multiple cursor: (visual-multi) Add number(default 1/2/ means 1 3 5 ...)
-z<          Multiple cursor: (visual-multi) align at cursors by character
-]           Multiple cursor: (visual-multi)find next
-[           Multiple cursor: (visual-multi)find previous
-g/          Multiple cursor: (normal) start regex search
-<a-s-a>     Multiple cursor: (normal,visual,visual-multi) select all that match pattern
-<tab>       Multiple cursor: (visual-multi) change match case type
-Q           Multiple cursor: (visual-multi-visual) cancel current selection
-q           Multiple cursor: (visual-multi-visual) cancel current selection in cursor mode and ignore curret selection and find the next in visual mode
-<c-LeftMouse>    Multiple cursor: (normal,visual-multi) add cursor at clicked position
-<c-RightMouse>   Multiple cursor: (normal,visual-multi) select clicked word
-<M-C-RightMouse> Multiple cursor: (normal,visual-multi) select all lines between mouse click and current cursor
-:set mouse=a    Enable mouse mode
+<c-w>H      Move current window to far left
+<c-w>J      Move current window to far bottom
+<c-w>K      Move current window to far top
+<c-w>L      Move current window to far right
+<c-w>h      Move to left window
+<c-w>j      Move to lower window
+<c-w>k      Move to upper window
+<c-w>l      Move to right window
+<c-w>_      Maximize current window height
+<c-w>|      Maximize current window width
+<c-w>=      Balance window sizes
+<c-w>T      Move current window to new tab
 h           Move left
 j           Move down
 k           Move up
@@ -70,256 +29,1767 @@ l           Move right
 gg          Go to beginning of file
 G           Go to end of file
 ngg         Go to nth line
-:noh        cancel all current highlight
-:r!command  execute external command and read output to current buffer
-o: open in prev window
-t           NerdTree: open in new tab
-<Space>0    Open NerdTree
-go          NerdTree: preview   (File node mappings) 
-t           NerdTree: open in new tab   (File node mappings) 
-T           NerdTree: open in new tab silently   (File node mappings) 
-i           NerdTree: open split   (File node mappings) 
-gi          NerdTree: preview split   (File node mappings) 
-s           NerdTree: open vsplit   (File node mappings) 
-gs          NerdTree: preview vsplit   (File node mappings) 
-o           NerdTree: open & close node   (Directory node mappings) 
-O           NerdTree: recursively open node   (Directory node mappings) 
-t           NerdTree: open in new tab   (Directory node mappings) 
-T           NerdTree: open in new tab silently   (Directory node mappings) 
-R           NerdTree: refresh current root directory
-r           NerdTree: refresh cursor directory
-x           NerdTree: close parent of node   (Directory node mappings) 
-X           NerdTree: close all child nodes of current node recursively   (Directory node mappings) 
-e           NerdTree: explore selected dir   (Directory node mappings) 
-m           NerdTree: open nerdtree menu to do some operation(Create dir,delete dir,open in system software...)
-<Space>en   Go to next error
-<Space>eN   Go to previous error
-<Space>ep   Go to previous error
-<c-/><c-/>  Comment the line
-<c-y>       YouCompleteMe(YCM): comfirm selection
-<c-e>       YouCompleteMe(YCM): cancel completion and redisplay origin word
-<c-v>       snippets: trigger snippets
-<c-f>       snippets: jump forward to fill in items
-<c-b>       snippets: jump backward to fill in items
-<c-o>       Jump back to previous visited location
-<c-i>       Jump forward to next visited location
-L           Go to buttom of screen
-H           Go to top of screen
 M           Go to middle of screen
-%           Go to the match character of the pair
-vim -R      Open file by vim as read-only mode(can make changes,but can't save)
-vim -M      Open file by vim as read-only mode(can not make changes)
-vim +n      Open file and go to the nth line
-vim +/str   Go to the first match of the str pattern
-vim +?str   Go to the last match of the str pattern
-<S-right>   Go to begining of next word
-<S-left>    Go to begining of previous word
-ma          Bookmark the current location with name 'a'
-`a          Jump to the exact location of bookmark 'a'
-'a          Jump to the beginning of the line containing the bookmark 'a'
-mA          Bookmark the current location with name 'a' globally
-:marks      Display all bookmarks
-`"          Go to the position where you did last edit before exit
-`.          Go to the position of where the last change was made
-`^          Go to the position where the cursor was the last time when exiting insert mode
-gv          Start Visual mode with the same area as the previous area and the same mode.
-:'<,'>      Type : in visual mode to invoke this command.Execute command to manipulate the selected text
-D           Delete using system register
-Y           Yank using system register
-<C-r>       Paste content of the subsequent register (used in inserting).
-<A-h>       Move left in insert mode
-<A-j>       Move down in insert mode
-<A-k>       Move up in insert mode
-<A-l>       Move right in insert mode
-<A-H>       Move to left split
-<A-J>       Move to down split
-<A-K>       Move to up split
-<A-L>       Move to right split
-<c-R>       To find a string under working directory
-PythonPrint Open odd python file to edit a python program to print.Press again to exit and print
-[[          Go to preious function
-]]          Go to next function
-[]          Go to end of previous function
-][          Go to end of next function
+%           Go to matching character of pair
 /           Search forward
-?           Search backward
-.           Concat two strings in ex mode
-".          Register for last inserted text
-<a-h>       Insert mode: move the last word(<c-left>)
-<a-j>       Insert mode: add new line below and go to that(<c-o>o)
-<a-k>       Insert mode: add new line above and go to that(<c-o>O)
-<a-l>       Insert mode: move the previous word(<c-right>)
-<c-h>       Insert mode: move to left(<left>)
-<c-j>       Insert mode: move to down(<down>)
-<c-k>       Insert mode: move to up(<up>)
-<c-l>       Insert mode: move to right(<right>)
-<c-b>       Insert mode: move to the end(<c-o>^)
-<c-e>       Insert mode: move to the start(<c-o>$)
-<c-p>       Insert mode: paste(<c-o>p)
-<c-d>       Insert mode: delete(<c-o>d)
-<space>r    Run current python file(write automatically)
-cs          Vim-Surround: change surround type t1 to t2 with motion
-ds          Vim-Surround: delete surround type t
-ys          Vim-Surround: add surround type t with motion
-yss         Vim-Surround: add surround around the sentence
-S           Vim-Surround: (visual) add surround type t with motion
-DiffSaved   Difference between buffer and file
-CompareClipboard    Check difference between current buffer and clipboard
-zz          Scroll the current line to the center of the window
-<c-h>       Replace (replace strings in current buffer)
-(y/n/a/q/l/^E/^Y),Replace keymap for gc: y: yes one match, n: no one match, a: all matched, q: quit replace, l: yes one match then quit, ^E and ^Y: scroll 
-*<c-h>/     Replace word under cursor
-SPC ag      Open current file with gedit
-SPC au      Open undo tree
-SPC as      Open terminal
-:set wrap!  Turn off soft wrap
-:set wrap   Turn on soft wrap
-SPC tw      Toggle soft wrap for all panes
-:!python    Run selected code by python (in visual mode)
-<c-r>"      Paste in ex mode (command mode)
-:cd %:p:h   Set current directory to working directory (mapped to SPC cd)
-=           Is an operator (by default, it formats/indents text).
-SPC yf      YouCompleteMe(YCM): fix it of ycm
-SPC yr      YouCompleteMe(YCM): restart server
-SPC yg      YouCompleteMe(YCM): generate .ycm_extra_conf.py according to CMakeLists.txt
-SPC yd      YouCompleteMe(YCM): go to documentation
-SPC yb      YouCompleteMe(YCM): go to definition/declaration
-c-b         YouCompleteMe(YCM): go to definition/declaration
-c-]         ctags: go(jump) to symbol
-c-t         ctags: go(jump) back symbol to definition
-:!ctags -R    ctags: generate tags
-SPC gs      Git: git status (show status)
-SPC gd      Git: diff with HEAD
-SPC gc      Git: git commit
-SPC gfm     Git: git move
-SPC gfr     Git: git remove
-SPC ga      Git: git add(stage)
-SPC gb      Git: show git commit time in detail(every line)
-SPC gr      Git: git unstage(revert)
-SPC gl      Git: git browse history. see commit log. show all commit
-[c          Git: show next hunk(next change with HEAD in file)
-]c          Git: show previous hunk(next change with HEAD in file)
-SPC gn      Git: (in git log)show next commit of current file
-[q          Git: (in git log)show next commit of current file
-SPC gp      Git: (in git log)show previous commit of current file
-SPC gN      Git: (in git log)show previous commit of current file
-]q          Git: (in git log)show previous commit of current file
--	        Git: (in git status)add/reset file (works in visual mode too)
-<Enter>	    Git: (in git status)open current file in the window below
-p	        Git: (in git status)run `git add –patch` for current file
-cc          Git: (in git status)invoke :Gcommit
-c?          Git: (in git status)show help for git status commands
-:Gblame     Git: git blame,Show details about change time of every line
-SPC fO      Open file under the cursor with default system software
-SPC fo      Open current file with default system software
-SPC ft      Open the terminal with current file path as working directory
-SPC fd      Open the folder containing current file
-:e!<CR>     Refresh changed content of file(buffer) opened in vi(m)
-SPC pf      Fuzzy search/find current working directory(project file)
-<c-w> T     Move current window to new tab
-,cc         Run c,cpp file(Support CMakeLists)
-,cp         Run c,cpp file(Support CMakeLists) with mpirun (Use :SetMpiProcessors to set mpirun -n num)
-,cm         Make c,cpp file(Support CMakeLists)
-gf          Edit file under the cursor with nvim in current window
-gd          Go to definition
+?           Search backward (outside a LaTeX help mapping)
+*           Search word under cursor (normal mode)
+:noh        Clear search highlighting
+:set mouse=a  Enable mouse
+:set wrap   Enable soft wrap
+:set nowrap  Disable soft wrap
+:r!command  Read output of external command into current buffer
+:e!         Reload file and discard unsaved changes
+:cd %:p:h   Set working directory to current file directory
+vim -R      Open file read-only (buffer can be changed)
+vim -M      Open file without allowing buffer changes
+vim +n      Open file at nth line
+vim +/str   Open file at first match of pattern
+ma          Set local mark a
+`a          Jump to exact position of mark a
+'a          Jump to beginning of line containing mark a
+mA          Set global mark A
+:marks      Display all marks
+`"          Go to last cursor position before leaving file
+`.          Go to last change
+`^          Go to last position where insert mode stopped
+gv          Restore previous visual selection
+v           Enter visual character mode (normal mode)
+V           Enter visual line mode (normal mode)
+:'<,'>      Command range for visual selection
+D           Delete from cursor to end of line
+Y           Yank from cursor to end of line
+<c-r>"      Paste unnamed register (insert,command modes)
+<c-r>+      Paste system clipboard register (insert,command modes)
+".          Register containing last inserted text
+zz          Scroll current line to center of window
+=           Indent text with motion or visual selection
+gf          Edit file under cursor
 <c-g>       Show current file path
-<c-n>       Vim-gdb: frame down(next frame)
-<c-p>       Vim-gdb: frame up(previous frame)
-<F8>        Vim-gdb: set breakpoint at the cursor line
-,f          Format file
-<c-o>       Switch between select mode and visual mode
-SPC hc      Translate between Chinese and English
-:set mouse=a Enable mouse
-q/          Open search history in command-line window. And edit to search with auto-completion
-q:          Open command history in command-line window. And edit to execute with auto-completion
-c-f         In command/Ex mode, enter command-line window to edit with auto-completion
-SPC :       Vimux: promt to run command
-SPC vp      Vimux: run repl in current buffer
-SPC vr      Vimux: rerun previous command
-SPC vo      Vimux: open pane in tmux if there is only one pane
-SPC vc      Vimux: close pane that is opened by SPC vo command
-A-u         Vimux: Previous vim pane or tmux pane
-A-z         Vumux: Toggle maximize panes (for vim or in tmux)
-SetMpiProcessors    Set the numer of mpi processors for mpirun when execute c/cpp using ,cp command
-SPC ls      Save layout(session) with dir base name as layout(session) name
-SPC lS      Save layout(session) with user input as layout(session) name
-SPC lr      Load layout(session) with dir base name as layout(session) name
-SPC lR      Load layout(session) with prompt window for help to choose
-zM          Folding: fold all
-zR          Folding: unfold all
-SPC z-      Folding: fold all
-SPC z+      Folding: unfold all
-zj          Folding: go to next fold
-zk          Folding: go to previous fold
-A-s         Latex: (visual mode) save abbreviation
-A-s         Latex: (normal, insert mode) jump to abbreviation, (Press A-s again will jump back)
-A-r         Latex: jump to bibtex (Press A-r again will jump back)
-,i          Latex: show latex information
-,b          Latex: toggle latex autocompile
-,v          Latex: view and jump to pdf
-,e          Latex: show latex errors
-c-j         Latex: (insert mode) insert _{}<left>
-c-k         Latex: (insert mode) insert ^{}<left>
-c-o         Latex: (insert mode) insert $$<left>
-c-b         Latex: (insert mode) insert \textbf{}<left>
-SPC ss      Cscope: symbol: find all references to the token under cursor
-SPC sg      Cscope: global: find global definition(s) of the token under cursor
-SPC sc      Cscope: calls:  find all calls to the function name under cursor
-SPC st      Cscope: text:   find all instances of the text under cursor
-SPC se      Cscope: egrep:  egrep search for the word under cursor
-SPC sf      Cscope: file:   open the filename under cursor
-SPC si      Cscope: includes: find files that include the current file
-SPC sd      Cscope: called: find functions that function under cursor calls
-gd          Coc.nvim: go to definition
-gy          Coc.nvim: go to type definition
-gi          Coc.nvim: go to implementation
-gr          Coc.nvim: go to references
-SPC cg      Coc.nvim: (c/c++) generate compile_commands.json for clangd completion according to CMakeLists.txt
-SPC cr      Coc.nvim: restart coc server
-SPC ci      Coc.nvim: (python) set python interpreter
-SPC cc      Coc.nvim: run coc command
-SPC ca      Coc.nvim: (visual mode) choose and do coc action on selected region
-SPC cs      Coc.nvim: show code structure
-SPC cl      Coc.nvim: show coc lists
-c-n         Coc.nvim: (insert mode) force to trigger completion
-c-p         Coc.nvim: (insert mode) toggle show signature help (show parameters)
-c-j         Coc.nvim: jump to the floating window in normal mode
-SPC dk      Vimspector: show vimspector keymap
-SPC d?      Vimspector: show vimspector help
-g?          Vimspector: show vimspector help
-SPC dd      Vimspector: begin debugging or continue
-SPC dc      Vimspector: begin debugging or continue
-gc          Vimspector: begin debugging or continue
-SPC dp      Vimspector: pause
-gp          Vimspector: pause
-SPC dr      Vimspector: restart
-SPC de      Vimspector: stop/end
-ge          Vimspector: stop/end
-SPC dq      Vimspector: quit/reset/exit
-gq          Vimspector: quit/reset/exit
-SPC db      Vimspector: toggle breakpoint
-gb          Vimspector: toggle breakpoint
-SPC dB      Vimspector: add conditional breakpoint
-gB          Vimspector: add conditional breakpoint
-SPC dl      Vimspector: update breakpoints list
-gl          Vimspector: update breakpoints list
-SPC dfb     Vimspector: add function breakpoint
-gfb         Vimspector: add function breakpoint
-SPC d]      Vimspector: frame up
-g]          Vimspector: frame up
-SPC d[      Vimspector: frame down
-g[          Vimspector: frame down
-SPC d SPC   Vimspector: go to current line
-g SPC       Vimspector: go to current line
-SPC ds      Vimspector: step into
-gs          Vimspector: step into
-SPC dn      Vimspector: step next
-gn          Vimspector: step next
-SPC do      Vimspector: step out
-go          Vimspector: step out
-SPC dt      Vimspector: run to the cursor
-gt          Vimspector: run to the cursor
-SPC d:      Vimspector: evaluate command
-g:          Vimspector: evaluate command
-c-s         Freeze terminal (make you stuck) in vim
-c-q         Unfreeze terminal (if you stuck with c-s in vim)
+q/          Open search history in command-line window
+q:          Open command history in command-line window
+zM          Close all folds
+zR          Open all folds
+zj          Go to next fold
+zk          Go to previous fold
+:!ctags -R  Generate ctags recursively
+<c-]>       Jump to tag (normal mode)
+:pop        Return from tag jump
+DiffSaved   Show difference between buffer and saved file
+CompareClipboard  Compare current buffer with system clipboard
+SPC         Prefix key (<leader> is <Space>)
+<c-c><c-o>  Open URL under cursor
+<c-s>       (insert mode) Save file
+SPC Tc      Toggle transparency
+<a-b>       (command,insert modes) Word back
+<a-f>       (command,insert modes) Word forward
+<a-h>       (command,insert modes) Word back
+<a-j>       (insert mode) New line down
+<a-k>       (insert mode) New line up
+<a-l>       (command,insert modes) Word forward
+<c-a>       (command mode) Move to beginning of command line
+<c-a>       (insert mode) Move to first non-blank character of line
+<c-b>       (select mode) Jump to previous snippet field, otherwise move left
+<c-b>       (insert mode) Jump to previous snippet/annotation field, otherwise move left
+<c-b>       (command mode) Move left in command line
+<c-e>       (command mode) Move to end of command line
+<c-e>       (insert mode) Move to end of line
+<c-f>       (select mode) Jump to next snippet field, otherwise move right
+<c-f>       (insert mode) Jump to next snippet/annotation field, otherwise move right
+<c-h>       (command,insert modes) Move left
+<c-j>       (select,insert modes) Select next snippet choice, otherwise move down
+<c-k>       (insert mode) Select previous snippet choice, otherwise move up
+<c-l>       (command,insert modes) Move right
+<c-x>       (command mode) Cut commands
+<c-y>       (command,insert modes) Paste
+SPC eN      Previous Diagnostic
+SPC en      Next Diagnostic
+SPC ep      Previous Diagnostic
+SPC es      Show floating diagnostic
+SPC Tp      Toggle paste mode
+SPC tp      Toggle paste mode
+[e          Move line up
+]e          Move line down
+gm          (visual,normal modes) Go to match pair
+H           (visual,normal modes) Start of line
+L           (visual,normal modes) End of line
+SPC tc      Close tab
+SPC th      Previous tab
+SPC tl      Next tab
+SPC tn      New tab
+<a-n>       Next buffer
+<a-p>       Previous buffer
+SPC <tab>   Most recent buffer
+SPC b1      Go to buffer 1
+SPC b2      Go to buffer 2
+SPC b3      Go to buffer 3
+SPC b4      Go to buffer 4
+SPC b5      Go to buffer 5
+SPC b6      Go to buffer 6
+SPC b7      Go to buffer 7
+SPC b8      Go to buffer 8
+SPC b9      Go to buffer 9
+SPC bb      Show all buffers
+SPC bd      Close buffer
+SPC bM      Unavailable: notification dismissal requires nvim-notify, which is not configured
+SPC bm      Message buffer
+SPC bn      Next buffer
+SPC bp      Previous buffer
+SPC bs      Scratch buffer
+SPC bx      Close buffer and window
+[b          Go to previous buffer
+]b          Go to next buffer
+<a-1>       Toggle window 1 width between one cell and previous size
+<a-2>       Toggle window 2 width between one cell and previous size
+<a-3>       Toggle window 3 width between one cell and previous size
+<a-4>       Toggle window 4 width between one cell and previous size
+<a-5>       Toggle window 5 width between one cell and previous size
+<a-6>       Toggle window 6 width between one cell and previous size
+<a-7>       Toggle window 7 width between one cell and previous size
+<a-8>       Toggle window 8 width between one cell and previous size
+<a-9>       Toggle window 9 width between one cell and previous size
+<a-h>       Move to left window
+<a-j>       Move to lower window
+<a-k>       Move to upper window
+<a-l>       Move to right window
+<a-z>       Toggle zen mode(with tmux support)
+<c-1>       Toggle window 1 height between one cell and previous size
+<c-2>       Toggle window 2 height between one cell and previous size
+<c-3>       Toggle window 3 height between one cell and previous size
+<c-4>       Toggle window 4 height between one cell and previous size
+<c-5>       Toggle window 5 height between one cell and previous size
+<c-6>       Toggle window 6 height between one cell and previous size
+<c-7>       Toggle window 7 height between one cell and previous size
+<c-8>       Toggle window 8 height between one cell and previous size
+<c-9>       Toggle window 9 height between one cell and previous size
+<c-down>    Resize Window down
+<c-left>    Resize window left
+<c-right>   Resize window right
+<c-up>      Resize window up
+SPC 1       Go to window 1
+SPC 2       Go to window 2
+SPC 3       Go to window 3
+SPC 4       Go to window 4
+SPC 5       Go to window 5
+SPC 6       Go to window 6
+SPC 7       Go to window 7
+SPC 8       Go to window 8
+SPC 9       Go to window 9
+SPC <a-1>   Toggle window 1 height between one cell and previous size
+SPC <a-2>   Toggle window 2 height between one cell and previous size
+SPC <a-3>   Toggle window 3 height between one cell and previous size
+SPC <a-4>   Toggle window 4 height between one cell and previous size
+SPC <a-5>   Toggle window 5 height between one cell and previous size
+SPC <a-6>   Toggle window 6 height between one cell and previous size
+SPC <a-7>   Toggle window 7 height between one cell and previous size
+SPC <a-8>   Toggle window 8 height between one cell and previous size
+SPC <a-9>   Toggle window 9 height between one cell and previous size
+SPC w-      Split window down
+SPC w/      Split window right
+SPC w=      Balance window size
+SPC wd      Close window
+SPC wH      Move window left
+SPC wh      Window go left
+SPC wJ      Move window down
+SPC wj      Window go down
+SPC wK      Move window up
+SPC wk      Window go up
+SPC wL      Move window right
+SPC wl      Window go right
+SPC wM      Toggle zen mode
+SPC wo      Close other windows
+SPC ww      Switch to next window
+SPC wx      Close window and buffer
+''          Show marks with Fzf
+*           (visual mode) Search selected region
+<a-x>hdk    (insert mode) Show keymaps
+<c-f>       (command mode) Search command/search history
+<c-f>       Search lines
+<c-h>       Replace
+<c-h>       (visual mode) Replace in the region
+SPC /       Search in directory
+SPC /       (visual mode) Search selection in current directory
+SPC b/      Search across buffer
+SPC fd      Open current file directory with Nautilus (Linux)
+SPC ff      Open path selection helper
+SPC fO      Open file under cursor with xdg-open (Linux)
+SPC fo      Open current file with xdg-open (Linux)
+SPC fr      Fzf: open recent files
+SPC ft      Open external x-terminal-emulator (Linux)
+SPC fvc     Open NvChad/vimrc_for_lua
+SPC fvD     Open init.lua
+SPC fvd     Open lua/plugins/plugins.lua
+SPC fvf     Open NvChad/vimrc_functions
+SPC fvi     Open lua/myinit.lua
+SPC fvM     Open default mappings in lazy/NvChad/lua/nvchad/mappings.lua
+SPC fvm     Open lua/mappings.lua
+SPC fvv     Open main Vim vimrc (shared Vim configuration)
+SPC hdk     Show all keymaps
+SPC hdp     Show all plugins
+SPC hds     Show all snippets
+SPC hdv     Show all vim options
+SPC pF      Fzf: find files in current directory
+SPC pf      Fzf: find files tracked by git in current project
+SPC pp      Search git projects
+<a-x>k      Telescope: (insert mode) Search insert mode key
+<a-x>k      Telescope: (visual mode) Search visual mode key
+<a-x>sk     Telescope: (insert mode) Search insert mode key
+<a-x>sk     Telescope: (visual mode) Search visual mode key
+<c-g>k      Telescope: (insert mode) Search insert mode key
+<c-g>k      Telescope: (visual mode) Search visual mode key
+<c-g>sk     Telescope: (insert mode) Search insert mode key
+<c-g>sk     Telescope: (visual mode) Search visual mode key
+SPC <space>  Telescope: Find commands (opens command history or Telescope commands; overlapping configured bindings)
+SPC ee      Telescope: Show all diagnostics
+SPC gh      Telescope: Search git commit history of current repository
+SPC k       Telescope: Search normal mode key
+SPC k       Telescope: (visual mode) Search visual mode key
+SPC s/      Telescope: Search history
+SPC s:      Telescope: Command history
+SPC sc      Telescope: Command history
+SPC sj      Telescope: Jump lists
+SPC sk      Telescope: Search normal mode key
+SPC sM      Telescope: Search all bookmarks
+SPC sm      Telescope: Search current file bookmarks
+SPC sp      Telescope: Search git projects
+SPC ss      Telescope: Search history
+SPC st      Telescope: Open theme picker
+m/          Bookmarks: Search all bookmarks
+mc          Bookmarks: Clear bookmarks except comment bookmarks
+mi          Bookmarks: Add annotation bookmarks
+ml          Bookmarks: Load project bookmarks
+mm          Bookmarks: Toggle bookmarks
+ms          Bookmarks: Save project bookmarks
+mx          Bookmarks: Clear bookmarks including comment bookmarks
+<a-z>       (insert mode) Toggle zen mode with tmux support
+<c-p>       Open menu
+<c-t>       Toggle function context
+<c-t>       Unavailable: (insert mode) obsolete TSContextToggle command; use normal-mode <C-t> or :TSContext toggle
+<f5>        Reload current file if buffer has no unsaved changes
+SPC <space>  Find commands (opens command history or Telescope commands; overlapping configured bindings)
+SPC AA      Search actions help by keyword
+SPC aA      Search actions help by keyword
+SPC aa      Find actions help before Avante loads; Avante ask replaces this binding after Avante loads
+SPC ag      Open current file with gedit (Linux)
+SPC as      Unavailable before Avante loads: :terminal ++curwin uses Vim-only syntax; Avante replaces this with toggle automatic suggestions
+SPC au      Undo tree toggle
+SPC cd      Change working directory to current
+SPC fe      Edit file with path in clipboard
+SPC fy      Copy file path
+SPC hc      (visual mode) Translate visual selection with external translate command
+SPC hc      Unavailable in normal mode: Ydc translator command is not configured
+SPC hr      Open source and translated text side by side
+SPC htc     Unavailable: Yde translator command is not configured
+SPC id      Insert divider and comment it (overlapping TComment/disabled Comment.nvim bindings; commenting may fail)
+SPC pP      Edit file with path in clipboard
+SPC qq      (visual,normal modes) Quit
+SPC tf      Unavailable: obsolete TSContextToggle command; use normal-mode <C-t> or :TSContext toggle
+SPC tw      Toggle wrap
+SPC ye      Edit file with path in clipboard
+SPC yy      Copy file path
+SPC z+      Unfold all
+SPC z-      Fold all
+SPC Tb      Toggle buffer line (tab line)
+SPC Tg      Unavailable: GitGutter is not configured; use :Gitsigns toggle_signs
+SPC TL      Toggle all window line number
+SPC Tl      Toggle line number
+SPC Tn      Toggle theme
+SPC TT      Toggle all auxiliary display
+SPC tT      Toggle all auxiliary display
+SPC tt      Toggle auxiliary display
+SPC ;;      Comment current line
+<c-q>       (insert mode) Show signature help
+SPC ca      (visual,normal modes) Show code actions
+SPC ct      Go to type definition
+SPC rn      Unavailable outside Java buffers: legacy nvchad_ui renamer module is missing; use SPC ra with LSP attached
+gD          Go to declaration
+gd          Find definitions with Telescope (attached LSP mapping overrides this)
+gi          Go to implementation
+gr          Find references with Telescope
+K           Show documentation hover
+,f          LSP: Format file
+<c-]>       Neogen: (insert mode) Generate docstring/annotation
+SPC fsR     Snippets: Unavailable: snippet reload mapping uses the removed custom/configs/snip.lua path
+SPC sd      Neogen: Generate docstring/annotation
+<a-m>       Symbols outline: Toggle symbols outline
+SPC <cr>    Symbols outline: Toggle symbols outline
+SPC 0       Neo-tree: Toggle neo-tree
+SPC fp      Neo-tree: Show file in neo-tree
+SPC ga      Git: Add
+SPC gb      Git: Blame
+SPC gc      Git: Commit
+SPC gd      Git: Diff
+SPC gfd     Git: Remove file from git and delete buffer
+SPC gfm     Git: Prompt for file destination with :GMove
+SPC gfr     Git: Remove file from git and keep buffer
+SPC gl      Git: Current file history
+SPC gN      Git: Previous history
+SPC gn      Git: Next history
+SPC gp      Git: Previous history
+SPC gr      Git: Read git index version into buffer (does not unstage file)
+SPC gs      Git: Status
+[q          Git: Next history
+]q          Git: Previous history
+SPC gg      Git: Lazygit
+SPC au      Undotree: Toggle undotree
+<a-h>       Tmux: Move to left window or tmux pane (requires tmux)
+<a-j>       Tmux: Move to lower window or tmux pane (requires tmux)
+<a-k>       Tmux: Move to upper window or tmux pane (requires tmux)
+<a-l>       Tmux: Move to right window or tmux pane (requires tmux)
+<a-enter>   Vimux: (visual,insert,normal modes) Run current line or visual selection in tmux runner (requires tmux)
+<a-v>       Vimux: (visual,insert,normal modes) Run current line or visual selection in tmux runner (requires tmux)
+SPC :       Vimux: Prompt for command in tmux runner (requires tmux)
+SPC v:      Vimux: Prompt tmux command (requires tmux)
+SPC vc      Vimux: Tmux close runner (requires tmux)
+SPC vl      Vimux: Run last Vimux command (requires tmux)
+SPC vo      Vimux: Tmux runner (requires tmux)
+SPC vp      Vimux: Tmux repl (requires tmux)
+SPC vr      Vimux: Run shell history command !! in tmux runner (requires tmux)
+SPC vs      Vimux: (visual,normal modes) Run current line or visual selection in tmux runner (requires tmux)
+SPC d0      DAP: Toggle debugger windows
+SPC d:      DAP: Evaluate expression under cursor
+SPC d:      DAP: (visual mode) Unavailable: visual evaluation mapping is missing its command prefix; use gE or g: after SPC dd
+SPC d[      DAP: Frame down
+SPC d]      DAP: Frame up
+SPC dB      DAP: Toggle conditional breakpoint
+SPC db      DAP: Toggle breakpoint
+SPC dc      DAP: Continue
+SPC dd      DAP: Start debugging
+SPC dE      DAP: Evaluate expression under cursor
+SPC dE      DAP: (visual mode) Unavailable: visual evaluation mapping is missing its command prefix; use gE or g: after SPC dd
+SPC de      DAP: Terminate
+SPC dl      DAP: List breakpoints
+SPC dn      DAP: Step over
+SPC do      DAP: Step out
+SPC dp      DAP: Pause
+SPC dq      DAP: Terminate debugging, close debugger windows, and restore buffer mappings
+SPC dR      DAP: Reset debugger window layout
+SPC dr      DAP: Run last debugging configuration
+SPC ds      DAP: Step into
+SPC dT      DAP: Focus current frame
+SPC dt      DAP: Run to cursor
+<c-x>       ChatGPT: (insert mode) Code completion
+\ca         ChatGPT: (visual,normal modes) Add tests
+\cc         ChatGPT: Chat
+\cd         ChatGPT: (visual,normal modes) Docstring
+\ce         ChatGPT: (visual,normal modes) Edit with instruction
+\cf         ChatGPT: (visual,normal modes) Fix bugs
+\cg         ChatGPT: (visual,normal modes) Grammar correction
+\ck         ChatGPT: (visual,normal modes) Keywords
+\cl         ChatGPT: (visual,normal modes) Code readability analysis
+\co         ChatGPT: (visual,normal modes) Optimize code
+\cr         ChatGPT: (visual,normal modes) Roxygen edit
+\cs         ChatGPT: (visual,normal modes) Summarize
+\ct         ChatGPT: (visual,normal modes) Translate
+\cx         ChatGPT: (visual,normal modes) Explain code
+<a-a>af     Avante: (insert mode) Toggle focus
+SPC aC      Avante: Clear chat before Avante loads; toggle selection hints after Avante loads
+SPC am      Avante: Select model
+\aa         Avante: (visual,normal modes) Ask questions
+\aB         Avante: Add all open buffers
+\aC         Avante: Clear history
+\ae         Avante: (visual mode) Edit
+\af         Avante: Toggle focus
+\ah         Avante: Select history
+\am         Avante: Select model
+\ar         Avante: Refresh
+\aS         Avante: Stop
+\at         Avante: Toggle pane
+SPC fb      Browser bookmarks: Browser bookmarks
+<a-i>       Copilot: (insert mode) Unavailable: copilot.vim panel is disabled
+SPC cp      Copilot: Unavailable: copilot.vim is disabled
+<a-h>       Terminal: (terminal mode) Toggle horizontal terminal
+<a-i>       Terminal: Toggle floating terminal
+<a-i>       Terminal: (terminal mode) Toggle floating terminal
+<a-v>       Terminal: (terminal mode) Toggle vertical terminal
+<c-j>       Move to lower window
+<c-k>       Move to upper window
+<c-n>       Unavailable before visual-multi loads: nvim-tree is disabled; visual-multi replaces this binding after startup
+<c-s>       Save file
+<c-x>       Terminal: (terminal mode) Leave terminal input mode
+<esc>       Clear search highlighting
+<s-tab>     Go to previous buffer
+SPC ch      Cheatsheet: Show shortcut reference
+SPC fa      Telescope: Find files including hidden and ignored files
+SPC fh      Telescope: Search help tags
+SPC fm      Conform: (normal,visual modes) Format buffer with LSP fallback
+SPC fw      Telescope: Search project text
+SPC fz      Telescope: Search current buffer
+SPC gt      Telescope: Search git status
+SPC ma      Telescope: Search marks
+SPC pt      Terminal: Select hidden terminal
+SPC x       Close current buffer
+<tab>       Go to next buffer
+SPC ;       TComment: (normal mode) toggle comment with motion; (visual,select modes) toggle comment for selection
+<rightmouse>  Menu: (normal,visual,select modes) open context menu at mouse position
+<c-p>       Menu: open context menu for current buffer
+gd          LSP: (attached buffer) go to definition
+gD          LSP: (attached buffer) go to declaration
+SPC wa      LSP: (attached buffer) add workspace folder
+SPC wr      LSP: (attached buffer) remove workspace folder
+SPC wl      LSP: (attached buffer) move to right window
+SPC D       LSP: (attached buffer) go to type definition
+SPC ra      LSP: (attached buffer) rename symbol with current renamer
+<esc>       LSP: (rename popup,normal,insert modes) cancel rename
+<cr>        LSP: (rename popup,insert mode) confirm new name
+SPC rn      Java: rename symbol
+SPC jo      Java: organize imports
+<a-d>       Signature help: (Java insert mode,focused popup) scroll down
+<a-u>       Signature help: (Java insert mode,focused popup) scroll up
+<c-n>       Completion: (insert mode) select next item
+<c-p>       Completion: (insert mode) select previous item
+<c-e>       Completion: (insert mode) close completion menu
+<cr>        Completion: (insert mode) confirm selected or first item
+<tab>       Completion: (insert,select modes) select next item or expand snippet
+<s-tab>     Completion: (insert,select modes) select previous item
+<c-v>       Completion: (insert mode) trigger completion
+<c-d>       Completion: (insert mode) scroll documentation down
+<c-u>       Completion: (insert mode) scroll documentation up
+<bs>        Autopairs: (insert mode) delete matching pair around cursor
+<cr>        Autopairs: (insert mode) insert indented newline between matching pairs
+<a-A>       Minuet: (insert mode,MINUET_END_POINT set) accept entire suggestion
+<a-a>       Minuet: (insert mode,MINUET_END_POINT set) accept one suggestion line
+<a-[>       Minuet: (insert mode,MINUET_END_POINT set) previous suggestion or trigger completion
+<a-]>       Minuet: (insert mode,MINUET_END_POINT set) next suggestion or trigger completion
+<a-e>       Minuet: (insert mode,MINUET_END_POINT set) dismiss suggestion
+<2-leftmouse>  Telescope: (picker, normal mode) Double mouse click
+<c-d>       Telescope: (picker, normal mode) Preview scrolling down
+<c-f>       Telescope: (picker, normal mode) Preview scrolling left
+<c-k>       Telescope: (picker, normal mode) Preview scrolling right
+<c-q>       Telescope: (picker, normal mode) Send to qflist + open qflist
+<c-t>       Telescope: (picker, normal mode) Open in new tab
+<c-u>       Telescope: (picker, normal mode) Preview scrolling up
+<c-v>       Telescope: (picker, normal mode) Open in vertical split
+<c-x>       Telescope: (picker, normal mode) Open in horizontal split
+<cr>        Telescope: (picker, normal mode) Open selected result
+<down>      Telescope: (picker, normal mode) Select next result
+<leftmouse>  Telescope: (picker, normal mode) Mouse click
+<a-f>       Telescope: (picker, normal mode) Results scrolling left
+<a-k>       Telescope: (picker, normal mode) Results scrolling right
+<a-q>       Telescope: (picker, normal mode) Send selected to qflist + open qflist
+<pagedown>  Telescope: (picker, normal mode) Results scrolling down
+<pageup>    Telescope: (picker, normal mode) Results scrolling up
+<s-tab>     Telescope: (picker, normal mode) Toggle selection + move selection better
+<tab>       Telescope: (picker, normal mode) Toggle selection + move selection worse
+<up>        Telescope: (picker, normal mode) Select previous result
+<esc>       Telescope: (picker, normal mode) Close
+?           Telescope: (picker, normal mode) Show picker shortcuts
+G           Telescope: (picker, normal mode) Go to last result
+H           Telescope: (picker, normal mode) Go to first result
+L           Telescope: (picker, normal mode) Go to last result
+M           Telescope: (picker, normal mode) Go to middle result
+gg          Telescope: (picker, normal mode) Go to first result
+j           Telescope: (picker, normal mode) Select next result
+k           Telescope: (picker, normal mode) Select previous result
+<2-leftmouse>  Telescope: (picker, insert mode) Double mouse click
+<c-/>       Telescope: (picker, insert mode) Show picker shortcuts
+<c-_>       Telescope: (picker, insert mode) Show picker shortcuts
+<c-c>       Telescope: (picker, insert mode) Close
+<c-d>       Telescope: (picker, insert mode) Preview scrolling down
+<c-f>       Telescope: (picker, insert mode) Preview scrolling left
+<c-h>       Telescope: (picker, insert mode) Show picker shortcuts
+<c-j>       Telescope: (picker, insert mode) Select next result
+<c-k>       Telescope: (picker, insert mode) Select previous result
+<c-l>       Telescope: (picker, insert mode) Complete tag in prompt
+<c-n>       Telescope: (picker, insert mode) Select next result
+<c-p>       Telescope: (picker, insert mode) Select previous result
+<c-q>       Telescope: (picker, insert mode) Send to qflist + open qflist
+<c-r><c-a>  Telescope: (picker, insert mode) Insert original WORD under cursor
+<c-r><c-f>  Telescope: (picker, insert mode) Insert original filename under cursor
+<c-r><c-l>  Telescope: (picker, insert mode) Insert original line under cursor
+<c-r><c-w>  Telescope: (picker, insert mode) Insert original word under cursor
+<c-t>       Telescope: (picker, insert mode) Open in new tab
+<c-u>       Telescope: (picker, insert mode) Preview scrolling up
+<c-v>       Telescope: (picker, insert mode) Open in vertical split
+<c-w>       Telescope: (picker, insert mode) Delete previous query word
+<c-x>       Telescope: (picker, insert mode) Open in horizontal split
+<c-y>       Telescope: (picker, insert mode) Copy visible preview text to system clipboard
+<cr>        Telescope: (picker, insert mode) Open selected result
+<down>      Telescope: (picker, insert mode) Select next result
+<leftmouse>  Telescope: (picker, insert mode) Mouse click
+<a-f>       Telescope: (picker, insert mode) Results scrolling left
+<a-k>       Telescope: (picker, insert mode) Results scrolling right
+<a-q>       Telescope: (picker, insert mode) Send selected to qflist + open qflist
+<pagedown>  Telescope: (picker, insert mode) Results scrolling down
+<pageup>    Telescope: (picker, insert mode) Results scrolling up
+<s-tab>     Telescope: (picker, insert mode) Toggle selection + move selection better
+<tab>       Telescope: (picker, insert mode) Toggle selection + move selection worse
+<up>        Telescope: (picker, insert mode) Select previous result
+<a-p>       Telescope: (picker, insert mode) Toggle preview
+#           Neo-tree: (filesystem window) Fuzzy sorter
+.           Neo-tree: (filesystem window) Set selected directory as root
+<           Neo-tree: (filesystem window) Switch to previous source
+<2-leftmouse>  Neo-tree: (filesystem window) Open
+<c-x>       Neo-tree: (filesystem window) Clear filter
+<bs>        Neo-tree: (filesystem window) Go to parent directory
+<cr>        Neo-tree: (filesystem window) Open
+<esc>       Neo-tree: (filesystem window) Revert preview
+SPC         Neo-tree: (filesystem window) Toggle node
+>           Neo-tree: (filesystem window) Switch to next source
+?           Neo-tree: (filesystem window) Show help
+A           Neo-tree: (filesystem window) Add directory
+C           Neo-tree: (filesystem window) Close node
+D           Neo-tree: (filesystem window) Fuzzy finder directory
+H           Neo-tree: (filesystem window) Toggle hidden
+P           Neo-tree: (filesystem window) Toggle preview
+R           Neo-tree: (filesystem window) Refresh
+S           Neo-tree: (filesystem window) Open in horizontal split
+Y           Neo-tree: (filesystem window) Copy file to Neo-tree clipboard
+[g          Neo-tree: (filesystem window) Prev git modified
+]g          Neo-tree: (filesystem window) Next git modified
+a           Neo-tree: (filesystem window) Add
+c           Neo-tree: (filesystem window) Copy
+d           Neo-tree: (filesystem window) Delete
+f           Neo-tree: (filesystem window) Filter on submit
+m           Neo-tree: (filesystem window) Move
+p           Neo-tree: (filesystem window) Paste file from Neo-tree clipboard
+q           Neo-tree: (filesystem window) Close window
+r           Neo-tree: (filesystem window) Rename
+s           Neo-tree: (filesystem window) Open in vertical split
+t           Neo-tree: (filesystem window) Open in new tab
+x           Neo-tree: (filesystem window) Cut file to Neo-tree clipboard
+z           Neo-tree: (filesystem window) Close all nodes
+.           Neo-tree: (buffers window) Set selected directory as root
+<           Neo-tree: (buffers window) Switch to previous source
+<2-leftmouse>  Neo-tree: (buffers window) Open
+<bs>        Neo-tree: (buffers window) Go to parent directory
+<cr>        Neo-tree: (buffers window) Open
+<esc>       Neo-tree: (buffers window) Revert preview
+SPC         Neo-tree: (buffers window) Toggle node
+>           Neo-tree: (buffers window) Switch to next source
+?           Neo-tree: (buffers window) Show help
+A           Neo-tree: (buffers window) Add directory
+C           Neo-tree: (buffers window) Close node
+P           Neo-tree: (buffers window) Toggle preview
+R           Neo-tree: (buffers window) Refresh
+S           Neo-tree: (buffers window) Open in horizontal split
+a           Neo-tree: (buffers window) Add
+bd          Neo-tree: (buffers window) Buffer delete
+c           Neo-tree: (buffers window) Copy
+d           Neo-tree: (buffers window) Delete
+e           Neo-tree: (buffers window) Toggle auto expand width
+l           Neo-tree: (buffers window) Focus preview
+m           Neo-tree: (buffers window) Move
+p           Neo-tree: (buffers window) Paste file from Neo-tree clipboard
+q           Neo-tree: (buffers window) Close window
+r           Neo-tree: (buffers window) Rename
+s           Neo-tree: (buffers window) Open in vertical split
+t           Neo-tree: (buffers window) Open in new tab
+w           Neo-tree: (buffers window) Open with window picker
+x           Neo-tree: (buffers window) Cut file to Neo-tree clipboard
+y           Neo-tree: (buffers window) Copy file to Neo-tree clipboard
+z           Neo-tree: (buffers window) Close all nodes
+<           Neo-tree: (git status window) Switch to previous source
+<2-leftmouse>  Neo-tree: (git status window) Open
+<cr>        Neo-tree: (git status window) Open
+<esc>       Neo-tree: (git status window) Revert preview
+SPC         Neo-tree: (git status window) Toggle node
+>           Neo-tree: (git status window) Switch to next source
+?           Neo-tree: (git status window) Show help
+A           Neo-tree: (git status window) Git add all
+C           Neo-tree: (git status window) Close node
+P           Neo-tree: (git status window) Toggle preview
+R           Neo-tree: (git status window) Refresh
+S           Neo-tree: (git status window) Open in horizontal split
+a           Neo-tree: (git status window) Add
+c           Neo-tree: (git status window) Copy
+d           Neo-tree: (git status window) Delete
+e           Neo-tree: (git status window) Toggle auto expand width
+ga          Neo-tree: (git status window) Git add file
+gc          Neo-tree: (git status window) Git commit
+gg          Neo-tree: (git status window) Git commit and push
+gp          Neo-tree: (git status window) Git push
+gr          Neo-tree: (git status window) Git revert file
+gu          Neo-tree: (git status window) Git unstage file
+l           Neo-tree: (git status window) Focus preview
+m           Neo-tree: (git status window) Move
+p           Neo-tree: (git status window) Paste file from Neo-tree clipboard
+q           Neo-tree: (git status window) Close window
+r           Neo-tree: (git status window) Rename
+s           Neo-tree: (git status window) Open in vertical split
+t           Neo-tree: (git status window) Open in new tab
+w           Neo-tree: (git status window) Open with window picker
+x           Neo-tree: (git status window) Cut file to Neo-tree clipboard
+y           Neo-tree: (git status window) Copy file to Neo-tree clipboard
+z           Neo-tree: (git status window) Close all nodes
+<esc>       Symbols outline: (outline window) Close
+q           Symbols outline: (outline window) Close
+<cr>        Symbols outline: (outline window) Goto location
+o           Symbols outline: (outline window) Focus location
+<c-space>   Symbols outline: (outline window) Hover symbol
+K           Symbols outline: (outline window) Toggle preview
+h           Symbols outline: (outline window) Fold
+r           Symbols outline: (outline window) Rename symbol
+a           Symbols outline: (outline window) Code actions
+?           Symbols outline: (outline window) Show help
+l           Symbols outline: (outline window) Unfold
+W           Symbols outline: (outline window) Fold all
+R           Symbols outline: (outline window) Fold reset
+E           Symbols outline: (outline window) Unfold all
+\ll         LLM: Toggle chat session
+\lt         LLM: (visual mode) Translate selected word
+\le         LLM: (visual mode) Explain selected code
+\lt         LLM: Open translation tool
+\lc         LLM: (visual mode) Generate tests for selected code
+\lo         LLM: (visual mode) Optimize selected code and show comparison
+\lu         LLM: Show provider balance
+\lg         LLM: Generate commit message from git diff
+<c-d>       LLM: (chat session, insert,normal modes) Scroll down half a page
+<c-u>       LLM: (chat session, insert,normal modes) Scroll up half a page
+?           LLM: (chat session, normal mode) Show help
+<c-c>       LLM: (chat input, normal,insert modes) Cancel request
+<c-j>       LLM: (chat input, normal,insert modes) Next prompt history item
+<c-k>       LLM: (chat input, normal,insert modes) Previous prompt history item
+<c-s-j>     LLM: (chat input, insert mode) Select next model
+<c-s-k>     LLM: (chat input, insert mode) Select previous model
+<c-r>       LLM: (chat input, normal,insert modes) Resend prompt
+<c-s>       LLM: (chat input, normal,insert modes) Send prompt
+G           LLM: (chat session, normal mode) Go to bottom
+gg          LLM: (chat session, normal mode) Go to top
+i           LLM: (chat output, normal mode) Focus input to ask a question
+<c-c>       LLM: (chat output, normal mode) Cancel request
+<c-r>       LLM: (chat output, normal mode) Resend request
+<c-f>       LLM: (chat session, insert,normal modes) Scroll down one page
+<c-b>       LLM: (chat session, insert,normal modes) Scroll up one page
+<esc>       LLM: (chat session, normal mode) Close chat session
+Q           LLM: (chat session, normal mode) Close chat session
+<c-h>       LLM: (chat session, normal mode) Select session history
+<c-m>       LLM: (chat session, normal mode) Select model
+<c-n>       LLM: (chat session, normal mode) Start new session
+SPC ac      LLM: (chat session, normal mode) Toggle chat session
+<c-c>       ChatGPT: (chat window, normal,insert modes) Close
+<c-f>       ChatGPT: (chat window, normal,insert modes) Cycle chat modes
+<tab>       ChatGPT: (chat window, normal,insert modes) Cycle windows
+d           ChatGPT: (messages panel, normal mode) Delete message
+d           ChatGPT: (sessions panel, normal mode) Delete session
+<c-t>       ChatGPT: (chat window, normal,insert modes) Store input as draft message without sending
+e           ChatGPT: (messages panel, normal mode) Edit message
+<c-n>       ChatGPT: (input, settings, or help panel, normal,insert modes) New session
+<c-j>       ChatGPT: (messages panel, normal mode) Next message
+<c-k>       ChatGPT: (messages panel, normal mode) Prev message
+r           ChatGPT: (sessions panel, normal mode) Rename session
+<c-d>       ChatGPT: (chat input, normal,insert modes) Scroll down
+<c-u>       ChatGPT: (chat input, normal,insert modes) Scroll up
+SPC         ChatGPT: (sessions panel, normal mode) Select session
+<c-x>       ChatGPT: (chat input, normal,insert modes) Stop generating
+<c-h>       ChatGPT: (chat window, normal,insert modes) Toggle help
+<c-t>       ChatGPT: (chat window, normal,insert modes) Unavailable: role toggle is overridden by the same-key draft-message mapping
+<c-p>       ChatGPT: (chat window, normal,insert modes) Toggle sessions
+<c-o>       ChatGPT: (chat window, normal,insert modes) Toggle settings
+<c-s>       ChatGPT: (chat window, normal,insert modes) Toggle system prompt window
+<c-y>       ChatGPT: (chat input, normal,insert modes) Copy selected response
+<c-k>       ChatGPT: (chat input, normal,insert modes) Copy selected code block
+<c-y>       ChatGPT: (edit window, normal,insert modes) Apply output to buffer
+<c-c>       ChatGPT: (edit window, normal,insert modes) Close
+<tab>       ChatGPT: (edit window, normal,insert modes) Cycle windows
+<c-d>       ChatGPT: (edit window, normal,insert modes) Toggle diff
+<c-h>       ChatGPT: (edit window, normal,insert modes) Toggle help
+<c-o>       ChatGPT: (edit window, normal,insert modes) Toggle settings
+<c-i>       ChatGPT: (edit window, normal,insert modes) Use output as next input
+<c-u>       ChatGPT: (edit window, normal,insert modes) Copy output
+af          Treesitter: (visual,operator-pending modes) Select around function
+if          Treesitter: (visual,operator-pending modes) Select inside function
+ac          Treesitter: (visual,operator-pending modes) Select around class
+ic          Treesitter: (visual,operator-pending modes) Select inside class
+is          Treesitter: (visual,operator-pending modes) Select inside scope
+as          Treesitter: (visual,operator-pending modes) Select around scope
+io          Treesitter: (visual,operator-pending modes) Select inside loop
+ao          Treesitter: (visual,operator-pending modes) Select around loop
+]m          Treesitter: (normal,visual,operator-pending modes) Next function start
+]]          Treesitter: (normal,visual,operator-pending modes) Next class start
+]c          Treesitter: (normal,visual,operator-pending modes) Next class start
+]M          Treesitter: (normal,visual,operator-pending modes) Next function end
+][          Treesitter: (normal,visual,operator-pending modes) Next class end
+]C          Treesitter: (normal,visual,operator-pending modes) Next class end
+]O          Treesitter: (normal,visual,operator-pending modes) Next loop end
+[m          Treesitter: (normal,visual,operator-pending modes) Previous function start
+[[          Treesitter: (normal,visual,operator-pending modes) Previous class start
+[c          Treesitter: (normal,visual,operator-pending modes) Previous class start
+[o          Treesitter: (normal,visual,operator-pending modes) Previous loop start
+[M          Treesitter: (normal,visual,operator-pending modes) Previous function end
+[]          Treesitter: (normal,visual,operator-pending modes) Previous class end
+[C          Treesitter: (normal,visual,operator-pending modes) Previous class end
+[O          Treesitter: (normal,visual,operator-pending modes) Previous loop end
+]o          Treesitter: (normal,visual,operator-pending modes) Next loop start
+]d          Treesitter: (normal,visual,operator-pending modes) Next conditional
+[d          Treesitter: (normal,visual,operator-pending modes) Previous conditional
+]s          Treesitter: (normal,visual,operator-pending modes) Next scope
+]z          Treesitter: (normal,visual,operator-pending modes) Next fold
+;           Treesitter: (normal,visual,operator-pending modes) Repeat last Treesitter or f/F/t/T movement
+f           Treesitter: (normal,visual,operator-pending modes) Find next character and remember movement
+F           Treesitter: (normal,visual,operator-pending modes) Find previous character and remember movement
+t           Treesitter: (normal,visual,operator-pending modes) Move before next character and remember movement
+T           Treesitter: (normal,visual,operator-pending modes) Move after previous character and remember movement
+<c-g>S      Vim-Surround: (insert mode) Insert surrounding pair on separate lines
+<c-g>s      Vim-Surround: (insert mode) Insert surrounding pair
+S           Vim-Surround: (visual mode) Surround selection
+cS          Vim-Surround: Change pair and place contents on separate lines
+cs          Vim-Surround: Change surrounding pair
+ds          Vim-Surround: Delete surrounding pair
+gS          Vim-Surround: (visual mode) Surround selection without automatic linewise spacing
+ySS         Vim-Surround: Surround current line on separate lines
+ySs         Vim-Surround: Surround current line on separate lines
+yss         Vim-Surround: Surround current line
+yS          Vim-Surround: Add pair with motion and place contents on separate lines
+ys          Vim-Surround: Add surrounding pair with motion
+i           Targets: (visual,operator-pending modes) Select inside target (follow with pair, quote, separator, t for tag, or a for argument)
+a           Targets: (visual,operator-pending modes) Select around target (follow with pair, quote, separator, t for tag, or a for argument)
+I           Targets: (visual,operator-pending modes) Select inside target and trim whitespace (follow with pair, quote, separator, t for tag, or a for argument)
+A           Targets: (visual,operator-pending modes) Select around target including adjacent whitespace (follow with pair, quote, separator, t for tag, or a for argument)
+in          Targets: (visual,operator-pending modes) inside next target (follow with target)
+an          Targets: (visual,operator-pending modes) around next target (follow with target)
+il          Targets: (visual,operator-pending modes) inside last target (follow with target)
+al          Targets: (visual,operator-pending modes) around last target (follow with target)
+In          Targets: (visual,operator-pending modes) inside next target, trimmed (follow with target)
+An          Targets: (visual,operator-pending modes) around next target with whitespace (follow with target)
+Il          Targets: (visual,operator-pending modes) inside last target, trimmed (follow with target)
+Al          Targets: (visual,operator-pending modes) around last target with whitespace (follow with target)
+<c-_>1      TComment: (insert,normal,operator-pending,visual modes) Set comment repetition count to 1
+<c-_>2      TComment: (insert,normal,operator-pending,visual modes) Set comment repetition count to 2
+<c-_>3      TComment: (insert,normal,operator-pending,visual modes) Set comment repetition count to 3
+<c-_>4      TComment: (insert,normal,operator-pending,visual modes) Set comment repetition count to 4
+<c-_>5      TComment: (insert,normal,operator-pending,visual modes) Set comment repetition count to 5
+<c-_>6      TComment: (insert,normal,operator-pending,visual modes) Set comment repetition count to 6
+<c-_>7      TComment: (insert,normal,operator-pending,visual modes) Set comment repetition count to 7
+<c-_>8      TComment: (insert,normal,operator-pending,visual modes) Set comment repetition count to 8
+<c-_>9      TComment: (insert,normal,operator-pending,visual modes) Set comment repetition count to 9
+<c-_><c-_>  TComment: (insert,normal,operator-pending,visual modes) Toggle comment for current line or selection
+<c-_><space>  TComment: (insert,normal,operator-pending,select,visual modes) Prompt for :TComment arguments
+<c-_>a      TComment: (insert,normal,operator-pending,select,visual modes) Prompt for comment filetype
+<c-_>b      TComment: (insert,normal,operator-pending,select,visual modes) Toggle block comment
+<c-_>ca     TComment: (normal,operator-pending,select,visual modes) Prompt for comment style
+<c-_>cc     TComment: (normal,operator-pending,select,visual modes) Set repeated comment count
+<c-_>i      TComment: (insert,normal,operator-pending,select,visual modes) Toggle inline comment
+<c-_>n      TComment: (insert,normal,operator-pending,select,visual modes) Comment using current filetype
+<c-_>p      TComment: (insert,normal,operator-pending,select,visual modes) Comment paragraph
+<c-_>r      TComment: (insert,normal,operator-pending,select,visual modes) Comment from cursor to line end
+<c-_>s      TComment: (insert,normal,operator-pending,select,visual modes) Prompt for comment subtype
+SPC ;       TComment: (normal,visual modes) Toggle comment with motion or selection
+SPC ;1      TComment: Comment with motion using repetition count 1
+SPC ;1c     TComment: Comment through line end using repetition count 1
+SPC ;2      TComment: Comment with motion using repetition count 2
+SPC ;2c     TComment: Comment through line end using repetition count 2
+SPC ;3      TComment: Comment with motion using repetition count 3
+SPC ;3c     TComment: Comment through line end using repetition count 3
+SPC ;4      TComment: Comment with motion using repetition count 4
+SPC ;4c     TComment: Comment through line end using repetition count 4
+SPC ;5      TComment: Comment with motion using repetition count 5
+SPC ;5c     TComment: Comment through line end using repetition count 5
+SPC ;6      TComment: Comment with motion using repetition count 6
+SPC ;6c     TComment: Comment through line end using repetition count 6
+SPC ;7      TComment: Comment with motion using repetition count 7
+SPC ;7c     TComment: Comment through line end using repetition count 7
+SPC ;8      TComment: Comment with motion using repetition count 8
+SPC ;8c     TComment: Comment through line end using repetition count 8
+SPC ;9      TComment: Comment with motion using repetition count 9
+SPC ;9c     TComment: Comment through line end using repetition count 9
+SPC ;b      TComment: Toggle block comment
+SPC ;c      TComment: Toggle comment through line end
+SPC _<space>  TComment: (normal,operator-pending,select,visual modes) Prompt for :TComment arguments
+SPC __      TComment: (normal,operator-pending,select,visual modes) Toggle comment for current line or selection
+SPC _a      TComment: (normal,operator-pending,select,visual modes) Prompt for comment filetype
+SPC _b      TComment: (normal,operator-pending,select,visual modes) Toggle block comment
+SPC _i      TComment: (visual mode) Toggle inline comment
+SPC _n      TComment: (normal,operator-pending,select,visual modes) Comment using current filetype
+SPC _p      TComment: (normal,operator-pending,select,visual modes) Comment paragraph
+SPC _r      TComment: (normal,operator-pending,select,visual modes) Comment from cursor to line end
+SPC _s      TComment: (normal,operator-pending,select,visual modes) Prompt for comment subtype
+g<          TComment: (normal,visual modes) Force uncomment with motion or selection
+g<b         TComment: Force block uncomment
+g<c         TComment: Force uncomment through line end
+g>          TComment: (normal,visual modes) Force comment with motion or selection
+g>b         TComment: Force block comment
+g>c         TComment: Force comment through line end
+<a-J>       Multiple cursor: Add cursor down
+<a-K>       Multiple cursor: Add cursor up
+<c-n>       Multiple cursor: (visual mode) Find and select visual text
+<c-n>       Multiple cursor: Find and select word under cursor
+<a-c-rightmouse>  Multiple cursor: Select column between cursor and mouse position
+<c-leftmouse>  Multiple cursor: Add cursor at mouse position
+<c-rightmouse>  Multiple cursor: Select word at mouse position
+<a-A>       Multiple cursor: Select all
+g/          Multiple cursor: Start regex search
+<a-A>       Multiple cursor: (visual mode) Select all occurrences of visual selection
+g/          Multiple cursor: (visual mode) Start regex search from visual selection
+&           Multiple cursor: (visual-multi, normal mode) Repeat substitute
+A           Multiple cursor: (visual-multi, normal mode) Append at each line end
+<a-J>       Multiple cursor: (visual-multi, normal mode) Add cursor down
+<a-K>       Multiple cursor: (visual-multi, normal mode) Add cursor up
+\\a         Multiple cursor: (visual-multi, normal mode) Align
+z<          Multiple cursor: (visual-multi, normal mode) Align char
+\\>         Multiple cursor: (visual-multi, normal mode) Align regex
+\\<c-x>     Multiple cursor: (visual-multi, normal mode) Alpha decrease
+\\<c-a>     Multiple cursor: (visual-multi, normal mode) Alpha increase
+C           Multiple cursor: (visual-multi, normal mode) Change to end of line at each cursor
+\\C         Multiple cursor: (visual-multi, normal mode) Case conversion menu
+\\c         Multiple cursor: (visual-multi, normal mode) Case setting
+D           Multiple cursor: (visual-multi, normal mode) Delete to end of line at each cursor
+<c-x>       Multiple cursor: (visual-multi, normal mode) Decrease
+<del>       Multiple cursor: (visual-multi, normal mode) Delete character under each cursor
+d           Multiple cursor: (visual-multi, normal mode) Delete
+.           Multiple cursor: (visual-multi, normal mode) Repeat last edit
+\\d         Multiple cursor: (visual-multi, normal mode) Duplicate
+\\+         Multiple cursor: (visual-multi, normal mode) Enlarge
+\\f         Multiple cursor: (visual-multi, normal mode) Filter regions
+n           Multiple cursor: (visual-multi, normal mode) Find next
+m           Multiple cursor: (visual-multi, normal mode) Find occurrences using motion
+N           Multiple cursor: (visual-multi, normal mode) Find prev
+]           Multiple cursor: (visual-multi, normal mode) Goto next
+[           Multiple cursor: (visual-multi, normal mode) Goto prev
+\\g         Multiple cursor: (visual-multi, normal mode) Goto regex
+\\G         Multiple cursor: (visual-multi, normal mode) Goto regex!
+I           Multiple cursor: (visual-multi, normal mode) Insert at each line start
+<c-s-left>  Multiple cursor: (visual-multi, insert mode) Move all cursors backward by WORD
+<c-s-down>  Multiple cursor: (visual-multi, insert mode) Move all cursors to next WORD end
+<c-s-right>  Multiple cursor: (visual-multi, insert mode) Move all cursors forward by WORD
+<c-left>    Multiple cursor: (visual-multi, insert mode) Move all cursors backward by word
+<c-down>    Multiple cursor: (visual-multi, insert mode) Move all cursors to next word end
+<c-s-up>    Multiple cursor: (visual-multi, insert mode) Move all cursors to previous WORD end
+<c-up>      Multiple cursor: (visual-multi, insert mode) Move all cursors to previous word end
+<c-right>   Multiple cursor: (visual-multi, insert mode) Move all cursors forward by word
+<bs>        Multiple cursor: (visual-multi, insert mode) Delete character before each cursor
+<c-b>       Multiple cursor: (visual-multi, insert mode) Move all cursors left
+<c-c>       Multiple cursor: (visual-multi, insert mode) Leave multi-insert mode
+<c-d>       Multiple cursor: (visual-multi, insert mode) Reduce indentation
+<c-f>       Multiple cursor: (visual-multi, insert mode) Move all cursors right
+<c-o>       Multiple cursor: (visual-multi, insert mode) Execute one normal command for all cursors
+<c-u>       Multiple cursor: (visual-multi, insert mode) Delete to beginning of line at each cursor
+<c-w>       Multiple cursor: (visual-multi, insert mode) Delete previous word at each cursor
+<c-^>       Multiple cursor: (visual-multi, insert mode) Toggle insert mode cursor
+<del>       Multiple cursor: (visual-multi, insert mode) Delete character under each cursor
+<down>      Multiple cursor: (visual-multi, insert mode) Down arrow
+<end>       Multiple cursor: (visual-multi, insert mode) Move all cursors to line end
+<home>      Multiple cursor: (visual-multi, insert mode) Move all cursors to line start
+<left>      Multiple cursor: (visual-multi, insert mode) Left arrow
+<c-v>       Multiple cursor: (visual-multi, insert mode) Paste at all cursors
+<insert>    Multiple cursor: (visual-multi, insert mode) Toggle insert/replace mode
+<cr>        Multiple cursor: (visual-multi, insert mode) Insert newline at each cursor
+<right>     Multiple cursor: (visual-multi, insert mode) Right arrow
+<up>        Multiple cursor: (visual-multi, insert mode) Up arrow
+<c-a>       Multiple cursor: (visual-multi, normal mode) Increase
+J           Multiple cursor: (visual-multi, normal mode) Join lines
+\\m         Multiple cursor: (visual-multi, normal mode) Merge regions
+<a-s-left>  Multiple cursor: (visual-multi, normal mode) Move left
+<a-s-right>  Multiple cursor: (visual-multi, normal mode) Move right
+1           Multiple cursor: (visual-multi, normal mode) Insert increasing numbers (count sets starting value)
+\\n         Multiple cursor: (visual-multi, normal mode) Numbers append
+O           Multiple cursor: (visual-multi, normal mode) Open a line above each cursor
+\\L         Multiple cursor: (visual-multi, normal mode) One per line
+P           Multiple cursor: (visual-multi, normal mode) Paste before each cursor
+\\R         Multiple cursor: (visual-multi, normal mode) Remove every n regions
+\\q         Multiple cursor: (visual-multi, normal mode) Remove last region
+Q           Multiple cursor: (visual-multi, normal mode) Remove current region
+R           Multiple cursor: (visual-multi, normal mode) Replace
+r           Multiple cursor: (visual-multi, normal mode) Replace characters
+\\r         Multiple cursor: (visual-multi, normal mode) Rewrite last search
+\\.         Multiple cursor: (visual-multi, normal mode) Run dot
+\\x         Multiple cursor: (visual-multi, normal mode) Run ex
+\\X         Multiple cursor: (visual-multi, normal mode) Run last ex
+\\Z         Multiple cursor: (visual-multi, normal mode) Run last normal
+\\V         Multiple cursor: (visual-multi, normal mode) Run last visual
+\\@         Multiple cursor: (visual-multi, normal mode) Run macro
+\\z         Multiple cursor: (visual-multi, normal mode) Run normal
+\\v         Multiple cursor: (visual-multi, normal mode) Run visual
+\\S         Multiple cursor: (visual-multi, normal mode) Search menu
+<c-f>       Multiple cursor: (visual-multi, normal mode) Seek down
+<c-b>       Multiple cursor: (visual-multi, normal mode) Seek up
+<a-c-down>  Multiple cursor: (visual-multi, normal mode) Select cursor down
+<a-c-up>    Multiple cursor: (visual-multi, normal mode) Select cursor up
+s           Multiple cursor: (visual-multi, normal mode) Add selection with motion
+<s-left>    Multiple cursor: (visual-multi, normal mode) Extend selections left
+<s-down>    Multiple cursor: (visual-multi, normal mode) Extend selections down
+<s-up>      Multiple cursor: (visual-multi, normal mode) Extend selections up
+<s-right>   Multiple cursor: (visual-multi, normal mode) Extend selections right
+\\l         Multiple cursor: (visual-multi, normal mode) Show infoline
+\\"         Multiple cursor: (visual-multi, normal mode) Show registers
+\\-         Multiple cursor: (visual-multi, normal mode) Shrink
+<a-left>    Multiple cursor: (visual-multi, normal mode) Single select h
+<a-right>   Multiple cursor: (visual-multi, normal mode) Single select l
+q           Multiple cursor: (visual-multi, normal mode) Skip current region and find next
+g/          Multiple cursor: (visual-multi, normal mode) Slash search
+\\s         Multiple cursor: (visual-multi, normal mode) Split regions
+S           Multiple cursor: (visual-multi, normal mode) Surround
+<tab>       Multiple cursor: (visual-multi, normal mode) Switch between cursor and extend modes
+M           Multiple cursor: (visual-multi, normal mode) Toggle multiline
+\\<cr>      Multiple cursor: (visual-multi, normal mode) Toggle single region
+\\w         Multiple cursor: (visual-multi, normal mode) Toggle whole word
+\\`         Multiple cursor: (visual-multi, normal mode) Tools menu
+\\e         Multiple cursor: (visual-multi, normal mode) Transform regions
+\\t         Multiple cursor: (visual-multi, normal mode) Transpose
+\\r         Multiple cursor: (visual-multi, visual mode) Visual reduce
+\\s         Multiple cursor: (visual-multi, visual mode) Visual subtract
+X           Multiple cursor: (visual-multi, normal mode) Delete character before each cursor
+Y           Multiple cursor: (visual-multi, normal mode) Yank each selected line
+y           Multiple cursor: (visual-multi, normal mode) Yank
+\\0N        Multiple cursor: (visual-multi, normal mode) Zero numbers
+\\0n        Multiple cursor: (visual-multi, normal mode) Zero numbers append
+a           Multiple cursor: (visual-multi, normal mode) Append after each cursor
+c           Multiple cursor: (visual-multi, normal mode) Change each region
+g<c-x>      Multiple cursor: (visual-multi, normal mode) Gdecrease
+g<c-a>      Multiple cursor: (visual-multi, normal mode) Gincrease
+gU          Multiple cursor: (visual-multi, normal mode) Convert to uppercase with motion
+gc          Multiple cursor: (visual-multi, normal mode) Change case with motion
+gu          Multiple cursor: (visual-multi, normal mode) Convert to lowercase with motion
+i           Multiple cursor: (visual-multi, normal mode) Insert before each cursor
+o           Multiple cursor: (visual-multi, normal mode) Open a line below each cursor
+p           Multiple cursor: (visual-multi, normal mode) Paste after each cursor
+x           Multiple cursor: (visual-multi, normal mode) Delete character under each cursor
+~           Multiple cursor: (visual-multi, normal mode) Toggle case
+\\<space>   Multiple cursor: (visual-multi) Toggle visual-multi mappings
+<esc>       Multiple cursor: (visual-multi) Exit visual-multi
+:           Multiple cursor: (visual-multi) Run Ex command on regions
+/           Multiple cursor: (visual-multi) Search forward on regions
+?           Multiple cursor: (visual-multi) Search backward on regions
+<c-b>       VimTeX: (LaTeX buffer, insert mode) Insert \textbf{} and place cursor inside
+<c-o>       VimTeX: (LaTeX buffer, insert mode) Insert $$ and place cursor inside
+<c-u>       VimTeX: (LaTeX buffer, insert mode) Insert ^{} and place cursor inside
+<c-d>       VimTeX: (LaTeX buffer, insert mode) Insert _{} and place cursor inside
+<a-v>       VimTeX: (LaTeX buffer, insert mode) View PDF
+,e          VimTeX: (LaTeX buffer, normal mode) Show errors
+,r          VimTeX: (LaTeX buffer, normal mode) Reverse search from PDF
+,v          VimTeX: (LaTeX buffer, normal mode) View PDF
+,c          VimTeX: (LaTeX buffer, normal mode) Clean auxiliary files
+,b          VimTeX: (LaTeX buffer, normal mode) Start/stop continuous compilation
+,i          VimTeX: (LaTeX buffer, normal mode) Show VimTeX information
+?           VimTeX: (LaTeX buffer, normal mode) Show custom LaTeX keymap help
+z?          VimTeX: (LaTeX buffer, normal mode) Start backward search
+`0          VimTeX: (math context, insert mode) Insert \emptyset
+`2          VimTeX: (math context, insert mode) Insert \sqrt
+`6          VimTeX: (math context, insert mode) Insert \partial
+`8          VimTeX: (math context, insert mode) Insert \infty
+`=          VimTeX: (math context, insert mode) Insert \equiv
+`\          VimTeX: (math context, insert mode) Insert \setminus
+`.          VimTeX: (math context, insert mode) Insert \cdot
+`*          VimTeX: (math context, insert mode) Insert \times
+`<          VimTeX: (math context, insert mode) Insert \langle
+`>          VimTeX: (math context, insert mode) Insert \rangle
+`H          VimTeX: (math context, insert mode) Insert \hbar
+`+          VimTeX: (math context, insert mode) Insert \dagger
+`[          VimTeX: (math context, insert mode) Insert \subseteq
+`]          VimTeX: (math context, insert mode) Insert \supseteq
+`(          VimTeX: (math context, insert mode) Insert \subset
+`)          VimTeX: (math context, insert mode) Insert \supset
+`A          VimTeX: (math context, insert mode) Insert \forall
+`B          VimTeX: (math context, insert mode) Insert \boldsymbol
+`E          VimTeX: (math context, insert mode) Insert \exists
+`N          VimTeX: (math context, insert mode) Insert \nabla
+`jj         VimTeX: (math context, insert mode) Insert \downarrow
+`jJ         VimTeX: (math context, insert mode) Insert \Downarrow
+`jk         VimTeX: (math context, insert mode) Insert \uparrow
+`jK         VimTeX: (math context, insert mode) Insert \Uparrow
+`jh         VimTeX: (math context, insert mode) Insert \leftarrow
+`jH         VimTeX: (math context, insert mode) Insert \Leftarrow
+`jl         VimTeX: (math context, insert mode) Insert \rightarrow
+`jL         VimTeX: (math context, insert mode) Insert \Rightarrow
+`a          VimTeX: (math context, insert mode) Insert \alpha
+`b          VimTeX: (math context, insert mode) Insert \beta
+`c          VimTeX: (math context, insert mode) Insert \chi
+`d          VimTeX: (math context, insert mode) Insert \delta
+`e          VimTeX: (math context, insert mode) Insert \epsilon
+`f          VimTeX: (math context, insert mode) Insert \phi
+`g          VimTeX: (math context, insert mode) Insert \gamma
+`h          VimTeX: (math context, insert mode) Insert \eta
+`i          VimTeX: (math context, insert mode) Insert \iota
+`k          VimTeX: (math context, insert mode) Insert \kappa
+`l          VimTeX: (math context, insert mode) Insert \lambda
+`m          VimTeX: (math context, insert mode) Insert \mu
+`n          VimTeX: (math context, insert mode) Insert \nu
+`p          VimTeX: (math context, insert mode) Insert \pi
+`q          VimTeX: (math context, insert mode) Insert \theta
+`r          VimTeX: (math context, insert mode) Insert \rho
+`s          VimTeX: (math context, insert mode) Insert \sigma
+`t          VimTeX: (math context, insert mode) Insert \tau
+`y          VimTeX: (math context, insert mode) Insert \psi
+`u          VimTeX: (math context, insert mode) Insert \upsilon
+`w          VimTeX: (math context, insert mode) Insert \omega
+`z          VimTeX: (math context, insert mode) Insert \zeta
+`x          VimTeX: (math context, insert mode) Insert \xi
+`D          VimTeX: (math context, insert mode) Insert \Delta
+`F          VimTeX: (math context, insert mode) Insert \Phi
+`G          VimTeX: (math context, insert mode) Insert \Gamma
+`L          VimTeX: (math context, insert mode) Insert \Lambda
+`P          VimTeX: (math context, insert mode) Insert \Pi
+`Q          VimTeX: (math context, insert mode) Insert \Theta
+`S          VimTeX: (math context, insert mode) Insert \Sigma
+`U          VimTeX: (math context, insert mode) Insert \Upsilon
+`W          VimTeX: (math context, insert mode) Insert \Omega
+`X          VimTeX: (math context, insert mode) Insert \Xi
+`Y          VimTeX: (math context, insert mode) Insert \Psi
+`ve         VimTeX: (math context, insert mode) Insert \varepsilon
+`vf         VimTeX: (math context, insert mode) Insert \varphi
+`vk         VimTeX: (math context, insert mode) Insert \varkappa
+`vp         VimTeX: (math context, insert mode) Insert \varpi
+`vq         VimTeX: (math context, insert mode) Insert \vartheta
+`vr         VimTeX: (math context, insert mode) Insert \varrho
+#/          VimTeX: (math context, insert mode) Insert slashed math style
+#b          VimTeX: (math context, insert mode) Insert mathbf math style
+#f          VimTeX: (math context, insert mode) Insert mathfrak math style
+#c          VimTeX: (math context, insert mode) Insert mathcal math style
+#-          VimTeX: (math context, insert mode) Insert overline math style
+#B          VimTeX: (math context, insert mode) Insert mathbb math style
+``          VimTeX: (LaTeX buffer, insert mode) Insert ``
+q           VimTeX: (VimTeX scratch window) Close information/log/scratch window
+<esc>       VimTeX: (VimTeX scratch window) Close information/log/scratch window
+<c-6>       VimTeX: (VimTeX scratch window) Close information/log/scratch window
+<c-^>       VimTeX: (VimTeX scratch window) Close information/log/scratch window
+<c-e>       VimTeX: (VimTeX scratch window) Close information/log/scratch window
+SPC R       DAP: (debugging buffer, normal mode) Reset debugger window layout
+SPC 0       DAP: (debugging buffer, normal mode) Toggle debugger windows
+g:          DAP: (debugging buffer, visual mode) Evaluate visual selection
+g:          DAP: (debugging buffer, normal mode) Evaluate expression under cursor
+gE          DAP: (debugging buffer, visual mode) Evaluate visual selection
+gE          DAP: (debugging buffer, normal mode) Evaluate expression under cursor
+gR          DAP: (debugging buffer, normal mode) Reset debugger window layout
+g0          DAP: (debugging buffer, normal mode) Toggle debugger windows
+gT          DAP: (debugging buffer, normal mode) Focus current frame
+gt          DAP: (debugging buffer, normal mode) Run to cursor
+gr          DAP: (debugging buffer, normal mode) Run last debugging configuration
+g[          DAP: (debugging buffer, normal mode) Frame down
+g]          DAP: (debugging buffer, normal mode) Frame up
+go          DAP: (debugging buffer, normal mode) Step out
+gs          DAP: (debugging buffer, normal mode) Step into
+gn          DAP: (debugging buffer, normal mode) Step over
+gq          DAP: (debugging buffer, normal mode) Terminate debugging, close debugger windows, and restore buffer mappings
+gp          DAP: (debugging buffer, normal mode) Pause
+ge          DAP: (debugging buffer, normal mode) Terminate
+gc          DAP: (debugging buffer, normal mode) Continue
+gB          DAP: (debugging buffer, normal mode) Toggle conditional breakpoint
+gb          DAP: (debugging buffer, normal mode) Toggle breakpoint
+g?          DAP: (debugging buffer, normal mode) Show debugger help
+e           DAP UI: (debugger panel) edit selected item
+<cr>        DAP UI: (debugger panel) expand selected item
+<2-leftmouse>  DAP UI: (debugger panel) expand selected item
+o           DAP UI: (debugger panel) open selected item
+<rightmouse>  DAP UI: (debugger panel) open selected item
+d           DAP UI: (debugger panel) remove selected item
+r           DAP UI: (debugger panel) open selected item in REPL
+t           DAP UI: (debugger panel) toggle selected item
+q           DAP UI: (floating debugger window) close window
+<esc>       DAP UI: (floating debugger window) close window
+G           DAP UI: (console) go to bottom and enable automatic scrolling
+<cr>        DAP REPL: (normal mode) run first action on selected value
+o           DAP REPL: (normal mode) show actions for selected value
+<up>        DAP REPL: (insert mode) previous command history item
+<down>      DAP REPL: (insert mode) next command history item
+]]          DAP REPL: go to next prompt
+[[          DAP REPL: go to previous prompt
+G           DAP REPL: go to bottom and enable automatic scrolling
+H           Lazy: (Lazy window) Go back to plugin list
+I           Lazy: (Lazy window) Install missing plugins
+i           Lazy: (selected plugin) Install a plugin
+U           Lazy: (Lazy window) Update plugins
+u           Lazy: (selected plugin) Update a plugin
+S           Lazy: (Lazy window) Run install, clean and update
+X           Lazy: (Lazy window) Clean plugins that are no longer needed
+x           Lazy: (selected plugin) Delete a plugin
+C           Lazy: (Lazy window) Check for updates and show the log (git fetch)
+c           Lazy: (selected plugin) Check for updates and show the log (git fetch)
+L           Lazy: (Lazy window) Show recent updates
+gl          Lazy: (selected plugin) Show recent updates
+R           Lazy: (Lazy window) Updates all plugins to the state in the lockfile
+r           Lazy: (selected plugin) Restore a plugin to the state in the lockfile or to a given commit under the cursor
+P           Lazy: (Lazy window) Show detailed profiling
+D           Lazy: (Lazy window) Show debug information
+?           Lazy: (Lazy window) Toggle this help page
+gb          Lazy: (selected plugin) Rebuild a plugin
+<c-c>       Lazy: (Lazy window) Abort running tasks
+d           Lazy: (Lazy window) Show commit diff
+q           Lazy: (Lazy window) Close window
+<cr>        Lazy: (Lazy window) Toggle plugin details
+K           Lazy: (Lazy window) Open link or plugin repository
+]]          Lazy: (Lazy window) Go to next plugin
+<c-f>       Lazy: (Lazy window) Set profiling time threshold
+[[          Lazy: (Lazy window) Go to previous plugin
+<c-s>       Lazy: (Lazy window) Toggle profile sorting
+\l          Lazy: (selected plugin) Open lazygit log
+\i          Lazy: (selected plugin) Inspect Plugin
+\t          Lazy: (selected plugin) Open terminal in plugin dir
+gx          Lazy: (Lazy window) Open link or plugin repository
+g?          Mason: (Mason window) Toggle help
+<c-c>       Mason: (Mason window) Cancel installation
+<c-f>       Mason: (Mason window) Apply language filter
+<cr>        Mason: (Mason window) Toggle package install log
+<cr>        Mason: (Mason window) Toggle package expand
+i           Mason: (Mason window) Install package
+u           Mason: (Mason window) Update package
+c           Mason: (Mason window) Check package version
+U           Mason: (Mason window) Update all packages
+C           Mason: (Mason window) Check outdated packages
+X           Mason: (Mason window) Uninstall package
+?           Undotree: (undo tree window) Toggle quick help
+q           Undotree: (undo tree window) Close undotree panel
+<tab>       Undotree: (undo tree window) Set Focus back to the editor
+C           Undotree: (undo tree window) Clear undo history (with confirmation)
+T           Undotree: (undo tree window) Toggle relative timestamp
+D           Undotree: (undo tree window) Toggle the diff panel
+=           Undotree: (undo tree window) Set the diff marker
+M           Undotree: (undo tree window) Clear the diff marker
+K           Undotree: (undo tree window) Move to the next undo state
+J           Undotree: (undo tree window) Move to the previous undo state
+>           Undotree: (undo tree window) Move to the next saved state
+<           Undotree: (undo tree window) Move to the previous saved state
+<c-r>       Undotree: (undo tree window) Redo
+u           Undotree: (undo tree window) Undo
+<2-leftmouse>  Undotree: (undo tree window) Move to the current state
+<cr>        Undotree: (undo tree window) Move to the current state
+<c-d>       Which-key: scroll help popup down
+<c-u>       Which-key: scroll help popup up
+<esc>       Which-key: dismiss help popup
+<c-n>       Theme picker: (insert mode) select next theme
+<down>      Theme picker: select next theme
+j           Theme picker: (normal mode) select next theme
+<c-p>       Theme picker: (insert mode) select previous theme
+<up>        Theme picker: select previous theme
+k           Theme picker: (normal mode) select previous theme
+<cr>        Theme picker: confirm selected theme
+<c-w>       Theme picker: (insert mode) delete previous query word
+<c-t>       Theme picker: (normal mode) cycle picker windows
+q           Theme picker: (normal mode) close picker
+<esc>       Theme picker: (normal mode) close picker
+q           Menu: close menu
+<esc>       Menu: close menu
+<c-t>       Menu: cycle menu windows
+h           Menu: move to previous menu window
+l           Menu: move to next menu window
+<c-s>       Minty: save selected color
+<c-t>       Minty: cycle color picker windows
+q           Minty: close color picker
+<esc>       Minty: close color picker
+q           Conform: (ConformInfo window) close formatter information
+<c-c>       Conform: (ConformInfo window) close formatter information
+SPC fm      Menu: (default menu) Format Buffer
+SPC ca      Menu: (default menu) Code Actions
+ed          Menu: (default menu) Edit Config
+<c-c>       Menu: (default menu) Copy Content
+dc          Menu: (default menu) Delete Content
+gd          Menu: (lsp menu) Goto Definition
+gD          Menu: (lsp menu) Goto Declaration
+gi          Menu: (lsp menu) Goto Implementation
+SPC sh      Menu: (lsp menu) Show signature help
+SPC wa      Menu: (lsp menu) Add workspace folder
+SPC wr      Menu: (lsp menu) Remove workspace folder
+gr          Menu: (lsp menu) Show References
+SPC fm      Menu: (lsp menu) Format Buffer
+SPC ca      Menu: (lsp menu) Code Actions
+<cr>        Git: (Fugitive blame window, normal mode) Open selected commit and close blame
+(           Git: (Fugitive blame window, normal mode) Move up one line
+)           Git: (Fugitive blame window, normal mode) Move down one line
+-           Git: (Fugitive blame window, normal mode) Blame file at selected commit
+.           Git: (Fugitive blame window, normal mode) Prepare Ex command with selected commit hash
+A           Git: (Fugitive blame window, normal mode) Resize blame window to show author/date
+C           Git: (Fugitive blame window, normal mode) Resize blame window to show commit hash
+D           Git: (Fugitive blame window, normal mode) Resize blame window to show original line number
+O           Git: (Fugitive blame window, normal mode) Open selected commit in new tab
+P           Git: (Fugitive blame window, normal mode) Blame file at numbered parent (count required)
+cb?         Git: (Fugitive blame window, normal mode) Show mapping help for cb
+cb<cr>      Git: (Fugitive blame window, normal mode) Run :Git branch
+cb<space>   Git: (Fugitive blame window, normal mode) Prepare :Git branch command
+co?         Git: (Fugitive blame window, normal mode) Show mapping help for co
+coo         Git: (Fugitive blame window, normal mode) Check out selected commit
+co<cr>      Git: (Fugitive blame window, normal mode) Run :Git checkout
+co<space>   Git: (Fugitive blame window, normal mode) Prepare :Git checkout command
+cz?         Git: (Fugitive blame window, normal mode) Show mapping help for cz
+czz         Git: (Fugitive blame window, normal mode) Stash changes (1 includes untracked files; 2 includes ignored files)
+czw         Git: (Fugitive blame window, normal mode) Stash work tree and keep index (1 includes untracked; 2 includes ignored)
+czv         Git: (Fugitive blame window, normal mode) Open stash (count selects stash index)
+czs         Git: (Fugitive blame window, normal mode) Stash staged changes
+czP         Git: (Fugitive blame window, normal mode) Pop stash (count selects stash index)
+czp         Git: (Fugitive blame window, normal mode) Pop stash and preserve index
+czA         Git: (Fugitive blame window, normal mode) Apply stash (count selects stash index)
+cza         Git: (Fugitive blame window, normal mode) Apply stash and preserve index
+cz<cr>      Git: (Fugitive blame window, normal mode) Run :Git stash
+cz<space>   Git: (Fugitive blame window, normal mode) Prepare :Git stash command
+cm?         Git: (Fugitive blame window, normal mode) Show mapping help for cm
+cmt         Git: (Fugitive blame window, normal mode) Prepare :Git mergetool command
+cm<cr>      Git: (Fugitive blame window, normal mode) Run :Git merge
+cm<space>   Git: (Fugitive blame window, normal mode) Prepare :Git merge command
+cr?         Git: (Fugitive blame window, normal mode) Show mapping help for cr
+crn         Git: (Fugitive blame window, normal mode) Revert selected commit without committing
+crc         Git: (Fugitive blame window, normal mode) Revert selected commit
+cr<cr>      Git: (Fugitive blame window, normal mode) Run :Git revert
+cr<space>   Git: (Fugitive blame window, normal mode) Prepare :Git revert command
+c?          Git: (Fugitive blame window, normal mode) Show mapping help for c
+cn          Git: (Fugitive blame window, normal mode) Create squash! commit and edit message
+cS          Git: (Fugitive blame window, normal mode) Create squash! commit and prepare autosquash rebase
+cs          Git: (Fugitive blame window, normal mode) Create squash! commit without editing message
+cF          Git: (Fugitive blame window, normal mode) Create fixup! commit and prepare autosquash rebase
+cf          Git: (Fugitive blame window, normal mode) Create fixup! commit for selected commit
+cRw         Git: (Fugitive blame window, normal mode) Reword commit and reset author
+cRe         Git: (Fugitive blame window, normal mode) Amend commit without editing message and reset author
+cRa         Git: (Fugitive blame window, normal mode) Amend commit and reset author
+cvc         Git: (Fugitive blame window, normal mode) Create commit with verbose diff in new tab
+cva         Git: (Fugitive blame window, normal mode) Amend last commit with verbose diff in new tab
+cW          Git: (Fugitive blame window, normal mode) Create amend! commit to reword selected commit
+cw          Git: (Fugitive blame window, normal mode) Reword last commit
+ce          Git: (Fugitive blame window, normal mode) Amend last commit without editing message
+cc          Git: (Fugitive blame window, normal mode) Create commit
+ca          Git: (Fugitive blame window, normal mode) Amend last commit and edit message
+cv<cr>      Git: (Fugitive blame window, normal mode) Run :Git commit -v
+cv<space>   Git: (Fugitive blame window, normal mode) Prepare :Git commit -v command
+c<cr>       Git: (Fugitive blame window, normal mode) Run :Git commit
+c<space>    Git: (Fugitive blame window, normal mode) Prepare :Git commit command
+gq          Git: (Fugitive blame window, normal mode) Close blame buffer
+g?          Git: (Fugitive blame window, normal mode) Show blame help
+i           Git: (Fugitive blame window, normal mode) Open selected commit and close blame
+o           Git: (Fugitive blame window, normal mode) Open selected commit in split
+p           Git: (Fugitive blame window, normal mode) Preview selected commit
+r?          Git: (Fugitive blame window, normal mode) Show mapping help for r
+ra          Git: (Fugitive blame window, normal mode) Abort rebase
+re          Git: (Fugitive blame window, normal mode) Edit rebase todo
+rs          Git: (Fugitive blame window, normal mode) Skip current rebase commit
+rr          Git: (Fugitive blame window, normal mode) Continue rebase
+rx          Git: (Fugitive blame window, normal mode) Interactive rebase with selected commit marked drop
+rk          Git: (Fugitive blame window, normal mode) Interactive rebase with selected commit marked drop
+rd          Git: (Fugitive blame window, normal mode) Interactive rebase with selected commit marked drop
+rm          Git: (Fugitive blame window, normal mode) Interactive rebase with selected commit marked edit
+rw          Git: (Fugitive blame window, normal mode) Interactive rebase with selected commit marked reword
+rp          Git: (Fugitive blame window, normal mode) Interactive rebase against push target
+ru          Git: (Fugitive blame window, normal mode) Interactive rebase against upstream
+rf          Git: (Fugitive blame window, normal mode) Autosquash rebase without editing todo
+ri          Git: (Fugitive blame window, normal mode) Interactive rebase from selected commit ancestor
+r<cr>       Git: (Fugitive blame window, normal mode) Run :Git rebase
+r<space>    Git: (Fugitive blame window, normal mode) Prepare :Git rebase command
+s           Git: (Fugitive blame window, normal mode) Blame file at selected commit
+u           Git: (Fugitive blame window, normal mode) Blame file at selected commit
+~           Git: (Fugitive blame window, normal mode) Blame file at first ancestor (count chooses ancestor)
+<2-leftmouse>  Git: (Fugitive blame window, normal mode) Open selected commit and close blame
+<f1>        Git: (Fugitive blame window, normal mode) Show blame help
+<cr>        Git: (Fugitive status window, normal mode) Open selected file or object
+#           Git: (Fugitive status window, normal,operator-pending modes) Search corresponding changed line backward
+(           Git: (Fugitive status window, normal,operator-pending,visual modes) Go to previous file, hunk, or revision
+)           Git: (Fugitive status window, normal,operator-pending,visual modes) Go to next file, hunk, or revision
+*           Git: (Fugitive status window, normal,operator-pending modes) Search corresponding changed line forward
+-           Git: (Fugitive status window, normal,visual modes) Toggle staging of selected file or hunk
+.           Git: (Fugitive status window, normal,visual modes) Prepare Ex command with selected filename(s)
+<lt>        Git: (Fugitive status window, normal,visual modes) Hide inline diff
+=           Git: (Fugitive status window, normal,visual modes) Toggle inline diff
+>           Git: (Fugitive status window, normal,visual modes) Show inline diff
+C           Git: (Fugitive status window, normal mode) Open containing commit
+I           Git: (Fugitive status window, normal,visual modes) Interactive add/reset patch (untracked file: prompt git add)
+J           Git: (Fugitive status window, normal,operator-pending,visual modes) Go to next hunk and expand inline diff
+K           Git: (Fugitive status window, normal,operator-pending,visual modes) Go to previous hunk and expand inline diff
+O           Git: (Fugitive status window, normal mode) Open selected file in new tab
+P           Git: (Fugitive status window, normal,visual modes) Interactive patch; in Unpushed section prepare push command
+U           Git: (Fugitive status window, normal mode) Unstage everything
+X           Git: (Fugitive status window, normal,visual modes) Discard selected change (count 1 also removes untracked file)
+[]          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to previous section end
+[[          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to previous section
+[m          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to previous file and collapse inline diffs
+[/          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to previous file and collapse inline diffs
+[c          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to previous hunk and expand inline diff
+][          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to next section end
+]]          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to next section
+]m          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to next file and collapse inline diffs
+]/          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to next file and collapse inline diffs
+]c          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to next hunk and expand inline diff
+cb?         Git: (Fugitive status window, normal mode) Show mapping help for cb
+cb<cr>      Git: (Fugitive status window, normal mode) Run :Git branch
+cb<space>   Git: (Fugitive status window, normal mode) Prepare :Git branch command
+co?         Git: (Fugitive status window, normal mode) Show mapping help for co
+coo         Git: (Fugitive status window, normal mode) Check out selected commit
+co<cr>      Git: (Fugitive status window, normal mode) Run :Git checkout
+co<space>   Git: (Fugitive status window, normal mode) Prepare :Git checkout command
+cz?         Git: (Fugitive status window, normal mode) Show mapping help for cz
+czz         Git: (Fugitive status window, normal mode) Stash changes (1 includes untracked files; 2 includes ignored files)
+czw         Git: (Fugitive status window, normal mode) Stash work tree and keep index (1 includes untracked; 2 includes ignored)
+czv         Git: (Fugitive status window, normal mode) Open stash (count selects stash index)
+czs         Git: (Fugitive status window, normal mode) Stash staged changes
+czP         Git: (Fugitive status window, normal mode) Pop stash (count selects stash index)
+czp         Git: (Fugitive status window, normal mode) Pop stash and preserve index
+czA         Git: (Fugitive status window, normal mode) Apply stash (count selects stash index)
+cza         Git: (Fugitive status window, normal mode) Apply stash and preserve index
+cz<cr>      Git: (Fugitive status window, normal mode) Run :Git stash
+cz<space>   Git: (Fugitive status window, normal mode) Prepare :Git stash command
+cm?         Git: (Fugitive status window, normal mode) Show mapping help for cm
+cmt         Git: (Fugitive status window, normal mode) Prepare :Git mergetool command
+cm<cr>      Git: (Fugitive status window, normal mode) Run :Git merge
+cm<space>   Git: (Fugitive status window, normal mode) Prepare :Git merge command
+cr?         Git: (Fugitive status window, normal mode) Show mapping help for cr
+crn         Git: (Fugitive status window, normal mode) Revert selected commit without committing
+crc         Git: (Fugitive status window, normal mode) Revert selected commit
+cr<cr>      Git: (Fugitive status window, normal mode) Run :Git revert
+cr<space>   Git: (Fugitive status window, normal mode) Prepare :Git revert command
+c?          Git: (Fugitive status window, normal mode) Show mapping help for c
+cn          Git: (Fugitive status window, normal mode) Create squash! commit and edit message
+cS          Git: (Fugitive status window, normal mode) Create squash! commit and prepare autosquash rebase
+cs          Git: (Fugitive status window, normal mode) Create squash! commit without editing message
+cF          Git: (Fugitive status window, normal mode) Create fixup! commit and prepare autosquash rebase
+cf          Git: (Fugitive status window, normal mode) Create fixup! commit for selected commit
+cRw         Git: (Fugitive status window, normal mode) Reword commit and reset author
+cRe         Git: (Fugitive status window, normal mode) Amend commit without editing message and reset author
+cRa         Git: (Fugitive status window, normal mode) Amend commit and reset author
+cvc         Git: (Fugitive status window, normal mode) Create commit with verbose diff in new tab
+cva         Git: (Fugitive status window, normal mode) Amend last commit with verbose diff in new tab
+cW          Git: (Fugitive status window, normal mode) Create amend! commit to reword selected commit
+cw          Git: (Fugitive status window, normal mode) Reword last commit
+ce          Git: (Fugitive status window, normal mode) Amend last commit without editing message
+cc          Git: (Fugitive status window, normal mode) Create commit
+ca          Git: (Fugitive status window, normal mode) Amend last commit and edit message
+cv<cr>      Git: (Fugitive status window, normal mode) Run :Git commit -v
+cv<space>   Git: (Fugitive status window, normal mode) Prepare :Git commit -v command
+c<cr>       Git: (Fugitive status window, normal mode) Run :Git commit
+c<space>    Git: (Fugitive status window, normal mode) Prepare :Git commit command
+d?          Git: (Fugitive status window, normal mode) Show mapping help for d
+dv          Git: (Fugitive status window, normal mode) Open selected file in vertical diff split
+dp          Git: (Fugitive status window, normal mode) Open selected file git diff
+ds          Git: (Fugitive status window, normal mode) Open selected file in horizontal diff split
+dh          Git: (Fugitive status window, normal mode) Open selected file in horizontal diff split
+dd          Git: (Fugitive status window, normal mode) Open selected file in default diff split
+dq          Git: (Fugitive status window, normal mode) Close other diff buffers and disable diff mode
+gf          Git: (Fugitive status window, normal mode) Find selected file
+gI          Git: (Fugitive status window, normal,visual modes) Add selected file to ignore/exclude file
+gq          Git: (Fugitive status window, normal mode) Close status buffer
+gr          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to Rebasing section file
+gP          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to Unpulled section file
+gp          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to Unpushed section file
+gs          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to Staged section file
+gU          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to Unstaged/Untracked section file
+gu          Git: (Fugitive status window, normal,operator-pending,visual modes) Go to Untracked/Unstaged section file
+g?          Git: (Fugitive status window, normal mode) Show mapping help for g
+gi          Git: (Fugitive status window, normal,visual modes) Open .git/info/exclude (count opens .gitignore)
+gc          Git: (Fugitive status window, normal mode) Preview containing commit
+gC          Git: (Fugitive status window, normal mode) Preview containing commit
+gO          Git: (Fugitive status window, normal mode) Open selected file in vertical split
+i           Git: (Fugitive status window, normal mode) Go to next file or hunk and expand inline diff
+o           Git: (Fugitive status window, normal mode) Open selected file in horizontal split
+1p          Git: (Fugitive status window, normal mode) Open selected file in preview window (count required)
+r?          Git: (Fugitive status window, normal mode) Show mapping help for r
+ra          Git: (Fugitive status window, normal mode) Abort rebase
+re          Git: (Fugitive status window, normal mode) Edit rebase todo
+rs          Git: (Fugitive status window, normal mode) Skip current rebase commit
+rr          Git: (Fugitive status window, normal mode) Continue rebase
+rx          Git: (Fugitive status window, normal mode) Interactive rebase with selected commit marked drop
+rk          Git: (Fugitive status window, normal mode) Interactive rebase with selected commit marked drop
+rd          Git: (Fugitive status window, normal mode) Interactive rebase with selected commit marked drop
+rm          Git: (Fugitive status window, normal mode) Interactive rebase with selected commit marked edit
+rw          Git: (Fugitive status window, normal mode) Interactive rebase with selected commit marked reword
+rp          Git: (Fugitive status window, normal mode) Interactive rebase against push target
+ru          Git: (Fugitive status window, normal mode) Interactive rebase against upstream
+rf          Git: (Fugitive status window, normal mode) Autosquash rebase without editing todo
+ri          Git: (Fugitive status window, normal mode) Interactive rebase from selected commit ancestor
+r<cr>       Git: (Fugitive status window, normal mode) Run :Git rebase
+r<space>    Git: (Fugitive status window, normal mode) Prepare :Git rebase command
+s           Git: (Fugitive status window, normal,visual modes) Stage selected file or hunk
+u           Git: (Fugitive status window, normal,visual modes) Unstage selected file or hunk
+~           Git: (Fugitive status window, normal mode) Open file in first ancestor (count chooses ancestor)
+<c-w>gf     Git: (Fugitive status window, normal mode) Find selected file in new tab
+<c-w><c-f>  Git: (Fugitive status window, normal mode) Find selected file in split
+<c-w>f      Git: (Fugitive status window, normal mode) Find selected file in split
+<f1>        Git: (Fugitive status window, normal mode) Show mapping help for <F1>
+<c-n>       Git: (Fugitive status window, normal mode) Go to next item (deprecated alias; use ))
+<c-p>       Git: (Fugitive status window, normal mode) Go to previous item (deprecated alias; use ()
+<2-leftmouse>  Git: (Fugitive status window, normal mode) Open selected file or object
+p           Git: (Fugitive status window, visual mode) Interactive patch for selection
+<c-r><c-f>  Git: (Fugitive status window, command mode) Insert selected git object filename on command line
+SPC aa      Avante: (after Avante loads, normal,visual modes) Ask about buffer or selection
+SPC az      Avante: (after Avante loads, normal,visual modes) Toggle full-screen chat
+SPC an      Avante: (after Avante loads, normal,visual modes) Ask in new chat
+SPC ae      Avante: (after Avante loads, visual mode) Edit selected code
+SPC aS      Avante: (after Avante loads, normal mode) Stop current request
+SPC ar      Avante: (after Avante loads, normal mode) Refresh sidebar
+SPC af      Avante: (after Avante loads, normal mode) Focus sidebar
+SPC a?      Avante: (after Avante loads, normal mode) Select model
+SPC ah      Avante: (after Avante loads, normal mode) Select chat history
+SPC as      Avante: (after Avante loads) Toggle automatic suggestions
+SPC aC      Avante: (after Avante loads) Toggle selection hints
+SPC aR      Avante: (after Avante loads) Show repository map
+SPC at      Avante: (after Avante loads) Toggle sidebar
+SPC ad      Avante: (after Avante loads) Toggle debug display
+SPC ac      Avante: (after sidebar first opens; works while open) Add current buffer to selected files (binding remains after sidebar closes)
+SPC aB      Avante: (after Avante loads) Add all open buffers to selected files
+x           Avante: (sidebar, normal mode) Toggle code window
+d           Avante: (selected-files window, normal,visual modes) Remove selected file(s)
+A           Avante: (sidebar, normal mode) Apply all code blocks
+a           Avante: (sidebar, normal mode) Apply code block under cursor
+r           Avante: (sidebar, normal mode) Retry user request under cursor
+e           Avante: (sidebar, normal mode) Edit user request under cursor
+<tab>       Avante: (sidebar, normal,insert modes) Focus next sidebar window
+[p          Avante: (sidebar, normal mode) Go to previous user prompt
+q           Avante: (sidebar, normal mode) Close sidebar
+]p          Avante: (sidebar, normal mode) Go to next user prompt
+<s-tab>     Avante: (sidebar, normal,insert modes) Focus previous sidebar window
+@           Avante: (selected-files window, normal mode) Select files to add
+<s-tab>     Avante: (sidebar, normal mode) Expand/collapse tool output under cursor
+]]          Avante: (response window) Go to next code block
+[[          Avante: (response window) Go to prev code block
+ct          Avante: (diff buffer, normal,visual modes) Keep generated code
+cc          Avante: (diff buffer, normal mode) Keep version under cursor
+ca          Avante: (diff buffer, normal,visual modes) Keep all generated code
+cb          Avante: (diff buffer, normal,visual modes) Keep both versions
+]x          Avante: (diff buffer, normal mode) Go to next conflict
+co          Avante: (diff buffer, normal,visual modes) Keep current code
+[x          Avante: (diff buffer, normal mode) Go to previous conflict
+<a-]>       Avante: (automatic suggestions enabled; disabled by default, insert mode) Next suggestion
+<a-[>       Avante: (automatic suggestions enabled; disabled by default, insert mode) Previous suggestion
+<c-]>       Avante: (automatic suggestions enabled; disabled by default, insert mode) Dismiss suggestion
+<a-l>       Avante: (automatic suggestions enabled; disabled by default, insert mode) Accept suggestion
+<cr>        Avante: (prompt input, normal mode) Submit prompt
+<c-s>       Avante: (prompt input, insert mode) Submit prompt
+<c-c>       Avante: (edit prompt input, normal mode) Cancel edit prompt
+<esc>       Avante: (edit prompt input, normal mode) Cancel edit prompt
+q           Avante: (edit prompt input, normal mode) Cancel edit prompt
+<c-c>       Avante: (edit prompt input, insert mode) Cancel edit prompt
+<c-w>f      Avante: (confirmation pending, normal,insert modes) Focus pending confirmation
+r           Avante: (confirmation popup, normal mode) Focus response window
+c           Avante: (confirmation popup, normal mode) Focus code window
+i           Avante: (confirmation popup, normal mode) Focus input window
+<c-p>       Avante: (chat input, normal mode) Previous prompt history item
+<c-p>       Avante: (chat input, insert mode) Previous prompt history item
+<c-n>       Avante: (chat input, normal mode) Next prompt history item
+<c-n>       Avante: (chat input, insert mode) Next prompt history item
+y           Avante: (confirmation popup) approve tool action
+Y           Avante: (confirmation popup) approve tool action
+a           Avante: (confirmation popup) approve all tool actions
+A           Avante: (confirmation popup) approve all tool actions
+n           Avante: (confirmation popup) reject tool action
+N           Avante: (confirmation popup) reject tool action
+<left>      Avante: (confirmation popup) select previous button
+<right>     Avante: (confirmation popup) select next button
+h           Avante: (confirmation popup) select approve button
+l           Avante: (confirmation popup) select approve-all button
+<tab>       Avante: (confirmation popup or inline buttons) select next button
+<s-tab>     Avante: (confirmation popup or inline buttons) select previous button
+<cr>        Avante: (confirmation popup or inline buttons) activate selected button
+<leftmouse>  Avante: (confirmation popup or inline buttons) activate clicked button
+q           Avante: (repository map popup) close repository map
+j           Avante: (streaming response) move down and update automatic scrolling
+k           Avante: (streaming response) move up and pause automatic scrolling
+G           Avante: (streaming response) go to bottom and resume automatic scrolling
+<c-a>       Fzf: (picker defaults) Move to beginning of query
+<c-b>       Fzf: (picker defaults) Move left in query
+<c-c>       Fzf: (picker defaults) Cancel picker
+<c-g>       Fzf: (picker defaults) Cancel picker
+<c-q>       Fzf: (picker defaults) Cancel picker
+<esc>       Fzf: (picker defaults) Cancel picker
+<c-d>       Fzf: (picker defaults) Delete query character; cancel if query is empty
+<c-e>       Fzf: (picker defaults) Move to end of query
+<bs>        Fzf: (picker defaults) Delete query character before cursor
+<c-bs>      Fzf: (picker defaults) Delete query character before cursor
+<tab>       Fzf: (picker defaults) Toggle selection and move down (multiple selection)
+<s-tab>     Fzf: (picker defaults) Toggle selection and move up (multiple selection)
+<c-j>       Fzf: (picker defaults) Move down one item
+<c-k>       Fzf: (picker defaults) Move up one item
+<c-l>       Fzf: (picker defaults) Redraw picker
+<cr>        Fzf: (picker defaults) Accept selected item(s)
+<c-n>       Fzf: (picker defaults) Select next match (with history: next query history item for Ctrl-N)
+<c-p>       Fzf: (picker defaults) Select previous match (with history: previous query history item for Ctrl-P)
+<a-down>    Fzf: (picker defaults) Select next match (with history: next query history item for Ctrl-N)
+<a-up>      Fzf: (picker defaults) Select previous match (with history: previous query history item for Ctrl-P)
+<c-u>       Fzf: (picker defaults) Delete query before cursor
+<c-w>       Fzf: (picker defaults) Delete previous query word
+<c-y>       Fzf: (picker defaults) Paste last deleted query text
+<c-z>       Fzf: (picker defaults) Suspend picker (Unix)
+<c-/>       Fzf: (picker defaults) Toggle word wrapping of result lines
+<s-left>    Fzf: (picker defaults) Move to previous query word
+<a-left>    Fzf: (picker defaults) Move to previous query word
+<s-right>   Fzf: (picker defaults) Move to next query word
+<a-right>   Fzf: (picker defaults) Move to next query word
+<a-backspace>  Fzf: (picker defaults) Delete previous query word
+<up>        Fzf: (picker defaults) Move up one item
+<down>      Fzf: (picker defaults) Move down one item
+<left>      Fzf: (picker defaults) Move left in query
+<right>     Fzf: (picker defaults) Move right in query
+<home>      Fzf: (picker defaults) Move to beginning of query
+<end>       Fzf: (picker defaults) Move to end of query
+<del>       Fzf: (picker defaults) Delete query character under cursor
+<pageup>    Fzf: (picker defaults) Scroll results up one page
+<pagedown>  Fzf: (picker defaults) Scroll results down one page
+<s-up>      Fzf: (picker defaults) Scroll preview up one line
+<s-down>    Fzf: (picker defaults) Scroll preview down one line
+<leftmouse>  Fzf: (picker defaults) Select clicked item (double click accepts)
+<rightmouse>  Fzf: (picker defaults) Toggle clicked item selection
+<s-leftmouse>  Fzf: (picker defaults) Toggle clicked item selection
+<s-rightmouse>  Fzf: (picker defaults) Toggle clicked item selection
+<scrollwheelup>  Fzf: (picker defaults) Move up one item
+<scrollwheeldown>  Fzf: (picker defaults) Move down one item
+<scrollwheelup>  Fzf: (preview window) Scroll preview up one line
+<scrollwheeldown>  Fzf: (preview window) Scroll preview down one line
+<a-/>       Fzf: (picker defaults) Toggle word wrapping of result lines
+<a-b>       Fzf: (picker defaults) Move to previous query word
+<a-f>       Fzf: (picker defaults) Move to next query word
+<a-d>       Fzf: (picker defaults) Delete next query word
+<c-t>       Fzf: (file pickers) open selected file in new tab
+<c-x>       Fzf: (file pickers) open selected file in horizontal split
+<c-v>       Fzf: (file pickers) open selected file in vertical split
+<c-f>       Fzf: (file pickers) unavailable: configured :read @/ action treats @/ as part of filename
+<c-f>       Fzf: (pickers without file actions) move right in query
+<c-u>       Fzf: (custom preview pickers) scroll preview up one page
+<c-d>       Fzf: (custom preview pickers) scroll preview down one page
+<a-u>       Fzf: (custom preview pickers) scroll preview up one line
+<a-d>       Fzf: (custom preview pickers) scroll preview down one line
+<a-k>       Fzf: (custom preview pickers) scroll preview up one line
+<a-j>       Fzf: (custom preview pickers) scroll preview down one line
+<c-o>       Fzf: (custom preview pickers) toggle preview wrapping
+<c-/>       Fzf: (preview pickers) toggle preview window
+<a-enter>   Fzf: (paste-enabled pickers,modifiable buffer) paste selected text, path, or commit hash
+<a-a>       Fzf: (Ag/Rg pickers) select all matches
+<a-d>       Fzf: (Ag/Rg pickers) deselect all matches
+<c-e>       Fzf: (command/search history picker) edit selected history item
+<c-x>       Fzf: (Commands picker) execute selected command immediately
+<c-a-x>     Fzf: (Buffers picker) remove selected buffer from results and delete it on exit
+<c-s>       Fzf: (Commits/BCommits picker) toggle sorting
+<c-y>       Fzf: (Commits/BCommits picker) copy selected commit hashes
+<c-d>       Fzf: (BCommits picker) diff current buffer against selected commit
+<s-scrollwheelup>  Fzf: toggle selection and move up
+<s-scrollwheeldown>  Fzf: toggle selection and move down
+,cc         Run file: (Python buffer) save and run with python3 in tmux or shell
+,cc         Run file: (Matlab buffer) save and run with Matlab when installed, otherwise Octave
+,cc         Run file: (JavaScript buffer) save and run with node in tmux or shell
+,cc         Run file: (Go buffer) save and run with go run in tmux or shell
+,cc         Run file: (FreeFem edp filetype) save and run with FreeFem++ in tmux or shell
+,cc         Build: (C/C++ or CMakeLists.txt) save, build, and run with cmake_run helper
+,cm         Build: (C/C++ or CMakeLists.txt) save and build with cmake_run --make-only
+,cp         Build: (C/C++ or CMakeLists.txt) build and run with mpirun (default 4 processes)
+:SetMpiProcessors N  Build: set MPI process count for ,cp
+,cd         Unavailable: (Python buffer) GdbStartPDB belongs to unconfigured vim-gdb; use SPC dd
+,cd         Unavailable: (C/C++ or CMakeLists.txt) GdbStart belongs to unconfigured vim-gdb; use SPC dd
+,cd         Unavailable: (shell buffer) GdbStartBashDB belongs to unconfigured vim-gdb
+<a-;>       Edit: (C/C++ insert mode) move to line end, append semicolon, and insert newline
+K           Matlab: show documentation for word under cursor
+gd          Matlab: find definition of word under cursor
+gb          Matlab: (matlab executable installed) toggle breakpoint on current line
+glb         Matlab: (matlab executable installed) list breakpoints
+gc          Matlab: (matlab executable installed) continue debugging
+gn          Matlab: (matlab executable installed) step over
+gs          Matlab: (matlab executable installed) step into
+go          Matlab: (matlab executable installed) step out
+gq          Matlab: (matlab executable installed) quit debugging
+gls         Matlab: (matlab executable installed) show stack
+gku         Matlab: (matlab executable installed) move up stack frame
+gkd         Matlab: (matlab executable installed) move down stack frame
+g?          Matlab: (matlab executable installed) show custom debugger help
+,er         Vim script: (normal mode,Vim buffer) execute current line
+,er         Vim script: (visual mode,Vim buffer) execute selection
+,er         Lua: (visual mode,Lua buffer) execute selection
+SPC vp      Vim script: (Vim buffer) toggle Enter-to-execute mode
+<cr>        Vim script: (execution mode,normal mode) execute line and move down
+<cr>        Vim script: (execution mode,insert mode) execute line and insert newline
+<cr>        Vim script: (execution mode,visual mode) execute selection
+<cr>        Vimux: (REPL mode,normal mode) send current line to tmux and move down
+<cr>        Vimux: (REPL mode,insert mode) send current line to tmux and insert newline
+<cr>        Vimux: (REPL mode,visual mode) send selection to tmux
+K           Vimux: (Python REPL mode,visual mode) show Python documentation for selection
+<f5>        Command window: execute current command and reopen command history
+<cr>        Path helper: (insert mode) open file path under cursor
+<esc>       Path helper: (normal,visual,operator-pending modes) close path helper buffer
+<c-c>       Path helper: (insert mode) close path helper buffer
+<c-h>       Path helper: (insert mode) switch to next window
+<cr>        Session path helper: (insert mode) source session path under cursor
+<c-s>       Translation: (toBeTranslate.txt buffer,normal,visual,insert modes) translate input immediately
+<a-s>       LaTeX: (normal,insert modes) open local abbrev_defs.vim
+<a-s>       LaTeX: (visual mode) create abbreviation from selection
+<a-s>       LaTeX: (abbrev_defs.vim,normal,insert modes) return to alternate buffer
+<a-r>       LaTeX: (normal,insert modes) open shared ref.bib bibliography
+<a-r>       LaTeX: (shared ref.bib buffer) return to alternate buffer
+<c-c><c-c>  LaTeX: (abbrev_defs.vim) clear abbreviations and reload current definitions
+<a-w>       Unavailable: expand-region plugin is not configured
+v           Unavailable: (visual mode) expand-region plugin is not configured
+V           Unavailable: (visual mode) expand-region plugin is not configured
+<esc>       Neo-tree: (input popup,insert mode) cancel input
+<c-w>       Neo-tree: (input popup,insert mode) delete previous input word
+<cr>        Neo-tree: (confirmation popup) confirm selected answer
+<esc>       Neo-tree: (confirmation popup or help) close popup
+<down>      Neo-tree: (fuzzy filter popup) select next result
+<c-n>       Neo-tree: (fuzzy filter popup) select next result
+<up>        Neo-tree: (fuzzy filter popup) select previous result
+<c-p>       Neo-tree: (fuzzy filter popup) select previous result
+<cr>        Neo-tree: (filter input) apply filter and return to tree
+<esc>       Neo-tree: (filter input,insert mode) close filter input
+q           Gitsigns: (preview popup) close popup
+<esc>       Gitsigns: (diff help) close help
+g?          Gitsigns: (diff help) close help
+<cr>        Gitsigns: (blame window) open blame context menu
+r           Gitsigns: (blame window) blame at selected commit
+R           Gitsigns: (blame window) blame at selected commit parent
+d           Gitsigns: (blame window) open diff in new tab
+D           Gitsigns: (blame window) show entire commit diff in new tab
+s           Gitsigns: (blame window) show commit in vertical split
+S           Gitsigns: (blame window) show commit in new tab
+e           Gitsigns: (blame window) show commit in current window
+<cr>        Gitsigns: (commit window) open file or commit under cursor
+<c-o>       Gitsigns: (commit window) previous commit in navigation history
+<c-i>       Gitsigns: (commit window) next commit in navigation history
+q           Gitsigns: (floating commit window) close window
+]f          Gitsigns: (diff file window) next file
+[f          Gitsigns: (diff file window) previous file
+]c          Gitsigns: (unified diff file window) next change
+[c          Gitsigns: (unified diff file window) previous change
+<cr>        Dressing: (input,normal,insert modes) confirm input
+<esc>       Dressing: (input,normal mode) cancel input
+<c-c>       Dressing: (input,insert mode) cancel input
+<up>        Dressing: (input,insert mode) previous input history item
+<down>      Dressing: (input,insert mode) next input history item
+<tab>       Dressing: (input,insert mode) complete input when completion is available
+<c-enter>   ChatGPT: (chat/edit input,insert mode) submit prompt
+<enter>     ChatGPT: (chat/edit input,normal mode) submit prompt
+<cr>        ChatGPT: (code completion popup,normal,insert modes) accept generated completion
+<esc>       ChatGPT: (code completion popup,normal,insert modes) dismiss generated completion
+<cr>        ChatGPT: (settings panel) edit selected parameter
+y           LLM: (chat session,normal mode) copy suggested code
+Y           LLM: (chat session,normal mode) copy suggested code
+y           LLM: (translation,explanation,test tools) copy result and close tool
+Y           LLM: (translation,explanation,test tools) copy result and close tool
+n           LLM: (translation,explanation,test tools) dismiss result
+N           LLM: (translation,explanation,test tools) dismiss result
+<esc>       LLM: (translation,explanation,test tools) close tool
+y           LLM: (optimization tool) accept generated changes
+Y           LLM: (optimization tool) accept generated changes
+n           LLM: (optimization tool) reject generated changes
+N           LLM: (optimization tool) reject generated changes
+<esc>       LLM: (optimization tool) close tool
+<c-c>       LLM: (optimization/test/translation output) cancel request
+i           LLM: (optimization output) open follow-up input
+I           LLM: (optimization output) open follow-up input
+<cr>        LLM: (optimization follow-up input,normal mode) send follow-up prompt
+<esc>       LLM: (optimization follow-up input,normal mode) close follow-up input
+<c-r>       LLM: (optimization output) regenerate result
+<cr>        LLM: (translation input,normal mode) submit text for translation
+J           LLM: (translation tool) switch between input and output
+K           LLM: (translation tool) switch between input and output
+co          Avante: (tool edit review,normal,visual modes) reject current edit and keep original code
+ct          Avante: (tool edit review,normal,visual modes) accept current edit
+]x          Avante: (tool edit review,normal,visual modes) next edit
+[x          Avante: (tool edit review,normal,visual modes) previous edit
+<cr>        Gitsigns: (diff file panel) Open file, show commit message, or toggle directory fold
+<leftrelease>  Gitsigns: (diff file panel) Open clicked entry or toggle directory fold
+<s-cr>      Gitsigns: (diff file panel) Open file and keep focus in the panel
+]f          Gitsigns: (diff file panel) Next file
+[f          Gitsigns: (diff file panel) Previous file
+o           Gitsigns: (diff file panel) View target file (tab)
+O           Gitsigns: (diff file panel) View file at base revision (tab)
+gu          Gitsigns: (diff file panel) Toggle unified diff
+s           Gitsigns: (diff file panel; working-tree comparison) Stage file or directory
+u           Gitsigns: (diff file panel; working-tree comparison) Unstage file or directory
+SPC         Gitsigns: (diff file panel; working-tree comparison) Toggle file or directory staging
+g?          Gitsigns: (diff file panel) Show available keys
+q           Gitsigns: (diff file panel) Close diff
+l           Dashboard: (dashboard) Open Lazy plugin manager
+f           Dashboard: (dashboard) Find files with Telescope
+e           Dashboard: (dashboard) Open scratch buffer
+p           Dashboard: (dashboard) Unavailable: projects Telescope extension is not configured; use SPC fP or SPC FP
+r           Dashboard: (dashboard) Find recent files
+t           Dashboard: (dashboard) Search project text
+m           Dashboard: (dashboard) Unavailable: button uses old lua/custom/mappings.lua path; use SPC fvm
+s           Dashboard: (dashboard) Unavailable: button uses old lua/custom/plugins.lua path; use SPC fvd
+b           Dashboard: (dashboard) Find marks with Telescope
+q           Dashboard: (dashboard) Quit editor
+<cr>        Dashboard: (dashboard) Activate selected button
+<a-cr>      Dashboard: (dashboard) Queue selected button
+0..2        Dashboard: (dashboard) Open corresponding recent file in current directory
+<c-w><c-_>  Maximize current window height
+<c-f>       Command line: (command/search prompt) open editable command-line window
+vim +?str   Open file at last match of pattern
+:set wrap!  Toggle soft wrap
+:'<,'>!python3  Run selected Python code and replace selection with output
+'term       Fzf: match term exactly in search query
+<c-r><c-g>  Git: (command mode) insert Git object path for current buffer
+y<c-g>      Git: copy current Git object path to chosen register
+q           Mason: (Mason window) close package manager
+<esc>       Mason: (Mason window) clear active language filter/search, otherwise close window
+1           Mason: (Mason window) show all packages
+2           Mason: (Mason window) show language servers
+3           Mason: (Mason window) show debug adapters
+4           Mason: (Mason window) show linters
+5           Mason: (Mason window) show formatters
+<cr>        Mason: (help page) expand current settings
+<cr>        Mason: (package settings schema) expand selected schema field
+<c-r>m      Telescope: (git commits,normal,insert modes) reset selected commit with mixed mode
+<c-r>s      Telescope: (git commits,normal,insert modes) reset selected commit with soft mode
+<c-r>h      Telescope: (git commits,normal,insert modes) reset selected commit with hard mode
+<cr>        Telescope: (git commits or branches) check out selected commit or branch
+<cr>        Telescope: (git stash) apply selected stash
+<cr>        Telescope: (git buffer commits) check out selected version of current file
+<c-x>       Telescope: (git buffer commits) compare selected version in horizontal diff split
+<c-v>       Telescope: (git buffer commits) compare selected version in vertical diff split
+<c-t>       Telescope: (git buffer commits) compare selected version in new tab
+<c-t>       Telescope: (git branches,normal,insert modes) track selected branch
+<c-r>       Telescope: (git branches,normal,insert modes) rebase onto selected branch
+<c-a>       Telescope: (git branches,normal,insert modes) create branch
+<c-s>       Telescope: (git branches,normal,insert modes) switch branch
+<c-d>       Telescope: (git branches,normal,insert modes) delete selected branch
+<c-y>       Telescope: (git branches,normal,insert modes) merge selected branch
+<tab>       Telescope: (git status,normal,insert modes) toggle staging of selected file
+<c-space>   Telescope: (live grep or dynamic workspace symbols,insert mode) refine results with fuzzy search
+<c-x>       Telescope: (previous pickers,normal,insert modes) remove selected picker
+<c-q>       Telescope: (quickfix history,normal,insert modes) open selected list in quickfix window
+<c-e>       Telescope: (command history,normal,insert modes) edit selected command
+<c-e>       Telescope: (search history,normal,insert modes) edit selected search
+<a-d>       Telescope: (buffers,normal,insert modes) delete selected buffer
+<c-e>       Telescope: (registers,normal,insert modes) edit selected register
+<cr>        Telescope: (command history) run selected command
+<cr>        Telescope: (search history) search selected pattern
+<cr>        Telescope: (commands) prepare selected command on command line
+<cr>        Telescope: (registers) paste selected register
+<cr>        Telescope: (keymaps) execute selected mapping
+<cr>        Telescope: (filetypes) set selected filetype
+<cr>        Telescope: (colorschemes) apply selected colorscheme
+<cr>        Telescope: (highlights) show selected highlight definition
+<cr>        Telescope: (Vim options) prepare option assignment on command line
+<cr>        Telescope: (spell suggestions) replace word with selected suggestion
+<cr>        Telescope: (Lua module reloader) reload selected module
+<cr>        Telescope: (symbols) insert selected symbol
+<cr>        Telescope: (built-in pickers) launch selected picker
+<cr>        Telescope: (previous pickers) resume selected picker
+<cr>        Telescope: (quickfix history) browse selected quickfix list
+<cr>        Telescope: (help tags) open selected help page
+<cr>        Telescope: (man pages) open selected manual page
+<cr>        Telescope: (autocommands) open source or run selected Lua callback
+<cr>        Browser bookmarks: (Telescope bookmarks picker) open selected bookmark URL
+<cr>        DAP: (Telescope configurations picker) start selected debugger configuration
+<cr>        DAP: (Telescope commands picker) run selected debugger command
+<cr>        DAP: (Telescope frames picker) jump to selected stack frame
+<cr>        Repository picker: find files in selected repository
+<c-v>       Repository picker: search text in selected repository
+<c-t>       Repository picker: open selected repository in new tab and find files
+w           DAP UI: (debugger panel) add selected expression to watches
+SPC wm      Toggle current window maximization
+q           Cheatsheet: close shortcut reference window
+<esc>       Cheatsheet: close shortcut reference window
+<tab>       Theme picker/Menu/Minty: select next clickable control
+<s-tab>     Theme picker/Menu/Minty: select previous clickable control
+<cr>        Theme picker/Menu/Minty: activate selected control
+<leftmouse>  Theme picker/Menu/Minty: activate clicked control
+ff          Start dashboard: (Nvdash window) find files
+fo          Start dashboard: (Nvdash window) find recent files
+fw          Start dashboard: (Nvdash window) search project text
+th          Start dashboard: (Nvdash window) open theme picker
+ch          Start dashboard: (Nvdash window) open cheatsheet
+j           Start dashboard: (Nvdash window) select next button
+<down>      Start dashboard: (Nvdash window) select next button
+k           Start dashboard: (Nvdash window) select previous button
+<up>        Start dashboard: (Nvdash window) select previous button
+<cr>        Start dashboard: (Nvdash window) activate selected button
+o<cr>       Avante: (history action input) open selected history entry
+d<cr>       Avante: (history action input) delete selected history entry
+c<cr>       Avante: (history action input) cancel selection
+$           Multiple cursor: (visual-multi, normal mode) Move to line end at each cursor
+%           Multiple cursor: (visual-multi, normal mode) Move to matching pair at each cursor
+(           Multiple cursor: (visual-multi, normal mode) Move to previous sentence at each cursor
+)           Multiple cursor: (visual-multi, normal mode) Move to next sentence at each cursor
+,           Multiple cursor: (visual-multi, normal mode) Reverse character search at each cursor
+0           Multiple cursor: (visual-multi, normal mode) Move to line beginning at each cursor
+;           Multiple cursor: (visual-multi, normal mode) Repeat character search at each cursor
+B           Multiple cursor: (visual-multi, normal mode) Move to previous WORD at each cursor
+E           Multiple cursor: (visual-multi, normal mode) Move to WORD end at each cursor
+F           Multiple cursor: (visual-multi, normal mode) Find previous character at each cursor
+T           Multiple cursor: (visual-multi, normal mode) Move after previous character at each cursor
+W           Multiple cursor: (visual-multi, normal mode) Move to next WORD at each cursor
+^           Multiple cursor: (visual-multi, normal mode) Move to first nonblank character at each cursor
+b           Multiple cursor: (visual-multi, normal mode) Move to previous word at each cursor
+e           Multiple cursor: (visual-multi, normal mode) Move to word end at each cursor
+f           Multiple cursor: (visual-multi, normal mode) Find next character at each cursor
+g}          Multiple cursor: (visual-multi, normal mode) Move to next unmatched closing brace at each cursor
+g(          Multiple cursor: (visual-multi, normal mode) Move to previous unmatched opening parenthesis at each cursor
+ge          Multiple cursor: (visual-multi, normal mode) Move to previous word end at each cursor
+g{          Multiple cursor: (visual-multi, normal mode) Move to previous unmatched opening brace at each cursor
+gE          Multiple cursor: (visual-multi, normal mode) Move to previous WORD end at each cursor
+g)          Multiple cursor: (visual-multi, normal mode) Move to next unmatched closing parenthesis at each cursor
+h           Multiple cursor: (visual-multi, normal mode) Move left at each cursor
+j           Multiple cursor: (visual-multi, normal mode) Move down at each cursor
+k           Multiple cursor: (visual-multi, normal mode) Move up at each cursor
+l           Multiple cursor: (visual-multi, normal mode) Move right at each cursor
+t           Multiple cursor: (visual-multi, normal mode) Move before next character at each cursor
+w           Multiple cursor: (visual-multi, normal mode) Move to next word at each cursor
+{           Multiple cursor: (visual-multi, normal mode) Move to previous paragraph at each cursor
+|           Multiple cursor: (visual-multi, normal mode) Move to numbered column at each cursor
+}           Multiple cursor: (visual-multi, normal mode) Move to next paragraph at each cursor
