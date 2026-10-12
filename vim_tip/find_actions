@@ -269,7 +269,11 @@ mx          Bookmarks: Clear bookmarks including comment bookmarks
 SPC <space>  Find commands (opens command history or Telescope commands; overlapping configured bindings)
 SPC AA      Search actions help by keyword
 SPC aA      Search actions help by keyword
-SPC aa      Find actions help before Avante loads; Avante ask replaces this binding after Avante loads
+SPC aa      Search shortcuts; Enter streams assistant answer using typed question and full actions reference
+<cr>        (actions search) Ask assistant with current input, including when no shortcuts match
+<esc>       (actions search) Cancel shortcut search without sending a request
+q           (assistant answer window, normal mode) Close Markdown answer and cancel pending request
+<esc>       (assistant answer window, normal mode) Close Markdown answer and cancel pending request
 SPC ag      Open current file with gedit (Linux)
 SPC as      Unavailable before Avante loads: :terminal ++curwin uses Vim-only syntax; Avante replaces this with toggle automatic suggestions
 SPC au      Undo tree toggle
@@ -1381,7 +1385,7 @@ u           Git: (Fugitive status window, normal,visual modes) Unstage selected 
 <2-leftmouse>  Git: (Fugitive status window, normal mode) Open selected file or object
 p           Git: (Fugitive status window, visual mode) Interactive patch for selection
 <c-r><c-f>  Git: (Fugitive status window, command mode) Insert selected git object filename on command line
-SPC aa      Avante: (after Avante loads, normal,visual modes) Ask about buffer or selection
+\aa         Avante: (after Avante loads, normal,visual modes) Ask about buffer or selection
 SPC az      Avante: (after Avante loads, normal,visual modes) Toggle full-screen chat
 SPC an      Avante: (after Avante loads, normal,visual modes) Ask in new chat
 SPC ae      Avante: (after Avante loads, visual mode) Edit selected code

@@ -1,0 +1,394 @@
+-- Run from the repository root: nvim --clean --headless -l tests/find_actions.lua
+-- Uses only temporary settings and a local HTTP server, never the real provider.
+local uv = vim.uv or vim.loop
+-- Optionally exercise the installed Markdown renderer and parsers as well.
+local markdown_runtime = vim.env.FIND_ACTIONS_TEST_RENDER_RUNTIME
+if markdown_runtime then
+  vim.opt.runtimepath:prepend(vim.fn.stdpath("data") .. "/lazy/nvim-treesitter")
+  vim.opt.runtimepath:prepend(markdown_runtime)
+  vim.cmd.source(markdown_runtime .. "/plugin/render-markdown.lua")
+end
+local assistant = dofile("NvChad/find_actions.lua")
+local temp = vim.fn.tempname()
+vim.fn.mkdir(temp .. "/.ai", "p")
+local stdpath, executable, notify = vim.fn.stdpath, vim.fn.executable, vim.notify
+local notices, requests, clients = {}, {}, {}
+local response = { status = 200, body = { choices = { { message = { content = "# Close a window\n\nUse `<c-w>c`." } } } } }
+local held = false
+local server = uv.new_tcp()
+assert(server:bind("127.0.0.1", 0))
+assert(server:listen(16, function(err)
+  assert(not err, err)
+  local client = uv.new_tcp()
+  server:accept(client)
+  clients[#clients + 1] = client
+  local received, answered = "", false
+  client:read_start(function(read_error, data)
+    assert(not read_error, read_error)
+    if not data then
+      if not client:is_closing() then client:close() end
+      return
+    end
+    received = received .. data
+    local header, body = received:match("^(.-)\r\n\r\n(.*)$")
+    local length = header and tonumber(header:lower():match("content%-length: (%d+)"))
+    if answered or not length or #body < length then return end
+    answered = true
+    local request = { header = header, body = vim.json.decode(body:sub(1, length)) }
+    requests[#requests + 1] = request
+    if held then return end
+    if response.stream then
+      client:write("HTTP/1.1 " .. response.status .. " Test\r\nContent-Type: text/event-stream\r\n"
+        .. "Transfer-Encoding: chunked\r\nConnection: close\r\n\r\n")
+      request.send = function(piece)
+        if not client:is_closing() then client:write(string.format("%X\r\n", #piece) .. piece .. "\r\n") end
+      end
+      request.finish = function()
+        client:write("0\r\n\r\n", function()
+          client:shutdown(function() if not client:is_closing() then client:close() end end)
+        end)
+      end
+      request.abort = function() if not client:is_closing() then client:close() end end
+      return
+    end
+    local payload = type(response.body) == "string" and response.body or vim.json.encode(response.body)
+    client:write("HTTP/1.1 " .. response.status .. " Test\r\nContent-Type: application/json\r\nContent-Length: "
+      .. #payload .. "\r\nConnection: close\r\n\r\n" .. payload, function()
+      client:shutdown(function() if not client:is_closing() then client:close() end end)
+    end)
+  end)
+end))
+local port = server:getsockname().port
+local base = "http://127.0.0.1:" .. port .. "/v1"
+vim.fn.stdpath = function(kind) return kind == "config" and temp or stdpath(kind) end
+vim.notify = function(message) notices[#notices + 1] = message end
+local inherited = { vim.env.https_proxy, vim.env.http_proxy, vim.env.BASE_URL, vim.env.API_KEY, vim.env.MODEL }
+vim.env.https_proxy = "http://127.0.0.1:1"
+vim.env.http_proxy = "http://127.0.0.1:1"
+vim.env.BASE_URL, vim.env.API_KEY, vim.env.MODEL = "inherited", "inherited", "inherited"
+local reference_file = assert(io.open("vim_tip/find_actions", "rb"))
+local reference = reference_file:read("*a")
+reference_file:close()
+local function check(condition, message) assert(condition, message) end
+local function wait(predicate, message)
+  check(vim.wait(6000, predicate, 10), message)
+end
+local function settings(extra, url)
+  vim.fn.writefile(vim.split('export BASE_URL="' .. (url or base) .. '"\nexport API_KEY="test-key"\n'
+    .. (extra or ""), "\n", { plain = true }), temp .. "/.ai/env")
+end
+local function text()
+  return table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), "\n")
+end
+local function answer(question)
+  assistant.submit(question or "close window", reference)
+  wait(function() return text():find("<c%-w>c") ~= nil end, "answer did not arrive: " .. text())
+end
+local function notice(fragment)
+  for _, message in ipairs(notices) do if message:find(fragment, 1, true) then return true end end
+  return false
+end
+local function error_answer(fragment)
+  assistant.submit("close window", reference)
+  wait(function() return notice(fragment) end, "expected diagnostic: " .. fragment)
+  notices = {}
+end
+local function rendered_heading()
+  if not markdown_runtime then return end
+  local namespace = vim.api.nvim_get_namespaces()["render-markdown.nvim"]
+  check(namespace ~= nil, "Markdown renderer did not initialize")
+  wait(function()
+    for _, mark in ipairs(vim.api.nvim_buf_get_extmarks(0, namespace, 0, -1, { details = true })) do
+      if mark[2] == 0 and mark[4].virt_text then return true end
+    end
+    return false
+  end, "question heading was not rendered")
+end
+
+local function run()
+  assistant.setup()
+  check(vim.fn.exists(":FindActions") == 2, "command missing")
+  check(vim.fn.maparg("<Space>aa", "n") == "<Cmd>FindActions<CR>", "mapping missing")
+  local avante_opts
+  package.loaded["avante.config"] = { override = function(opts) avante_opts = opts end }
+  vim.keymap.set({ "n", "v" }, "<Space>aa", "<Nop>", { desc = "avante: ask" })
+  vim.api.nvim_exec_autocmds("User", { pattern = "LazyLoad", data = "avante.nvim" })
+  check(vim.fn.maparg("<Space>aa", "n") == "<Cmd>FindActions<CR>", "Avante replaced search")
+  check(vim.fn.maparg("<Space>aa", "x") == "", "Avante visual collision remains")
+  check(avante_opts.mappings.ask == "\\aa", "Avante ask not moved")
+  package.loaded["avante.config"] = nil
+
+  settings('MODEL="test-model"\nREASONING_EFFORT=xhigh')
+  local question = 'How to close "window", show me all keymap $() `x`\n中文'
+  answer(question)
+  local request = requests[#requests]
+  check(request.header:find("POST /v1/chat/completions", 1, true), "wrong endpoint")
+  check(request.header:find("Authorization: Bearer test-key", 1, true), "missing auth")
+  check(request.body.messages[3].content == question, "query was changed")
+  local shown_question, shown_answer = text():match("^## Your question\n\n(.-)\n\n%-%-%-\n\n## Answer\n\n(.*)$")
+  check(shown_question == question, "submitted question not preserved above separator")
+  check(shown_answer == response.body.choices[1].message.content, "answer not preserved below separator")
+  check(request.body.messages[2].content:sub(-#reference) == reference, "reference was truncated")
+  check(request.body.messages[1].role == "system", "system prompt missing")
+  check(request.body.model == "test-model" and request.body.reasoning_effort == "xhigh", "request settings ignored")
+  check(request.body.stream == true, "streaming was not requested")
+  check(vim.bo.filetype == "markdown" and vim.bo.buftype == "nofile", "answer isn't Markdown scratch")
+  check(not vim.bo.modifiable and vim.wo.wrap, "answer buffer options")
+  check(vim.api.nvim_win_get_config(0).relative == "editor", "answer isn't a float")
+  rendered_heading()
+  vim.api.nvim_exec_autocmds("VimResized", {})
+  check(vim.api.nvim_win_get_config(0).width > 0, "resize failed")
+
+  settings('MODEL=""\nREASONING_EFFORT=""')
+  answer()
+  check(requests[#requests].body.model == "gpt-6-luna", "default model ignored")
+  check(requests[#requests].body.reasoning_effort == nil, "empty reasoning effort sent")
+
+  local function start_stream(question)
+    response = { status = 200, stream = true }
+    local count = #requests
+    assistant.submit(question or "stream this question", reference)
+    wait(function() return #requests > count and requests[#requests].send ~= nil end, "stream did not start")
+    return requests[#requests]
+  end
+  local function delta(content)
+    return 'data: ' .. vim.json.encode({ choices = { { delta = { content = content }, finish_reason = vim.NIL } } }) .. '\r\n\r\n'
+  end
+  local function title()
+    return vim.api.nvim_win_get_config(0).title[1][1]
+  end
+  local function stream_notice(fragment)
+    wait(function() return notice(fragment) end, "expected stream diagnostic: " .. fragment)
+    check(title():find("Error", 1, true), "failed stream still appears active")
+    notices = {}
+  end
+  local streaming = start_stream("Show all close-window shortcuts")
+  streaming.send(': keepalive\r\n\r\n'
+    .. 'data: {"choices":[{"delta":{"role":"assistant"},"finish_reason":null}]}\r\n\r\n'
+    .. 'data: {"choices":[{"delta":{"reasoning_content":"Checking window shortcuts."},"finish_reason":null}]}\r\n\r\n')
+  wait(function() return text():find("> [!NOTE] Thinking\n> Checking window shortcuts.", 1, true) ~= nil end, "thinking was not streamed before answer")
+  check(title():find("Thinking", 1, true), "thinking progress missing")
+  check(text():find("*Waiting for the answer…*", 1, true), "thinking was mixed into answer")
+  streaming.send('data: ' .. vim.json.encode({ choices = { { delta = {
+    reasoning_content = "\n\nCompare modes 中文.", reasoning = "DUPLICATE_ALIAS",
+  }, finish_reason = vim.NIL } } }) .. '\r\n\r\n')
+  -- Split both a UTF-8 character and the terminating CRLF over curl reads.
+  local first = delta("### Close a window 中文")
+  local cut = assert(first:find("中", 1, true))
+  streaming.send(first:sub(1, cut))
+  streaming.send(first:sub(cut + 1, -2))
+  streaming.send(first:sub(-1))
+  wait(function() return text():find("### Close a window 中文", 1, true) ~= nil end, "first content was not shown before stream completion")
+  check(title():find("Streaming", 1, true), "streaming progress missing")
+  check(text():find("> Checking window shortcuts.\n> \n> Compare modes 中文.", 1, true), "multiline thinking lost blockquote formatting")
+  check(not text():find("DUPLICATE_ALIAS", 1, true), "thinking aliases duplicated")
+  rendered_heading()
+  vim.api.nvim_win_set_cursor(0, { 2, 0 })
+  streaming.send('event: message\r\ndata: {"choices":\r\n'
+    .. 'data: [{"delta":{"content":"\\n\\nUse `<c-w>c`."},"finish_reason":null}]}\r\n\r\n')
+  wait(function() return text():find("Use `<c-w>c`.", 1, true) ~= nil end, "multiline SSE event was not decoded")
+  check(vim.api.nvim_win_get_cursor(0)[1] == 2, "stream updates moved the reader's cursor")
+  check(title():find("Streaming", 1, true), "stream marked complete before DONE")
+  streaming.send('data: {"choices":[],"usage":{"completion_tokens":10}}\r\n\r\n')
+  streaming.send('data: [DONE]\r\n\r\n')
+  streaming.finish()
+  wait(function() return title():find(" · Answer ", 1, true) ~= nil end, "stream did not finish")
+  local streamed_question, thinking_section, streamed_answer = text():match("^## Your question\n\n(.-)\n\n%-%-%-\n\n(.-)\n\n%-%-%-\n\n## Answer\n\n(.*)$")
+  check(streamed_question == "Show all close-window shortcuts", "stream removed question")
+  check(thinking_section == "> [!NOTE] Thinking\n> Checking window shortcuts.\n> \n> Compare modes 中文.", "completed thinking was not preserved")
+  check(streamed_answer == "### Close a window 中文\n\nUse `<c-w>c`.", "stream content was corrupted")
+  rendered_heading()
+
+  if markdown_runtime then
+    local namespace = vim.api.nvim_get_namespaces()["render-markdown.nvim"]
+    local note_row
+    for i, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, -1, false)) do
+      if line == "> [!NOTE] Thinking" then note_row = i - 1 end
+    end
+    wait(function()
+      for _, mark in ipairs(vim.api.nvim_buf_get_extmarks(0, namespace, 0, -1, { details = true })) do
+        if mark[2] == note_row and mark[4].virt_text then return true end
+      end
+      return false
+    end, "thinking note was not rendered")
+  end
+
+  for _, field in ipairs({ "reasoning", "thinking" }) do
+    streaming = start_stream()
+    streaming.send('data: ' .. vim.json.encode({ choices = { { delta = { [field] = "Thinking alias " .. field }, finish_reason = vim.NIL } } }) .. '\n\n')
+    wait(function() return text():find("> Thinking alias " .. field, 1, true) ~= nil end, "thinking alias not supported: " .. field)
+    streaming.send(delta("Alias answer") .. 'data: [DONE]\n\n')
+    streaming.finish()
+    wait(function() return title():find(" · Answer ", 1, true) ~= nil end, "thinking alias stream did not finish")
+    check(text():find("## Answer\n\nAlias answer", 1, true), "alias thinking mixed into answer")
+  end
+
+  -- Providers may end with a finish_reason instead of [DONE].
+  streaming = start_stream()
+  streaming.send('data: {"choices":[{"delta":{"content":"Finished answer"},"finish_reason":"stop"}]}\n\n')
+  streaming.finish()
+  wait(function() return title():find(" · Answer ", 1, true) ~= nil end, "finish_reason was ignored")
+  check(not text():find("[!NOTE]", 1, true), "thinking note invented when provider sent no thinking")
+
+  streaming = start_stream()
+  streaming.send(delta("Keep this partial answer"))
+  wait(function() return text():find("Keep this partial answer", 1, true) ~= nil end, "partial answer missing")
+  streaming.send('data: {"error":{"message":"bad test-key in stream"}}\n\n')
+  stream_notice("bad [redacted] in stream")
+  check(text():find("Keep this partial answer", 1, true) and text():find("Response interrupted", 1, true), "stream error discarded partial answer")
+
+  streaming = start_stream()
+  streaming.send('data: {broken json}\n\n')
+  stream_notice("invalid streaming JSON")
+  streaming = start_stream()
+  streaming.send('data: [DONE]\n\n')
+  streaming.finish()
+  stream_notice("no answer")
+  streaming = start_stream()
+  streaming.send(delta("Incomplete answer"))
+  streaming.finish()
+  stream_notice("ended before completion")
+  check(text():find("Incomplete answer", 1, true), "premature EOF discarded answer")
+
+  streaming = start_stream()
+  streaming.send('data: {"choices":[{"delta":{"reasoning_content":"Incomplete thinking"},"finish_reason":null}]}\n\n')
+  wait(function() return text():find("> Incomplete thinking", 1, true) ~= nil end, "partial thinking missing")
+  streaming.finish()
+  stream_notice("ended before completion")
+  check(text():find("> Incomplete thinking", 1, true) and text():find("Response interrupted", 1, true), "interruption discarded thinking")
+
+  streaming = start_stream()
+  streaming.send(delta("Answer before connection dropped"))
+  wait(function() return text():find("Answer before connection dropped", 1, true) ~= nil end, "connection-drop test did not receive content")
+  streaming.abort()
+  stream_notice("closed before the answer finished")
+  check(text():find("Answer before connection dropped", 1, true), "connection drop discarded partial answer")
+
+  streaming = start_stream()
+  streaming.send(delta("Cancel this partial answer"))
+  wait(function() return text():find("Cancel this partial answer", 1, true) ~= nil end, "cancel test did not receive content")
+  local stream_window = vim.api.nvim_get_current_win()
+  vim.fn.maparg("q", "n", false, true).callback()
+  check(not vim.api.nvim_win_is_valid(stream_window), "closing did not cancel streamed answer")
+  check(#notices == 0, "cancelled stream produced an error notification")
+  response = { status = 200, body = { choices = { { message = { content = "# Close a window\n\nUse `<c-w>c`." } } } } }
+  response.body.choices[1].message.reasoning_content = "Thinking from a JSON response"
+  answer()
+  check(text():find("> Thinking from a JSON response", 1, true), "JSON fallback discarded thinking")
+  response.body.choices[1].message.reasoning_content = nil
+
+  -- A reachable proxy serves an otherwise unresolvable provider. The env loader
+  -- must expand references and support several assignments on the same line.
+  settings('export http_proxy="http://127.0.0.1:' .. port .. '"\n'
+    .. 'export HTTP_PROXY="$http_proxy" HTTPS_PROXY="$http_proxy" ALL_PROXY="$http_proxy"\n'
+    .. 'all_proxy=socks5://127.0.0.1:1', "http://provider.invalid/v1")
+  answer()
+  check(requests[#requests].header:find("POST http://provider.invalid/v1/chat/completions", 1, true), "proxy was bypassed")
+
+  local closed = uv.new_tcp()
+  assert(closed:bind("127.0.0.1", 0))
+  local closed_port = closed:getsockname().port
+  closed:close()
+  settings('export all_proxy="socks5://127.0.0.1:' .. closed_port .. '"')
+  answer()
+  check(notice("connecting directly"), "closed proxy wasn't reported")
+  check(requests[#requests].header:find("POST /v1/chat/completions", 1, true), "direct fallback failed")
+  notices = {}
+
+  settings()
+  response = { status = 401, body = { error = { message = "bad test-key" } } }
+  error_answer("Provider error (HTTP 401): bad [redacted]")
+  response = { status = 200, body = "not json" }
+  error_answer("invalid JSON")
+  response = { status = 200, body = { choices = {} } }
+  error_answer("no answer")
+  response = { status = 200, body = { error = { message = "unsupported model" } } }
+  error_answer("unsupported model")
+  settings("", "http://127.0.0.1:" .. closed_port .. "/v1")
+  error_answer("Could not connect")
+
+  -- Bound timeout verification without waiting two minutes or contacting HTTPS.
+  -- It also checks that HTTPS_PROXY wins over ALL_PROXY for an HTTPS provider.
+  local system, curl_options = vim.system
+  vim.system = function(command, options, callback)
+    if command[1] ~= "curl" then return system(command, options, callback) end
+    curl_options = options
+    vim.schedule(function() callback({ code = 28, stdout = "", stderr = "timeout" }) end)
+    return { kill = function() end }
+  end
+  settings('export https_proxy="http://127.0.0.1:' .. port .. '"\n'
+    .. 'export HTTPS_PROXY="$https_proxy" ALL_PROXY="socks5://127.0.0.1:1"', "https://provider.invalid/v1")
+  error_answer("The request timed out")
+  check(curl_options.stdin:find('proxy = "http://127.0.0.1:' .. port .. '"', 1, true), "HTTPS proxy priority wrong")
+  check(curl_options.clear_env and curl_options.env.http_proxy == nil, "inherited proxy not cleared")
+  check(curl_options.timeout == 121000 and curl_options.stdin:find("max-time = 120", 1, true), "timeout not bounded")
+  vim.system = system
+
+  settings()
+  held = true
+  local count = #requests
+  assistant.submit("cancel this", reference)
+  check(text():find("## Your question\n\ncancel this", 1, true), "question missing while preparing")
+  wait(function() return #requests > count end, "held request did not start")
+  check(text():find("## Answer\n\n*Thinking", 1, true), "loading view missing answer section")
+  rendered_heading()
+  local float = vim.api.nvim_get_current_win()
+  local close = vim.fn.maparg("q", "n", false, true).callback
+  check(type(close) == "function", "close mapping missing")
+  close()
+  check(not vim.api.nvim_win_is_valid(float), "close did not dismiss answer")
+  check(vim.api.nvim_win_get_config(0).relative == "", "editing focus not restored")
+  held = false
+  response = { status = 200, body = { choices = { { message = { content = "# Close a window\n\nUse `<c-w>c`." } } } } }
+  answer()
+
+  vim.fn.delete(temp .. "/.ai/env")
+  error_answer("Provider settings are missing")
+  vim.fn.writefile({ "MODEL=test" }, temp .. "/.ai/env")
+  error_answer("Set BASE_URL and API_KEY")
+  settings('REASONING_EFFORT="unterminated')
+  error_answer("Could not load provider settings")
+  settings('http_proxy=invalid')
+  error_answer("Invalid proxy URL")
+  vim.fn.executable = function(name) return name == "curl" and 0 or executable(name) end
+  assistant.submit("close window", reference)
+  check(notice("curl is unavailable"), "missing curl not reported")
+  vim.fn.executable = executable
+  notices = {}
+  count = #requests
+  assistant.submit("   ", reference)
+  check(#requests == count and notice("Type a question"), "empty query sent a request")
+
+  -- Exercise the real fzf bridge through a controlled sink, including no-match
+  -- output: the first line is always the question, never the selected action.
+  local captured
+  vim.fn.mkdir(temp .. "/autoload", "p")
+  vim.fn.writefile(vim.split([[
+    function! fzf#wrap(name, spec, bang)
+      return a:spec
+    endfunction
+    function! fzf#run(spec)
+      let g:find_actions_test_spec = a:spec
+    endfunction
+  ]], "\n", { plain = true }), temp .. "/autoload/fzf.vim")
+  vim.opt.runtimepath:prepend(temp)
+  settings()
+  assistant.open({ args = "close window" })
+  captured = vim.g.find_actions_test_spec
+  check(captured.source[1] ~= nil, "search has no source")
+  check(captured.options[#captured.options] == "close window", "initial query lost")
+  vim.cmd([[call g:find_actions_test_spec['sink*'](['How to close window, show me all keymap', 'selected result'])]])
+  wait(function() return requests[#requests].body.messages[3].content == "How to close window, show me all keymap" end, "selected result sent instead of query")
+  vim.cmd([[call g:find_actions_test_spec['sink*'](['question with zero matches', 'question with zero matches'])]])
+  wait(function() return requests[#requests].body.messages[3].content == "question with zero matches" end, "zero-match question lost")
+end
+
+local ok, err = xpcall(run, debug.traceback)
+for _, client in ipairs(clients) do if not client:is_closing() then client:close() end end
+server:close()
+vim.fn.stdpath, vim.fn.executable, vim.notify = stdpath, executable, notify
+vim.env.https_proxy, vim.env.http_proxy, vim.env.BASE_URL, vim.env.API_KEY, vim.env.MODEL = unpack(inherited)
+vim.fn.delete(temp, "rf")
+if not ok then io.stderr:write(err .. "\n"); vim.cmd("cquit 1") end
+print("find_actions: local integration checks passed")
+vim.cmd("qa!")

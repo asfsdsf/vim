@@ -1255,10 +1255,14 @@ endif
     " explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
     let g:fzf_history_dir = '~/.local/share/fzf-history'
 
-    " - command to search help (FindActions) with fzf
-    command! -bang -nargs=* FindActions
-      \ call fzf#vim#grep(
-      \   'cat $HOME/Software/vim/vim_tip/find_actions '.shellescape(<q-args>), 1)
+    " - search shortcuts with fzf; Enter asks the assistant using the typed query
+    if has('nvim')
+      execute 'lua dofile(' . json_encode(expand('<sfile>:p:h') . '/find_actions.lua') . ').setup()'
+    else
+      command! -bang -nargs=* FindActions
+        \ call fzf#vim#grep(
+        \   'cat $HOME/Software/vim/vim_tip/find_actions '.shellescape(<q-args>), 1)
+    endif
 
     " - command to show search help (FindActions) for keyword
     command! -bang -nargs=* FindActionsFor
