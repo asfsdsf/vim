@@ -272,6 +272,9 @@ SPC aA      Search actions help by keyword
 SPC aa      Search shortcuts; Enter streams assistant answer using typed question and full actions reference
 <cr>        (actions search) Ask assistant with current input, including when no shortcuts match
 <esc>       (actions search) Cancel shortcut search without sending a request
+<cr>        (assistant answer window, normal mode, after response finishes) Input follow-up question with conversation history
+<cr>        (assistant follow-up input, normal,insert modes) Send new question with conversation history
+<esc>       (assistant follow-up input, normal,insert modes) Cancel input and return to conversation
 q           (assistant answer window, normal mode) Close Markdown answer and cancel pending request
 <esc>       (assistant answer window, normal mode) Close Markdown answer and cancel pending request
 SPC ag      Open current file with gedit (Linux)

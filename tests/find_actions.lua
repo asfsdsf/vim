@@ -277,6 +277,87 @@ local function run()
   check(text():find("> Thinking from a JSON response", 1, true), "JSON fallback discarded thinking")
   response.body.choices[1].message.reasoning_content = nil
 
+  -- Follow-ups use the existing conversation window and its clean API history.
+  local conversation_win, conversation_buf = vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf()
+  local first_transcript, first_answer = text(), response.body.choices[1].message.content
+  local first_question = requests[#requests].body.messages[3].content
+  local function open_followup()
+    local enter = vim.fn.maparg("<CR>", "n", false, true).callback
+    check(type(enter) == "function", "follow-up Enter mapping missing")
+    enter()
+    local input_win = vim.api.nvim_get_current_win()
+    check(input_win ~= conversation_win and vim.api.nvim_win_get_config(0).relative == "win", "follow-up is not an input float")
+    -- Repeated activation focuses the same input instead of opening another one.
+    enter()
+    check(vim.api.nvim_get_current_win() == input_win, "duplicate follow-up input opened")
+    return input_win
+  end
+  local function send_followup(question)
+    local count = #requests
+    local input_win = open_followup()
+    vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(question, "\n", { plain = true }))
+    vim.fn.maparg("<CR>", "i", false, true).callback()
+    check(not vim.api.nvim_win_is_valid(input_win), "submitted input did not close")
+    check(vim.api.nvim_get_current_win() == conversation_win and vim.api.nvim_get_current_buf() == conversation_buf, "follow-up replaced conversation window")
+    wait(function() return #requests > count end, "follow-up request did not start")
+    return requests[#requests]
+  end
+  response = { status = 200, body = { choices = { { message = { content = "### Other options\n\nUse `<c-w>q`." } } } } }
+  local followup_question = 'What other keymaps do that? "中文"'
+  local followup_request = send_followup(followup_question)
+  wait(function() return title():find(" · Answer ", 1, true) ~= nil end, "second turn did not complete")
+  local messages = followup_request.body.messages
+  check(#messages == 5 and messages[1].role == "system", "follow-up history has wrong shape")
+  check(messages[2].content:sub(-#reference) == reference, "follow-up omitted full reference")
+  check(messages[3].role == "user" and messages[3].content == first_question, "first question missing from history")
+  check(messages[4].role == "assistant" and messages[4].content == first_answer, "first answer missing from history")
+  check(messages[5].role == "user" and messages[5].content == followup_question, "new question missing from history")
+  check(text():sub(1, #first_transcript) == first_transcript, "follow-up discarded earlier transcript or thinking")
+  check(text():find("## Your question\n\n" .. followup_question, 1, true), "new turn missing from transcript")
+  check(title():find("Turn 2", 1, true), "turn counter missing")
+
+  local count = #requests
+  open_followup()
+  vim.fn.maparg("<Esc>", "i", false, true).callback()
+  check(#requests == count and vim.api.nvim_get_current_win() == conversation_win, "cancelled input sent a request or lost focus")
+  open_followup()
+  vim.fn.maparg("<CR>", "i", false, true).callback()
+  check(#requests == count and vim.api.nvim_get_current_win() == conversation_win, "empty follow-up sent a request")
+
+  local second_answer = response.body.choices[1].message.content
+  response = { status = 200, stream = true }
+  local third_request = send_followup("Which one should I use?")
+  wait(function() return third_request.send ~= nil end, "third turn stream did not start")
+  messages = third_request.body.messages
+  check(#messages == 7 and messages[6].role == "assistant" and messages[6].content == second_answer, "third turn lost second answer or recorded cancelled input")
+  check(messages[7].content == "Which one should I use?", "third question missing")
+  vim.fn.maparg("<CR>", "n", false, true).callback()
+  check(notice("Wait for this answer to finish") and vim.api.nvim_get_current_win() == conversation_win, "follow-up allowed concurrent requests")
+  notices = {}
+  third_request.send('data: {"choices":[{"delta":{"reasoning_content":"Compare the earlier options."},"finish_reason":null}]}\n\n')
+  wait(function() return text():find("> Compare the earlier options.", 1, true) ~= nil end, "follow-up thinking was not streamed")
+  third_request.send(delta("### Recommended\n\nUse `<c-w>c`.") .. 'data: [DONE]\n\n')
+  third_request.finish()
+  wait(function() return title():find(" · Answer ", 1, true) ~= nil end, "third turn did not complete")
+  check(text():find(first_answer, 1, true) and text():find(second_answer, 1, true), "streaming follow-up removed earlier answers")
+
+  response = { status = 401, body = { error = { message = "follow-up failure" } } }
+  send_followup("This turn fails")
+  stream_notice("follow-up failure")
+  response = { status = 200, body = { choices = { { message = { content = "Recovered answer" } } } } }
+  local recovery = send_followup("Continue after that error")
+  wait(function() return title():find(" · Answer ", 1, true) ~= nil end, "conversation did not recover after failure")
+  messages = recovery.body.messages
+  check(#messages == 10 and messages[8].role == "assistant" and messages[8].content == "### Recommended\n\nUse `<c-w>c`.", "recovery lost completed history")
+  check(messages[9].content == "This turn fails" and messages[10].content == "Continue after that error", "recovery lost user prompts or added an error as an assistant answer")
+  check(text():find("follow-up failure", 1, true) and text():find("Recovered answer", 1, true), "recovery removed previous turn")
+
+  local stale_input = open_followup()
+  response = { status = 200, body = { choices = { { message = { content = "# Close a window\n\nUse `<c-w>c`." } } } } }
+  answer("New conversation")
+  check(not vim.api.nvim_win_is_valid(stale_input) and not vim.api.nvim_win_is_valid(conversation_win), "new conversation left stale windows")
+  check(#requests[#requests].body.messages == 3, "new search inherited previous conversation")
+
   -- A reachable proxy serves an otherwise unresolvable provider. The env loader
   -- must expand references and support several assignments on the same line.
   settings('export http_proxy="http://127.0.0.1:' .. port .. '"\n'

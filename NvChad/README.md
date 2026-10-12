@@ -60,8 +60,13 @@ When the provider returns thinking text, it streams into a separate Markdown
 `> [!NOTE] Thinking` callout above the answer and remains visible after completion.
 Its title shows progress and its footer shows controls. If a stream is interrupted,
 the partial thinking and answer stay visible alongside the error.
-Scroll and copy with normal editor commands; `q` or Escape closes the
-answer and cancels a pending request. `SPC aA` remains a search-only command.
+After an answer finishes, press Enter in the window to open a follow-up input.
+Enter sends it; Escape cancels input. Each request includes the full reference,
+earlier user questions, and completed assistant answers. Earlier turns and thinking
+notes remain visible in the same window. Settings are reread for each turn.
+Scroll and copy with normal editor commands; `q` or Escape closes the conversation
+and cancels a pending request. A new `SPC aa` question starts a fresh conversation.
+`SPC aA` remains a search-only command.
 
 The assistant needs `curl` and a trusted shell settings file at
 `vim.fn.stdpath("config") .. "/.ai/env"`. For example:
