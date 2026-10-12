@@ -239,7 +239,6 @@ SPC pp      Search git projects
 <c-g>k      Telescope: (visual mode) Search visual mode key
 <c-g>sk     Telescope: (insert mode) Search insert mode key
 <c-g>sk     Telescope: (visual mode) Search visual mode key
-SPC <space>  Telescope: Find commands (opens command history or Telescope commands; overlapping configured bindings)
 SPC ee      Telescope: Show all diagnostics
 SPC gh      Telescope: Search git commit history of current repository
 SPC k       Telescope: Search normal mode key
@@ -266,12 +265,17 @@ mx          Bookmarks: Clear bookmarks including comment bookmarks
 <c-t>       Toggle function context
 <c-t>       Unavailable: (insert mode) obsolete TSContextToggle command; use normal-mode <C-t> or :TSContext toggle
 <f5>        Reload current file if buffer has no unsaved changes
-SPC <space>  Find commands (opens command history or Telescope commands; overlapping configured bindings)
+SPC <space>  Ask assistant for general questions with multi-turn conversation
+SPC :       Search available editor commands; Enter asks assistant using typed question and command reference
 SPC AA      Search actions help by keyword
 SPC aA      Search actions help by keyword
 SPC aa      Search shortcuts; Enter streams assistant answer using typed question and full actions reference
 <cr>        (actions search) Ask assistant with current input, including when no shortcuts match
 <esc>       (actions search) Cancel shortcut search without sending a request
+<cr>        (commands search) Ask assistant with current input, including when no commands match
+<esc>       (commands search) Cancel command search without sending a request
+<cr>        (assistant question input, normal,insert modes) Send question and start conversation
+<esc>       (assistant question input, normal,insert modes) Cancel question and close new conversation
 <cr>        (assistant answer window, normal mode, after response finishes) Input follow-up question with conversation history
 <cr>        (assistant follow-up input, normal,insert modes) Send new question with conversation history
 <esc>       (assistant follow-up input, normal,insert modes) Cancel input and return to conversation
@@ -345,7 +349,6 @@ SPC au      Undotree: Toggle undotree
 <a-l>       Tmux: Move to right window or tmux pane (requires tmux)
 <a-enter>   Vimux: (visual,insert,normal modes) Run current line or visual selection in tmux runner (requires tmux)
 <a-v>       Vimux: (visual,insert,normal modes) Run current line or visual selection in tmux runner (requires tmux)
-SPC :       Vimux: Prompt for command in tmux runner (requires tmux)
 SPC v:      Vimux: Prompt tmux command (requires tmux)
 SPC vc      Vimux: Tmux close runner (requires tmux)
 SPC vl      Vimux: Run last Vimux command (requires tmux)

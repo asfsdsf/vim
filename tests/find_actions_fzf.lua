@@ -7,23 +7,27 @@ vim.cmd.source(plugin .. "/plugin/fzf.vim")
 vim.g.fzf_layout = { window = "belowright 30split enew" }
 vim.env.FZF_DEFAULT_OPTS = ""
 local assistant = dofile("NvChad/find_actions.lua")
+local commands = dofile("NvChad/find_commands.lua")
 assistant.setup()
+commands.setup()
 local submitted
 assistant.submit = function(question, reference) submitted = { question, reference } end
-local function start(query)
+commands.submit = function(question, reference) submitted = { question, reference } end
+local function start(query, tool, prompt)
   submitted = nil
-  assistant.open({ args = query })
+  local picker = tool or assistant
+  picker.open({ args = query })
   assert(vim.wait(4000, function()
-    return vim.bo.buftype == "terminal" and table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), "\n"):find("Actions>", 1, true)
+    return vim.bo.buftype == "terminal" and table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), "\n"):find((prompt or "Actions") .. ">", 1, true)
   end, 10), "fzf did not start")
   return vim.b.terminal_job_id
 end
-local function enter(query)
-  local job = start(query)
+local function enter(query, tool, prompt)
+  local job = start(query, tool, prompt)
   vim.fn.chansend(job, "\r")
   assert(vim.wait(4000, function() return submitted ~= nil end, 10), "Enter did not submit")
   assert(submitted[1] == query, "selected row or altered query was submitted")
-  assert(submitted[2]:find("SPC aa", 1, true), "reference missing")
+  assert(submitted[2]:find(tool == commands and ":write" or "SPC aa", 1, true), "reference missing")
   assert(vim.bo.buftype ~= "terminal", "fzf did not restore editing buffer")
 end
 enter("close window")
@@ -32,5 +36,11 @@ local job = start("cancel this query")
 vim.fn.chansend(job, "\27")
 assert(vim.wait(4000, function() return vim.bo.buftype ~= "terminal" end, 10), "Escape did not close search")
 assert(submitted == nil, "Escape submitted a question")
-print("find_actions: real fzf Enter and Escape checks passed")
+enter("write", commands, "Commands")
+enter("How do I save all buffers and then quit?", commands, "Commands")
+job = start("cancel command question", commands, "Commands")
+vim.fn.chansend(job, "\27")
+assert(vim.wait(4000, function() return vim.bo.buftype ~= "terminal" end, 10), "Escape did not close command search")
+assert(submitted == nil, "Escape submitted a command question")
+print("find_actions, find_commands: real fzf Enter and Escape checks passed")
 vim.cmd("qa!")

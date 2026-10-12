@@ -9,6 +9,8 @@ if markdown_runtime then
   vim.cmd.source(markdown_runtime .. "/plugin/render-markdown.lua")
 end
 local assistant = dofile("NvChad/find_actions.lua")
+local chat = require("llm_chat")
+local commands = dofile("NvChad/find_commands.lua")
 local temp = vim.fn.tempname()
 vim.fn.mkdir(temp .. "/.ai", "p")
 local stdpath, executable, notify = vim.fn.stdpath, vim.fn.executable, vim.notify
@@ -107,8 +109,18 @@ end
 
 local function run()
   assistant.setup()
+  commands.setup()
   check(vim.fn.exists(":FindActions") == 2, "command missing")
+  check(vim.fn.exists(":LLMChat") == 2 and vim.fn.exists(":FindCommands") == 2, "shared chat commands missing")
   check(vim.fn.maparg("<Space>aa", "n") == "<Cmd>FindActions<CR>", "mapping missing")
+  check(vim.fn.maparg("<Space><Space>", "n") == "<Cmd>LLMChat<CR>", "general chat mapping missing")
+  check(vim.fn.maparg("<Space>:", "n") == "<Cmd>FindCommands<CR>", "command search mapping missing")
+  vim.keymap.set("n", "<Space><Space>", ":<C-f>")
+  vim.keymap.set("n", "<Space>:", "<Cmd>call VimuxPromptCommand()<CR>")
+  wait(function()
+    return vim.fn.maparg("<Space><Space>", "n") == "<Cmd>LLMChat<CR>"
+      and vim.fn.maparg("<Space>:", "n") == "<Cmd>FindCommands<CR>"
+  end, "scheduled starter mappings replaced chat bindings")
   local avante_opts
   package.loaded["avante.config"] = { override = function(opts) avante_opts = opts end }
   vim.keymap.set({ "n", "v" }, "<Space>aa", "<Nop>", { desc = "avante: ask" })
@@ -462,6 +474,87 @@ local function run()
   wait(function() return requests[#requests].body.messages[3].content == "How to close window, show me all keymap" end, "selected result sent instead of query")
   vim.cmd([[call g:find_actions_test_spec['sink*'](['question with zero matches', 'question with zero matches'])]])
   wait(function() return requests[#requests].body.messages[3].content == "question with zero matches" end, "zero-match question lost")
+
+  -- General chat starts with native input and no shortcut-specific context.
+  local request_count = #requests
+  vim.cmd("LLMChat")
+  local initial_input = vim.api.nvim_get_current_win()
+  local parent = vim.api.nvim_win_get_config(initial_input).win
+  check(vim.api.nvim_win_get_config(initial_input).relative == "win", "general chat did not open input")
+  check(#requests == request_count, "opening general chat sent a request")
+  vim.fn.maparg("<Esc>", "i", false, true).callback()
+  check(not vim.api.nvim_win_is_valid(initial_input) and not vim.api.nvim_win_is_valid(parent), "initial cancel left chat windows")
+  check(#requests == request_count and vim.api.nvim_win_get_config(0).relative == "", "initial cancel sent request or lost editor focus")
+
+  chat.open()
+  initial_input = vim.api.nvim_get_current_win()
+  parent = vim.api.nvim_win_get_config(initial_input).win
+  vim.fn.maparg("<CR>", "i", false, true).callback()
+  check(not vim.api.nvim_win_is_valid(parent) and #requests == request_count, "empty initial question sent request or left chat open")
+
+  vim.cmd("LLMChat")
+  initial_input = vim.api.nvim_get_current_win()
+  vim.api.nvim_buf_set_lines(0, 0, -1, false, { "Explain how rainbows form" })
+  vim.fn.maparg("<CR>", "i", false, true).callback()
+  wait(function() return #requests > request_count and title():find(" · Answer ", 1, true) end, "general answer did not arrive")
+  messages = requests[#requests].body.messages
+  check(#messages == 2 and messages[2].content == "Explain how rainbows form", "general prompt included unwanted context")
+  check(messages[1].content:find("general-purpose", 1, true), "general chat still uses shortcut instructions")
+  check(title():find("LLM chat", 1, true) and not vim.api.nvim_win_is_valid(initial_input), "general chat title or input dismissal failed")
+  conversation_win, conversation_buf = vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf()
+  first_transcript, first_answer = text(), response.body.choices[1].message.content
+  local general_followup = send_followup("Explain it for a child")
+  wait(function() return title():find(" · Answer ", 1, true) end, "general follow-up did not finish")
+  messages = general_followup.body.messages
+  check(#messages == 4 and messages[2].content == "Explain how rainbows form"
+    and messages[3].role == "assistant" and messages[3].content == first_answer
+    and messages[4].content == "Explain it for a child", "general follow-up lost history")
+  check(text():find(first_transcript, 1, true), "general follow-up removed first transcript")
+
+  -- The reusable API accepts a title, system prompt, and optional context.
+  request_count = #requests
+  chat.submit("Summarize this", { title = "Custom tool", system_prompt = "Custom system instructions",
+    context = "Custom reference", context_title = "Custom data" })
+  wait(function() return #requests > request_count and title():find(" · Answer ", 1, true) end, "custom tool did not finish")
+  messages = requests[#requests].body.messages
+  check(#messages == 3 and messages[1].content == "Custom system instructions"
+    and messages[2].content == "Custom data:\n\nCustom reference" and messages[3].content == "Summarize this", "custom chat options ignored")
+  check(title():find("Custom tool", 1, true), "custom title ignored")
+
+  -- Command search captures built-ins and both scopes in the originating buffer.
+  vim.api.nvim_create_user_command("AssistantTestCommand", function() error("Command must never execute") end, { nargs = "*", bang = true })
+  vim.api.nvim_buf_create_user_command(0, "AssistantTestCommand", function() error("Command must never execute") end, { nargs = "?" })
+  local command_reference, command_source = commands.reference()
+  check(command_reference:find(":write  [built-in]  :w[rite]", 1, true), "built-in command summary missing")
+  check(command_reference:find(":AssistantTestCommand  [global; args=*; supports !", 1, true), "global command metadata missing")
+  check(command_reference:find(":AssistantTestCommand  [buffer-local; args=?", 1, true), "buffer-local command metadata missing")
+  check(#command_source > 100, "available command list is incomplete")
+  commands.open({ args = "write" })
+  captured = vim.g.find_actions_test_spec
+  check(captured.options[#captured.options] == "write", "command query lost")
+  check(table.concat(captured.source, "\n"):find("AssistantTestCommand", 1, true), "command search source missing custom commands")
+  request_count = #requests
+  vim.cmd([[call g:find_actions_test_spec['sink*'](['How do I save all buffers?', ':AssistantTestCommand'])]])
+  wait(function() return #requests > request_count and title():find(" · Answer ", 1, true) end, "command question did not arrive")
+  messages = requests[#requests].body.messages
+  check(#messages == 3 and messages[3].content == "How do I save all buffers?", "command selection submitted instead of question")
+  check(messages[2].content:sub(-#command_reference) == command_reference, "command reference was changed or lost")
+  check(messages[1].content:find("Ex commands", 1, true) and title():find("Commands assistant", 1, true), "command tool used wrong prompt or title")
+  check(not messages[2].content:find("Complete find_actions reference", 1, true), "command tool inherited action reference")
+  conversation_win, conversation_buf = vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf()
+  first_answer = response.body.choices[1].message.content
+  local command_followup = send_followup("And how do I quit afterwards?")
+  wait(function() return title():find(" · Answer ", 1, true) end, "command follow-up did not finish")
+  messages = command_followup.body.messages
+  check(#messages == 5 and messages[4].content == first_answer
+    and messages[5].content == "And how do I quit afterwards?", "command chat lost history")
+  check(messages[2].content:sub(-#command_reference) == command_reference, "command follow-up lost originating reference")
+
+  request_count = #requests
+  vim.cmd("LLMChat New general topic")
+  wait(function() return #requests > request_count and title():find(" · Answer ", 1, true) end, "LLMChat initial argument did not submit")
+  messages = requests[#requests].body.messages
+  check(#messages == 2 and messages[2].content == "New general topic", "new tool conversation inherited another tool's history")
 end
 
 local ok, err = xpcall(run, debug.traceback)
@@ -471,5 +564,5 @@ vim.fn.stdpath, vim.fn.executable, vim.notify = stdpath, executable, notify
 vim.env.https_proxy, vim.env.http_proxy, vim.env.BASE_URL, vim.env.API_KEY, vim.env.MODEL = unpack(inherited)
 vim.fn.delete(temp, "rf")
 if not ok then io.stderr:write(err .. "\n"); vim.cmd("cquit 1") end
-print("find_actions: local integration checks passed")
+print("llm_chat, find_actions, find_commands: local integration checks passed")
 vim.cmd("qa!")
